@@ -1,0 +1,922 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Cómo trabajamos VORA</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: una columna de lectura (unos 760px) con bandas por sección; los 4 carriles llevan los colores de la app VORA */
+:root {
+  --bg: #F7F8F5;
+  --surface: #FFFFFF;
+  --ink: #17211F;
+  --muted: #5E6966;
+  --faint: #8E9894;
+  --line: #E4E9E6;
+  --accent: #123D35;
+  --panel: #123D35;
+  --on-panel: #F2F6F3;
+  --on-panel-muted: #B9CCC5;
+  --mint: #65D6B0;
+  --mint-soft: rgba(101, 214, 176, 0.14);
+  --lime: #C9E86A;
+  --lime-soft: rgba(201, 232, 106, 0.28);
+  --red: #D95D5D;
+  --red-soft: rgba(217, 93, 93, 0.12);
+  --ok: #27AE60;
+  --ok-soft: rgba(39, 174, 96, 0.12);
+  --code-bg: #10231F;
+  --code-ink: #E3EEEA;
+  --code-dim: #8FB3A7;
+  --code-hl: #C9E86A;
+  --font: "Manrope", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+  --r-sm: 10px;
+  --r-md: 16px;
+  --r-lg: 24px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0D1614; --surface: #142220; --ink: #E7EEEB; --muted: #A4B1AC; --faint: #7D8B86;
+    --line: #23342F; --accent: #7FE0BF; --panel: #123D35; --on-panel: #EEF5F1; --on-panel-muted: #A9C2B9;
+    --mint: #65D6B0; --mint-soft: rgba(101, 214, 176, 0.12); --lime: #C9E86A; --lime-soft: rgba(201, 232, 106, 0.14);
+    --red: #E57B7B; --red-soft: rgba(229, 123, 123, 0.14); --ok: #4CC882; --ok-soft: rgba(76, 200, 130, 0.14);
+    --code-bg: #0A1311; --code-ink: #DDE9E4; --code-dim: #7FA396; --code-hl: #C9E86A;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0D1614; --surface: #142220; --ink: #E7EEEB; --muted: #A4B1AC; --faint: #7D8B86;
+  --line: #23342F; --accent: #7FE0BF; --panel: #123D35; --on-panel: #EEF5F1; --on-panel-muted: #A9C2B9;
+  --mint: #65D6B0; --mint-soft: rgba(101, 214, 176, 0.12); --lime: #C9E86A; --lime-soft: rgba(201, 232, 106, 0.14);
+  --red: #E57B7B; --red-soft: rgba(229, 123, 123, 0.14); --ok: #4CC882; --ok-soft: rgba(76, 200, 130, 0.14);
+  --code-bg: #0A1311; --code-ink: #DDE9E4; --code-dim: #7FA396; --code-hl: #C9E86A;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--ink);
+  font-family: var(--font); font-size: 16px; line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+}
+.wrap {
+  max-width: 800px; margin: 0 auto;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+h1, h2, h3, h4 { text-wrap: balance; line-height: 1.2; margin: 0; }
+h2 { font-size: clamp(1.55rem, 4vw, 2rem); font-weight: 800; letter-spacing: -0.02em; }
+h3 { font-size: 1.2rem; font-weight: 700; }
+h4 { font-size: 1rem; font-weight: 700; }
+p { margin: 0; }
+a { color: var(--accent); text-underline-offset: 3px; }
+code { font-family: var(--mono); font-size: 0.86em; background: var(--mint-soft); padding: 0.1em 0.35em; border-radius: 6px; }
+.eyebrow { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
+.lead { font-size: 1.08rem; color: var(--muted); }
+.stack { display: flex; flex-direction: column; gap: 16px; }
+.stack-lg { display: flex; flex-direction: column; gap: 28px; }
+section { padding-block: 56px; border-top: 1px solid var(--line); }
+section:first-of-type { border-top: 0; }
+
+/* Hero */
+.hero { background: var(--panel); color: var(--on-panel); }
+.hero .wrap { padding-block: 56px 48px; display: flex; flex-direction: column; gap: 20px; }
+.hero h1 { font-size: clamp(2.1rem, 7vw, 3.4rem); font-weight: 800; letter-spacing: -0.03em; }
+.hero h1 span { color: var(--lime); }
+.hero p { color: var(--on-panel-muted); font-size: 1.08rem; max-width: 62ch; }
+.hero .eyebrow { color: var(--mint); }
+.facts { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 6px; }
+.fact { border: 1px solid rgba(255,255,255,0.18); border-radius: 999px; padding: 6px 14px; font-size: 0.85rem; color: var(--on-panel); font-variant-numeric: tabular-nums; }
+.fact b { color: var(--lime); font-weight: 700; }
+
+/* Nav */
+.toc { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 5; background: var(--bg); border-bottom: 1px solid var(--line); }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--bg); }
+.toc .wrap { display: flex; gap: 8px; overflow-x: auto; padding-block: 10px; scrollbar-width: none; }
+.toc a { flex: none; text-decoration: none; color: var(--muted); font-size: 0.85rem; font-weight: 600; padding: 6px 12px; border-radius: 999px; }
+.toc a:hover, .toc a:focus-visible { background: var(--mint-soft); color: var(--ink); outline: none; }
+
+/* Ideas */
+.ideas { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; }
+.idea { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-md); padding: 22px; display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+.idea svg { width: 44px; height: 44px; }
+.idea .ej { font-size: 0.9rem; color: var(--muted); border-top: 1px dashed var(--line); padding-top: 10px; }
+.quote { border-left: 3px solid var(--mint); padding: 4px 0 4px 16px; color: var(--muted); font-size: 0.98rem; }
+.quote cite { display: block; font-style: normal; font-size: 0.8rem; color: var(--faint); margin-top: 4px; }
+
+/* TDD cycle figure */
+.figure { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-lg); padding: 24px; display: grid; grid-template-columns: 220px 1fr; gap: 24px; align-items: center; }
+.figure svg { width: 100%; max-width: 220px; height: auto; justify-self: center; }
+.figure ol { margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 8px; }
+@media (max-width: 620px) { .figure { grid-template-columns: 1fr; } }
+
+/* Carriles */
+.lanes { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+@media (max-width: 620px) { .lanes { grid-template-columns: 1fr; } }
+.lane { border-radius: var(--r-md); padding: 20px; display: flex; flex-direction: column; gap: 8px; border: 1px solid var(--line); background: var(--surface); }
+.lane-head { display: flex; align-items: center; gap: 12px; }
+.badge { width: 40px; height: 40px; border-radius: 12px; display: grid; place-items: center; flex: none; }
+.badge svg { width: 22px; height: 22px; }
+.l-a .badge { background: var(--lime-soft); color: var(--accent); }
+.l-b .badge { background: var(--mint-soft); color: var(--accent); }
+.l-c .badge { background: var(--panel); color: var(--lime); }
+.l-d .badge { background: var(--red-soft); color: var(--red); }
+.lane .q { font-size: 0.92rem; color: var(--muted); }
+.lane ul { margin: 4px 0 0; padding-left: 18px; font-size: 0.92rem; }
+.tag { display: inline-flex; align-items: center; gap: 6px; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; padding: 3px 10px; border-radius: 999px; }
+.t-a { background: var(--lime-soft); color: var(--accent); }
+.t-b { background: var(--mint-soft); color: var(--accent); }
+.t-c { background: var(--panel); color: var(--lime); }
+.t-d { background: var(--red-soft); color: var(--red); }
+
+/* Decision tree */
+.tree { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-lg); padding: 8px 20px; }
+.tree-row { display: grid; grid-template-columns: 1fr auto; gap: 16px; align-items: center; padding: 14px 0; border-top: 1px solid var(--line); }
+.tree-row:first-child { border-top: 0; }
+.tree-row p { font-weight: 600; }
+.tree-row p small { display: block; font-weight: 400; color: var(--muted); font-size: 0.86rem; }
+
+/* Tables */
+.table-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: var(--r-md); background: var(--surface); }
+table { border-collapse: collapse; width: 100%; font-size: 0.9rem; min-width: 560px; }
+th, td { text-align: left; padding: 11px 14px; border-top: 1px solid var(--line); vertical-align: top; }
+thead th { border-top: 0; font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); font-weight: 700; }
+
+/* Steps */
+.example-head { display: flex; flex-direction: column; gap: 10px; }
+.scenario { background: var(--mint-soft); border-radius: var(--r-md); padding: 16px 18px; font-size: 0.98rem; }
+.scenario b { color: var(--accent); }
+.steps { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0; }
+.step { display: grid; grid-template-columns: 40px minmax(0, 1fr); gap: 16px; position: relative; padding-bottom: 28px; }
+.step:last-child { padding-bottom: 0; }
+.step::before { content: ""; position: absolute; left: 19px; top: 40px; bottom: 0; width: 2px; background: var(--line); }
+.step:last-child::before { display: none; }
+.num { width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; font-weight: 800; font-size: 0.95rem; background: var(--surface); border: 2px solid var(--line); color: var(--accent); font-variant-numeric: tabular-nums; }
+.step.red .num { border-color: var(--red); color: var(--red); }
+.step.green .num { border-color: var(--ok); color: var(--ok); }
+.step-body { display: flex; flex-direction: column; gap: 10px; min-width: 0; padding-top: 6px; }
+.step-body > p { color: var(--ink); }
+.who { font-size: 0.8rem; color: var(--faint); font-weight: 600; }
+
+/* Prompt + code */
+.prompt { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-md); overflow: hidden; }
+.prompt-top { display: flex; justify-content: space-between; align-items: center; gap: 8px; padding: 8px 10px 8px 14px; border-bottom: 1px solid var(--line); background: var(--mint-soft); }
+.prompt-top span { font-size: 0.75rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--accent); }
+.prompt pre { margin: 0; padding: 14px; white-space: pre-wrap; word-break: break-word; font-family: var(--mono); font-size: 0.82rem; line-height: 1.6; color: var(--ink); }
+.copy { font-family: var(--font); font-size: 0.78rem; font-weight: 700; border: 1px solid var(--line); background: var(--surface); color: var(--ink); border-radius: 8px; padding: 5px 10px; cursor: pointer; }
+.copy:hover { border-color: var(--mint); }
+.copy:focus-visible { outline: 2px solid var(--mint); outline-offset: 2px; }
+.code { background: var(--code-bg); color: var(--code-ink); border-radius: var(--r-md); overflow-x: auto; }
+.code-top { padding: 8px 14px; font-family: var(--mono); font-size: 0.74rem; color: var(--code-dim); border-bottom: 1px solid rgba(255,255,255,0.08); }
+.code pre { margin: 0; padding: 14px; font-family: var(--mono); font-size: 0.8rem; line-height: 1.6; white-space: pre; }
+.code .c { color: var(--code-dim); }
+.code .h { color: var(--code-hl); }
+.code .k { color: var(--mint); }
+.code .r { color: #F08C8C; }
+.code .g { color: #74D99F; }
+
+.note { border-radius: var(--r-md); padding: 14px 16px; font-size: 0.93rem; display: flex; gap: 12px; align-items: flex-start; }
+.note svg { width: 20px; height: 20px; flex: none; margin-top: 2px; }
+.note.info { background: var(--mint-soft); }
+.note.warn { background: var(--lime-soft); }
+.note.bad { background: var(--red-soft); }
+.note.good { background: var(--ok-soft); }
+
+.result { display: flex; flex-wrap: wrap; gap: 8px; }
+.pill { font-size: 0.78rem; font-weight: 700; padding: 4px 10px; border-radius: 999px; font-family: var(--mono); }
+.pill.red { background: var(--red-soft); color: var(--red); }
+.pill.green { background: var(--ok-soft); color: var(--ok); }
+
+/* Git graph */
+.git { background: var(--code-bg); color: var(--code-ink); border-radius: var(--r-md); padding: 16px; font-family: var(--mono); font-size: 0.8rem; line-height: 1.8; overflow-x: auto; white-space: pre; }
+
+/* Comparison */
+.change { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-md); padding: 18px 20px; display: flex; flex-direction: column; gap: 8px; }
+.change .why { font-size: 0.88rem; color: var(--muted); }
+.keep { display: flex; flex-wrap: wrap; gap: 8px; }
+.keep span { font-size: 0.85rem; background: var(--surface); border: 1px solid var(--line); padding: 6px 12px; border-radius: 999px; }
+
+/* People */
+.people { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; }
+.person { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-md); padding: 16px; display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.person .tags { display: flex; gap: 6px; flex-wrap: wrap; }
+.person p { font-size: 0.88rem; color: var(--muted); }
+
+/* Quiz */
+.quiz { display: flex; flex-direction: column; gap: 14px; }
+.qcard { background: var(--surface); border: 1px solid var(--line); border-radius: var(--r-md); padding: 18px; display: flex; flex-direction: column; gap: 12px; }
+.qcard .qtext { font-weight: 600; }
+.opts { display: flex; flex-wrap: wrap; gap: 8px; }
+.opt { font-family: var(--font); font-size: 0.86rem; font-weight: 600; border: 1px solid var(--line); background: var(--bg); color: var(--ink); border-radius: 999px; padding: 7px 14px; cursor: pointer; }
+.opt:hover { border-color: var(--mint); }
+.opt:focus-visible { outline: 2px solid var(--mint); outline-offset: 2px; }
+.opt.right { background: var(--ok-soft); border-color: var(--ok); color: var(--ok); }
+.opt.wrong { background: var(--red-soft); border-color: var(--red); color: var(--red); }
+.feedback { font-size: 0.9rem; color: var(--muted); border-top: 1px dashed var(--line); padding-top: 10px; }
+.score { font-weight: 700; color: var(--accent); }
+
+.sources { font-size: 0.9rem; display: flex; flex-direction: column; gap: 8px; padding-left: 18px; margin: 0; }
+footer { padding-block: 40px 64px; color: var(--faint); font-size: 0.85rem; border-top: 1px solid var(--line); }
+
+@media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto !important; transition: none !important; } }
+html { scroll-behavior: smooth; }
+:target { scroll-margin-top: 64px; }
+section[id] { scroll-margin-top: 56px; }
+</style>
+</head>
+<body>
+
+<!-- SVG sprite -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="i-bolt" viewBox="0 0 24 24"><path d="M13 2 4 14h7l-1 8 9-12h-7l1-8Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></symbol>
+    <symbol id="i-phone" viewBox="0 0 24 24"><rect x="6" y="2.5" width="12" height="19" rx="2.5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M9.5 18.5h5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M9 7h6M9 10.5h4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+    <symbol id="i-db" viewBox="0 0 24 24"><ellipse cx="12" cy="5.5" rx="7" ry="3" fill="none" stroke="currentColor" stroke-width="2"/><path d="M5 5.5v13c0 1.7 3.1 3 7 3s7-1.3 7-3v-13M5 12c0 1.7 3.1 3 7 3s7-1.3 7-3" fill="none" stroke="currentColor" stroke-width="2"/></symbol>
+    <symbol id="i-bug" viewBox="0 0 24 24"><rect x="7" y="7" width="10" height="13" rx="5" fill="none" stroke="currentColor" stroke-width="2"/><path d="M9 7.5a3 3 0 0 1 6 0M12 11v9M3 13h4M17 13h4M4 7l3.5 2.5M20 7l-3.5 2.5M4 19.5l3.5-2M20 19.5l-3.5-2" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+    <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 11v6M12 7.5v.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+    <symbol id="i-warn" viewBox="0 0 24 24"><path d="M12 3 2 20h20L12 3Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M12 10v4M12 17v.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/><path d="m8 12.5 2.7 2.7L16 9.8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  </defs>
+</svg>
+
+<header class="hero">
+  <div class="wrap">
+    <span class="eyebrow">Parcial TP3 · VORA Coach · para Martu, Sofi, Hector, Zaki y Fiore</span>
+    <h1>Cómo trabajamos <span>con la IA</span> de acá a la entrega</h1>
+    <p>Qué es SDD, qué es TDD y, sobre todo, qué camino seguir según lo que tengas que hacer: una funcionalidad nueva, una pantalla, un arreglo chico o un bug. Con ejemplos reales del parcial y los pedidos listos para copiar.</p>
+    <div class="facts">
+      <span class="fact">Hito 1: <b>mié 21/10</b></span>
+      <span class="fact">Entrega interna: <b>mar 27/10</b></span>
+      <span class="fact">Entrega: <b>mié 28/10, 19:00</b></span>
+      <span class="fact">Devolución: <b>mié 4/11</b></span>
+    </div>
+  </div>
+</header>
+
+<nav class="toc" aria-label="Secciones">
+  <div class="wrap">
+    <a href="#ideas">Las 3 ideas</a>
+    <a href="#carriles">Qué camino tomo</a>
+    <a href="#feature">Feature nueva</a>
+    <a href="#bug">Bug</a>
+    <a href="#pantalla">Pantalla</a>
+    <a href="#chico">Cambio chico</a>
+    <a href="#siempre">Lo que va siempre</a>
+    <a href="#ajustes">Qué ajusté</a>
+    <a href="#quien">Quién usa qué</a>
+    <a href="#practica">Practicá</a>
+  </div>
+</nav>
+
+<main>
+
+<!-- 1. IDEAS -->
+<section id="ideas">
+  <div class="wrap stack-lg">
+    <div class="stack">
+      <span class="eyebrow">Desde cero</span>
+      <h2>Las tres ideas, antes que cualquier herramienta</h2>
+      <p class="lead">Todo lo que sigue sale de un solo principio: a la IA hay que darle algo que le diga "sí, está bien" o "no, está mal". Si no tiene eso, deja de trabajar cuando el código <em>parece</em> terminado, y la única que controla sos vos.</p>
+      <p class="quote">"Dale a Claude un control que pueda correr: tests, un build, una captura para comparar."<cite>Guía oficial de buenas prácticas de Claude Code (Anthropic)</cite></p>
+    </div>
+
+    <div class="ideas">
+      <article class="idea">
+        <svg viewBox="0 0 44 44" aria-hidden="true"><rect x="8" y="5" width="28" height="34" rx="5" fill="var(--mint-soft)" stroke="var(--accent)" stroke-width="2"/><path d="M14 15h16M14 21h16M14 27h10" stroke="var(--accent)" stroke-width="2" stroke-linecap="round"/><circle cx="31" cy="31" r="7" fill="var(--lime)"/><path d="m28 31 2 2 4-4" stroke="var(--panel)" stroke-width="2" fill="none" stroke-linecap="round"/></svg>
+        <h3>1. La spec (SDD)</h3>
+        <p><b>Primero se escribe qué tiene que pasar y recién después se programa.</b> Es como el plano antes de construir: el código se juzga contra el plano, no contra lo que a la IA le pareció.</p>
+        <p class="ej"><b>Ejemplo:</b> "SI el nombre de la comida está vacío, ENTONCES la app DEBE no guardar y mostrar el error debajo del campo." Esa frase es la spec. Se escribe así (con SI, CUANDO, MIENTRAS) para que no haya dos formas de entenderla. Ese formato se llama EARS.</p>
+      </article>
+      <article class="idea">
+        <svg viewBox="0 0 44 44" aria-hidden="true"><circle cx="22" cy="22" r="16" fill="none" stroke="var(--line)" stroke-width="4"/><path d="M22 6a16 16 0 0 1 13.9 8" stroke="var(--red)" stroke-width="4" fill="none" stroke-linecap="round"/><path d="M37.6 20a16 16 0 0 1-9.6 14.8" stroke="var(--ok)" stroke-width="4" fill="none" stroke-linecap="round"/><path d="M23 37.9A16 16 0 0 1 6.2 19" stroke="var(--mint)" stroke-width="4" fill="none" stroke-linecap="round"/></svg>
+        <h3>2. El test (TDD)</h3>
+        <p><b>Un test es un programa chiquito que comprueba otro.</b> En TDD se escribe primero el test, se ve que falla (rojo), se programa hasta que pasa (verde) y se ordena el código.</p>
+        <p class="ej"><b>Ejemplo:</b> el test arma una comida con nombre "&nbsp;&nbsp;" y verifica que la validación diga "vacío". Antes de programar falla. Cuando falla y después pasa, quedó probado que el código hace lo que dice la spec.</p>
+      </article>
+      <article class="idea">
+        <svg viewBox="0 0 44 44" aria-hidden="true"><circle cx="15" cy="16" r="6" fill="var(--mint-soft)" stroke="var(--accent)" stroke-width="2"/><circle cx="31" cy="16" r="6" fill="var(--lime-soft)" stroke="var(--accent)" stroke-width="2"/><path d="M6 36c1-6 5-9 9-9s8 3 9 9M22 36c1-6 5-9 9-9s8 3 9 9" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linecap="round"/></svg>
+        <h3>3. Quien hace no se califica</h3>
+        <p><b>El agente que escribió el código no es buen juez de su código.</b> Tiende a darle la razón a su propio razonamiento. Por eso revisa otro agente, en una sesión limpia, que solo ve el resultado y la spec.</p>
+        <p class="ej"><b>Ejemplo:</b> terminás de programar y le pedís al subagente <code>revisor-requisitos</code> que chequee cada criterio de la spec contra el código. No vio tu charla, así que no "sabe" lo que quisiste hacer: ve lo que hiciste.</p>
+      </article>
+    </div>
+
+    <div class="figure">
+      <svg viewBox="0 0 220 220" role="img" aria-label="Ciclo de TDD: rojo, verde, ordenar">
+        <circle cx="110" cy="110" r="78" fill="none" stroke="var(--line)" stroke-width="2" stroke-dasharray="4 6"/>
+        <circle cx="110" cy="34" r="30" fill="var(--red-soft)" stroke="var(--red)" stroke-width="2"/>
+        <text x="110" y="31" text-anchor="middle" font-family="Manrope, sans-serif" font-weight="800" font-size="14" fill="var(--red)">ROJO</text>
+        <text x="110" y="47" text-anchor="middle" font-family="Manrope, sans-serif" font-size="10" fill="var(--muted)">el test falla</text>
+        <circle cx="176" cy="148" r="30" fill="var(--ok-soft)" stroke="var(--ok)" stroke-width="2"/>
+        <text x="176" y="145" text-anchor="middle" font-family="Manrope, sans-serif" font-weight="800" font-size="14" fill="var(--ok)">VERDE</text>
+        <text x="176" y="161" text-anchor="middle" font-family="Manrope, sans-serif" font-size="10" fill="var(--muted)">el test pasa</text>
+        <circle cx="44" cy="148" r="30" fill="var(--mint-soft)" stroke="var(--accent)" stroke-width="2"/>
+        <text x="44" y="145" text-anchor="middle" font-family="Manrope, sans-serif" font-weight="800" font-size="10.5" fill="var(--accent)">ORDENAR</text>
+        <text x="44" y="161" text-anchor="middle" font-family="Manrope, sans-serif" font-size="10" fill="var(--muted)">sigue verde</text>
+        <path d="M138 50 Q170 80 170 112" fill="none" stroke="var(--faint)" stroke-width="2" marker-end="url(#arr)"/>
+        <path d="M146 166 Q110 190 76 166" fill="none" stroke="var(--faint)" stroke-width="2" marker-end="url(#arr)"/>
+        <path d="M48 116 Q52 76 82 48" fill="none" stroke="var(--faint)" stroke-width="2" marker-end="url(#arr)"/>
+        <defs><marker id="arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0 10 5 0 10Z" fill="var(--faint)"/></marker></defs>
+      </svg>
+      <div class="stack">
+        <h3>Por qué el rojo es lo más importante</h3>
+        <ol>
+          <li><b>Rojo:</b> ver fallar el test prueba que el test sirve. Un test que nunca falló puede estar mal escrito y pasar siempre (por eso la metodología pide el "control negativo").</li>
+          <li><b>Verde:</b> se programa lo mínimo para que pase, sin tocar el test.</li>
+          <li><b>Ordenar:</b> se mejora el código (nombres, repetición) y los tests siguen en verde. Si se rompen, el ordenamiento rompió algo.</li>
+        </ol>
+        <p class="note info"><svg aria-hidden="true"><use href="#i-info"/></svg><span>En TDD el control negativo viene incluido: si viste el test en rojo antes del código, ya sabés que detecta el caso malo.</span></p>
+      </div>
+    </div>
+
+    <div class="stack">
+      <h3>Dónde vive cada cosa en el repo</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Archivo</th><th>Qué es</th><th>Cuándo se toca</th></tr></thead>
+          <tbody>
+            <tr><td><code>specs/CONTEXTO.md</code></td><td>Las reglas del proyecto: arquitectura, carpetas, nombres, tema. La IA lo lee siempre primero.</td><td>Una vez (sale de la tarea b) y cuando se decide algo nuevo</td></tr>
+            <tr><td><code>specs/PANTALLAS.md</code></td><td>Las 37 pantallas: barra o encima, desde dónde se llega, a dónde lleva cada botón, estado. Es la spec de cada pantalla.</td><td>Lo arma Fiore (tarea c); cada una actualiza su fila</td></tr>
+            <tr><td><code>specs/REQUISITOS.md</code></td><td>Los códigos de la consigna (UI, NAV, RF) con su estado y quién lo verificó</td><td>Al cerrar cada pull request</td></tr>
+            <tr><td><code>specs/funcionales/*.md</code></td><td>Una spec en EARS por funcionalidad con datos (catálogo de entrenamientos, registro de comidas)</td><td>Antes de programar, y cada vez que un bug muestra un caso que faltaba</td></tr>
+            <tr><td><code>app/src/test/</code></td><td>Tests que corren en la compu, sin emulador (validaciones, repositorio, ViewModel). Rápidos.</td><td>Los corre el control automático en cada turno de la IA</td></tr>
+            <tr><td><code>app/src/androidTest/</code></td><td>Tests que necesitan el emulador (el DAO de Room con base en memoria)</td><td>A mano, antes de abrir el pull request</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="note good"><svg aria-hidden="true"><use href="#i-check"/></svg><span><b>La spec queda viva.</b> No se escribe una vez y se olvida: cuando cambia algo, primero se cambia la spec y después el código. Así cualquiera de las cinco (o su IA) puede abrir el archivo y saber cómo tiene que funcionar.</span></p>
+    </div>
+  </div>
+</section>
+
+<!-- 2. CARRILES -->
+<section id="carriles">
+  <div class="wrap stack-lg">
+    <div class="stack">
+      <span class="eyebrow">La decisión de cada tarea</span>
+      <h2>No todo lleva spec y tests: cuatro caminos según el cambio</h2>
+      <p class="lead">El error más común con SDD es usar el proceso completo para todo. Un análisis de Martin Fowler cuenta que una herramienta de specs convirtió un bug chico en 4 historias de usuario con 16 criterios: "como usar una maza para partir una nuez". Elegí el camino por el tamaño del cambio.</p>
+    </div>
+
+    <div class="tree" role="list">
+      <div class="tree-row" role="listitem"><p>¿Lo podés decir en una oración y toca uno o dos archivos?<small>Un texto, un color fuera del tema, un margen, un nombre mal escrito.</small></p><span class="tag t-a">A · Chico</span></div>
+      <div class="tree-row" role="listitem"><p>¿Algo que andaba, ya no anda?<small>Un error, un crash, un dato que no se actualiza, una pantalla que se ve distinta al Figma después de un cambio.</small></p><span class="tag t-d">D · Bug</span></div>
+      <div class="tree-row" role="listitem"><p>¿Trae, guarda, valida o calcula datos?<small>Retrofit, Room, el repositorio, el ViewModel, las validaciones, los estados de carga y error.</small></p><span class="tag t-c">C · Datos</span></div>
+      <div class="tree-row" role="listitem"><p>¿Es algo que se ve?<small>Una pantalla nueva, un componente, la navegación entre pantallas.</small></p><span class="tag t-b">B · Pantalla</span></div>
+    </div>
+    <p class="note info"><svg aria-hidden="true"><use href="#i-info"/></svg><span>Hay tareas que tienen las dos cosas. Workout / 03 (detalle de un entrenamiento) es <b>C</b> para traer y guardar el detalle y <b>B</b> para dibujar la pantalla. Se hacen en ese orden y conviene en dos pull requests.</span></p>
+
+    <div class="lanes">
+      <article class="lane l-a">
+        <div class="lane-head"><span class="badge"><svg aria-hidden="true"><use href="#i-bolt"/></svg></span><h3>A · Cambio chico</h3></div>
+        <p class="q">Directo, sin spec y sin plan.</p>
+        <ul><li>Se pide en una línea</li><li>El control automático corre igual</li><li>Pull request chico, se revisa en 5 minutos</li></ul>
+      </article>
+      <article class="lane l-b">
+        <div class="lane-head"><span class="badge"><svg aria-hidden="true"><use href="#i-phone"/></svg></span><h3>B · Pantalla</h3></div>
+        <p class="q">La spec es la fila de <code>PANTALLAS.md</code> y el test es el Figma.</p>
+        <ul><li>Plan, aprobás, implementa</li><li>Captura en dos tamaños de emulador</li><li>Revisor visual: APROBADA o CON CAMBIOS</li></ul>
+      </article>
+      <article class="lane l-c">
+        <div class="lane-head"><span class="badge"><svg aria-hidden="true"><use href="#i-db"/></svg></span><h3>C · Funcionalidad con datos</h3></div>
+        <p class="q">El ciclo completo: spec, auditoría, tests en rojo y después el código.</p>
+        <ul><li>Spec en EARS por entrevista</li><li>Tests y código en sesiones distintas</li><li>Revisores en limpio antes del pull request</li></ul>
+      </article>
+      <article class="lane l-d">
+        <div class="lane-head"><span class="badge"><svg aria-hidden="true"><use href="#i-bug"/></svg></span><h3>D · Bug</h3></div>
+        <p class="q">Primero se reproduce, después se arregla.</p>
+        <ul><li>Test que falla mostrando el bug</li><li>Se commitea solo, y el test no se toca más</li><li>Arreglo hasta verde, y la spec suma el caso</li></ul>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- 3. FEATURE -->
+<section id="feature">
+  <div class="wrap stack-lg">
+    <div class="example-head">
+      <span class="tag t-c">Ejemplo 1 · Carril C</span>
+      <h2>"Quiero agregar una feature": validar la comida antes de guardarla</h2>
+      <p class="scenario"><b>La situación.</b> Sofi tiene que hacer que en <b>Nutrition / 03 Add Food</b> no se pueda guardar una comida sin nombre o con valores negativos (RF03). Es lógica de datos, así que va por el carril completo. Son 7 pasos; los primeros dos llevan 20 minutos y ahorran horas.</p>
+    </div>
+
+    <ol class="steps">
+      <li class="step">
+        <span class="num">1</span>
+        <div class="step-body">
+          <h3>La IA te entrevista y escribe la spec</h3>
+          <span class="who">Sesión 1 · Sofi + IA · en la carpeta del repo</span>
+          <p>No escribís la spec de cero: le pedís a la IA que te haga preguntas, una por vez, sobre los casos que no están claros. Vos contestás y ella escribe.</p>
+          <div class="prompt"><div class="prompt-top"><span>Pedido para copiar</span><button class="copy" type="button">Copiar</button></div><pre>Quiero especificar el registro manual de comidas del parcial VORA Coach (RF03 y RF04).
+Leé specs/CONTEXTO.md, specs/PANTALLAS.md (Nutrition / 03 y 02) y la consigna.
+Entrevistame con preguntas, una por vez, sobre casos borde, errores y lo que no está claro.
+No preguntes lo obvio.
+Cuando terminemos, escribí la spec en formato EARS en specs/funcionales/registro-comidas.md
+con la plantilla de la sección 17.1. Cada criterio tiene que poder convertirse en un test.</pre></div>
+          <p>Preguntas típicas que va a hacer: "¿Cero calorías es válido?" (sí: la consigna dice <em>no negativos</em>), "¿Se acepta coma decimal, 12,5?", "¿Qué pasa si el nombre tiene solo espacios?". Esas respuestas son las que después la IA no puede inventar.</p>
+          <div class="code"><div class="code-top">specs/funcionales/registro-comidas.md (fragmento)</div><pre><span class="h">## Criterios de aceptación</span>
+C1. La app DEBE pedir nombre, fecha, tipo (desayuno, almuerzo, merienda
+    o cena), calorías, proteínas, carbohidratos y grasas de la porción.
+C2. SI el nombre está vacío o tiene solo espacios, ENTONCES la app DEBE
+    no guardar y mostrar el error debajo del campo Nombre.
+C3. SI un valor numérico es negativo o no es un número, ENTONCES la app
+    DEBE no guardar y marcar ese campo. El cero es válido.
+C4. CUANDO todos los datos son válidos y la persona toca Guardar,
+    la app DEBE guardar la comida en Room y volver a Today's Meals.
+
+<span class="h">## Fuera de alcance</span>
+Búsqueda de alimentos (EXT02). Foto y voz (simulados).</pre></div>
+        </div>
+      </li>
+
+      <li class="step">
+        <span class="num">2</span>
+        <div class="step-body">
+          <h3>Otro agente audita la spec</h3>
+          <span class="who">Subagente auditor-spec · solo lectura</span>
+          <p>Antes de programar, un revisor que no vio la entrevista busca palabras vagas ("rápido", "correcto"), criterios imposibles de probar y requisitos de la consigna que faltan.</p>
+          <div class="prompt"><div class="prompt-top"><span>Pedido para copiar</span><button class="copy" type="button">Copiar</button></div><pre>Usá el subagente auditor-spec sobre specs/funcionales/registro-comidas.md.</pre></div>
+          <p>Ejemplo de lo que puede encontrar: <em>"ALTA · C4 · No dice qué pasa si Room falla al guardar. Propuesta: SI falla el guardado, ENTONCES la app DEBE mostrar el error y conservar lo escrito."</em> Decidís qué corregir, aprobás la spec y la commiteás: <code>docs(specs): agregar spec de registro de comidas</code>.</p>
+        </div>
+      </li>
+
+      <li class="step red">
+        <span class="num">3</span>
+        <div class="step-body">
+          <h3>Una sesión nueva escribe los tests, y fallan</h3>
+          <span class="who">Sesión 2 · se abre con <code>TDD_ROJO=1 claude</code> (ver "Qué ajusté")</span>
+          <p>Los tests salen de la spec, no del código, y los escribe una sesión distinta de la que va a programar. Si la misma sesión escribe test y código, tiende a escribir tests que su código ya pasa.</p>
+          <div class="prompt"><div class="prompt-top"><span>Pedido para copiar</span><button class="copy" type="button">Copiar</button></div><pre>Leé specs/CONTEXTO.md y specs/funcionales/registro-comidas.md.
+Escribí los tests unitarios de C2 y C3 en app/src/test/.
+No implementes la lógica: creá solo las firmas vacías que hagan falta para que compile
+(por ejemplo validarComida devolviendo un mapa vacío).
+Corré ./gradlew testDebugUnitTest y mostrame la salida: los tests tienen que fallar
+por el resultado, no por un error de compilación.</pre></div>
+          <div class="code"><div class="code-top">app/src/test/.../ValidarComidaTest.kt</div><pre><span class="k">class</span> ValidarComidaTest {
+
+    <span class="c">// Una comida correcta; cada test le cambia un solo campo</span>
+    <span class="k">private val</span> valida = FormularioComida(
+        nombre = <span class="h">"Avena con banana"</span>, tipo = TipoComida.DESAYUNO,
+        calorias = <span class="h">"350"</span>, proteinas = <span class="h">"12"</span>, carbohidratos = <span class="h">"60"</span>, grasas = <span class="h">"7"</span>,
+    )
+
+    @Test
+    <span class="k">fun</span> `C2 nombre con solo espacios no es valido`() {
+        <span class="k">val</span> errores = validarComida(valida.copy(nombre = <span class="h">"   "</span>))
+        assertEquals(ErrorCampo.VACIO, errores[Campo.NOMBRE])
+    }
+
+    @Test
+    <span class="k">fun</span> `C3 calorias negativas no son validas`() {
+        <span class="k">val</span> errores = validarComida(valida.copy(calorias = <span class="h">"-5"</span>))
+        assertEquals(ErrorCampo.NUMERO_INVALIDO, errores[Campo.CALORIAS])
+    }
+
+    @Test
+    <span class="k">fun</span> `C3 el cero si es valido`() {
+        assertTrue(validarComida(valida.copy(grasas = <span class="h">"0"</span>)).isEmpty())
+    }
+}</pre></div>
+          <div class="code"><div class="code-top">salida de ./gradlew testDebugUnitTest</div><pre><span class="r">ValidarComidaTest > C2 nombre con solo espacios no es valido FAILED</span>
+    java.lang.AssertionError: expected:&lt;VACIO&gt; but was:&lt;null&gt;
+<span class="r">ValidarComidaTest > C3 calorias negativas no son validas FAILED</span>
+    java.lang.AssertionError: expected:&lt;NUMERO_INVALIDO&gt; but was:&lt;null&gt;
+<span class="g">ValidarComidaTest > C3 el cero si es valido PASSED</span>
+3 tests completed, 2 failed</pre></div>
+          <p class="note warn"><svg aria-hidden="true"><use href="#i-warn"/></svg><span><b>Mirá el tercero:</b> pasa en rojo porque la firma vacía devuelve "sin errores". Todavía no prueba nada. Cuando esté el código hay que hacerle el control negativo (paso 4). Y los dos que fallan, fallan <em>por el resultado</em> ("esperaba VACIO y vino null"), que es la razón correcta. Si fallaran por "Unresolved reference", el test no estaría probando nada todavía.</span></p>
+          <p>Commit del rojo, solo: <code>test(nutrition): cubrir validaciones de la carga manual</code>. Queda en la historia como prueba de que el test existía y fallaba antes del código.</p>
+        </div>
+      </li>
+
+      <li class="step green">
+        <span class="num">4</span>
+        <div class="step-body">
+          <h3>Otra sesión programa hasta el verde, sin tocar los tests</h3>
+          <span class="who">Sesión 3 · <code>/clear</code> o ventana nueva · empezá en modo plan (Shift+Tab)</span>
+          <div class="prompt"><div class="prompt-top"><span>Pedido para copiar</span><button class="copy" type="button">Copiar</button></div><pre>Leé specs/CONTEXTO.md, specs/funcionales/registro-comidas.md y los tests de ValidarComidaTest.
+Proponé un plan para que pasen C2 y C3 y para conectar la validación en AddFoodViewModel.
+No modifiques ningún archivo de test. Decime qué requisitos cubre el plan (RF, UI, NAV).</pre></div>
+          <p>Leés el plan, lo corregís si hace falta y lo aprobás. Recién ahí programa:</p>
+          <div class="code"><div class="code-top">ValidarComida.kt</div><pre><span class="k">fun</span> validarComida(f: FormularioComida): Map&lt;Campo, ErrorCampo&gt; = buildMap {
+    <span class="k">if</span> (f.nombre.isBlank()) put(Campo.NOMBRE, ErrorCampo.VACIO)
+    mapOf(
+        Campo.CALORIAS to f.calorias, Campo.PROTEINAS to f.proteinas,
+        Campo.CARBOHIDRATOS to f.carbohidratos, Campo.GRASAS to f.grasas,
+    ).forEach { (campo, texto) ->
+        <span class="k">val</span> numero = texto.replace(<span class="h">','</span>, <span class="h">'.'</span>).toDoubleOrNull()
+        <span class="k">if</span> (numero == <span class="k">null</span> || numero &lt; 0) put(campo, ErrorCampo.NUMERO_INVALIDO)
+    }
+}</pre></div>
+          <div class="result"><span class="pill green">3 tests completed, 0 failed</span><span class="pill green">control automático: OK</span></div>
+          <p><b>Control negativo del test que pasó a la primera:</b> le pedís a la IA que cambie <code>numero &lt; 0</code> por <code>numero &lt;= 0</code>, corra los tests, te muestre que "el cero sí es válido" ahora falla, y deshaga el cambio. Así ese test también quedó probado. Si es lógica de Room (el DAO), sus tests van en <code>androidTest</code> y se corren con el emulador abierto: <code>./gradlew connectedDebugAndroidTest</code>.</p>
+        </div>
+      </li>
+
+      <li class="step">
+        <span class="num">5</span>
+        <div class="step-body">
+          <h3>Revisores en limpio, en paralelo</h3>
+          <span class="who">Subagentes · ninguno vio la charla</span>
+          <div class="prompt"><div class="prompt-top"><span>Pedido para copiar</span><button class="copy" type="button">Copiar</button></div><pre>Usá en paralelo los subagentes revisor-requisitos (contra specs/funcionales/registro-comidas.md)
+y revisor-arquitectura sobre este cambio, y corré /code-review.
+Corregí solo lo marcado como BLOQUEA, CRÍTICA o ALTA. El resto anotalo como sugerencia.</pre></div>
+          <p>Máximo <b>dos vueltas</b> de revisar y corregir. Si a la segunda sigue mal, la sesión está llena de intentos fallidos: <code>/clear</code> y un pedido nuevo que incluya lo aprendido. Lo dice la guía de Anthropic y lo dice nuestra metodología.</p>
+          <p class="note info"><svg aria-hidden="true"><use href="#i-info"/></svg><span>Un revisor al que le pedís problemas casi siempre encuentra alguno, aunque esté bien. Si corregís todo, el código se llena de capas que nadie pidió. Solo lo que rompe un requisito es obligatorio.</span></p>
+        </div>
+      </li>
+
+      <li class="step">
+        <span class="num">6</span>
+        <div class="step-body">
+          <h3>Probás vos en el emulador</h3>
+          <p>Los tests prueban la lógica; vos probás lo que ve la persona. Escribís un nombre vacío, tocás Guardar y mirás que aparezca el error debajo del campo. Captura a <code>docs/evidencia/</code>.</p>
+        </div>
+      </li>
+
+      <li class="step">
+        <span class="num">7</span>
+        <div class="step-body">
+          <h3>Commit, pull request y bitácora</h3>
+          <p>La IA redacta; vos leés y commiteás desde tu usuario. Pull request con la plantilla, la tarea pasa a <b>En test</b>, una compañera revisa, aprueba y une a <code>main</code>. Ahí pasa a <b>Hecha</b>.</p>
+          <div class="git"><span style="color:var(--code-hl)">*</span>   Merge pull request #12 from feature/nutrition-validar-comida   <span style="color:var(--code-dim)">(lo une quien aprobó)</span>
+<span style="color:var(--code-hl)">|\</span>
+<span style="color:var(--code-hl)">| *</span> feat(nutrition): validar la comida antes de guardarla
+<span style="color:var(--code-hl)">| *</span> test(nutrition): cubrir validaciones de la carga manual   <span style="color:#F08C8C">(rojo)</span>
+<span style="color:var(--code-hl)">| *</span> docs(specs): agregar spec de registro de comidas
+<span style="color:var(--code-hl)">|/</span>
+<span style="color:var(--code-hl)">*</span>   ...main</div>
+          <p>Así el profe ve en la historia el camino completo: spec, test que fallaba, código que lo hizo pasar. Es justo la "data de cómo llegaron al resultado" que pidió.</p>
+        </div>
+      </li>
+    </ol>
+  </div>
+</section>
+
+<!-- 4. BUG -->
+<section id="bug">
+  <div class="wrap stack-lg">
+    <div class="example-head">
+      <span class="tag t-d">Ejemplo 2 · Carril D</span>
+      <h2>"Hay un bug": borré una comida y el total del día no bajó</h2>
+      <p class="scenario"><b>La situación.</b> Hector prueba Nutrition / 01: hay dos comidas (500 y 300 kcal), el total dice 800. Elimina la de 500 y el total sigue en 800. RF04 dice que el total tiene que cambiar. Lo que <b>no</b> hay que hacer: "arreglá el total que no anda". La IA cambia cosas hasta que <em>parece</em> andar y no queda prueba de nada.</p>
+    </div>
+
+    <ol class="steps">
+      <li class="step">
+        <span class="num">1</span>
+        <div class="step-body">
+          <h3>Anotalo con los pasos para reproducirlo</h3>
+          <p>En la pestaña <b>Bugs</b> del tablero: qué hiciste, qué esperabas, qué pasó. Si no es tu zona, avisás a la responsable (acá Sofi); lo puede arreglar cualquiera, pero ella revisa.</p>
+        </div>
+      </li>
+      <li class="step red">
+        <span class="num">2</span>
+        <div class="step-body">
+          <h3>Un test que falla mostrando el bug</h3>
+          <span class="who">Sesión con <code>TDD_ROJO=1 claude</code> · sin tocar código de la app</span>
+          <div class="prompt"><div class="prompt-top"><span>Pedido para copiar</span><button class="copy" type="button">Copiar</button></div><pre>Bug en Nutrition / 01: con dos comidas de 500 y 300 kcal el total muestra 800;
+elimino la de 500 y sigue en 800. Debería mostrar 300 (RF04).
+No modifiques código de app/src/main.
+Escribí un test en app/src/test/ que reproduzca exactamente esto con un repositorio falso,
+corrélo y mostrame que falla por el total, no por compilación.</pre></div>
+          <div class="code"><div class="code-top">NutritionViewModelTest.kt</div><pre>@get:Rule <span class="k">val</span> mainDispatcher = MainDispatcherRule()  <span class="c">// reemplaza Dispatchers.Main en tests</span>
+
+@Test
+<span class="k">fun</span> `al eliminar una comida el total del dia baja`() = runTest {
+    <span class="k">val</span> repo = FakeComidasRepository(comida(id = 1, kcal = 500), comida(id = 2, kcal = 300))
+    <span class="k">val</span> vm = NutritionViewModel(repo)
+    backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) { vm.estado.collect {} }
+
+    vm.onEliminar(id = 1)
+    advanceUntilIdle()
+
+    assertEquals(300, vm.estado.value.totalCalorias)
+}</pre></div>
+          <div class="result"><span class="pill red">expected:&lt;300&gt; but was:&lt;800&gt;</span></div>
+          <p><b>Un repositorio falso</b> (fake) es una versión de mentira que guarda las comidas en una lista en memoria. Sirve para probar el ViewModel sin Room ni emulador, en un segundo. Es lo que recomienda la documentación de Android.</p>
+          <p>Commit del rojo, solo: <code>test(nutrition): reproducir total que no baja al eliminar</code>.</p>
+        </div>
+      </li>
+      <li class="step">
+        <span class="num">3</span>
+        <div class="step-body">
+          <h3>Buscar la causa, no tapar el síntoma</h3>
+          <span class="who">Sesión nueva, en modo plan</span>
+          <div class="prompt"><div class="prompt-top"><span>Pedido para copiar</span><button class="copy" type="button">Copiar</button></div><pre>El test "al eliminar una comida el total del dia baja" falla. Encontrá la causa y explicámela
+en una oración antes de cambiar nada. Después proponé el arreglo.
+Prohibido modificar el test. Corré todos los tests al terminar, no solo ese.</pre></div>
+          <div class="code"><div class="code-top">la causa que encuentra</div><pre><span class="c">// NutritionViewModel, antes: el total se lee UNA vez al abrir la pantalla</span>
+init { viewModelScope.launch { total = repo.totalDelDia(hoy) } }   <span class="r">// suspend, no se entera de los cambios</span>
+
+<span class="c">// después: Room avisa cada vez que cambia la tabla y el total se recalcula solo</span>
+@Query(<span class="h">"SELECT COALESCE(SUM(calorias), 0) FROM comidas WHERE fecha = :fecha"</span>)
+<span class="k">fun</span> observarTotalDelDia(fecha: String): Flow&lt;Int&gt;</pre></div>
+          <div class="result"><span class="pill green">todos los tests: 0 failed</span></div>
+        </div>
+      </li>
+      <li class="step green">
+        <span class="num">4</span>
+        <div class="step-body">
+          <h3>La spec suma el caso que faltaba</h3>
+          <p>Si hubo bug, la spec tenía un hueco. Se agrega el criterio, así nadie lo rompe de nuevo sin que salte el test:</p>
+          <div class="code"><div class="code-top">specs/funcionales/registro-comidas.md</div><pre><span class="g">+ C5. CUANDO se guarda o se elimina una comida, el total del día DEBE
++     actualizarse sin salir de la pantalla. (RF04)</span></pre></div>
+          <p>Commit del arreglo: <code>fix(nutrition): observar el total del día desde Room</code> con <code>Refs: RF04</code>. Revisores, pull request y bitácora como siempre.</p>
+        </div>
+      </li>
+    </ol>
+
+    <div class="stack">
+      <h3>¿Y si el bug es visual o de navegación?</h3>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Tipo de bug</th><th>Qué hace de "test en rojo"</th><th>Qué hace de "verde"</th></tr></thead>
+          <tbody>
+            <tr><td><b>Visual</b><br>"En el emulador chico el título de Profile / 01 se corta"</td><td>La captura del emulador donde se ve cortado, al lado del frame de Figma</td><td>Captura en los dos tamaños (UI03) y <code>revisor-visual</code> dice APROBADA</td></tr>
+            <tr><td><b>Navegación</b><br>"Atrás desde Workout Complete vuelve a Active Workout"</td><td>Los pasos exactos y lo que dice <code>PANTALLAS.md</code> sobre el destino correcto</td><td>Recorrer los pasos y llegar al destino de la fila. Si se repite, un test de navegación</td></tr>
+            <tr><td><b>Datos</b><br>"Al rotar el teléfono el catálogo se pide de nuevo"</td><td>Un test del ViewModel que cuenta las llamadas al repositorio falso</td><td>El test pasa: una sola llamada (RF07)</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="note bad"><svg aria-hidden="true"><use href="#i-warn"/></svg><span><b>La trampa número uno de la IA con bugs:</b> "arreglar" el test en vez del código (por ejemplo, cambiar <code>assertEquals(300, ...)</code> por algo que pase siempre). Por eso el test rojo se commitea antes y en el pedido se prohíbe tocarlo. En la revisión del pull request, mirá que el commit del test no cambió después.</span></p>
+    </div>
+  </div>
+</section>
+
+<!-- 5. PANTALLA -->
+<section id="pantalla">
+  <div class="wrap stack-lg">
+    <div class="example-head">
+      <span class="tag t-b">Ejemplo 3 · Carril B</span>
+      <h2>"Tengo que hacer una pantalla": Profile / 01 Dashboard</h2>
+      <p class="scenario"><b>La situación.</b> Zaki arranca Profile / 01. Acá están los 65 puntos (40 de fidelidad y 25 de navegación), y el control no es un test de código: <b>es el frame del Figma</b>. La IA trabaja muy bien cuando tiene contra qué compararse.</p>
+    </div>
+    <ol class="steps">
+      <li class="step">
+        <span class="num">1</span>
+        <div class="step-body">
+          <h3>La spec ya existe: la fila de PANTALLAS.md</h3>
+          <p>Dice si lleva barra inferior (Profile / 01 sí, así que <b>no la dibuja</b>: la pone el <code>Scaffold</code>), a dónde lleva cada botón y qué datos usa (de demostración). No hace falta escribir nada en EARS.</p>
+        </div>
+      </li>
+      <li class="step">
+        <span class="num">2</span>
+        <div class="step-body">
+          <h3>Plan primero</h3>
+          <div class="prompt"><div class="prompt-top"><span>Pedido para copiar</span><button class="copy" type="button">Copiar</button></div><pre>Pantalla: Profile / 01 Dashboard (flujo Profile), su fila en specs/PANTALLAS.md.
+Requisitos: UI01, UI02, UI03, NAV02, NAV03.
+Leé specs/CONTEXTO.md, la fila y el frame del Figma.
+No programes todavía: proponé el plan, con los componentes del tema que reutilizás
+y los que faltarían.</pre></div>
+          <p class="note warn"><svg aria-hidden="true"><use href="#i-warn"/></svg><span>Si el plan dice "falta un componente" (por ejemplo una tarjeta de ajustes), <b>no lo crea en la pantalla</b>: es zona de Martu. Se le pide o se coordina con ella. Corregir un componente tiene que corregirlo en todas las pantallas (UI02).</span></p>
+        </div>
+      </li>
+      <li class="step">
+        <span class="num">3</span>
+        <div class="step-body">
+          <h3>Implementa y compara</h3>
+          <p>Con el plan aprobado programa: pantalla en <code>ProfileRoute</code> (con el ViewModel) y <code>ProfileScreen</code> (solo dibuja), textos en <code>strings.xml</code>, colores y tamaños del tema. Después sacás la captura en el emulador parecido al Figma y en otro tamaño:</p>
+          <div class="code"><div class="code-top">terminal</div><pre>adb shell screencap -p /sdcard/captura.png
+adb pull /sdcard/captura.png docs/evidencia/visual/profile-01-pixel5.png</pre></div>
+        </div>
+      </li>
+      <li class="step">
+        <span class="num">4</span>
+        <div class="step-body">
+          <h3>El revisor visual decide</h3>
+          <div class="prompt"><div class="prompt-top"><span>Pedido para copiar</span><button class="copy" type="button">Copiar</button></div><pre>Usá el subagente revisor-visual: compará docs/evidencia/visual/profile-01-pixel5.png
+y profile-01-chico.png con el frame Profile - 01 Dashboard de docs/figma/.</pre></div>
+          <p>Devuelve la lista ordenada por impacto ("el título es 20 Bold en Figma y en la app 18 SemiBold") y al final <b>APROBADA</b> o <b>CON CAMBIOS</b>. Se itera, con el mismo tope de dos vueltas. El pull request lleva Figma y app lado a lado.</p>
+        </div>
+      </li>
+    </ol>
+    <p class="note info"><svg aria-hidden="true"><use href="#i-info"/></svg><span><b>¿Por qué acá no hay TDD?</b> Porque lo que se evalúa es cómo se ve, y eso lo prueba la comparación con Figma mejor que cualquier test de código. Los tests de capturas (Roborazzi) protegen después que nadie rompa una pantalla ya aprobada, pero son opcionales: ver "Qué ajusté".</span></p>
+  </div>
+</section>
+
+<!-- 6. CHICO -->
+<section id="chico">
+  <div class="wrap stack-lg">
+    <div class="example-head">
+      <span class="tag t-a">Ejemplo 4 · Carril A</span>
+      <h2>"Es una pavada": el botón dice "Start workout" y en Figma "Start Workout"</h2>
+    </div>
+    <div class="prompt"><div class="prompt-top"><span>Pedido para copiar</span><button class="copy" type="button">Copiar</button></div><pre>En strings.xml la clave start_workout dice "Start workout". Cambiala a "Start Workout",
+como en el frame Workout / 04 Pre Workout.</pre></div>
+    <p>Sin spec, sin plan, sin entrevista. La guía de Anthropic lo dice así: <em>"si podés describir el cambio en una oración, salteate el plan"</em>. Lo que <b>no</b> se saltea: el control automático corre igual, va en su rama, pull request con una aprobación. Commit: <code>fix(workout): corregir mayúsculas del botón según Figma</code>.</p>
+    <p class="note warn"><svg aria-hidden="true"><use href="#i-warn"/></svg><span>Si al hacerlo aparece algo más grande ("ah, pero este botón también está mal en otras 5 pantallas"), ya no es carril A: es un componente compartido, y es zona de Martu.</span></p>
+  </div>
+</section>
+
+<!-- 7. SIEMPRE -->
+<section id="siempre">
+  <div class="wrap stack-lg">
+    <div class="stack">
+      <span class="eyebrow">En los cuatro carriles</span>
+      <h2>Lo que va siempre, sea grande o chico</h2>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Momento</th><th>Qué pasa</th><th>En el Kanban</th></tr></thead>
+        <tbody>
+          <tr><td>Arrancás</td><td>Rama desde <code>main</code> actualizado: <code>feature/flujo-tema</code>. Como mucho 2 tareas en curso por persona.</td><td>En curso</td></tr>
+          <tr><td>Cada turno de la IA</td><td>El control automático corre solo: tests unitarios y reglas del grupo (la UI no llama a Retrofit ni al DAO, no hay textos escritos en el código). Si falla, la IA no puede decir "listo".</td><td></td></tr>
+          <tr><td>Entre tareas</td><td><code>/clear</code>. Mezclar tareas en una misma sesión hace que la IA rinda peor.</td><td></td></tr>
+          <tr><td>Abrís el pull request</td><td>Con la plantilla: qué cambia, requisitos, cómo probarlo, evidencia, qué hizo la IA. Pegás el link en el campo "Pull request" de la tarea.</td><td>En test</td></tr>
+          <tr><td>Revisión</td><td>Otra integrante, en menos de 24 horas, con Conventional Comments. La une a <code>main</code> quien aprobó, con merge commit.</td><td>Hecha</td></tr>
+          <tr><td>Al cerrar</td><td>La IA agrega la entrada en <code>docs/BITACORA.md</code>: qué propuso la IA y qué cambiaron ustedes. Se actualiza <code>REQUISITOS.md</code>.</td><td></td></tr>
+          <tr><td>Antes del push</td><td><code>git log -1</code>: el autor sos vos y no hay ninguna línea <code>Co-Authored-By</code> de la IA.</td><td></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- 8. AJUSTES -->
+<section id="ajustes">
+  <div class="wrap stack-lg">
+    <div class="stack">
+      <span class="eyebrow">Sobre la metodología que ya tenemos</span>
+      <h2>Qué mantuve, qué ajusté y por qué</h2>
+      <p class="lead">La metodología del grupo está bien armada y casi todo coincide con lo que recomiendan Anthropic, GitHub y Martin Fowler. Encontré siete cosas para ajustar: dos que hubieran trabado el trabajo, tres que faltaban y dos para no sobrecargar diez días.</p>
+    </div>
+    <div class="stack">
+      <h3>Se mantiene tal cual</h3>
+      <div class="keep"><span>La consigna es la spec</span><span>Specs en EARS</span><span>Entrevista para escribirlas</span><span>auditor-spec antes de programar</span><span>Tests y código en sesiones distintas</span><span>Revisores en contexto limpio</span><span>Evidencia, no "listo"</span><span>Máximo dos vueltas</span><span>main y feature, merge commit</span><span>Sin firma de IA</span><span>Bitácora</span></div>
+    </div>
+    <div class="stack">
+      <article class="change">
+        <span class="tag t-d">Hubiera trabado</span>
+        <h4>1. El control automático no deja terminar a la sesión que escribe tests en rojo</h4>
+        <p>El hook del final de cada turno corre los tests y, si fallan, no deja terminar. Pero en TDD la sesión de tests <em>tiene</em> que dejarlos fallando. Se queda en un loop. <b>Arreglo:</b> esa sesión se abre con <code>TDD_ROJO=1 claude</code> (en Windows, PowerShell: <code>$env:TDD_ROJO=1; claude</code>). Si usan la app de escritorio en vez de la terminal, se crea un archivo vacío <code>.tdd-rojo</code> en la raíz del repo mientras dura esa sesión (va en <code>.gitignore</code>) y se borra al terminar. <code>scripts/control-rapido.sh</code> suma al principio:</p>
+        <div class="code"><pre><span class="c"># En la sesión de tests en rojo solo se controlan las reglas, no los tests</span>
+<span class="k">if</span> [ <span class="h">"$TDD_ROJO"</span> = <span class="h">"1"</span> ] || [ -f .tdd-rojo ]; <span class="k">then</span>
+  ./scripts/reglas.sh || exit 2
+  exit 0
+<span class="k">fi</span></pre></div>
+        <p class="why">Por qué: el hook de Stop bloquea el final del turno mientras el script devuelva 2 (documentación de hooks de Claude Code).</p>
+      </article>
+      <article class="change">
+        <span class="tag t-d">Hubiera trabado</span>
+        <h4>2. Los tests de Room no corren donde decía</h4>
+        <p>Los tests del DAO con base en memoria necesitan Android: van en <code>androidTest</code> y se corren con el emulador (<code>./gradlew connectedDebugAndroidTest</code>), a mano antes del pull request. El control automático y la CI corren <code>test/</code>, sin emulador. Por eso la lógica (validaciones, repositorio, ViewModel) se prueba en <code>test/</code> con repositorios falsos, y en <code>androidTest</code> queda solo lo que es de Room.</p>
+        <p class="why">Por qué: la documentación de Android recomienda probar Room en un dispositivo con <code>inMemoryDatabaseBuilder</code> y desaconseja Robolectric para esto; para probar lógica que no es la base, recomienda no levantar la base.</p>
+      </article>
+      <article class="change">
+        <span class="tag t-c">Faltaba</span>
+        <h4>3. Un camino para cada tamaño de cambio</h4>
+        <p>El ciclo de 8 pasos (capa 6) parecía para todo. Ahora hay cuatro carriles: el completo es solo para lógica de datos.</p>
+        <p class="why">Por qué: Fowler documenta el costo de usar el proceso entero para un bug chico; la guía de Anthropic dice que planificar agrega trabajo y conviene saltearlo cuando el cambio entra en una oración.</p>
+      </article>
+      <article class="change">
+        <span class="tag t-c">Faltaba</span>
+        <h4>4. Un flujo para los bugs</h4>
+        <p>No estaba. Ahora: test que reproduce, commit del rojo solo, prohibido tocar el test, causa en una oración, suite completa, y la spec suma el caso.</p>
+        <p class="why">Por qué: la guía de Anthropic pide "escribí un test que falle reproduciendo el problema y después arreglalo"; el error documentado de los agentes es debilitar el test para que pase.</p>
+      </article>
+      <article class="change">
+        <span class="tag t-c">Faltaba</span>
+        <h4>5. Firmas vacías para que el rojo sea el correcto</h4>
+        <p>En Kotlin, un test que llama a algo que no existe no compila, y eso no es un rojo válido. La sesión de tests crea las firmas vacías y el test falla por el resultado. Además, el test rojo va en un commit propio: con merge commit queda en la historia.</p>
+      </article>
+      <article class="change">
+        <span class="tag t-b">Para no sobrecargar</span>
+        <h4>6. ktlint y Roborazzi, después</h4>
+        <p>El control automático arranca solo con tests y reglas. ktlint (formato) y Roborazzi (tests de capturas) se suman si alguien tiene tiempo después del hito. Si el plugin no está instalado y el script lo llama, el control falla siempre y nadie puede trabajar.</p>
+      </article>
+      <article class="change">
+        <span class="tag t-b">Para no sobrecargar</span>
+        <h4>7. Las fechas del archivo que tenías</h4>
+        <p>La versión que me pasaste dice hito el <b>martes</b> 21 y entrega el <b>martes</b> 28. Son <b>miércoles</b> y la entrega es a las 19:00. La versión del plugin ya está corregida; conviene que en el repo quede esa.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- 9. QUIEN -->
+<section id="quien">
+  <div class="wrap stack-lg">
+    <div class="stack">
+      <span class="eyebrow">Por rol</span>
+      <h2>Qué carril va a usar más cada una</h2>
+    </div>
+    <div class="people">
+      <div class="person"><h4>Martu</h4><div class="tags"><span class="tag t-b">B</span><span class="tag t-a">A</span></div><p>Tema y componentes, después Acceso e Inicio. Cuidar que cada componente sea uno solo y lo usen todas.</p></div>
+      <div class="person"><h4>Fiore</h4><div class="tags"><span class="tag t-b">B</span></div><p>Su spec es <code>PANTALLAS.md</code>. El esqueleto se programa contra esa tabla. Opcional: un test que verifique que cada pantalla del inventario tiene su ruta.</p></div>
+      <div class="person"><h4>Hector</h4><div class="tags"><span class="tag t-c">C</span><span class="tag t-b">B</span></div><p>Retrofit, caché en Room y estados de carga y error con spec y TDD (MockWebServer para el servidor). Después las 7 pantallas de Workout.</p></div>
+      <div class="person"><h4>Sofi</h4><div class="tags"><span class="tag t-c">C</span><span class="tag t-b">B</span></div><p>Room de comidas con spec y TDD: validaciones, listado por fecha, eliminación y total. Después las 8 de Nutrition.</p></div>
+      <div class="person"><h4>Zaki</h4><div class="tags"><span class="tag t-b">B</span></div><p>Las 18 pantallas de Coach, Progress y Profile, y coordina el revisor visual de las 37.</p></div>
+      <div class="person"><h4>Todas</h4><div class="tags"><span class="tag t-d">D</span></div><p>Cuando algo se rompe, sea de quien sea: se anota en Bugs y se arregla por el carril D.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- 10. PRACTICA -->
+<section id="practica">
+  <div class="wrap stack-lg">
+    <div class="stack">
+      <span class="eyebrow">Para que quede</span>
+      <h2>Practicá: ¿qué carril es?</h2>
+      <p class="lead">Seis situaciones reales del parcial. Tocá la que te parece.</p>
+    </div>
+    <div class="quiz" id="quiz"></div>
+    <p class="score" id="score" aria-live="polite">0 de 6</p>
+  </div>
+</section>
+
+<section id="fuentes">
+  <div class="wrap stack">
+    <span class="eyebrow">De dónde sale esto</span>
+    <h2>Fuentes</h2>
+    <ul class="sources">
+      <li><a href="https://code.claude.com/docs/en/best-practices" target="_blank" rel="noopener">Best practices for Claude Code</a> (Anthropic): dar un control que se pueda correr, explorar, planificar y programar, escritor y revisor, tests de un lado y código del otro, dos correcciones y <code>/clear</code>.</li>
+      <li><a href="https://www.martinfowler.com/articles/exploring-gen-ai/sdd-3-tools.html" target="_blank" rel="noopener">Understanding Spec-Driven Development: Kiro, spec-kit, and Tessl</a> (martinfowler.com): niveles de SDD y el costo de usarlo para cambios chicos.</li>
+      <li><a href="https://github.blog/ai-and-ml/generative-ai/spec-driven-development-with-ai-get-started-with-a-new-open-source-toolkit/" target="_blank" rel="noopener">Spec-driven development with AI</a> (GitHub): especificar, planificar, tareas e implementar; la persona dirige y verifica.</li>
+      <li><a href="https://developer.android.com/training/data-storage/room/testing-db" target="_blank" rel="noopener">Test and debug your database</a> (Android Developers): Room con base en memoria, en dispositivo.</li>
+      <li><a href="https://developer.android.com/kotlin/flow/test" target="_blank" rel="noopener">Testing Kotlin flows on Android</a> (Android Developers): ViewModel con StateFlow, repositorios falsos, <code>runTest</code> y <code>backgroundScope</code>.</li>
+      <li><a href="https://developertoolkit.ai/en/developer-scorecard-guide/test-driven-fixing/" target="_blank" rel="noopener">Test-Driven Bug Fixing: Red Test First, Lock the Test</a>: commitear el rojo y no dejar que el agente toque el test.</li>
+      <li><a href="https://en.wikipedia.org/wiki/Easy_Approach_to_Requirements_Syntax" target="_blank" rel="noopener">Easy Approach to Requirements Syntax (EARS)</a>: las cinco plantillas de requisitos.</li>
+      <li>Metodología del grupo (secciones 5, 6, 7, 10 y 17) y la consigna del profe, que manda ante cualquier duda.</li>
+    </ul>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">Guía del grupo VORA Coach · Taller de Programación 3, ORT · 18/10/2026</div>
+</footer>
+
+<script>
+(function () {
+  // Botones de copiar
+  document.querySelectorAll('.prompt').forEach(function (box) {
+    var btn = box.querySelector('.copy');
+    var pre = box.querySelector('pre');
+    if (!btn || !pre) return;
+    btn.addEventListener('click', function () {
+      var text = pre.innerText;
+      var done = function () { btn.textContent = 'Copiado'; setTimeout(function () { btn.textContent = 'Copiar'; }, 1600); };
+      var fallback = function () {
+        var r = document.createRange(); r.selectNodeContents(pre);
+        var s = window.getSelection(); s.removeAllRanges(); s.addRange(r);
+        btn.textContent = 'Seleccionado: Cmd+C';
+      };
+      try {
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(text).then(done, fallback);
+        } else { fallback(); }
+      } catch (e) { fallback(); }
+    });
+  });
+
+  // Quiz
+  var opciones = [
+    { k: 'A', t: 'A · Chico' }, { k: 'B', t: 'B · Pantalla' },
+    { k: 'C', t: 'C · Datos' }, { k: 'D', t: 'D · Bug' }, { k: 'CB', t: 'C y después B' }
+  ];
+  var preguntas = [
+    { q: 'El título de Nutrition / 01 está en negro puro y en el tema es "Texto principal".', a: 'A', f: 'Se dice en una oración y es una línea: usar el color del tema. Directo, con su pull request chico.' },
+    { q: 'Armar Workout / 03, el detalle de un entrenamiento que viene del servidor.', a: 'CB', f: 'Primero C: traer el detalle con Retrofit y guardarlo en Room, con spec y tests (RF01, RF02). Después B: dibujar la pantalla contra el Figma.' },
+    { q: 'Al rotar el teléfono, el catálogo de entrenamientos se vuelve a pedir al servidor.', a: 'D', f: 'Algo que tendría que andar (RF07) no anda: es un bug. Test del ViewModel que cuenta las llamadas al repositorio falso, rojo, arreglo, verde.' },
+    { q: 'Hacer Progress / 02 Dashboard con datos de demostración.', a: 'B', f: 'Es algo que se ve y no trae datos reales: la spec es su fila de PANTALLAS.md y el control es el Figma.' },
+    { q: 'Que un detalle nunca descargado avise "todavía no está disponible sin conexión".', a: 'C', f: 'Es lógica de datos de RF02 (qué hacer si no hay red ni caché): criterio EARS con SI ... ENTONCES, test con el servidor caído y después el código.' },
+    { q: 'Una variable se llama "calroias" en vez de "calorias".', a: 'A', f: 'Un renombre. Directo; el control automático confirma que todo sigue compilando y pasando.' }
+  ];
+  var quiz = document.getElementById('quiz');
+  var scoreEl = document.getElementById('score');
+  var aciertos = 0, respondidas = 0;
+  preguntas.forEach(function (p, i) {
+    var card = document.createElement('div'); card.className = 'qcard';
+    var qt = document.createElement('p'); qt.className = 'qtext'; qt.textContent = (i + 1) + '. ' + p.q; card.appendChild(qt);
+    var opts = document.createElement('div'); opts.className = 'opts';
+    var fb = document.createElement('p'); fb.className = 'feedback'; fb.hidden = true;
+    var answered = false;
+    opciones.forEach(function (o) {
+      var b = document.createElement('button'); b.type = 'button'; b.className = 'opt'; b.textContent = o.t;
+      b.id = 'q' + i + '-' + o.k;
+      b.addEventListener('click', function () {
+        if (answered) return; answered = true; respondidas++;
+        var ok = o.k === p.a;
+        if (ok) { aciertos++; b.classList.add('right'); }
+        else {
+          b.classList.add('wrong');
+          var correct = opts.querySelector('#q' + i + '-' + p.a);
+          if (correct) correct.classList.add('right');
+        }
+        fb.textContent = (ok ? '¡Bien! ' : 'Casi. ') + p.f; fb.hidden = false;
+        scoreEl.textContent = aciertos + ' de ' + preguntas.length + (respondidas === preguntas.length ? (aciertos === preguntas.length ? ': lo tenés.' : ': repasá los que fallaste.') : '');
+      });
+      opts.appendChild(b);
+    });
+    card.appendChild(opts); card.appendChild(fb); quiz.appendChild(card);
+  });
+})();
+</script>
+</body>
+</html>
