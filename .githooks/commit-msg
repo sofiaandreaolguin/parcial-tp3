@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+# Frena commits que nombran a una IA como autora o coautora. Los commits van solo con el usuario de cada integrante.
+# Se activa una vez por persona, dentro del repo: git config core.hooksPath .githooks
+if grep -qiE '^co-authored-by:.*(claude|anthropic|copilot|openai|gemini|cursor)|generated with|claude\.ai/code' "$1"; then
+  echo "El commit menciona a una IA como autora o coautora. Sacá esa línea: los commits van solo con tu usuario." >&2
+  exit 1
+fi
+exit 0

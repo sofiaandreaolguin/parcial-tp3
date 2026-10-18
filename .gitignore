@@ -13,3 +13,6 @@
 .externalNativeBuild
 .cxx
 local.properties
+
+# Modo "tests en rojo" de la IA (ver CLAUDE.md): nunca se sube
+.tdd-rojo
