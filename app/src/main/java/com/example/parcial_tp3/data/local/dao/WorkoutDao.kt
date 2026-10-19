@@ -1,19 +1,22 @@
 package com.example.parcial_tp3.data.local.dao
 
 import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Upsert
 import com.example.parcial_tp3.data.local.entity.WorkoutEntity
 import kotlinx.coroutines.flow.Flow
 
-// FIRMAS VACIAS (tests en rojo): las consultas reales se escriben en el paso de implementar.
+/**
+ * Cache de entrenamientos (RF02). Lo minimo para guardar y leer: la tarea j suma el detalle.
+ */
 @Dao
 interface WorkoutDao {
 
-    @Query("SELECT * FROM workouts WHERE 0")
+    /** Flow: Room vuelve a emitir cada vez que cambia la tabla. */
+    @Query("SELECT * FROM workouts ORDER BY id")
     fun observeAll(): Flow<List<WorkoutEntity>>
 
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    /** Upsert: si el id ya esta, lo reemplaza (refrescar la cache no duplica filas). */
+    @Upsert
     suspend fun upsertAll(workouts: List<WorkoutEntity>)
 }

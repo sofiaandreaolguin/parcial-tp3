@@ -33,7 +33,17 @@ android {
     }
 
     buildTypes {
+        // Escenarios del mock para probar RF05 (specs/API.md). Solo en debug:
+        // api.mockScenario=empty | error | malformed y api.mockDelayMs=3000 en local.properties.
+        debug {
+            val mockScenario = localProperties.getProperty("api.mockScenario", "")
+            val mockDelayMs = localProperties.getProperty("api.mockDelayMs", "0")
+            buildConfigField("String", "MOCK_SCENARIO", "\"$mockScenario\"")
+            buildConfigField("int", "MOCK_DELAY_MS", mockDelayMs)
+        }
         release {
+            buildConfigField("String", "MOCK_SCENARIO", "\"\"")
+            buildConfigField("int", "MOCK_DELAY_MS", "0")
             optimization {
                 enable = true
                 packageScope = setOf("androidx.**", "kotlin.**", "kotlinx.**")
