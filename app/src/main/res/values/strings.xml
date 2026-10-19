@@ -12,6 +12,11 @@
     <string name="volver">Back</string>
     <string name="entrar_demo">Enter (demo)</string>
 
+    <!-- Provisorios del esqueleto (VC-e). Los reemplaza Tema y componentes (VC-d) con
+         los iconos del Figma, que son dibujos propios y no de Material. -->
+    <string name="placeholder_pestana">•</string>
+    <string name="placeholder_volver">‹</string>
+
     <!-- Nombres de los frames del Figma, uno por ruta (33).
          Son provisorios: los usa PantallaVacia hasta que cada pantalla se maquete.
          Salen de specs/PANTALLAS.md y estan escritos igual que el frame. -->

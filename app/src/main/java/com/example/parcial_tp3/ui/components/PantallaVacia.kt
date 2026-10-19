@@ -47,7 +47,10 @@ fun PantallaVacia(
                 navigationIcon = {
                     // Flecha de relleno: la definitiva viene con VoraTopBar (tarea VC-d).
                     IconButton(onClick = onVolver) {
-                        Text(text = "‹", style = MaterialTheme.typography.titleLarge)
+                        Text(
+                            text = stringResource(R.string.placeholder_volver),
+                            style = MaterialTheme.typography.titleLarge,
+                        )
                     }
                 },
             )

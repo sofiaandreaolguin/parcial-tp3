@@ -5,6 +5,7 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
+import com.example.parcial_tp3.R
 import com.example.parcial_tp3.ui.navigation.VoraTab
 
 /**
@@ -30,7 +31,7 @@ fun VoraBottomBar(
             NavigationBarItem(
                 selected = tab == selected,
                 onClick = { onTab(tab) },
-                icon = { Text("•") },
+                icon = { Text(stringResource(R.string.placeholder_pestana)) },
                 label = { Text(stringResource(tab.etiqueta)) },
             )
         }
