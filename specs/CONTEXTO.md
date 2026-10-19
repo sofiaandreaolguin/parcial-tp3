@@ -47,9 +47,9 @@ Repositorio (inyectado por constructor)
 - Cambio de pestaña: `popUpTo` a la pantalla base de Home con `saveState`, `launchSingleTop` y `restoreState`. **No** `popUpTo(startDestination)` ni `findStartDestination()`: el inicio del `NavHost` es el login y se saca de la pila al entrar.
 - Pantallas más altas que el frame (unos 850 dp): llevan scroll (UI03).
 
-## 4. Estructura de carpetas (propuesta)
+## 4. Estructura de carpetas
 
-> Propuesta a partir de la metodología. Si en la tarea b se acordó otra, manda la de la tarea b y se corrige acá.
+> **Acordada el 19/10/2026** con el grupo. Antes era una propuesta; Hector marcó que el profe siempre lo maneja con una carpeta `screens`, así que se usa esa y adentro va una subcarpeta por flujo. Cierra la parte de carpetas de la tarea VC-b.
 
 ```
 app/src/main/java/com/example/parcial_tp3/
@@ -58,7 +58,15 @@ app/src/main/java/com/example/parcial_tp3/
 │   ├── theme/            # tema: colores, tipografía, espaciados, radios (Martu)
 │   ├── components/       # botones, tarjetas, campos, VoraTopBar, VoraBottomBar (Martu)
 │   ├── navigation/       # rutas, RUTAS_CON_BARRA, un NavGraph por flujo (Fiore)
-│   └── <flujo>/          # access, home, voice, workout, nutrition, progress, profile
+│   ├── components/       # PantallaVacia y la barra, mientras no esté el tema
+│   └── screens/          # las 37 pantallas, una subcarpeta por flujo
+│       ├── access/       #   Login 01 y 02
+│       ├── home/         #   Home 01 y 02
+│       ├── voice/        #   los 6 frames de Voice (2 rutas)
+│       ├── workout/      #   las 7 de Workout
+│       ├── nutrition/    #   las 8 de Nutrition
+│       ├── progress/     #   las 6 de Progress
+│       └── profile/      #   las 6 de Profile
 │                         # cada pantalla: XxxRoute + XxxScreen + XxxViewModel + XxxUiState
 ├── domain/model/         # modelos de la app (Workout, Exercise, Meal)
 ├── data/
@@ -68,7 +76,11 @@ app/src/main/java/com/example/parcial_tp3/
 └── di/                   # módulos de Hilt
 ```
 
-`scripts/reglas.sh` controla que nada dentro de `ui/` importe `retrofit2` ni `data.remote` o `data.local`. Si cambia la estructura, se ajusta ese script.
+Cada subcarpeta de `screens/` tiene un `LEEME.md` con las pantallas de ese flujo, su ruta, si llevan barra, su estado y lo que hay que cuidar al maquetarlas.
+
+`scripts/reglas.sh` controla que nada dentro de `ui/` importe `retrofit2` ni `data.remote` o `data.local`, y que no haya texto escrito en el código. Como busca en todo `ui/`, `screens/` ya queda cubierto sin tocar el script.
+
+**Para reemplazar una pantalla de relleno:** en el grafo de tu flujo (`ui/navigation/XxxNavGraph.kt`), cambiá `PantallaVacia(...)` por tu `XxxRoute(...)`. No se toca `MainActivity` ni la barra.
 
 ## 5. Nombres
 
