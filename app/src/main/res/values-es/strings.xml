@@ -1,0 +1,57 @@
+<resources>
+    <string name="app_name">parcial-tp3</string>
+
+    <!-- Barra inferior (5 destinos). Los textos salen del Figma, en ingles. -->
+    <string name="tab_home">Inicio</string>
+    <string name="tab_workout">Entrenamiento</string>
+    <string name="tab_nutrition">Nutrición</string>
+    <string name="tab_progress">Progreso</string>
+    <string name="tab_profile">Perfil</string>
+
+    <!-- Acciones comunes -->
+    <string name="volver">Volver</string>
+    <string name="entrar_demo">Entrar (demostración)</string>
+
+    <!-- Nombres de los frames del Figma, uno por ruta (33).
+         Son provisorios: los usa PantallaVacia hasta que cada pantalla se maquete.
+         Salen de specs/PANTALLAS.md y estan escritos igual que el frame. -->
+    <string name="pant_login_01">Login - 01 — SignIn</string>
+    <string name="pant_login_02">Login - 02 — SignUp</string>
+
+    <string name="pant_home_01">Home / 01 — Dashboard</string>
+    <string name="pant_home_02">Home / 02 — Notifications</string>
+
+    <string name="pant_voice">Voice / 01–04 y 06 — Idle · Listening · Processing · Speaking · Error</string>
+    <string name="pant_voice_05">Voice / 05 — Conversation</string>
+
+    <string name="pant_workout_01">Workout / 01 — Dashboard</string>
+    <string name="pant_workout_02">Workout / 02 — Weekly Plan</string>
+    <string name="pant_workout_03">Workout / 03 — Workout Details</string>
+    <string name="pant_workout_04">Workout / 04 — Pre Workout</string>
+    <string name="pant_workout_05">Workout / 05 — Active Workout</string>
+    <string name="pant_workout_06">Workout / 06 — Exercise Details</string>
+    <string name="pant_workout_07">Workout / 07 — Workout Complete</string>
+
+    <string name="pant_nutrition_01">Nutrition / 01 — Dashboard</string>
+    <string name="pant_nutrition_02">Nutrition / 02 — Today\'s Meals</string>
+    <string name="pant_nutrition_03">Nutrition / 03 — Add Food</string>
+    <string name="pant_nutrition_04">Nutrition / 04 — Voice Food Logging</string>
+    <string name="pant_nutrition_05">Nutrition / 05 — Food Analysis</string>
+    <string name="pant_nutrition_06">Nutrition / 06 — Photo Analysis</string>
+    <string name="pant_nutrition_07">Nutrition / 07 — Food Confirmation</string>
+    <string name="pant_nutrition_08">Nutrition / 08 — Meal Details</string>
+
+    <string name="pant_progress_01">Progress / 01 — Today\'s Overview</string>
+    <string name="pant_progress_02">Progress / 02 — Dashboard</string>
+    <string name="pant_progress_03">Progress / 03 — Workout Progress</string>
+    <string name="pant_progress_04">Progress / 04 — Nutrition Progress</string>
+    <string name="pant_progress_05">Progress / 05 — Health Trends</string>
+    <string name="pant_progress_06">Progress / 06 — Weekly Review</string>
+
+    <string name="pant_profile_01">Profile / 01 — Dashboard</string>
+    <string name="pant_profile_02">Profile / 02 — Edit Profile</string>
+    <string name="pant_profile_03">Profile / 03 — Goals &amp; Preferences</string>
+    <string name="pant_profile_04">Profile / 04 — Nutrition Preferences</string>
+    <string name="pant_profile_05">Profile / 05 — Voice &amp; AI Settings</string>
+    <string name="pant_profile_06">Profile / 06 — Settings</string>
+</resources>

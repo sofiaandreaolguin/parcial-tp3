@@ -1,0 +1,74 @@
+package com.example.parcial_tp3.ui.navigation
+
+import androidx.compose.ui.res.stringResource
+import androidx.navigation.NavController
+import androidx.navigation.NavGraphBuilder
+import androidx.navigation.NavType
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.navigation
+import androidx.navigation.navArgument
+import com.example.parcial_tp3.R
+import com.example.parcial_tp3.ui.components.PantallaVacia
+
+/**
+ * Nutricion: 8 pantallas. 01, 02, 03, 06, 07 y 08 con barra; 04 y 05 encima.
+ *
+ * Los casos que sorprenden estan asi en el Figma y se respetan: 03, 06, 07 y 08
+ * llevan barra aunque parezcan pasos de un flujo.
+ *
+ * NAV05: 04, 05 y 06 son simuladas y no piden microfono ni camara.
+ */
+fun NavGraphBuilder.nutritionGraph(nav: NavController) {
+    navigation(startDestination = Rutas.NUTRITION_DASHBOARD, route = Rutas.NUTRITION_GRAPH) {
+
+        composable(Rutas.NUTRITION_DASHBOARD) {
+            PantallaVacia(nombre = stringResource(R.string.pant_nutrition_01))
+        }
+
+        composable(Rutas.TODAYS_MEALS) {
+            PantallaVacia(nombre = stringResource(R.string.pant_nutrition_02))
+        }
+
+        composable(Rutas.ADD_FOOD) {
+            PantallaVacia(nombre = stringResource(R.string.pant_nutrition_03))
+        }
+
+        composable(Rutas.VOICE_FOOD_LOGGING) {
+            PantallaVacia(
+                nombre = stringResource(R.string.pant_nutrition_04),
+                onVolver = { nav.popBackStack() },
+            )
+        }
+
+        composable(Rutas.FOOD_ANALYSIS) {
+            PantallaVacia(
+                nombre = stringResource(R.string.pant_nutrition_05),
+                onVolver = { nav.popBackStack() },
+            )
+        }
+
+        composable(Rutas.PHOTO_ANALYSIS) {
+            PantallaVacia(nombre = stringResource(R.string.pant_nutrition_06))
+        }
+
+        composable(
+            route = Rutas.FOOD_CONFIRMATION,
+            // Sin mealId (-1) es una comida nueva; con id se edita una ya guardada (NAV04).
+            arguments = listOf(
+                navArgument(Rutas.ARG_MEAL_ID) {
+                    type = NavType.LongType
+                    defaultValue = -1L
+                },
+            ),
+        ) {
+            PantallaVacia(nombre = stringResource(R.string.pant_nutrition_07))
+        }
+
+        composable(
+            route = Rutas.MEAL_DETAILS,
+            arguments = listOf(navArgument(Rutas.ARG_MEAL_ID) { type = NavType.LongType }),
+        ) {
+            PantallaVacia(nombre = stringResource(R.string.pant_nutrition_08))
+        }
+    }
+}
