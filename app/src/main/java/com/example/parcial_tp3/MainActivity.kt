@@ -1,7 +1,9 @@
 package com.example.parcial_tp3
 
+import android.graphics.Color
 import android.os.Bundle
 import androidx.activity.ComponentActivity
+import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
@@ -34,7 +36,16 @@ import dagger.hilt.android.AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
+        // El tema de VORA es solo modo claro (el Figma no tiene oscuro, UI01), asi que la barra
+        // de estado se fija a mano. Sin argumentos, enableEdgeToEdge elige el color de los iconos
+        // segun el modo oscuro DEL CELULAR: en un celu en oscuro los pintaba blancos sobre nuestro
+        // fondo claro y no se leian. SystemBarStyle.light = "el fondo es claro, pinta los iconos
+        // oscuros" (se nombra por el fondo, no por el icono). Lo mismo abajo, que VoraBottomBar
+        // tambien usa colorScheme.surface, que es claro.
+        enableEdgeToEdge(
+            statusBarStyle = SystemBarStyle.light(Color.TRANSPARENT, Color.TRANSPARENT),
+            navigationBarStyle = SystemBarStyle.light(Color.TRANSPARENT, Color.TRANSPARENT),
+        )
         setContent {
             Parcialtp3Theme {
                 VoraApp()
