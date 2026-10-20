@@ -37,6 +37,8 @@ object VoraSpacing {
  */
 @Immutable
 object VoraRadius {
+    /** Punta de las barras de los graficos (medido en Weekly Steps Trend: 8 px a 2x). */
+    val r4 = 4.dp
     val r8 = 8.dp
     val r12 = 12.dp
     val r16 = 16.dp
@@ -63,6 +65,28 @@ object VoraSizes {
     val rowIconCircle = 36.dp
     /** Circulo de check de una tarjeta de opcion. */
     val checkCircle = 20.dp
+
+    // Indicadores (lamina 04: "Anillo 72 px · barras 4 px · senal 8 px")
+    val ring = 72.dp
+    val ringStroke = 6.dp
+    val progressBar = 4.dp
+    val statusDot = 8.dp
+    /** Divisor vertical entre columnas de una fila de estadisticas. */
+    val statDivider = 38.dp
+    /** Botones redondos de - y + del selector (Active Workout). */
+    val stepperButton = 36.dp
+    /** Orbe grande de VORA en las pantallas de Voice. */
+    val orb = 140.dp
+    /** Esfera chica de VORA: avatar de Conversation y de las tarjetas "VORA Insight". */
+    val orbSmall = 28.dp
+    /** Barras del grafico: 24 en Training Volume, 18 en Weekly Steps Trend. */
+    val barWidth = 24.dp
+    val barWidthNarrow = 18.dp
+    val chartHeight = 72.dp
+    /** Interruptor de Voice & AI Settings: pista de 44 x 24 y perilla de 20. */
+    val toggleWidth = 44.dp
+    val toggleHeight = 24.dp
+    val toggleThumb = 20.dp
 }
 
 /** Las formas de Material 3 apuntan a los mismos radios, asi los componentes de M3 coinciden. */

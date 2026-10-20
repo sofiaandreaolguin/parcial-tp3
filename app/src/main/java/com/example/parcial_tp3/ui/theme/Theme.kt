@@ -11,7 +11,7 @@ import androidx.compose.ui.graphics.Color
 
 /**
  * Los colores de la lamina repartidos en los roles de Material 3. Asi los componentes de
- * M3 (Switch, TextField, NavigationBar...) salen con los colores de VORA sin tocarlos.
+ * M3 (TextField, Slider, DatePicker...) salen con los colores de VORA sin tocarlos.
  */
 private val VoraColorScheme = lightColorScheme(
     primary = VoraGreen,
@@ -42,8 +42,10 @@ data class VoraExtraColors(
     val onAccent: Color = VoraGreen,
     val mintTranslucent: Color = VoraMintTranslucent,
     val mintBorder: Color = VoraMintBorder,
+    val orbHalo: Color = VoraOrbHalo,
     val onDarkMuted: Color = VoraOnDarkMuted,
     val onDarkBorder: Color = VoraOnDarkBorder,
+    val onDarkSubtle: Color = VoraOnDarkSubtle,
     val success: Color = VoraSuccess,
     val textMuted: Color = VoraTextMuted,
 )
