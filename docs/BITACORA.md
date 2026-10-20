@@ -22,7 +22,7 @@ Formato:
 - Qué propuso la IA y qué cambiamos: la IA propuso cuatro carriles según el tamaño del cambio (chico, pantalla, datos, bug) y siete ajustes a la metodología (decisión 001). Fiore pidió que la IA armara solo la metodología y no el código de la app, y que la IA nunca commitee: se agregó además un bloqueo de `git commit` y `git push` en `.claude/settings.json`.
 - Revisores: controles negativos de los scripts (ver decisión 001).
 - Evidencia: guía "Cómo trabajamos VORA" (artifact compartido con el grupo).
-- Commit / PR:
+- Commit / PR: [#1](https://github.com/sofiaandreaolguin/parcial-tp3/pull/1)
 
 ### 2026-10-19 · Hector · feat(di): proveer Retrofit y Room en módulos de Hilt
 - Carril y requisitos: C (sin spec EARS: criterios C1 a C7 en el plan) · RF08, RF06, RF05 · tarea VC-f
@@ -75,4 +75,13 @@ Formato:
   - /code-review: el gráfico arma barra y etiqueta en la misma columna, y TalkBack lee solo el resumen.
   - revisor-arquitectura, sin nada bloqueante. Se corrigieron los dos ALTA: el interruptor se puede usar con la fila entera como zona táctil (`onCheckedChange = null`), y el selector tiene área táctil de 48 sin cambiar cómo se ve. También: las cajas se anuncian como opción única, el anillo y las estadísticas se leen como un solo elemento, el orbe chico tiene su propio tamaño y CONTEXTO §6 y §9 quedaron al día.
 - Evidencia: `docs/evidencia/visual/controles-catalogo-{1,2}-{394dp,360dp}.png`. Build y 11 tests unitarios en verde, `reglas.sh` sin fallas.
+- Commit / PR: [#7](https://github.com/sofiaandreaolguin/parcial-tp3/pull/7)
+
+### 2026-10-20 · Fiore · fix(nav): fijar el estilo de la barra de estado para el tema claro
+- Carril y requisitos: D (bug) · UI01 · zona de Navegación (`MainActivity`)
+- Plan aprobado: `enableEdgeToEdge()` venía sin argumentos desde el commit inicial de la plantilla. Elegía el color de los íconos de las barras del sistema según el modo oscuro **del celular**, no según los colores de la app. Mientras el tema de la plantilla tenía modo oscuro no se notaba; al pasar el tema a solo claro (PR #5), en un celular en modo oscuro los íconos salían blancos sobre el fondo claro de VORA y no se leían. Se fija `SystemBarStyle.light` en las dos barras.
+- Qué propuso la IA y qué cambiamos: la IA encontró que la barra de abajo tenía el mismo problema y no solo la de estado (`VoraBottomBar` usa `colorScheme.surface`, que también es claro), así que se fijaron las dos y no solo `statusBarStyle`. Con `minSdk = 29` las dos barras admiten íconos oscuros, así que el segundo argumento (`darkScrim`) nunca se usa y queda transparente. Se agregó un comentario que aclara que `SystemBarStyle.light` se nombra por el **fondo**, no por el color del ícono.
+- También en este cambio: la ficha `docs/decisiones/004-rutas-object-y-route-screen.md`, que documenta dos decisiones de navegación que estaban tomadas pero sin escribir (`object Rutas` y `XxxRoute`), y la sección de `specs/CONTEXTO.md` que las compara con los proyectos de la cátedra.
+- Revisores: no corrieron los subagentes revisores (cambio de carril D, de tres líneas). Corrió el control automático: `reglas.sh` sin fallas y `control-rapido.sh` en verde.
+- Evidencia: `./gradlew testDebugUnitTest` en verde, 11 tests, 0 fallas. Comprobado en el emulador Pixel_8a (411 dp) con `adb shell cmd uimode night yes`: `docs/evidencia/visual/barra-estado-modo-oscuro-411dp.png`. La hora, el wifi y la batería se leen oscuros sobre el fondo claro de VORA, y la barra de gestos también.
 - Commit / PR:
