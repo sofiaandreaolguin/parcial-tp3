@@ -16,6 +16,7 @@ Lo que cualquier integrante, y cualquier IA, tiene que saber antes de tocar el c
 - Navigation Compose, ViewModel con `StateFlow` y coroutines, Retrofit con Gson, Room, Hilt (construido sobre Dagger).
 - Versiones exactas en `gradle/libs.versions.toml` y en el README.
 - Servidor: la `BASE_URL` sale de `api.baseUrl` en `local.properties` (no se sube). Por defecto el mock local desde el emulador, `http://10.0.2.2:8000/`. Para probar RF02 hay que poder apagar el servidor: conviene el local.
+- Escenarios del mock (solo debug): `api.mockScenario` (`empty`, `error`, `malformed`) y `api.mockDelayMs` en `local.properties`. Los agrega `MockScenarioInterceptor`. Detalle en el README.
 
 ## 2. Arquitectura (RF06, RF07, RF08)
 
@@ -110,7 +111,7 @@ El tema lo arma Tema y componentes en `ui/theme/`. Detalle completo en la secci�
 
 - Para probar el ViewModel: repositorio falso (fake), `runTest`, una regla que reemplaza `Dispatchers.Main` y un colector en `backgroundScope`.
 - **Un test se ve fallar antes de dar por bueno el código.** Si pasa a la primera, se rompe el código a propósito y se confirma que falla (control negativo).
-- Dependencias de test que todavía no están en `app/build.gradle.kts`: `kotlinx-coroutines-test` y `okhttp mockwebserver` (misma versión que okhttp). Las suma quien escriba el primer test que las necesite, coordinando con Workout (base del proyecto).
+- Dependencias de test ya incluidas en `app/build.gradle.kts` (tarea VC-f): `kotlinx-coroutines-test` (en `test` y `androidTest`) y `okhttp mockwebserver` (en `test`, misma versión que okhttp).
 
 ## 8. Git
 
