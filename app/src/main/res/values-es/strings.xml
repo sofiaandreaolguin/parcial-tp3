@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">parcial-tp3</string>
 
-    <!-- Barra inferior (5 destinos). Los textos salen del Figma, en ingles. -->
+    <!-- Barra inferior (5 destinos). Mismas claves que values/strings.xml, en espanol. -->
     <string name="tab_home">Inicio</string>
     <string name="tab_workout">Entrenamiento</string>
     <string name="tab_nutrition">Nutrición</string>
@@ -9,13 +9,10 @@
     <string name="tab_profile">Perfil</string>
 
     <!-- Acciones comunes -->
+    <string name="cerrar">Cerrar</string>
     <string name="volver">Volver</string>
     <string name="entrar_demo">Entrar (demostración)</string>
 
-    <!-- Provisorios del esqueleto (VC-e). Los reemplaza Tema y componentes (VC-d) con
-         los iconos del Figma, que son dibujos propios y no de Material. -->
-    <string name="placeholder_pestana">•</string>
-    <string name="placeholder_volver">‹</string>
 
     <!-- Nombres de los frames del Figma, uno por ruta (33).
          Son provisorios: los usa PantallaVacia hasta que cada pantalla se maquete.
