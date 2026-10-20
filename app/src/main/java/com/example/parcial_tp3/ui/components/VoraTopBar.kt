@@ -1,10 +1,17 @@
 package com.example.parcial_tp3.ui.components
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -13,9 +20,13 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -97,12 +108,61 @@ fun VoraTopBar(
     }
 }
 
+/**
+ * El encabezado grande de Profile, Settings y Nutrition Preferences: la flecha de volver
+ * dentro de un circulo blanco y el titulo de pantalla (20 Bold) a su lado, alineado a la
+ * izquierda, con el margen de pantalla de 20.
+ *
+ * @param title el titulo de la pantalla, de strings.xml ("Your goals", "Settings").
+ */
+@Composable
+fun VoraTopBarLarge(
+    title: String,
+    onBack: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Row(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(horizontal = VoraTheme.spacing.screen, vertical = VoraTheme.spacing.s12),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(VoraTheme.spacing.s14),
+    ) {
+        Box(
+            modifier = Modifier
+                .size(VoraTheme.sizes.backCircle)
+                .clip(CircleShape)
+                .background(MaterialTheme.colorScheme.surface)
+                .border(VoraTheme.sizes.border, MaterialTheme.colorScheme.outline, CircleShape)
+                .clickable(role = Role.Button, onClick = onBack),
+            contentAlignment = Alignment.Center,
+        ) {
+            Icon(
+                painter = painterResource(R.drawable.ic_back),
+                contentDescription = stringResource(R.string.volver),
+                tint = MaterialTheme.colorScheme.onSurface,
+            )
+        }
+        Text(
+            text = title,
+            style = MaterialTheme.typography.titleLarge,
+            color = MaterialTheme.colorScheme.onBackground,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+            modifier = Modifier.semantics { heading() },
+        )
+    }
+}
+
 @Preview
 @Composable
 private fun VoraTopBarPreview() {
     Parcialtp3Theme {
         Surface(color = MaterialTheme.colorScheme.background) {
-            VoraTopBar(title = stringResource(R.string.pant_workout_03), onBack = {}, onClose = {})
+            Column {
+                VoraTopBar(title = stringResource(R.string.pant_workout_03), onBack = {}, onClose = {})
+                VoraTopBarLarge(title = stringResource(R.string.tab_profile), onBack = {})
+            }
         }
     }
 }
