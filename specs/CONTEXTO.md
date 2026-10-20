@@ -58,7 +58,6 @@ app/src/main/java/com/example/parcial_tp3/
 │   ├── theme/            # tema: colores, tipografía, espaciados, radios (Martu)
 │   ├── components/       # botones, tarjetas, campos, VoraTopBar, VoraBottomBar (Martu)
 │   ├── navigation/       # rutas, RUTAS_CON_BARRA, un NavGraph por flujo (Fiore)
-│   ├── components/       # PantallaVacia y la barra, mientras no esté el tema
 │   └── screens/          # las 37 pantallas, una subcarpeta por flujo
 │       ├── access/       #   Login 01 y 02
 │       ├── home/         #   Home 01 y 02
@@ -99,7 +98,7 @@ El tema lo arma Tema y componentes en `ui/theme/`. Detalle completo en la secci�
 - **Colores:** verde principal `#123D35` (acciones, paneles, navegación activa), menta `#65D6B0` (coach, voz), lima `#C9E86A` (CTA destacado), superficie `#FFFFFF`, fondo `#F7F8F5`, borde `#E4E9E6`, texto `#17211F` / `#68736F` / `#9AA39F`, error `#D95D5D`, éxito `#27AE60`, menta translúcida `#65D6B01F`. Sobre lima o menta, el texto va en verde.
 - **Tipografía:** Manrope en toda la app (400, 500, 600, 700). Título de pantalla 20 Bold, título de tarjeta 18 SemiBold, cuerpo 13 Regular, etiqueta 10 SemiBold en mayúsculas, cifra destacada 24 SemiBold.
 - **Espaciado:** 4, 6, 8, 10, 12, 14, 16, 20, 24, 32 y 40. Márgenes de pantalla 20.
-- **Radios:** 12 campos y filas, 16 tarjetas, 20 a 24 paneles, 100 botones y chips.
+- **Radios:** 8, 12 campos y filas, 16 tarjetas, 18, 20 a 24 paneles, 100 botones y chips (lámina "Familia de radios").
 - No se inventan estados que no estén dibujados en el Figma.
 
 ## 7. Tests
@@ -122,4 +121,15 @@ El tema lo arma Tema y componentes en `ui/theme/`. Detalle completo en la secci�
 
 ## 9. Acuerdos de la tarea b (rutas, modelos y componentes)
 
-> **Pendiente de completar.** Copiar acá lo acordado en la tarea VC-b del tablero (pestaña Desarrollo): nombres de las rutas, modelos de entrenamientos y comidas, lista de componentes comunes y la firma de `VoraBottomBar`. Mientras tanto valen las propuestas de las secciones 3, 4 y 5.
+> **Parcial.** Las rutas están en `ui/navigation/Rutas.kt` (sección 15 de `PANTALLAS.md`). Falta copiar acá los modelos de entrenamientos y comidas acordados en VC-b.
+
+**Componentes comunes** (Tema y componentes, `ui/components/`). Todos sin estado: reciben datos y funciones, y toman colores, tipografías y medidas de `ui/theme/`.
+
+| Componente | Firma | Estado |
+|---|---|---|
+| Barra inferior | `VoraBottomBar(selected: VoraTab?, onTab: (VoraTab) -> Unit)`. Va **solo** en el `Scaffold` de `MainActivity` | Hecho (VC-d, PR 1) |
+| Encabezado | `VoraTopBar(title: String?, onBack: (() -> Unit)?, modifier, onClose: (() -> Unit)? = null, contentColor, actions)`. Volver a la izquierda, título chico centrado, cerrar o acciones a la derecha | Hecho (VC-d, PR 1) |
+| Botones (lima, oscuro, menta, contorno, texto), tarjeta clara y panel oscuro, campo con etiqueta, chips, fila de lista, mensajes de coaching | | VC-d, PR 2 |
+| Control segmentado, anillo y barra de progreso, tarjeta de estadística, interruptor, selector + y −, orbe de VORA, gráfico de barras | | VC-d, PR 3 |
+
+**Tema:** `Parcialtp3Theme` (solo claro, sin color dinámico). Lo propio de VORA que Material 3 no tiene se lee con `VoraTheme.colors`, `VoraTheme.spacing`, `VoraTheme.radius` y `VoraTheme.sizes`.
