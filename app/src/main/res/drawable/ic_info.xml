@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Icono de informacion (ic_info.svg del Figma). Igual que el destello: el circulo va como
+     clip-path con trazo de 4, asi el trazo queda de 2 hacia adentro. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="16dp"
+    android:height="16dp"
+    android:viewportWidth="16"
+    android:viewportHeight="16">
+    <group>
+        <clip-path android:pathData="M8 16C12.4183 16 16 12.4183 16 8C16 3.58172 12.4183 0 8 0C3.58172 0 0 3.58172 0 8C0 12.4183 3.58172 16 8 16Z" />
+        <path
+            android:pathData="M8 16C12.4183 16 16 12.4183 16 8C16 3.58172 12.4183 0 8 0C3.58172 0 0 3.58172 0 8C0 12.4183 3.58172 16 8 16Z"
+            android:strokeWidth="4"
+            android:strokeColor="#FF000000"
+            android:fillColor="#00000000" />
+    </group>
+    <!-- la i: palo de 8 a 11,2 y punto en 4,8 -->
+    <path
+        android:pathData="M8,8V11.2M8,4.8H8.008"
+        android:strokeWidth="2"
+        android:strokeColor="#FF000000"
+        android:strokeLineCap="round"
+        android:fillColor="#00000000" />
+</vector>

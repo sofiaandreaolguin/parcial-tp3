@@ -26,3 +26,8 @@ val VoraTextMuted = Color(0xFF9AA39F)
 val VoraError = Color(0xFFD95D5D)      // error y atencion ("NOT STARTED")
 val VoraSuccess = Color(0xFF27AE60)
 val VoraMintTranslucent = Color(0x1F65D6B0) // menta al 12 %: avisos y apoyo
+val VoraMintBorder = Color(0x6665D6B0)      // menta al 40 %: borde de los avisos
+
+// Sobre paneles verdes
+val VoraOnDarkMuted = Color(0xB3FFFFFF)     // blanco al 70 %: datos secundarios
+val VoraOnDarkBorder = Color(0x4DFFFFFF)    // blanco al 30 %: borde de "Details"

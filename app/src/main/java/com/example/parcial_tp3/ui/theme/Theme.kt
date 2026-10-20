@@ -41,6 +41,9 @@ data class VoraExtraColors(
     val cta: Color = VoraLime,
     val onAccent: Color = VoraGreen,
     val mintTranslucent: Color = VoraMintTranslucent,
+    val mintBorder: Color = VoraMintBorder,
+    val onDarkMuted: Color = VoraOnDarkMuted,
+    val onDarkBorder: Color = VoraOnDarkBorder,
     val success: Color = VoraSuccess,
     val textMuted: Color = VoraTextMuted,
 )

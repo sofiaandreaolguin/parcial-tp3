@@ -130,7 +130,15 @@ El tema lo arma Tema y componentes en `ui/theme/`. Detalle completo en la secci�
 |---|---|---|
 | Barra inferior | `VoraBottomBar(selected: VoraTab?, onTab: (VoraTab) -> Unit)`. Va **solo** en el `Scaffold` de `MainActivity` | Hecho (VC-d, PR 1) |
 | Encabezado | `VoraTopBar(title: String?, onBack: (() -> Unit)?, modifier, onClose: (() -> Unit)? = null, contentColor, actions)`. Volver a la izquierda, título chico centrado, cerrar o acciones a la derecha | Hecho (VC-d, PR 1) |
-| Botones (lima, oscuro, menta, contorno, texto), tarjeta clara y panel oscuro, campo con etiqueta, chips, fila de lista, mensajes de coaching | | VC-d, PR 2 |
-| Control segmentado, anillo y barra de progreso, tarjeta de estadística, interruptor, selector + y −, orbe de VORA, gráfico de barras | | VC-d, PR 3 |
+| Encabezado grande | `VoraTopBarLarge(title: String, onBack: () -> Unit, modifier)`. Flecha en un círculo blanco y título de pantalla a la izquierda (Profile, Settings, Nutrition Preferences) | Hecho (VC-d, PR 2) |
+| Botón | `VoraButton(text, onClick, modifier, style: VoraButtonStyle = Primary, size: VoraButtonSize = Large)`. Estilos: `Primary`, `Cta` (lima), `Mint`, `OutlinedOnDark`, `Outlined`, `Soft`, `Destructive`, `Text`, `TextMuted`. Dentro de paneles, tamaño `Small` | Hecho (VC-d, PR 2) |
+| Tarjeta y panel | `VoraCard(modifier, padding = 16, radius = 16, onClick = null) { }` (fila de comida: padding y radio 12) y `VoraPanel(modifier) { }` (verde, contenido blanco) | Hecho (VC-d, PR 2) |
+| Opción y fila | `VoraOptionCard(title, selected, onClick, modifier, subtitle, role = Checkbox)` (`RadioButton` si es elección única) y `VoraListRow(title, onClick, modifier, subtitle, icon: Painter?)` | Hecho (VC-d, PR 2) |
+| Campo | `VoraTextField(value, onValueChange, modifier, label, placeholder, leadingIcon, singleLine, keyboardOptions, keyboardActions)`. La etiqueta llega de `strings.xml` ya en mayúsculas | Hecho (VC-d, PR 2) |
+| Chip y etiqueta | `VoraChip(text, selected, onClick, modifier, selectedStyle = Mint \| Dark \| Outline, trailingIcon, trailingTint)` y `VoraTag(text, modifier, tone = Mint \| OnDark)` | Hecho (VC-d, PR 2) |
+| Mensajes | `VoraInfoMessage(text, modifier, icon = ic_sparkle)` y `VoraAdvice(label, text, modifier)` | Hecho (VC-d, PR 2) |
+| Control segmentado (también "3 days / 4 days" de Goals), anillo y barra de progreso, tarjeta de estadística, interruptor, selector + y −, orbe de VORA, gráfico de barras | | VC-d, PR 3 |
+
+**Catálogo:** `ui/components/CatalogoComponentes.kt` muestra todos juntos en una preview, para comparar con la lámina 04 del Figma.
 
 **Tema:** `Parcialtp3Theme` (solo claro, sin color dinámico). Lo propio de VORA que Material 3 no tiene se lee con `VoraTheme.colors`, `VoraTheme.spacing`, `VoraTheme.radius` y `VoraTheme.sizes`.

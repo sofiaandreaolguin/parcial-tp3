@@ -13,6 +13,8 @@ import androidx.compose.ui.unit.dp
  */
 @Immutable
 object VoraSpacing {
+    /** Entre titulo y subtitulo de una fila de comida ("gap de texto 2" en la lamina). */
+    val s2 = 2.dp
     val s4 = 4.dp
     val s6 = 6.dp
     val s8 = 8.dp
@@ -53,6 +55,14 @@ object VoraSizes {
     val icon = 20.dp
     /** Area tactil minima de un boton de icono. */
     val touchTarget = 48.dp
+    /** Borde de una tarjeta de opcion elegida (menta). */
+    val borderSelected = 2.dp
+    /** Circulo blanco de volver en el encabezado grande (Profile, Settings). */
+    val backCircle = 32.dp
+    /** Circulo del icono de una fila de Settings. */
+    val rowIconCircle = 36.dp
+    /** Circulo de check de una tarjeta de opcion. */
+    val checkCircle = 20.dp
 }
 
 /** Las formas de Material 3 apuntan a los mismos radios, asi los componentes de M3 coinciden. */
