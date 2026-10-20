@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Theme.Parcialtp3" parent="android:Theme.Material.Light.NoActionBar" />
+    <!-- Fondo de VORA desde el arranque, para que no se vea un destello blanco antes de
+         que Compose dibuje. El resto del tema vive en ui/theme/. -->
+    <style name="Theme.Parcialtp3" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:windowBackground">@color/vora_background</item>
+    </style>
 </resources>

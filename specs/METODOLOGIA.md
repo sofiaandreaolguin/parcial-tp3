@@ -174,20 +174,24 @@ Las pantallas exportadas del Figma van en `docs/figma/`, una imagen por frame, c
 - **Pantallas más altas que 850 dp** (por ejemplo Home / 01, Nutrition / 01, Progress / 02, Profile / 06): tienen contenido que se desplaza. Llevan scroll (UI03).
 - **Los textos del Figma están en inglés** ("Sign In", "Workouts", "Today's Meals"). Como la fidelidad incluye el contenido visible, la propuesta es **respetarlos tal cual**. Es una decisión de grupo y lleva su ficha en `docs/decisiones/`.
 
-### 3.2 Sistema de diseño provisional
+### 3.2 Sistema de diseño
 
-Sacado de las 36 pantallas exportadas mientras no tengamos el frame "Sistema de diseño". **Los valores de color son aproximados** (medidos sobre imágenes comprimidas): el rol Tema y componentes los reemplaza por los exactos del Figma.
+Valores exactos de la lámina **"Sistema de diseño — VORA"** del Figma (`docs/figma/Sistema de diseño — VORA.png`), pasados al código en `ui/theme/` por Tema y componentes (tarea VC-d, 20/10). Reemplazan a los aproximados que se habían medido sobre las capturas.
 
-| Rol | Color aproximado | Dónde se ve |
-|---|---|---|
-| Fondo de pantalla | `#F4F8F4` | Fondo general claro |
-| Verde oscuro principal | `#103C34` | Tarjetas VORA, pantallas de voz, botones oscuros |
-| Verde oscuro de superficie | `#1C443C` | Tarjetas sobre fondo oscuro |
-| Menta suave | `#E4F4EC` | Fondos de avisos y tarjetas resaltadas |
-| Menta | `#64D4B0` | Botones secundarios, barras, indicadores |
-| Lima (acento) | `#C8E868` | Botón principal ("Sign In", "Start Workout", "Complete Set") |
-| Texto oscuro | cerca de `#141C1C` | Títulos y texto principal |
-| Texto secundario | cerca de `#848C88` | Subtítulos y texto de apoyo |
+| Rol | Color | Dónde se ve | En el código |
+|---|---|---|---|
+| Verde principal | `#123D35` | Acciones, paneles, navegación activa | `colorScheme.primary` |
+| Menta | `#65D6B0` | Coach, voz, carbohidratos | `colorScheme.secondary` |
+| Lima | `#C9E86A` | CTA destacado ("Start Workout"), grasas | `colorScheme.tertiary`, `VoraTheme.colors.cta` |
+| Superficie | `#FFFFFF` | Tarjetas y campos | `colorScheme.surface` |
+| Fondo | `#F7F8F5` | Fondo de pantalla | `colorScheme.background` |
+| Borde | `#E4E9E6` | Separadores | `colorScheme.outline` |
+| Texto principal / secundario / tenue | `#17211F` / `#68736F` / `#9AA39F` | Títulos, apoyo, metadatos | `onSurface` / `onSurfaceVariant` / `VoraTheme.colors.textMuted` |
+| Error | `#D95D5D` | Error y "NOT STARTED" | `colorScheme.error` |
+| Éxito | `#27AE60` | Señal de éxito | `VoraTheme.colors.success` |
+| Menta translúcida | `#65D6B0` al 12 % | Avisos y apoyo | `VoraTheme.colors.mintTranslucent` |
+
+Tipografía, espaciado y radios: ver `specs/CONTEXTO.md` §6 y los KDoc de `ui/theme/Type.kt` y `ui/theme/Dimens.kt`.
 
 **Componentes que se repiten** (UI02: se arman una vez y se reutilizan):
 - Barra inferior de 5 pestañas: Home, Workout, Nutrition, Progress, Profile.
@@ -982,7 +986,7 @@ Es el recorrido mínimo que pide el profe. Se ensaya antes de entregar.
 - [ ] Confirmar que el Figma de la especificación (`owEBfWwacB12hsaruGixIg`) no tiene diferencias con el de la presentación, que es el que usamos.
 - [ ] Acceso al Figma desde el conector: la copia en borradores (`Dv82OC9hLPQqUfdxYuYOmd`) se abre, pero el conector solo ve la página "Cover Image". Revisar si la página "UI Screens" quedó en la copia; si no, volver a duplicar el archivo completo. Hace falta para sacar valores exactos (colores, tamaños, tipografías) del frame "Sistema de diseño".
 - [ ] Exportar a `docs/figma/` los dos frames que faltan: `Login - 02 SignUp` y "Sistema de diseño".
-- [ ] Reemplazar los colores aproximados de la sección 3.2 por los exactos, y sumar tipografías, tamaños y radios de borde.
+- [x] Reemplazar los colores aproximados de la sección 3.2 por los exactos, y sumar tipografías, tamaños y radios de borde (VC-d, 20/10).
 - [ ] Decidir si los textos quedan en inglés como en el Figma (sección 3.1).
 - [x] Inventario con los nombres reales de los frames (sección 3, leído del Figma el 14/10).
 - [ ] Proteger `main` en GitHub (pull request obligatorio, una aprobación) y cargar la plantilla `.github/pull_request_template.md`.

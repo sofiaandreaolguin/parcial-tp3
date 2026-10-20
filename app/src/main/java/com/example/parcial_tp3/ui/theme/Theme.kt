@@ -1,58 +1,80 @@
 package com.example.parcial_tp3.ui.theme
 
-import android.app.Activity
-import android.os.Build
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.darkColorScheme
-import androidx.compose.material3.dynamicDarkColorScheme
-import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.Immutable
+import androidx.compose.runtime.ReadOnlyComposable
+import androidx.compose.runtime.staticCompositionLocalOf
+import androidx.compose.ui.graphics.Color
 
-private val DarkColorScheme = darkColorScheme(
-    primary = Purple80,
-    secondary = PurpleGrey80,
-    tertiary = Pink80
+/**
+ * Los colores de la lamina repartidos en los roles de Material 3. Asi los componentes de
+ * M3 (Switch, TextField, NavigationBar...) salen con los colores de VORA sin tocarlos.
+ */
+private val VoraColorScheme = lightColorScheme(
+    primary = VoraGreen,
+    onPrimary = VoraSurface,
+    secondary = VoraMint,
+    onSecondary = VoraGreen,
+    tertiary = VoraLime,
+    onTertiary = VoraGreen,
+    background = VoraBackground,
+    onBackground = VoraTextPrimary,
+    surface = VoraSurface,
+    onSurface = VoraTextPrimary,
+    surfaceVariant = VoraBackground,
+    onSurfaceVariant = VoraTextSecondary,
+    outline = VoraBorder,
+    outlineVariant = VoraBorder,
+    error = VoraError,
+    onError = VoraSurface,
 )
 
-private val LightColorScheme = lightColorScheme(
-    primary = Purple40,
-    secondary = PurpleGrey40,
-    tertiary = Pink40
-
-    /* Other default colors to override
-    background = Color(0xFFFFFBFE),
-    surface = Color(0xFFFFFBFE),
-    onPrimary = Color.White,
-    onSecondary = Color.White,
-    onTertiary = Color.White,
-    onBackground = Color(0xFF1C1B1F),
-    onSurface = Color(0xFF1C1B1F),
-    */
+/**
+ * Los colores de VORA que Material 3 no tiene como rol propio. Se leen con
+ * `VoraTheme.colors`. Sobre lima o menta, el texto va en verde (`onAccent`).
+ */
+@Immutable
+data class VoraExtraColors(
+    val cta: Color = VoraLime,
+    val onAccent: Color = VoraGreen,
+    val mintTranslucent: Color = VoraMintTranslucent,
+    val success: Color = VoraSuccess,
+    val textMuted: Color = VoraTextMuted,
 )
 
+private val LocalVoraColors = staticCompositionLocalOf { VoraExtraColors() }
+
+/**
+ * Tema de VORA. Solo modo claro y sin color dinamico: el Figma no tiene modo oscuro y
+ * la fidelidad (UI01) pide los mismos colores en cualquier celular.
+ *
+ * Mantiene el nombre de la plantilla para no tocar MainActivity (zona de Navegacion).
+ */
 @Composable
-fun Parcialtp3Theme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
-    // Dynamic color is available on Android 12+
-    dynamicColor: Boolean = true,
-    content: @Composable () -> Unit
-) {
-    val colorScheme = when {
-        dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
-            val context = LocalContext.current
-            if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
-        }
-
-        darkTheme -> DarkColorScheme
-        else -> LightColorScheme
+fun Parcialtp3Theme(content: @Composable () -> Unit) {
+    CompositionLocalProvider(LocalVoraColors provides VoraExtraColors()) {
+        MaterialTheme(
+            colorScheme = VoraColorScheme,
+            typography = VoraTypography,
+            shapes = VoraShapes,
+            content = content,
+        )
     }
+}
 
-    MaterialTheme(
-        colorScheme = colorScheme,
-        typography = Typography,
-        content = content
-    )
+/**
+ * Acceso a lo propio de VORA: `VoraTheme.colors`, `VoraTheme.spacing`, `VoraTheme.radius`
+ * y `VoraTheme.sizes`.
+ */
+object VoraTheme {
+    val colors: VoraExtraColors
+        @Composable @ReadOnlyComposable
+        get() = LocalVoraColors.current
+
+    val spacing = VoraSpacing
+    val radius = VoraRadius
+    val sizes = VoraSizes
 }
