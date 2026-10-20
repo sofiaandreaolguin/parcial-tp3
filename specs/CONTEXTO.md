@@ -96,10 +96,10 @@ Cada subcarpeta de `screens/` tiene un `LEEME.md` con las pantallas de ese flujo
 
 El tema lo arma Tema y componentes en `ui/theme/`. Detalle completo en la sección 3.2 de la metodología. Ninguna pantalla escribe un color, un tamaño o un radio a mano.
 
-- **Colores:** verde principal `#123D35` (acciones, paneles, navegación activa), menta `#65D6B0` (coach, voz), lima `#C9E86A` (CTA destacado), superficie `#FFFFFF`, fondo `#F7F8F5`, borde `#E4E9E6`, texto `#17211F` / `#68736F` / `#9AA39F`, error `#D95D5D`, éxito `#27AE60`, menta translúcida `#65D6B01F`. Sobre lima o menta, el texto va en verde.
+- **Colores:** verde principal `#123D35` (acciones, paneles, navegación activa), menta `#65D6B0` (coach, voz), lima `#C9E86A` (CTA destacado), superficie `#FFFFFF`, fondo `#F7F8F5`, borde `#E4E9E6`, texto `#17211F` / `#68736F` / `#9AA39F`, error `#D95D5D`, éxito `#27AE60`, menta translúcida `#65D6B01F`. Sobre paneles verdes: blanco al 70 % (datos secundarios), al 30 % (borde de "Details") y al 12 % (fondo de "MODERATE" y del − y +). Halo del orbe: texto tenue al 45 %. Sobre lima o menta, el texto va en verde.
 - **Tipografía:** Manrope en toda la app (400, 500, 600, 700). Título de pantalla 20 Bold, título de tarjeta 18 SemiBold, cuerpo 13 Regular, etiqueta 10 SemiBold en mayúsculas, cifra destacada 24 SemiBold.
 - **Espaciado:** 4, 6, 8, 10, 12, 14, 16, 20, 24, 32 y 40. Márgenes de pantalla 20.
-- **Radios:** 8, 12 campos y filas, 16 tarjetas, 18, 20 a 24 paneles, 100 botones y chips (lámina "Familia de radios").
+- **Radios:** 8, 12 campos y filas, 16 tarjetas, 18, 20 a 24 paneles, 100 botones y chips (lámina "Familia de radios"). Además 4 en la punta de las barras de los gráficos (medido en Weekly Steps Trend).
 - No se inventan estados que no estén dibujados en el Figma.
 
 ## 7. Tests
@@ -137,7 +137,13 @@ El tema lo arma Tema y componentes en `ui/theme/`. Detalle completo en la secci�
 | Campo | `VoraTextField(value, onValueChange, modifier, label, placeholder, leadingIcon, singleLine, keyboardOptions, keyboardActions)`. La etiqueta llega de `strings.xml` ya en mayúsculas | Hecho (VC-d, PR 2) |
 | Chip y etiqueta | `VoraChip(text, selected, onClick, modifier, selectedStyle = Mint \| Dark \| Outline, trailingIcon, trailingTint)` y `VoraTag(text, modifier, tone = Mint \| OnDark)` | Hecho (VC-d, PR 2) |
 | Mensajes | `VoraInfoMessage(text, modifier, icon = ic_sparkle)` y `VoraAdvice(label, text, modifier)` | Hecho (VC-d, PR 2) |
-| Control segmentado (también "3 days / 4 days" de Goals), anillo y barra de progreso, tarjeta de estadística, interruptor, selector + y −, orbe de VORA, gráfico de barras | | VC-d, PR 3 |
+| Control segmentado | `VoraSegmentedControl(options, selectedIndex, onSelect, modifier, style = Pill \| Tabs \| Boxes)`. Pill: "Week / Month / 3 Months"; Tabs: "Calories / Protein…"; Boxes: "3 days / 4 days", "Supportive / Balanced / Direct" | Hecho (VC-d, PR 3) |
+| Estadísticas | `VoraStatRow(stats: List<VoraStat>, modifier)` con `VoraStat(label, value)` (fila con divisores) y `VoraStatTile(label, value, modifier, trend)` (tarjeta gris) | Hecho (VC-d, PR 3) |
+| Avance | `VoraProgressRing(progress, modifier, size = 72, strokeWidth, color, trackColor) { centro }`, `VoraProgressBar(progress, modifier, color, trackColor)` (verde, menta o lima por macro) y `VoraStatusDot(color, modifier)` | Hecho (VC-d, PR 3) |
+| Gráfico | `VoraBarChart(values, labels, description, modifier, highlighted: Set<Int>?, height = 72, barWidth = 24)` (18 en Weekly Steps). `description` es lo que lee TalkBack | Hecho (VC-d, PR 3) |
+| Interruptor | `VoraToggle(checked, onCheckedChange: ((Boolean) -> Unit)?, modifier)`. Lo recomendado: la fila con su texto se toca (`toggleable`) y el interruptor va con `onCheckedChange = null` | Hecho (VC-d, PR 3) |
+| Selector | `VoraStepper(value, onDecrease, onIncrease, modifier, onDark = true)`. Círculos de 36 con área táctil de 48 | Hecho (VC-d, PR 3) |
+| Orbe | `VoraOrb(modifier, size = 140, withRing = true, onDark = false) { ícono del centro }`. Sin aro y con `sizes.orbSmall` es el avatar del coach | Hecho (VC-d, PR 3) |
 
 **Catálogo:** `ui/components/CatalogoComponentes.kt` muestra todos juntos en una preview, para comparar con la lámina 04 del Figma.
 

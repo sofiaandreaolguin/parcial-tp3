@@ -110,7 +110,7 @@ fun VoraTag(
 ) {
     val (fondo, texto) = when (tone) {
         VoraTagTone.Mint -> VoraTheme.colors.mintTranslucent to MaterialTheme.colorScheme.primary
-        VoraTagTone.OnDark -> VoraTheme.colors.onDarkBorder to MaterialTheme.colorScheme.onPrimary
+        VoraTagTone.OnDark -> VoraTheme.colors.onDarkSubtle to MaterialTheme.colorScheme.onPrimary
     }
     Text(
         text = text,

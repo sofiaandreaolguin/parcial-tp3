@@ -10,6 +10,8 @@
 
     <!-- Acciones comunes -->
     <string name="cerrar">Cerrar</string>
+    <string name="disminuir">Disminuir</string>
+    <string name="aumentar">Aumentar</string>
     <string name="volver">Volver</string>
     <string name="entrar_demo">Entrar (demostración)</string>
 
