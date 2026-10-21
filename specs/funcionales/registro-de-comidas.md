@@ -67,17 +67,17 @@ Casos de la plantilla que no aplican: sin conexión, 404, 503 y JSON inválido (
 ## Tests
 | Criterio | Test | Dónde | Vi el rojo |
 |---|---|---|---|
-| C1 | `C1_insert_guarda_y_observeByDate_lee_la_comida` | `androidTest/` · `MealDaoTest` | no |
-| C2 | `C2_observeByDate_lista_solo_las_comidas_de_esa_fecha_ordenadas_por_id` | `androidTest/` · `MealDaoTest` | no |
-| C3 | `C3_dos_inserts_devuelven_ids_distintos_y_mayores_que_cero` | `androidTest/` · `MealDaoTest` | no |
-| C4 | `` `C4 Meal pasa a Entity y vuelve igual` `` | `test/` · `MealMappersTest` | no |
-| C5 | `` `C5 la Entity guarda la fecha ISO y el tipo con el nombre del enum` `` | `test/` · `MealMappersTest` | no |
-| C6 | `` `C6 observeMealsByDate pide la fecha ISO al DAO y devuelve modelos Meal` `` | `test/` · `MealRepositoryImplTest` | no |
-| C7 | `` `C7 addMeal manda una Entity al DAO y devuelve el id nuevo` `` | `test/` · `MealRepositoryImplTest` | no |
-| C8 | `` `C8 un tipo desconocido en la Entity lanza IllegalArgumentException` `` | `test/` · `MealMappersTest` | no |
-| C9 | `C9_observeByDate_sin_comidas_devuelve_lista_vacia` | `androidTest/` · `MealDaoTest` | no |
-| C10 | `C10_observeByDate_emite_la_lista_nueva_cuando_se_inserta_una_comida` | `androidTest/` · `MealDaoTest` | no |
-| C11 | `` `C11 una fecha no ISO en la Entity lanza DateTimeParseException` `` | `test/` · `MealMappersTest` | no |
+| C1 | `C1_insert_guarda_y_observeByDate_lee_la_comida` | `androidTest/` · `MealDaoTest` | sí |
+| C2 | `C2_observeByDate_lista_solo_las_comidas_de_esa_fecha_ordenadas_por_id` | `androidTest/` · `MealDaoTest` | sí |
+| C3 | `C3_dos_inserts_devuelven_ids_distintos_y_mayores_que_cero` | `androidTest/` · `MealDaoTest` | pasó en rojo; control negativo en verde |
+| C4 | `` `C4 Meal pasa a Entity y vuelve igual` `` | `test/` · `MealMappersTest` | sí |
+| C5 | `` `C5 la Entity guarda la fecha ISO y el tipo con el nombre del enum` `` | `test/` · `MealMappersTest` | sí |
+| C6 | `` `C6 observeMealsByDate pide la fecha ISO al DAO y devuelve modelos Meal` `` | `test/` · `MealRepositoryImplTest` | sí |
+| C7 | `` `C7 addMeal manda una Entity al DAO y devuelve el id nuevo` `` | `test/` · `MealRepositoryImplTest` | sí |
+| C8 | `` `C8 un tipo desconocido en la Entity lanza IllegalArgumentException` `` | `test/` · `MealMappersTest` | sí |
+| C9 | `C9_observeByDate_sin_comidas_devuelve_lista_vacia` | `androidTest/` · `MealDaoTest` | pasó en rojo; control negativo en verde |
+| C10 | `C10_observeByDate_emite_la_lista_nueva_cuando_se_inserta_una_comida` | `androidTest/` · `MealDaoTest` | sí |
+| C11 | `` `C11 una fecha no ISO en la Entity lanza DateTimeParseException` `` | `test/` · `MealMappersTest` | sí |
 
 - Los nombres de `androidTest/` van con guion bajo y sin espacios (con `minSdk` 29 el DEX no acepta espacios).
 - `control-rapido.sh` solo corre `testDebugUnitTest`: los tests de `androidTest/` (C1, C2, C3, C9, C10) se corren a mano con `./gradlew connectedDebugAndroidTest` y el emulador abierto, y la salida se guarda en `docs/evidencia/tests/` y se pega en el PR.
