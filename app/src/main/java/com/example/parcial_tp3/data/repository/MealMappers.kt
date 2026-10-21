@@ -5,18 +5,29 @@ import com.example.parcial_tp3.domain.model.Meal
 import com.example.parcial_tp3.domain.model.MealType
 import java.time.LocalDate
 
-// Firmas vacias (tests en rojo): la logica real la escribe la sesion de implementar.
+// La fecha se guarda como texto ISO (AAAA-MM-DD) y el tipo con el nombre del enum (RF06).
+// No se valida nada: un tipo o una fecha invalidos en la tabla lanzan excepcion al leerlos.
 
 fun Meal.toEntity(): MealEntity =
-    MealEntity(name = "", date = "", type = "", kcal = 0, proteinG = 0.0, carbsG = 0.0, fatG = 0.0)
+    MealEntity(
+        id = id,
+        name = name,
+        date = date.toString(),
+        type = type.name,
+        kcal = kcal,
+        proteinG = proteinG,
+        carbsG = carbsG,
+        fatG = fatG,
+    )
 
 fun MealEntity.toDomain(): Meal =
     Meal(
-        name = "",
-        date = LocalDate.of(2000, 1, 1),
-        type = MealType.BREAKFAST,
-        kcal = 0,
-        proteinG = 0.0,
-        carbsG = 0.0,
-        fatG = 0.0,
+        id = id,
+        name = name,
+        date = LocalDate.parse(date),
+        type = MealType.valueOf(type),
+        kcal = kcal,
+        proteinG = proteinG,
+        carbsG = carbsG,
+        fatG = fatG,
     )
