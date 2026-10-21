@@ -32,7 +32,6 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import com.example.parcial_tp3.R
 import com.example.parcial_tp3.domain.model.Experience
 import com.example.parcial_tp3.domain.model.Goal
@@ -47,9 +46,6 @@ import com.example.parcial_tp3.ui.components.VoraOrb
 import com.example.parcial_tp3.ui.components.VoraPanel
 import com.example.parcial_tp3.ui.theme.Parcialtp3Theme
 import com.example.parcial_tp3.ui.theme.VoraTheme
-
-// shortcut: no hay tamaño de avatar en VoraSizes (zona de Martu); pasarlo al tema cuando lo sume
-private val AvatarSize = 72.dp
 
 @Composable
 fun ProfileDashboardScreen(
@@ -152,7 +148,7 @@ private fun IdentityCard(fullName: String, onEditProfile: () -> Unit) {
                 painter = painterResource(R.drawable.avatar),
                 contentDescription = null,
                 modifier = Modifier
-                    .size(AvatarSize)
+                    .size(VoraTheme.sizes.avatar)
                     .clip(CircleShape),
             )
             Spacer(Modifier.height(VoraTheme.spacing.s12))
