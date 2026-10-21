@@ -5,9 +5,6 @@ import com.example.parcial_tp3.domain.model.Meal
 import com.example.parcial_tp3.domain.model.MealType
 import java.time.LocalDate
 
-// La fecha se guarda como texto ISO (AAAA-MM-DD) y el tipo con el nombre del enum (RF06).
-// No se valida nada: un tipo o una fecha invalidos en la tabla lanzan excepcion al leerlos.
-
 fun Meal.toEntity(): MealEntity =
     MealEntity(
         id = id,
