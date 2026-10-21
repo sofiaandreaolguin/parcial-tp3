@@ -103,10 +103,11 @@ fun ProfileDashboardScreen(
 /** "Build strength & improve fitness": el primero con mayúscula y el resto en minúscula. */
 @Composable
 private fun goalsSummary(goals: List<Goal>): String =
-    goals.mapIndexed { i, goal ->
-        val text = stringResource(goal.label())
-        if (i == 0) text else text.replaceFirstChar { it.lowercase() }
-    }.joinToString(" & ")
+    goals.map { stringResource(it.label()) }
+        .reduceOrNull { acc, next ->
+            stringResource(R.string.profile_goals_join, acc, next.replaceFirstChar { it.lowercase() })
+        }
+        .orEmpty()
 
 @Composable
 private fun Header(onSettings: () -> Unit) {

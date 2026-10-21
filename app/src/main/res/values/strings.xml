@@ -71,6 +71,7 @@
     <string name="profile_snapshot_experience">Experience</string>
     <string name="profile_snapshot_training">Training</string>
     <string name="profile_snapshot_workout">Preferred Workout</string>
+    <string name="profile_goals_join">%1$s &amp; %2$s</string>
     <string name="profile_per_week">%1$s/week</string>
     <string name="profile_workout_long">%1$s training</string>
     <string name="profile_vora_label">VORA Personalisation</string>
