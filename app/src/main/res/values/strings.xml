@@ -58,4 +58,48 @@
     <string name="pant_profile_04">Profile / 04 — Nutrition Preferences</string>
     <string name="pant_profile_05">Profile / 05 — Voice &amp; AI Settings</string>
     <string name="pant_profile_06">Profile / 06 — Settings</string>
+
+    <!-- Aviso de las opciones sin pantalla (NAV03) -->
+    <string name="aviso_demo">Demo mode: this option isn\'t available yet</string>
+
+    <!-- Profile / 01 — Dashboard -->
+    <string name="profile_settings">Settings</string>
+    <string name="profile_tagline">Building strength &amp; improving fitness</string>
+    <string name="profile_edit">Edit profile</string>
+    <string name="profile_snapshot">MY SNAPSHOT</string>
+    <string name="profile_snapshot_goal">Goal</string>
+    <string name="profile_snapshot_experience">Experience</string>
+    <string name="profile_snapshot_training">Training</string>
+    <string name="profile_snapshot_workout">Preferred Workout</string>
+    <string name="profile_per_week">%1$s/week</string>
+    <string name="profile_workout_long">%1$s training</string>
+    <string name="profile_vora_label">VORA Personalisation</string>
+    <string name="profile_vora_title">VORA knows your goals</string>
+    <string name="profile_vora_body">Your coaching adapts to your training, nutrition and activity preferences.</string>
+    <string name="profile_review">Review preferences</string>
+    <string name="profile_goals">Your Goals</string>
+    <string name="profile_preferences">Your Preferences</string>
+    <string name="profile_preferences_sub">Training, nutrition and coaching</string>
+    <string name="profile_connected">Connected Data</string>
+    <string name="profile_connected_sub">Health &amp; activity data</string>
+    <string name="profile_account">Account</string>
+    <string name="profile_account_sub">Subscription, notifications &amp; privacy</string>
+
+    <!-- Opciones del perfil (enums de domain/model/Profile.kt) -->
+    <string name="goal_build_strength">Build strength</string>
+    <string name="goal_improve_fitness">Improve fitness</string>
+    <string name="goal_lose_body_fat">Lose body fat</string>
+    <string name="goal_build_healthy_habits">Build healthy habits</string>
+    <string name="experience_beginner">Beginner</string>
+    <string name="experience_intermediate">Intermediate</string>
+    <string name="experience_advanced">Advanced</string>
+    <string name="training_days_three">3 days</string>
+    <string name="training_days_four">4 days</string>
+    <string name="training_days_five">5 days</string>
+    <string name="training_days_six_plus">6+ days</string>
+    <string name="workout_type_strength">Strength</string>
+    <string name="workout_type_cardio">Cardio</string>
+    <string name="workout_type_hiit">HIIT</string>
+    <string name="workout_type_mobility">Mobility</string>
+    <string name="workout_type_mixed">Mixed</string>
 </resources>

@@ -1,0 +1,283 @@
+package com.example.parcial_tp3.ui.screens.profile
+
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import com.example.parcial_tp3.R
+import com.example.parcial_tp3.domain.model.Experience
+import com.example.parcial_tp3.domain.model.Goal
+import com.example.parcial_tp3.domain.model.TrainingDays
+import com.example.parcial_tp3.domain.model.WorkoutType
+import com.example.parcial_tp3.ui.components.VoraButton
+import com.example.parcial_tp3.ui.components.VoraButtonSize
+import com.example.parcial_tp3.ui.components.VoraButtonStyle
+import com.example.parcial_tp3.ui.components.VoraCard
+import com.example.parcial_tp3.ui.components.VoraListRow
+import com.example.parcial_tp3.ui.components.VoraOrb
+import com.example.parcial_tp3.ui.components.VoraPanel
+import com.example.parcial_tp3.ui.theme.Parcialtp3Theme
+import com.example.parcial_tp3.ui.theme.VoraTheme
+
+// shortcut: no hay tamaño de avatar en VoraSizes (zona de Martu); pasarlo al tema cuando lo sume
+private val AvatarSize = 72.dp
+
+@Composable
+fun ProfileDashboardScreen(
+    state: ProfileDashboardUiState,
+    onSettings: () -> Unit,
+    onEditProfile: () -> Unit,
+    onReviewPreferences: () -> Unit,
+    onGoals: () -> Unit,
+    onPreferences: () -> Unit,
+    onDemo: () -> Unit,
+) {
+    val goals = goalsSummary(state.goals)
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.background)
+            .verticalScroll(rememberScrollState())
+            .padding(horizontal = VoraTheme.spacing.screen, vertical = VoraTheme.spacing.s12),
+        verticalArrangement = Arrangement.spacedBy(VoraTheme.spacing.s12),
+    ) {
+        Header(onSettings)
+        IdentityCard(state.fullName, onEditProfile)
+        SnapshotCard(state, goals)
+        PersonalisationPanel(onReviewPreferences)
+        VoraListRow(
+            title = stringResource(R.string.profile_goals),
+            subtitle = goals,
+            icon = painterResource(R.drawable.ic_target),
+            onClick = onGoals,
+        )
+        VoraListRow(
+            title = stringResource(R.string.profile_preferences),
+            subtitle = stringResource(R.string.profile_preferences_sub),
+            icon = painterResource(R.drawable.ic_sliders),
+            onClick = onPreferences,
+        )
+        VoraListRow(
+            title = stringResource(R.string.profile_connected),
+            subtitle = stringResource(R.string.profile_connected_sub),
+            icon = painterResource(R.drawable.ic_activity),
+            onClick = onDemo,
+        )
+        VoraListRow(
+            title = stringResource(R.string.profile_account),
+            subtitle = stringResource(R.string.profile_account_sub),
+            icon = painterResource(R.drawable.ic_lock),
+            onClick = onDemo,
+        )
+    }
+}
+
+/** "Build strength & improve fitness": el primero con mayúscula y el resto en minúscula. */
+@Composable
+private fun goalsSummary(goals: List<Goal>): String =
+    goals.mapIndexed { i, goal ->
+        val text = stringResource(goal.label())
+        if (i == 0) text else text.replaceFirstChar { it.lowercase() }
+    }.joinToString(" & ")
+
+@Composable
+private fun Header(onSettings: () -> Unit) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Text(
+            text = stringResource(R.string.tab_profile),
+            style = MaterialTheme.typography.titleLarge,
+            color = MaterialTheme.colorScheme.onBackground,
+            modifier = Modifier
+                .weight(1f)
+                .semantics { heading() },
+        )
+        Box(
+            modifier = Modifier
+                .size(VoraTheme.sizes.backCircle)
+                .clip(CircleShape)
+                .background(MaterialTheme.colorScheme.surface)
+                .border(VoraTheme.sizes.border, MaterialTheme.colorScheme.outline, CircleShape)
+                .clickable(role = Role.Button, onClick = onSettings),
+            contentAlignment = Alignment.Center,
+        ) {
+            Icon(
+                painter = painterResource(R.drawable.ic_settings),
+                contentDescription = stringResource(R.string.profile_settings),
+                tint = MaterialTheme.colorScheme.onSurface,
+            )
+        }
+    }
+}
+
+@Composable
+private fun IdentityCard(fullName: String, onEditProfile: () -> Unit) {
+    VoraCard(modifier = Modifier.fillMaxWidth(), padding = VoraTheme.spacing.s20) {
+        Column(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            Image(
+                painter = painterResource(R.drawable.avatar),
+                contentDescription = null,
+                modifier = Modifier
+                    .size(AvatarSize)
+                    .clip(CircleShape),
+            )
+            Spacer(Modifier.height(VoraTheme.spacing.s12))
+            Text(
+                text = fullName,
+                style = MaterialTheme.typography.titleMedium,
+                color = MaterialTheme.colorScheme.onSurface,
+            )
+            Spacer(Modifier.height(VoraTheme.spacing.s4))
+            Text(
+                text = stringResource(R.string.profile_tagline),
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                textAlign = TextAlign.Center,
+            )
+            Spacer(Modifier.height(VoraTheme.spacing.s12))
+            VoraButton(
+                text = stringResource(R.string.profile_edit),
+                onClick = onEditProfile,
+                style = VoraButtonStyle.Soft,
+                size = VoraButtonSize.Small,
+            )
+        }
+    }
+}
+
+@Composable
+private fun SnapshotCard(state: ProfileDashboardUiState, goals: String) {
+    VoraCard(modifier = Modifier.fillMaxWidth()) {
+        Text(
+            text = stringResource(R.string.profile_snapshot),
+            style = MaterialTheme.typography.labelSmall,
+            color = VoraTheme.colors.textMuted,
+        )
+        Spacer(Modifier.height(VoraTheme.spacing.s8))
+        Column(verticalArrangement = Arrangement.spacedBy(VoraTheme.spacing.s8)) {
+            SnapshotRow(stringResource(R.string.profile_snapshot_goal), goals)
+            SnapshotRow(
+                stringResource(R.string.profile_snapshot_experience),
+                stringResource(state.experience.label()),
+            )
+            SnapshotRow(
+                stringResource(R.string.profile_snapshot_training),
+                stringResource(R.string.profile_per_week, stringResource(state.trainingDays.label())),
+            )
+            SnapshotRow(
+                stringResource(R.string.profile_snapshot_workout),
+                stringResource(R.string.profile_workout_long, stringResource(state.workoutType.label())),
+            )
+        }
+    }
+}
+
+@Composable
+private fun SnapshotRow(label: String, value: String) {
+    Row(modifier = Modifier.fillMaxWidth()) {
+        Text(
+            text = label,
+            style = MaterialTheme.typography.bodyMedium,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+        )
+        Spacer(Modifier.size(VoraTheme.spacing.s12))
+        Text(
+            text = value,
+            style = MaterialTheme.typography.bodyMedium,
+            fontWeight = FontWeight.Medium,
+            color = MaterialTheme.colorScheme.onSurface,
+            textAlign = TextAlign.End,
+            modifier = Modifier.weight(1f),
+        )
+    }
+}
+
+@Composable
+private fun PersonalisationPanel(onReviewPreferences: () -> Unit) {
+    VoraPanel(modifier = Modifier.fillMaxWidth()) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(VoraTheme.spacing.s8),
+        ) {
+            VoraOrb(size = VoraTheme.sizes.orbSmall, withRing = false)
+            Text(
+                text = stringResource(R.string.profile_vora_label),
+                style = MaterialTheme.typography.labelMedium,
+                color = MaterialTheme.colorScheme.secondary,
+            )
+        }
+        Column(verticalArrangement = Arrangement.spacedBy(VoraTheme.spacing.s4)) {
+            Text(
+                text = stringResource(R.string.profile_vora_title),
+                style = MaterialTheme.typography.titleSmall,
+            )
+            Text(
+                text = stringResource(R.string.profile_vora_body),
+                style = MaterialTheme.typography.bodyMedium,
+                color = VoraTheme.colors.onDarkMuted,
+            )
+        }
+        VoraButton(
+            text = stringResource(R.string.profile_review),
+            onClick = onReviewPreferences,
+            style = VoraButtonStyle.Cta,
+            size = VoraButtonSize.Small,
+        )
+    }
+}
+
+@Preview(showBackground = true, heightDp = 1000)
+@Composable
+private fun ProfileDashboardScreenPreview() {
+    Parcialtp3Theme {
+        ProfileDashboardScreen(
+            state = ProfileDashboardUiState(
+                fullName = "Alex Morgan",
+                goals = listOf(Goal.BUILD_STRENGTH, Goal.IMPROVE_FITNESS),
+                experience = Experience.INTERMEDIATE,
+                trainingDays = TrainingDays.FOUR,
+                workoutType = WorkoutType.STRENGTH,
+            ),
+            onSettings = {},
+            onEditProfile = {},
+            onReviewPreferences = {},
+            onGoals = {},
+            onPreferences = {},
+            onDemo = {},
+        )
+    }
+}
