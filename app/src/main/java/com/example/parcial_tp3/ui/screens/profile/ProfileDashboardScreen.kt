@@ -232,7 +232,7 @@ private fun PersonalisationPanel(onReviewPreferences: () -> Unit) {
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(VoraTheme.spacing.s8),
         ) {
-            VoraOrb(size = VoraTheme.sizes.orbSmall, withRing = false)
+            VoraOrb(size = VoraTheme.sizes.orbSmall, onDark = true)
             Text(
                 text = stringResource(R.string.profile_vora_label),
                 style = MaterialTheme.typography.labelMedium,
