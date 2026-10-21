@@ -82,6 +82,7 @@
     <string name="profile_preferences_sub">Entrenamiento, nutrición y coaching</string>
     <string name="profile_connected">Datos conectados</string>
     <string name="profile_connected_sub">Datos de salud y actividad</string>
+    <string name="profile_synced">Sincronizado</string>
     <string name="profile_account">Cuenta</string>
     <string name="profile_account_sub">Suscripción, notificaciones y privacidad</string>
 

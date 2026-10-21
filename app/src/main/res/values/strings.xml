@@ -82,6 +82,7 @@
     <string name="profile_preferences_sub">Training, nutrition and coaching</string>
     <string name="profile_connected">Connected Data</string>
     <string name="profile_connected_sub">Health &amp; activity data</string>
+    <string name="profile_synced">Synced</string>
     <string name="profile_account">Account</string>
     <string name="profile_account_sub">Subscription, notifications &amp; privacy</string>
 

@@ -97,6 +97,7 @@ fun VoraPanel(
  * Fila de Settings y de Profile: icono en un circulo, titulo, subtitulo opcional y flecha.
  *
  * @param icon el icono propio de la fila (cada pantalla trae el suyo del Figma).
+ * @param trailing lo que va antes de la flecha, por ejemplo la etiqueta "Synced".
  */
 @Composable
 fun VoraListRow(
@@ -105,6 +106,7 @@ fun VoraListRow(
     modifier: Modifier = Modifier,
     subtitle: String? = null,
     icon: Painter? = null,
+    trailing: (@Composable () -> Unit)? = null,
 ) {
     VoraCard(modifier = modifier.fillMaxWidth(), onClick = onClick) {
         Row(verticalAlignment = Alignment.CenterVertically) {
@@ -134,6 +136,11 @@ fun VoraListRow(
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
                 }
+            }
+            if (trailing != null) {
+                Spacer(Modifier.size(VoraTheme.spacing.s8))
+                trailing()
+                Spacer(Modifier.size(VoraTheme.spacing.s8))
             }
             Icon(
                 painter = painterResource(R.drawable.ic_chevron_right),

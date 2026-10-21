@@ -44,6 +44,8 @@ import com.example.parcial_tp3.ui.components.VoraCard
 import com.example.parcial_tp3.ui.components.VoraListRow
 import com.example.parcial_tp3.ui.components.VoraOrb
 import com.example.parcial_tp3.ui.components.VoraPanel
+import com.example.parcial_tp3.ui.components.VoraTag
+import com.example.parcial_tp3.ui.components.VoraTagTone
 import com.example.parcial_tp3.ui.theme.Parcialtp3Theme
 import com.example.parcial_tp3.ui.theme.VoraTheme
 
@@ -87,6 +89,7 @@ fun ProfileDashboardScreen(
             subtitle = stringResource(R.string.profile_connected_sub),
             icon = painterResource(R.drawable.ic_activity),
             onClick = onDemo,
+            trailing = { VoraTag(stringResource(R.string.profile_synced), tone = VoraTagTone.Dark) },
         )
         VoraListRow(
             title = stringResource(R.string.profile_account),

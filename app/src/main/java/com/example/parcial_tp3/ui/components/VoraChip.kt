@@ -94,13 +94,15 @@ enum class VoraTagTone {
     Mint,
     /** Sobre un panel verde: blanco translucido con texto blanco ("MODERATE"). */
     OnDark,
+    /** Verde oscuro con texto blanco, sobre fondo claro: "Synced". */
+    Dark,
 }
 
 /**
  * Etiqueta compacta de disponibilidad o estado (lamina 04, "Indicadores"): pildora con
  * texto de 10 SemiBold en mayusculas. No se toca.
  *
- * @param text de strings.xml, ya en mayusculas.
+ * @param text de strings.xml, ya en mayusculas (salvo donde el Figma no las usa, como "Synced").
  */
 @Composable
 fun VoraTag(
@@ -111,6 +113,7 @@ fun VoraTag(
     val (fondo, texto) = when (tone) {
         VoraTagTone.Mint -> VoraTheme.colors.mintTranslucent to MaterialTheme.colorScheme.primary
         VoraTagTone.OnDark -> VoraTheme.colors.onDarkSubtle to MaterialTheme.colorScheme.onPrimary
+        VoraTagTone.Dark -> MaterialTheme.colorScheme.primary to MaterialTheme.colorScheme.onPrimary
     }
     Text(
         text = text,
@@ -152,6 +155,7 @@ private fun VoraChipPreview() {
             Row(horizontalArrangement = Arrangement.spacedBy(VoraTheme.spacing.s8)) {
                 VoraTag(a.uppercase())
                 VoraPanel { VoraTag(b.uppercase(), tone = VoraTagTone.OnDark) }
+                VoraTag(a, tone = VoraTagTone.Dark)
             }
         }
     }
