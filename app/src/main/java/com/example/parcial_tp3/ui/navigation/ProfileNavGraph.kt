@@ -7,13 +7,20 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import com.example.parcial_tp3.R
 import com.example.parcial_tp3.ui.components.PantallaVacia
+import com.example.parcial_tp3.ui.screens.profile.ProfileDashboardRoute
 
 /** Perfil: 6 pantallas. Solo 01 con barra; 02 a 06 se abren encima. */
 fun NavGraphBuilder.profileGraph(nav: NavController) {
     navigation(startDestination = Rutas.PROFILE_DASHBOARD, route = Rutas.PROFILE_GRAPH) {
 
         composable(Rutas.PROFILE_DASHBOARD) {
-            PantallaVacia(nombre = stringResource(R.string.pant_profile_01))
+            ProfileDashboardRoute(
+                onSettings = { nav.navigate(Rutas.SETTINGS) },
+                onEditProfile = { nav.navigate(Rutas.EDIT_PROFILE) },
+                onReviewPreferences = { nav.navigate(Rutas.VOICE_AI_SETTINGS) },
+                onGoals = { nav.navigate(Rutas.GOALS_PREFERENCES) },
+                onPreferences = { nav.navigate(Rutas.NUTRITION_PREFERENCES) },
+            )
         }
         composable(Rutas.EDIT_PROFILE) {
             PantallaVacia(
