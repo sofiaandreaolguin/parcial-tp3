@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Icono del Figma de VORA (ic_units.svg), trazo de 2. El color lo pone el componente con tint. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="17dp"
+    android:height="17dp"
+    android:viewportWidth="17"
+    android:viewportHeight="17">
+    <path
+        android:pathData="M16.0012 8.5006C16.0012 12.6431 12.6431 16.0012 8.5006 16.0012C4.35813 16.0012 1 12.6431 1 8.5006C1 4.35813 4.35813 1 8.5006 1C12.6431 1 16.0012 4.35813 16.0012 8.5006ZM11.6807 5.32017L10.3276 9.37874C10.2539 9.5997 10.1298 9.80047 9.96516 9.96516C9.80047 10.1298 9.5997 10.2539 9.37874 10.3276L5.32017 11.6807L6.67328 7.6221C6.74692 7.40115 6.871 7.20038 7.03569 7.03569C7.20038 6.871 7.40115 6.74692 7.6221 6.67328L11.6807 5.32017Z"
+        android:strokeWidth="2"
+        android:strokeColor="#FF000000"
+        android:strokeLineCap="round"
+        android:fillColor="#00000000" />
+</vector>
