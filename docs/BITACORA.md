@@ -85,3 +85,20 @@ Formato:
 - Revisores: no corrieron los subagentes revisores (cambio de carril D, de tres líneas). Corrió el control automático: `reglas.sh` sin fallas y `control-rapido.sh` en verde.
 - Evidencia: `./gradlew testDebugUnitTest` en verde, 11 tests, 0 fallas. Comprobado en el emulador Pixel_8a (411 dp) con `adb shell cmd uimode night yes`: `docs/evidencia/visual/barra-estado-modo-oscuro-411dp.png`. La hora, el wifi y la batería se leen oscuros sobre el fondo claro de VORA, y la barra de gestos también.
 - Commit / PR:
+
+### 2026-10-22 · Zaki · feat(profile): maquetar Profile / 01 Dashboard según Figma
+- Carril y requisitos: B · UI01, UI02, UI03, NAV01, NAV03
+- Plan aprobado: rama 1 de 6 del flujo Profile. Profile es "Demostración" en la consigna, así que no hay Room: un `ProfileRepository` en memoria (`@Singleton`, `StateFlow`) con el perfil de Alex Morgan, y un ViewModel por pantalla que lo lee. Aviso de modo demostración con `Toast` en las filas sin pantalla.
+- Qué propuso la IA y qué cambiamos:
+  - La IA propuso un solo `ProfileViewModel` compartido por las 6 pantallas. Zaki lo puso en duda con sus apuntes de clase ("un viewmodel por pantalla") y se eligió un ViewModel por pantalla con el repositorio compartido, que es la cadena de RF06 y la forma del proyecto `Quote` del docente.
+  - La IA propuso una función privada para la etiqueta "Synced". Zaki propuso usar `VoraTag` que ya existe; se sumó para usarlo el tono `Dark` a `VoraTag` y un `trailing` opcional a `VoraListRow` en vez de la función privada.
+  - Zaki notó que al orbe del panel le faltaba el aro del Figma; se pasó a `VoraOrb(onDark = true)`.
+  - El tamaño del avatar empezó como constante local y pasó al tema (`VoraSizes.avatar`).
+  - Los 16 íconos los exportó otro agente del Figma (cuenta Starter, sin Dev Mode) y la IA los convirtió a vector drawable.
+- Revisores:
+  - revisor-visual, dos vueltas. La primera marcó texto del panel VORA más grande y padding de 20 en la tarjeta de identidad: Zaki decidió no aplicarlas. La segunda, con capturas del teléfono en inglés a 411 y 360 dp: aprobada.
+  - revisor-arquitectura: un BLOQUEA, el conector " & " de los objetivos escrito en el código; se pasó a `profile_goals_join` ("&" en inglés, "y" en español). Un ALTA de zona: los cambios en `Dimens.kt`, `VoraCard.kt` y `VoraChip.kt` son de Martu y quedan para su aprobación en el PR.
+  - /code-review: además del " & ", el caso de objetivos vacíos (`reduceOrNull`).
+  - Quedan como sugerencias: test del ViewModel, `birthDate` como texto en inglés y alimentos a evitar sin traducir (se ven recién en 02 y 04), la frase bajo el nombre fija aunque cambien los objetivos, área táctil de 32 del engranaje (igual que `VoraTopBarLarge`), `FontWeight.Medium` en la pantalla y confirmar con Fiore la entrada a 05 desde "Review preferences".
+- Evidencia: `docs/evidencia/visual/profile-01-{411dp,360dp}{,-scrolled}.png` (teléfono real). Build y tests unitarios en verde, `control-rapido.sh` sin fallas.
+- Commit / PR:
