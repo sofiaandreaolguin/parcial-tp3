@@ -17,7 +17,7 @@ interface MealDao {
     @Insert
     suspend fun insert(meal: MealEntity): Long
 
-    // Firma vacia (tests en rojo): WHERE 0 siempre devuelve vacio. La query real la escribe implementar.
-    @Query("SELECT * FROM meals WHERE 0 AND date = :date")
+    /** Las comidas de un dia (fecha ISO), por id. Room vuelve a emitir cada vez que cambia la tabla. */
+    @Query("SELECT * FROM meals WHERE date = :date ORDER BY id")
     fun observeByDate(date: String): Flow<List<MealEntity>>
 }
