@@ -152,13 +152,68 @@ internal fun CatalogoControles() {
         VoraPanel(Modifier.fillMaxWidth()) {
             VoraStepper(corto, {}, {})
         }
+        // Orbe: los dos tonos y los tamanos que usa el asistente
         Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(VoraTheme.spacing.s16)) {
             VoraOrb()
+            VoraOrb(size = VoraTheme.sizes.orbMuted, tone = VoraOrbTone.Muted)
+            VoraOrb(size = VoraTheme.sizes.orbSmall)
             VoraOrb(size = VoraTheme.sizes.orbSmall, withRing = false)
         }
         VoraPanel(Modifier.fillMaxWidth()) {
-            VoraOrb(onDark = true)
+            VoraOrb(onDark = true, withRipple = true)
         }
+
+        // Botones redondos, en los tamanos de Voice
+        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(VoraTheme.spacing.s12)) {
+            VoraCircleButton(
+                painterResource(R.drawable.ic_mic),
+                corto,
+                {},
+                size = VoraTheme.sizes.micCircle,
+                iconSize = VoraTheme.sizes.iconMic,
+            )
+            VoraCircleButton(
+                painterResource(R.drawable.ic_pause),
+                corto,
+                {},
+                tone = VoraCircleButtonTone.Mint,
+                size = VoraTheme.sizes.pauseCircle,
+            )
+            VoraCircleButton(painterResource(R.drawable.ic_send), corto, {}, iconSize = VoraTheme.sizes.iconSmall)
+            VoraCircleButton(painterResource(R.drawable.ic_plus), corto, {}, tone = VoraCircleButtonTone.Surface)
+        }
+
+        // Etiqueta de seccion, aviso y conversacion
+        VoraSectionLabel(stringResource(R.string.voice_suggested))
+        VoraNoticeCard(
+            icon = painterResource(R.drawable.ic_mic),
+            iconBackground = VoraTheme.colors.noticeIcon,
+            title = stringResource(R.string.voice_mic_notice_title),
+            body = stringResource(R.string.voice_mic_notice_body),
+            primaryText = stringResource(R.string.voice_allow_access),
+            onPrimary = {},
+            modifier = Modifier.fillMaxWidth(),
+            secondaryText = stringResource(R.string.voice_not_now),
+            onSecondary = {},
+        )
+        VoraChatBubble(
+            text = stringResource(R.string.conversation_demo_q1),
+            author = VoraChatAuthor.Me,
+            time = stringResource(R.string.conversation_demo_t1),
+        )
+        VoraChatBubble(
+            text = stringResource(R.string.conversation_demo_a2),
+            author = VoraChatAuthor.Vora,
+            footer = { VoraChatAudioFooter(stringResource(R.string.conversation_listen), {}) },
+        )
+        VoraComposer(
+            value = "",
+            onValueChange = {},
+            onSend = {},
+            placeholder = stringResource(R.string.conversation_placeholder),
+            onAttach = {},
+            onMic = {},
+        )
     }
 }
 

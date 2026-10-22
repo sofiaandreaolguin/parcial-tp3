@@ -6,6 +6,8 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -47,6 +49,10 @@ import com.example.parcial_tp3.ui.theme.VoraTheme
  * (flecha 7 x 10, cruz 11 x 11), centrados en el area tactil de 48.
  *
  * @param title el titulo chico centrado, de strings.xml; null si el frame no lo tiene.
+ * @param titleAtStart true cuando el frame lo pone pegado a la flecha en vez de centrado.
+ *   Asi se ve en los seis frames de Voice; en Workout / 03, 04 y 06 va centrado.
+ * @param titleBadge lo que va inmediatamente despues del titulo: el punto verde de
+ *   Voice / 05 Conversation.
  * @param onBack si no es null, dibuja la flecha de volver.
  * @param onClose si no es null, dibuja la cruz de cerrar a la derecha.
  * @param actions otros iconos a la derecha, antes de cerrar.
@@ -58,6 +64,8 @@ fun VoraTopBar(
     modifier: Modifier = Modifier,
     onClose: (() -> Unit)? = null,
     contentColor: Color = MaterialTheme.colorScheme.onBackground,
+    titleAtStart: Boolean = false,
+    titleBadge: @Composable (() -> Unit)? = null,
     actions: @Composable RowScope.() -> Unit = {},
 ) {
     Box(
@@ -69,7 +77,7 @@ fun VoraTopBar(
             .padding(vertical = VoraTheme.spacing.s4),
         contentAlignment = Alignment.Center,
     ) {
-        if (title != null) {
+        if (title != null && !titleAtStart) {
             Text(
                 text = title,
                 style = MaterialTheme.typography.labelLarge,
@@ -81,13 +89,31 @@ fun VoraTopBar(
                 modifier = Modifier.padding(horizontal = VoraTheme.sizes.touchTarget),
             )
         }
-        if (onBack != null) {
-            IconButton(onClick = onBack, modifier = Modifier.align(Alignment.CenterStart)) {
-                Icon(
-                    painter = painterResource(R.drawable.ic_back),
-                    contentDescription = stringResource(R.string.volver),
-                    tint = contentColor,
+        Row(
+            modifier = Modifier.align(Alignment.CenterStart),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            if (onBack != null) {
+                IconButton(onClick = onBack) {
+                    Icon(
+                        painter = painterResource(R.drawable.ic_back),
+                        contentDescription = stringResource(R.string.volver),
+                        tint = contentColor,
+                    )
+                }
+            }
+            if (title != null && titleAtStart) {
+                Text(
+                    text = title,
+                    style = MaterialTheme.typography.labelLarge,
+                    color = contentColor,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
                 )
+                if (titleBadge != null) {
+                    Spacer(Modifier.width(VoraTheme.spacing.s10))
+                    titleBadge()
+                }
             }
         }
         Row(
