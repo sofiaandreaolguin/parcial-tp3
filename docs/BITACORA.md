@@ -22,7 +22,7 @@ Formato:
 - Qué propuso la IA y qué cambiamos: la IA propuso cuatro carriles según el tamaño del cambio (chico, pantalla, datos, bug) y siete ajustes a la metodología (decisión 001). Fiore pidió que la IA armara solo la metodología y no el código de la app, y que la IA nunca commitee: se agregó además un bloqueo de `git commit` y `git push` en `.claude/settings.json`.
 - Revisores: controles negativos de los scripts (ver decisión 001).
 - Evidencia: guía "Cómo trabajamos VORA" (artifact compartido con el grupo).
-- Commit / PR:
+- Commit / PR: [#1](https://github.com/sofiaandreaolguin/parcial-tp3/pull/1)
 
 ### 2026-10-19 · Hector · feat(di): proveer Retrofit y Room en módulos de Hilt
 - Carril y requisitos: C (sin spec EARS: criterios C1 a C7 en el plan) · RF08, RF06, RF05 · tarea VC-f
@@ -75,6 +75,44 @@ Formato:
   - /code-review: el gráfico arma barra y etiqueta en la misma columna, y TalkBack lee solo el resumen.
   - revisor-arquitectura, sin nada bloqueante. Se corrigieron los dos ALTA: el interruptor se puede usar con la fila entera como zona táctil (`onCheckedChange = null`), y el selector tiene área táctil de 48 sin cambiar cómo se ve. También: las cajas se anuncian como opción única, el anillo y las estadísticas se leen como un solo elemento, el orbe chico tiene su propio tamaño y CONTEXTO §6 y §9 quedaron al día.
 - Evidencia: `docs/evidencia/visual/controles-catalogo-{1,2}-{394dp,360dp}.png`. Build y 11 tests unitarios en verde, `reglas.sh` sin fallas.
+- Commit / PR: [#7](https://github.com/sofiaandreaolguin/parcial-tp3/pull/7)
+
+### 2026-10-20 · Fiore · fix(nav): fijar el estilo de la barra de estado para el tema claro
+- Carril y requisitos: D (bug) · UI01 · zona de Navegación (`MainActivity`)
+- Plan aprobado: `enableEdgeToEdge()` venía sin argumentos desde el commit inicial de la plantilla. Elegía el color de los íconos de las barras del sistema según el modo oscuro **del celular**, no según los colores de la app. Mientras el tema de la plantilla tenía modo oscuro no se notaba; al pasar el tema a solo claro (PR #5), en un celular en modo oscuro los íconos salían blancos sobre el fondo claro de VORA y no se leían. Se fija `SystemBarStyle.light` en las dos barras.
+- Qué propuso la IA y qué cambiamos: la IA encontró que la barra de abajo tenía el mismo problema y no solo la de estado (`VoraBottomBar` usa `colorScheme.surface`, que también es claro), así que se fijaron las dos y no solo `statusBarStyle`. Con `minSdk = 29` las dos barras admiten íconos oscuros, así que el segundo argumento (`darkScrim`) nunca se usa y queda transparente. Se agregó un comentario que aclara que `SystemBarStyle.light` se nombra por el **fondo**, no por el color del ícono.
+- También en este cambio: la ficha `docs/decisiones/004-rutas-object-y-route-screen.md`, que documenta dos decisiones de navegación que estaban tomadas pero sin escribir (`object Rutas` y `XxxRoute`), y la sección de `specs/CONTEXTO.md` que las compara con los proyectos de la cátedra.
+- Revisores: no corrieron los subagentes revisores (cambio de carril D, de tres líneas). Corrió el control automático: `reglas.sh` sin fallas y `control-rapido.sh` en verde.
+- Evidencia: `./gradlew testDebugUnitTest` en verde, 11 tests, 0 fallas. Comprobado en el emulador Pixel_8a (411 dp) con `adb shell cmd uimode night yes`: `docs/evidencia/visual/barra-estado-modo-oscuro-411dp.png`. La hora, el wifi y la batería se leen oscuros sobre el fondo claro de VORA, y la barra de gestos también.
+- Commit / PR:
+
+### 2026-10-21 · Sofi · feat(nutrition): guardar y leer comidas por fecha en Room
+- Carril y requisitos: C · RF03 (parcial), RF04 (parcial), RF06, RF08 (parcial)
+- Plan aprobado: VC-h, sesión 4 del plan (Commit 8 y pull request). Solo persistencia de comidas: `Meal`, `MealEntity`, `MealDao`, mapeo, `MealRepository` con su implementación y el cableado de Hilt. Sin ViewModel ni pantallas (VC-l).
+- Qué propuso la IA y qué cambiamos:
+  - La IA adelantó el repositorio (commit 6) al DAO (commit 7) para que `control-rapido.sh` quedara en verde: C6 y C7 usan un `FakeMealDao`.
+  - Los controles negativos mostraron que C3 y C9 habían pasado en rojo. Se les hizo el control negativo recién con el código real.
+  - Al cerrar, el revisor de requisitos marcó que la columna "Vi el rojo" de la spec decía "no" en todas las filas. Se corrigió a "sí", con nota en C3 y C9.
+  - Los revisores señalaron el `fallbackToDestructiveMigration` (borra las comidas al subir la versión) y las excepciones de los mappers dentro del `Flow`. No se tocaron: la spec los deja para VC-l y la decisión 003 ya documenta el fallback.
+- Revisores: revisor-requisitos, revisor-arquitectura y /code-review. Nada BLOQUEA ni CRÍTICA. Una ALTA (fallback destructivo con `VoraDatabase` en la versión 2), que queda como aviso y no se aplicó. Sugerencias sin aplicar: índice en `date`, `addMeal` con id repetido, test C10 con sincronización débil, `@Singleton` innecesario en el `@Binds`.
+- Evidencia: `docs/evidencia/tests/2026-10-21-vc-h-{rojo,verde}.md`. Build y 17 tests unitarios en verde; 8 tests instrumentados en verde en el emulador (`MealDaoTest` 5, `WorkoutDaoTest` 2, `ExampleInstrumentedTest` 1).
+- Commit / PR:
+
+### 2026-10-22 · Zaki · feat(profile): maquetar Profile / 01 Dashboard según Figma
+- Carril y requisitos: B · UI01, UI02, UI03, NAV01, NAV03
+- Plan aprobado: rama 1 de 6 del flujo Profile. Profile es "Demostración" en la consigna, así que no hay Room: un `ProfileRepository` en memoria (`@Singleton`, `StateFlow`) con el perfil de Alex Morgan, y un ViewModel por pantalla que lo lee. Aviso de modo demostración con `Toast` en las filas sin pantalla.
+- Qué propuso la IA y qué cambiamos:
+  - La IA propuso un solo `ProfileViewModel` compartido por las 6 pantallas. Zaki lo puso en duda con sus apuntes de clase ("un viewmodel por pantalla") y se eligió un ViewModel por pantalla con el repositorio compartido, que es la cadena de RF06 y la forma del proyecto `Quote` del docente.
+  - La IA propuso una función privada para la etiqueta "Synced". Zaki propuso usar `VoraTag` que ya existe; se sumó para usarlo el tono `Dark` a `VoraTag` y un `trailing` opcional a `VoraListRow` en vez de la función privada.
+  - Zaki notó que al orbe del panel le faltaba el aro del Figma; se pasó a `VoraOrb(onDark = true)`.
+  - El tamaño del avatar empezó como constante local y pasó al tema (`VoraSizes.avatar`).
+  - Los 16 íconos los exportó otro agente del Figma (cuenta Starter, sin Dev Mode) y la IA los convirtió a vector drawable.
+- Revisores:
+  - revisor-visual, dos vueltas. La primera marcó texto del panel VORA más grande y padding de 20 en la tarjeta de identidad: Zaki decidió no aplicarlas. La segunda, con capturas del teléfono en inglés a 411 y 360 dp: aprobada.
+  - revisor-arquitectura: un BLOQUEA, el conector " & " de los objetivos escrito en el código; se pasó a `profile_goals_join` ("&" en inglés, "y" en español). Un ALTA de zona: los cambios en `Dimens.kt`, `VoraCard.kt` y `VoraChip.kt` son de Martu y quedan para su aprobación en el PR.
+  - /code-review: además del " & ", el caso de objetivos vacíos (`reduceOrNull`).
+  - Quedan como sugerencias: test del ViewModel, `birthDate` como texto en inglés y alimentos a evitar sin traducir (se ven recién en 02 y 04), la frase bajo el nombre fija aunque cambien los objetivos, área táctil de 32 del engranaje (igual que `VoraTopBarLarge`), `FontWeight.Medium` en la pantalla y confirmar con Fiore la entrada a 05 desde "Review preferences".
+- Evidencia: `docs/evidencia/visual/profile-01-{411dp,360dp}{,-scrolled}.png` (teléfono real). Build y tests unitarios en verde, `control-rapido.sh` sin fallas.
 - Commit / PR:
 
 ### 2026-10-22 · Fiore · feat(voice): el asistente VORA con sus seis frames

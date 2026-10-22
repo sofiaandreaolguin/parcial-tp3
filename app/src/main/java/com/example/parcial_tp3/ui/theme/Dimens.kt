@@ -126,6 +126,8 @@ object VoraSizes {
     val toggleWidth = 44.dp
     val toggleHeight = 24.dp
     val toggleThumb = 20.dp
+    /** Foto de perfil de Profile / 01 y 02. */
+    val avatar = 72.dp
 }
 
 /** Las formas de Material 3 apuntan a los mismos radios, asi los componentes de M3 coinciden. */

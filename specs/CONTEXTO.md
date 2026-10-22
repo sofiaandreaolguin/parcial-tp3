@@ -82,6 +82,39 @@ Cada subcarpeta de `screens/` tiene un `LEEME.md` con las pantallas de ese flujo
 
 **Para reemplazar una pantalla de relleno:** en el grafo de tu flujo (`ui/navigation/XxxNavGraph.kt`), cambiá `PantallaVacia(...)` por tu `XxxRoute(...)`. No se toca `MainActivity` ni la barra.
 
+### Cómo se compara con los proyectos de la cátedra
+
+El repo `ORT-Argentina/kotlin-compose` reúne material de varias fuentes. Para "cómo lo pide
+el profe" tomamos los proyectos del docente (`ar.edu.ort.*`): `Quote` (el simulacro del 7/10,
+el más nuevo, con Hilt) y `BootShop`.
+
+| Decisión | Qué hacen los proyectos del docente | Qué hacemos |
+|---|---|---|
+| Carpeta de pantallas | `ui/screens/<feature>/` (Quote); `screens/<feature>/` (BootShop) | igual, una subcarpeta por flujo |
+| Route + Screen | `DetailRoute.kt` + `DetailScreen.kt` + `DetailViewModel.kt` (BootShop) | igual |
+| Grafos anidados | `navigation(route, startDestination)` con funciones `NavGraphBuilder.addXxx()` (BootShop) | igual, uno por flujo en su archivo |
+| Capas de datos | `data/local`, `data/repository`, `di/`, `model/` (Quote) | igual |
+| Rutas | `sealed class` con `data object` (Quote, BootShop) | **distinto:** `object Rutas` con `const val` |
+| Dónde se pide el ViewModel | `hiltViewModel()` dentro del `composable` del NavHost (Quote) | **distinto:** dentro del `XxxRoute` (como BootShop) |
+
+En casi todo seguimos la estructura de los ejemplos. Las dos diferencias están razonadas en
+`docs/decisiones/004-rutas-object-y-route-screen.md`, con las opciones que se descartaron.
+En resumen:
+
+1. **`object Rutas` en vez de `sealed class`.** Son 33 destinos, varios con argumentos
+   (`workout_details/{workoutId}`), así que hacen falta constructores
+   (`Rutas.workoutDetails(id)`). Además el `Scaffold` de `MainActivity` decide la barra
+   comparando contra `destination.route`, que es un `String`, y por eso existen
+   `RUTAS_CON_BARRA` y `RUTAS_ENCIMA`: con `sealed class` habría que sacar `.route` en todos
+   lados igual. Cubierto por `RutasTest.kt`. Si el proyecto siguiera, la migración natural
+   es a `sealed class`, que da chequeo del compilador.
+2. **`XxxRoute` separado en vez de `hiltViewModel()` inline.** Deja la `XxxScreen` stateless
+   y previsualizable, que es lo que permite la comparación con Figma de UI01 (40 puntos) y
+   las cinco capturas del README. Es lo que hace `BootShop`.
+
+La consigna fija los requisitos de navegación por comportamiento (NAV01 a NAV05) y no
+prescribe cómo declarar las rutas, así que las dos formas cumplen.
+
 ## 5. Nombres
 
 | Qué | Cómo | Ejemplo |
@@ -133,9 +166,9 @@ El tema lo arma Tema y componentes en `ui/theme/`. Detalle completo en la secci�
 | Encabezado grande | `VoraTopBarLarge(title: String, onBack: () -> Unit, modifier)`. Flecha en un círculo blanco y título de pantalla a la izquierda (Profile, Settings, Nutrition Preferences) | Hecho (VC-d, PR 2) |
 | Botón | `VoraButton(text, onClick, modifier, style: VoraButtonStyle = Primary, size: VoraButtonSize = Large)`. Estilos: `Primary`, `Cta` (lima), `Mint`, `OutlinedOnDark`, `Outlined`, `Soft`, `Destructive`, `Text`, `TextMuted`. Dentro de paneles, tamaño `Small` | Hecho (VC-d, PR 2) |
 | Tarjeta y panel | `VoraCard(modifier, padding = 16, radius = 16, onClick = null) { }` (fila de comida: padding y radio 12) y `VoraPanel(modifier) { }` (verde, contenido blanco) | Hecho (VC-d, PR 2) |
-| Opción y fila | `VoraOptionCard(title, selected, onClick, modifier, subtitle, role = Checkbox)` (`RadioButton` si es elección única) y `VoraListRow(title, onClick, modifier, subtitle, icon: Painter?)` | Hecho (VC-d, PR 2) |
+| Opción y fila | `VoraOptionCard(title, selected, onClick, modifier, subtitle, role = Checkbox)` (`RadioButton` si es elección única) y `VoraListRow(title, onClick, modifier, subtitle, icon: Painter?, trailing: (@Composable () -> Unit)?)`. `trailing` va antes de la flecha ("Synced") | Hecho (VC-d, PR 2; `trailing` en Profile / 01) |
 | Campo | `VoraTextField(value, onValueChange, modifier, label, placeholder, leadingIcon, singleLine, keyboardOptions, keyboardActions)`. La etiqueta llega de `strings.xml` ya en mayúsculas | Hecho (VC-d, PR 2) |
-| Chip y etiqueta | `VoraChip(text, selected, onClick, modifier, selectedStyle = Mint \| Dark \| Outline, trailingIcon, trailingTint)` y `VoraTag(text, modifier, tone = Mint \| OnDark)` | Hecho (VC-d, PR 2) |
+| Chip y etiqueta | `VoraChip(text, selected, onClick, modifier, selectedStyle = Mint \| Dark \| Outline, trailingIcon, trailingTint)` y `VoraTag(text, modifier, tone = Mint \| OnDark \| Dark)`. `Dark`: verde oscuro sobre fondo claro ("Synced") | Hecho (VC-d, PR 2; `Dark` en Profile / 01) |
 | Mensajes | `VoraInfoMessage(text, modifier, icon = ic_sparkle)` y `VoraAdvice(label, text, modifier)` | Hecho (VC-d, PR 2) |
 | Control segmentado | `VoraSegmentedControl(options, selectedIndex, onSelect, modifier, style = Pill \| Tabs \| Boxes)`. Pill: "Week / Month / 3 Months"; Tabs: "Calories / Protein…"; Boxes: "3 days / 4 days", "Supportive / Balanced / Direct" | Hecho (VC-d, PR 3) |
 | Estadísticas | `VoraStatRow(stats: List<VoraStat>, modifier)` con `VoraStat(label, value)` (fila con divisores) y `VoraStatTile(label, value, modifier, trend)` (tarjeta gris) | Hecho (VC-d, PR 3) |
