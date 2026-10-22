@@ -134,3 +134,23 @@ Formato:
 - Evidencia: `./gradlew assembleDebug` y `testDebugUnitTest` en verde, 15 tests nuevos de los dos ViewModel (26 en total). Capturas de los seis frames en dos tamaños, en `docs/evidencia/visual/voice-0*-{411,360}dp.png`, sacadas recorriendo la app de verdad: el recorrido de la demo (Idle → Listening → Processing → Speaking → Idle → segunda vuelta → Error → Conversation) funciona de punta a punta. Para llegar a Voice sin pasar por Home, que todavía es pantalla de relleno, se apuntó el `NavHost` a `voice_graph` **solo para capturar**, y se revirtió. Se creó el AVD `Vora_360` (1080 x 2160 a 480 ppp) para el segundo tamaño de UI03. Con el modo oscuro del sistema activado la pantalla se ve igual (criterio C38): `voice-01-idle-411dp-oscuro.png`.
 - Cierre (22/10): despues de la segunda vuelta del revisor se hizo la pasada que faltaba, nodo por nodo del Figma, sobre tipografias, colores y espaciados, que hasta ahi se habian mapeado "por funcion" a los roles del tema. De ahi salieron la flecha de volver dentro de un circulo a 20 del borde, SPEAKING en menta, TAP TO TALK en verde, "Type instead" subrayado, el encabezado de Conversation blanco de 56 debajo de la barra de estado, y el aire por frame (32 entre bloques en Idle, Speaking y Error; 40 en Listening y Processing). Las dos rutas del asistente pasaron a pintarse hasta el borde, que es lo unico que toca `MainActivity`: las otras 35 no cambian y `Profile / 01` quedo identica, verificado antes y despues. Dos errores propios quedaron en el camino y van como ejemplo en METODOLOGIA 6.2: el fondo del encabezado puesto antes del margen de la barra de estado, y el circulo de volver a 8 en vez de a 20 por el area tactil de 48. Los dos con el nodo bien leido y el resultado mal, y los dos pasaron varias revisiones a ojo antes de que un muestreo de color los mostrara en un segundo.
 - Commit / PR:
+
+### 2026-10-22 · Zaki · feat(profile): maquetar Profile / 02 Edit Profile según Figma
+- Carril y requisitos: B · UI01, UI02, UI03, NAV02, NAV03, NAV05
+- Plan aprobado: rama 2 de 6 del flujo Profile. Por ahora las pantallas de Profile solo se dibujan con los datos del `ProfileRepository` en memoria: los campos son de solo lectura y "Save changes" vuelve atrás sin guardar. Editar y guardar llega si se suma persistencia.
+- Qué propuso la IA y qué cambiamos:
+  - La IA propuso un menú para elegir Gender y campos con unidad fija para cm y kg. Zaki lo frenó: la pantalla es solo dibujo, y los datos se muestran estáticos como en el Figma.
+  - La IA planteó que los campos abrirían el teclado sin dejar escribir. Se sumó `readOnly` a `VoraTextField`, con el visto bueno de Martu. Al hacerlo editable alcanza con quitarlo, y la edición va en el ViewModel y el repositorio.
+  - Zaki pidió hacer componente solo lo que se repita en el flujo: `ProfileAvatar` (01 y 02) y el Toast de demostración (`rememberDemoToast`). "MY SNAPSHOT" pasó a `VoraSectionLabel`, que ya existía.
+  - `birthDate` pasó de texto en inglés a `LocalDate`, con el formato en `strings.xml` según el idioma.
+- Revisores:
+  - revisor-visual, dos vueltas. La primera marcó la foto de 80 dp, la etiqueta de los campos y la nota al pie en 12, y dos espaciados; la IA confirmó las medidas en el Figma antes de cambiar el tema y Zaki eligió aplicar todo (`avatarLarge`, `fieldLabel`, `footnote`). La segunda: aprobada.
+  - revisor-arquitectura: nada bloqueante. /code-review: se corrigieron dos comentarios que habían quedado mal, el Toast repetido y el `remember` del formato de fecha.
+  - Quedan como sugerencias:
+    - tres diferencias de 4 dp como mucho (GENDER → aviso, "Change photo" y botón → nota al pie);
+    - el campo de solo lectura toma foco y TalkBack lo lee como editable;
+    - "Save changes" vuelve sin avisar;
+    - `ProfileRepository` sin interfaz;
+    - nombres escritos en las previews.
+- Evidencia: `docs/evidencia/visual/profile-02-{411dp,360dp,360dp-scrolled}.png` (teléfono real). Build y tests unitarios en verde, `control-rapido.sh` sin fallas.
+- Commit / PR:
