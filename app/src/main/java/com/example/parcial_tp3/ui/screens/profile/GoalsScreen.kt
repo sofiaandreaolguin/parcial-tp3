@@ -5,10 +5,8 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -26,7 +24,6 @@ import com.example.parcial_tp3.domain.model.WorkoutType
 import com.example.parcial_tp3.ui.components.VoraButton
 import com.example.parcial_tp3.ui.components.VoraChip
 import com.example.parcial_tp3.ui.components.VoraOptionCard
-import com.example.parcial_tp3.ui.components.VoraSectionLabel
 import com.example.parcial_tp3.ui.components.VoraSegmentedControl
 import com.example.parcial_tp3.ui.components.VoraSegmentedStyle
 import com.example.parcial_tp3.ui.components.VoraTopBarLarge
@@ -50,6 +47,7 @@ fun GoalsScreen(
             modifier = Modifier.padding(
                 start = VoraTheme.spacing.screen,
                 end = VoraTheme.spacing.screen,
+                top = VoraTheme.spacing.s12,
                 bottom = VoraTheme.spacing.s20,
             ),
             verticalArrangement = Arrangement.spacedBy(VoraTheme.spacing.s12),
@@ -98,17 +96,23 @@ fun GoalsScreen(
             VoraButton(
                 text = stringResource(R.string.profile_save_preferences),
                 onClick = onSave,
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = VoraTheme.spacing.s8),
             )
         }
     }
 }
 
-/** Etiqueta de sección con un poco más de aire arriba que el resto de la columna. */
+/** Etiqueta de sección de 13 SemiBold, medida en Profile / 03 (más grande que la de Voice). */
 @Composable
 private fun Section(text: String) {
-    Spacer(Modifier.height(VoraTheme.spacing.s4))
-    VoraSectionLabel(text, color = VoraTheme.colors.textMuted)
+    Text(
+        text = text,
+        style = MaterialTheme.typography.labelMedium,
+        color = VoraTheme.colors.textMuted,
+        modifier = Modifier.padding(top = VoraTheme.spacing.s8),
+    )
 }
 
 // El Figma solo dibuja subtítulo en las opciones elegidas; las demás no lo tienen.
