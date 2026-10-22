@@ -61,7 +61,7 @@ fun VoraTextField(
     val textStyle = MaterialTheme.typography.bodyLarge.copy(color = colors.onSurface)
     Column(modifier) {
         if (label != null) {
-            Text(text = label, style = MaterialTheme.typography.labelSmall, color = colors.onSurfaceVariant)
+            Text(text = label, style = VoraTheme.text.fieldLabel, color = colors.onSurfaceVariant)
             // 4 + los 2 que suma el alto de linea de la etiqueta = los 6 de la lamina
             Spacer(Modifier.height(VoraTheme.spacing.s4))
         }
