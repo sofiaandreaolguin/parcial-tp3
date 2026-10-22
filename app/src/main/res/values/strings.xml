@@ -58,4 +58,67 @@
     <string name="pant_profile_04">Profile / 04 — Nutrition Preferences</string>
     <string name="pant_profile_05">Profile / 05 — Voice &amp; AI Settings</string>
     <string name="pant_profile_06">Profile / 06 — Settings</string>
+
+    <!-- Asistente VORA (Voice / 01 a 06 y Conversation). Textos del Figma, en ingles. -->
+    <string name="voice_coach_title">VORA Coach</string>
+    <string name="voice_online">ONLINE</string>
+    <string name="voice_idle_title">How can I help?</string>
+    <string name="voice_idle_subtitle">Talk naturally about your workout, nutrition or progress.</string>
+    <string name="voice_suggested">SUGGESTED QUESTIONS</string>
+    <string name="voice_q_workout">Start my workout</string>
+    <string name="voice_q_breakfast">Log my breakfast</string>
+    <string name="voice_q_dinner">What should I eat tonight?</string>
+    <string name="voice_q_progress">How am I doing?</string>
+    <string name="voice_last_conversation">LAST CONVERSATION</string>
+    <string name="voice_last_time">2 hours ago</string>
+    <string name="voice_last_question">\"Create a 30-minute workout for me.\"</string>
+    <string name="voice_tap_to_talk">TAP TO TALK</string>
+    <string name="voice_type_instead">Type instead</string>
+    <string name="voice_cancel">Cancel</string>
+
+    <string name="voice_listening_title">Listening</string>
+    <string name="voice_live_audio">LIVE AUDIO</string>
+    <string name="voice_live_transcript">LIVE TRANSCRIPT</string>
+    <string name="voice_transcript_demo">\"I had chicken, rice and some vegetables for lunch...\"</string>
+    <string name="voice_speak_naturally">Speak naturally. I\'m listening.</string>
+
+    <string name="voice_processing_title">Processing</string>
+    <string name="voice_thinking">THINKING...</string>
+    <string name="voice_captured_demo">\"I had chicken, rice and some vegetables for lunch.\"</string>
+    <string name="voice_checking">Checking your nutrition target...</string>
+
+    <string name="voice_speaking_title">VORA Speaking</string>
+    <string name="voice_speaking_tag">SPEAKING</string>
+    <string name="voice_reply_demo">\"That sounds like a balanced lunch. I\'ve estimated around 520 calories with approximately 38 grams of protein.\"</string>
+    <string name="voice_repeat">Repeat</string>
+    <string name="voice_pause">Pause</string>
+    <string name="voice_stop">Stop</string>
+    <string name="voice_tap_to_interrupt">Tap to Interrupt</string>
+    <string name="voice_elapsed">0:08</string>
+    <string name="voice_remaining">-0:14</string>
+
+    <string name="voice_error_title">System Alert</string>
+    <string name="voice_error_heading">Sorry, I didn\'t catch that</string>
+    <string name="voice_error_body">Try speaking again or type your request instead. Make sure your microphone is enabled.</string>
+    <string name="voice_mic_notice_title">Microphone access needed</string>
+    <string name="voice_mic_notice_body">VORA uses your microphone to listen to your voice commands and provide real-time hands-free coaching.</string>
+    <string name="voice_allow_access">Allow Access</string>
+    <string name="voice_not_now">Not Now</string>
+    <string name="voice_try_again">Try again</string>
+    <string name="voice_retry">Retry</string>
+    <string name="voice_orb">VORA</string>
+
+    <string name="conversation_day">TODAY AT 12:40 PM</string>
+    <string name="conversation_demo_q1">What should I eat for dinner?</string>
+    <string name="conversation_demo_t1">12:41</string>
+    <string name="conversation_demo_a1">You\'re currently 36g short of your protein target today. I\'d highly recommend grilled chicken breast with roasted seasonal vegetables and a side of Greek yoghurt.</string>
+    <string name="conversation_listen">Listen to response (0:14)</string>
+    <string name="conversation_demo_q2">Can you make that vegetarian?</string>
+    <string name="conversation_demo_t2">12:42</string>
+    <string name="conversation_demo_a2">Absolutely. Try grilled organic tofu with roasted vegetables, quinoa and Greek yoghurt.</string>
+    <string name="conversation_demo_t3">12:43</string>
+    <string name="conversation_placeholder">Ask VORA anything...</string>
+    <string name="conversation_send">Send</string>
+    <string name="conversation_attach">Add</string>
+    <string name="conversation_mic">Voice input</string>
 </resources>
