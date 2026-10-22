@@ -104,6 +104,25 @@
     <string name="workout_type_hiit">HIIT</string>
     <string name="workout_type_mobility">Mobility</string>
     <string name="workout_type_mixed">Mixed</string>
+    <string name="gender_female">Female</string>
+    <string name="gender_male">Male</string>
+    <string name="gender_non_binary">Non-binary</string>
+    <string name="gender_prefer_not_to_say">Prefer not to say</string>
+
+    <!-- Profile / 02 — Edit Profile -->
+    <string name="edit_change_photo">Change photo</string>
+    <string name="edit_first_name">FIRST NAME</string>
+    <string name="edit_last_name">LAST NAME</string>
+    <string name="edit_birth_date">DATE OF BIRTH</string>
+    <string name="edit_birth_date_pattern">d MMMM yyyy</string>
+    <string name="edit_height">HEIGHT</string>
+    <string name="edit_weight">WEIGHT</string>
+    <string name="edit_gender">GENDER</string>
+    <string name="edit_height_value">%1$d cm</string>
+    <string name="edit_weight_value">%1$d kg</string>
+    <string name="edit_info">Used to personalise your recommendations.</string>
+    <string name="edit_save">Save changes</string>
+    <string name="edit_footer">Your information is used to personalise your VORA experience.</string>
     <!-- Asistente VORA (Voice / 01 a 06 y Conversation). Textos del Figma, en ingles. -->
     <string name="voice_coach_title">VORA Coach</string>
     <string name="voice_online">ONLINE</string>
