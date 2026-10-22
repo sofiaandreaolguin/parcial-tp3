@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -49,6 +50,9 @@ import com.example.parcial_tp3.ui.theme.VoraTheme
  * (flecha 7 x 10, cruz 11 x 11), centrados en el area tactil de 48.
  *
  * @param title el titulo chico centrado, de strings.xml; null si el frame no lo tiene.
+ * @param backInCircle true cuando el frame dibuja la flecha dentro de un circulo de 32 con
+ *   borde, como los seis de Voice: blanco con borde gris sobre fondo claro, y blanco al 8 %
+ *   con borde al 12 % sobre el verde.
  * @param titleAtStart true cuando el frame lo pone pegado a la flecha en vez de centrado.
  *   Asi se ve en los seis frames de Voice; en Workout / 03, 04 y 06 va centrado.
  * @param titleBadge lo que va inmediatamente despues del titulo: el punto verde de
@@ -64,6 +68,7 @@ fun VoraTopBar(
     modifier: Modifier = Modifier,
     onClose: (() -> Unit)? = null,
     contentColor: Color = MaterialTheme.colorScheme.onBackground,
+    backInCircle: Boolean = false,
     titleAtStart: Boolean = false,
     titleBadge: @Composable (() -> Unit)? = null,
     actions: @Composable RowScope.() -> Unit = {},
@@ -90,16 +95,47 @@ fun VoraTopBar(
             )
         }
         Row(
-            modifier = Modifier.align(Alignment.CenterStart),
+            // el frame deja el circulo a 20 del borde; el area tactil de 48 alrededor de
+            // uno de 32 ya aporta 8, asi que faltan 12
+            modifier = Modifier
+                .align(Alignment.CenterStart)
+                .then(
+                    if (backInCircle) Modifier.padding(start = VoraTheme.spacing.s12) else Modifier,
+                ),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             if (onBack != null) {
                 IconButton(onClick = onBack) {
-                    Icon(
-                        painter = painterResource(R.drawable.ic_back),
-                        contentDescription = stringResource(R.string.volver),
-                        tint = contentColor,
-                    )
+                    if (backInCircle) {
+                        val sobreVerde = contentColor == MaterialTheme.colorScheme.onPrimary
+                        val forma = RoundedCornerShape(VoraTheme.radius.r16)
+                        Box(
+                            Modifier
+                                .size(VoraTheme.sizes.backCircle)
+                                .background(
+                                    if (sobreVerde) VoraTheme.colors.onDarkPanel else MaterialTheme.colorScheme.surface,
+                                    forma,
+                                )
+                                .border(
+                                    VoraTheme.sizes.border,
+                                    if (sobreVerde) VoraTheme.colors.onDarkPanelBorder else MaterialTheme.colorScheme.outline,
+                                    forma,
+                                ),
+                            contentAlignment = Alignment.Center,
+                        ) {
+                            Icon(
+                                painter = painterResource(R.drawable.ic_back),
+                                contentDescription = stringResource(R.string.volver),
+                                tint = contentColor,
+                            )
+                        }
+                    } else {
+                        Icon(
+                            painter = painterResource(R.drawable.ic_back),
+                            contentDescription = stringResource(R.string.volver),
+                            tint = contentColor,
+                        )
+                    }
                 }
             }
             if (title != null && titleAtStart) {

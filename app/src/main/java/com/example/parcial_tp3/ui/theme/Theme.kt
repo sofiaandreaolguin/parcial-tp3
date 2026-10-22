@@ -86,4 +86,5 @@ object VoraTheme {
     val spacing = VoraSpacing
     val radius = VoraRadius
     val sizes = VoraSizes
+    val text = VoraTextStyles
 }

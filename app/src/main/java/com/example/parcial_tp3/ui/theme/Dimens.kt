@@ -71,6 +71,8 @@ object VoraSizes {
     val borderSelected = 2.dp
     /** Circulo blanco de volver en el encabezado grande (Profile, Settings). */
     val backCircle = 32.dp
+    /** Alto del encabezado de Voice: 12 + el circulo de 32 + 12. */
+    val topBar = 56.dp
     /** Circulo del icono de una fila de Settings. */
     val rowIconCircle = 36.dp
     /** Circulo de check de una tarjeta de opcion. */

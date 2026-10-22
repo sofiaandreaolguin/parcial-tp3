@@ -20,6 +20,12 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import android.app.Activity
+import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.ui.platform.LocalView
+import androidx.core.view.WindowCompat
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -28,6 +34,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import com.example.parcial_tp3.R
@@ -78,12 +85,28 @@ fun VoiceScreen(
         estado.status == VoiceStatus.Speaking
     val contenido = if (verde) colors.onPrimary else colors.onBackground
 
+    // Sobre el verde los iconos del sistema van claros. El resto de la app los deja
+    // oscuros (PR #8), asi que se cambia solo mientras esta pantalla esta en verde y se
+    // deja como estaba al salir.
+    val vista = LocalView.current
+    DisposableEffect(verde) {
+        val ventana = (vista.context as Activity).window
+        val control = WindowCompat.getInsetsController(ventana, vista)
+        control.isAppearanceLightStatusBars = !verde
+        control.isAppearanceLightNavigationBars = !verde
+        onDispose {
+            control.isAppearanceLightStatusBars = true
+            control.isAppearanceLightNavigationBars = true
+        }
+    }
+
     Column(
         modifier
             .fillMaxSize()
             .background(if (verde) colors.primary else colors.background),
     ) {
         VoraTopBar(
+            modifier = Modifier.statusBarsPadding(),
             title = stringResource(
                 when (estado.status) {
                     VoiceStatus.Idle -> R.string.voice_coach_title
@@ -95,6 +118,7 @@ fun VoiceScreen(
             ),
             onBack = onVolver,
             contentColor = contenido,
+            backInCircle = true,
             titleAtStart = true,
             actions = {
                 // el frame deja la etiqueta a 20 del borde; el encabezado no trae
@@ -118,7 +142,7 @@ fun VoiceScreen(
                     VoiceStatus.Speaking -> VoraTag(
                         stringResource(R.string.voice_speaking_tag),
                         alBorde,
-                        VoraTagTone.OnDark,
+                        VoraTagTone.MintOnDark,
                     )
                     else -> Unit
                 }
@@ -130,6 +154,15 @@ fun VoiceScreen(
         // Cada frame deja su propio aire entre el encabezado y el orbe (20 en Idle, 40 en
         // Listening, 50 en Processing y 30 en Speaking y Error), asi que se toma el valor
         // mas cercano del tema, como pide la lamina de espaciados.
+        // Medidos en los frames: el aire entre bloques del cuerpo y el del pie.
+        val aire = when (estado.status) {
+            VoiceStatus.Listening, VoiceStatus.Processing -> VoraTheme.spacing.s40
+            else -> VoraTheme.spacing.s32
+        }
+        val airePie = when (estado.status) {
+            VoiceStatus.Listening, VoiceStatus.Speaking -> VoraTheme.spacing.s20
+            else -> VoraTheme.spacing.s16
+        }
         val aireArriba = when (estado.status) {
             VoiceStatus.Idle -> VoraTheme.spacing.s20
             VoiceStatus.Listening, VoiceStatus.Processing -> VoraTheme.spacing.s40
@@ -142,7 +175,7 @@ fun VoiceScreen(
                 .padding(horizontal = VoraTheme.spacing.s24)
                 .padding(top = aireArriba),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(VoraTheme.spacing.s20),
+            verticalArrangement = Arrangement.spacedBy(aire),
         ) {
             when (estado.status) {
                 VoiceStatus.Idle -> Idle(estado, onSugerencia)
@@ -155,9 +188,15 @@ fun VoiceScreen(
         Column(
             Modifier
                 .fillMaxWidth()
-                .padding(horizontal = VoraTheme.spacing.s24, vertical = VoraTheme.spacing.s16),
+                .navigationBarsPadding()
+                .padding(
+                    start = VoraTheme.spacing.s24,
+                    end = VoraTheme.spacing.s24,
+                    top = VoraTheme.spacing.s16,
+                    bottom = VoraTheme.spacing.s24,
+                ),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(VoraTheme.spacing.s8),
+            verticalArrangement = Arrangement.spacedBy(airePie),
         ) {
             when (estado.status) {
                 VoiceStatus.Idle -> PieIdle(onHablar, onEscribir)
@@ -173,8 +212,11 @@ fun VoiceScreen(
 @Composable
 private fun ColumnScope.Idle(estado: VoiceUiState, onSugerencia: (Int) -> Unit) {
     Orbe(VoraTheme.sizes.orb)
-    Titulo(stringResource(R.string.voice_idle_title), MaterialTheme.typography.headlineMedium)
-    Bajada(stringResource(R.string.voice_idle_subtitle))
+    Bloque(VoraTheme.spacing.s8) {
+        Titulo(stringResource(R.string.voice_idle_title), VoraTheme.text.heroTitle)
+        Bajada(stringResource(R.string.voice_idle_subtitle))
+    }
+    Bloque(VoraTheme.spacing.s12) {
     VoraSectionLabel(stringResource(R.string.voice_suggested))
     FlowRow(
         Modifier.fillMaxWidth(),
@@ -185,15 +227,24 @@ private fun ColumnScope.Idle(estado: VoiceUiState, onSugerencia: (Int) -> Unit) 
             VoraChip(stringResource(pregunta), selected = false, onClick = { onSugerencia(pregunta) })
         }
     }
+    }
     VoraCard(Modifier.fillMaxWidth(), padding = VoraTheme.spacing.s14) {
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-            VoraSectionLabel(stringResource(R.string.voice_last_conversation))
-            VoraSectionLabel(stringResource(R.string.voice_last_time))
+            Text(
+                text = stringResource(R.string.voice_last_conversation),
+                style = VoraTheme.text.label,
+                color = VoraTheme.colors.textMuted,
+            )
+            Text(
+                text = stringResource(R.string.voice_last_time),
+                style = VoraTheme.text.labelPlain,
+                color = VoraTheme.colors.textMuted,
+            )
         }
         Text(
             text = stringResource(estado.lastQuestion),
-            style = MaterialTheme.typography.bodyMedium,
-            modifier = Modifier.padding(top = VoraTheme.spacing.s16),
+            style = VoraTheme.text.quote,
+            modifier = Modifier.padding(top = VoraTheme.spacing.s6),
         )
     }
 }
@@ -209,7 +260,7 @@ private fun ColumnScope.Listening(estado: VoiceUiState) {
         )
         Text(
             text = stringResource(estado.transcript),
-            style = MaterialTheme.typography.titleMedium,
+            style = VoraTheme.text.panelBody,
             color = MaterialTheme.colorScheme.onPrimary,
         )
     }
@@ -219,17 +270,19 @@ private fun ColumnScope.Listening(estado: VoiceUiState) {
 @Composable
 private fun ColumnScope.Processing(estado: VoiceUiState) {
     Orbe(VoraTheme.sizes.orbProcessing, onDark = true)
+    Bloque(VoraTheme.spacing.s16) {
     Text(
         text = stringResource(R.string.voice_thinking),
-        style = MaterialTheme.typography.labelLarge,
+        style = VoraTheme.text.action,
         color = MaterialTheme.colorScheme.secondary,
     )
     PanelOscuro(radio = VoraTheme.radius.r16, relleno = VoraTheme.spacing.s20) {
         Text(
             text = stringResource(estado.transcript),
-            style = MaterialTheme.typography.bodyLarge,
+            style = VoraTheme.text.panelQuote,
             color = VoraTheme.colors.onDarkMuted,
         )
+    }
     }
     Row(
         horizontalArrangement = Arrangement.spacedBy(VoraTheme.spacing.s8),
@@ -254,10 +307,11 @@ private fun ColumnScope.Speaking(estado: VoiceUiState) {
     PanelOscuro {
         Text(
             text = stringResource(estado.reply),
-            style = MaterialTheme.typography.titleSmall,
+            style = VoraTheme.text.panelBodySmall,
             color = MaterialTheme.colorScheme.onPrimary,
         )
     }
+    Bloque(VoraTheme.spacing.s16) {
     VoraProgressBar(
         progress = AVANCE_AUDIO,
         color = MaterialTheme.colorScheme.secondary,
@@ -293,13 +347,16 @@ private fun ColumnScope.Speaking(estado: VoiceUiState) {
             iconSize = VoraTheme.sizes.iconSmall,
         )
     }
+    }
 }
 
 @Composable
 private fun ColumnScope.Error(onReintentar: () -> Unit) {
     Orbe(VoraTheme.sizes.orbMuted, tone = VoraOrbTone.Muted, icono = R.drawable.ic_refresh)
-    Titulo(stringResource(R.string.voice_error_heading), MaterialTheme.typography.headlineSmall)
-    Bajada(stringResource(R.string.voice_error_body))
+    Bloque(VoraTheme.spacing.s12) {
+        Titulo(stringResource(R.string.voice_error_heading), VoraTheme.text.alertTitle)
+        Bajada(stringResource(R.string.voice_error_body))
+    }
     VoraNoticeCard(
         icon = painterResource(R.drawable.ic_mic),
         iconBackground = VoraTheme.colors.noticeIcon,
@@ -318,18 +375,21 @@ private fun ColumnScope.Error(onReintentar: () -> Unit) {
 
 @Composable
 private fun PieIdle(onHablar: () -> Unit, onEscribir: () -> Unit) {
-    VoraCircleButton(
-        icon = painterResource(R.drawable.ic_mic),
-        contentDescription = stringResource(R.string.voice_tap_to_talk),
-        onClick = onHablar,
-        size = VoraTheme.sizes.micCircle,
-        iconSize = VoraTheme.sizes.iconMic,
-    )
-    Text(
-        text = stringResource(R.string.voice_tap_to_talk),
-        style = MaterialTheme.typography.labelMedium,
-        color = MaterialTheme.colorScheme.onSurfaceVariant,
-    )
+    // el frame separa 8 el circulo de su rotulo, y 16 el rotulo de "Type instead"
+    Bloque(VoraTheme.spacing.s8) {
+        VoraCircleButton(
+            icon = painterResource(R.drawable.ic_mic),
+            contentDescription = stringResource(R.string.voice_tap_to_talk),
+            onClick = onHablar,
+            size = VoraTheme.sizes.micCircle,
+            iconSize = VoraTheme.sizes.iconMic,
+        )
+        Text(
+            text = stringResource(R.string.voice_tap_to_talk),
+            style = VoraTheme.text.action,
+            color = MaterialTheme.colorScheme.primary,
+        )
+    }
     Enlace(stringResource(R.string.voice_type_instead), onEscribir)
 }
 
@@ -401,9 +461,20 @@ private fun Titulo(texto: String, estilo: TextStyle) {
 private fun Bajada(texto: String, color: Color = MaterialTheme.colorScheme.onSurfaceVariant) {
     Text(
         text = texto,
-        style = MaterialTheme.typography.bodyMedium,
+        style = VoraTheme.text.heroSubtitle,
         color = color,
         textAlign = TextAlign.Center,
+    )
+}
+
+/** Agrupa lo que en el frame va mas junto que el aire general de la pantalla. */
+@Composable
+private fun Bloque(aire: Dp, contenido: @Composable ColumnScope.() -> Unit) {
+    Column(
+        Modifier.fillMaxWidth(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(aire),
+        content = contenido,
     )
 }
 
@@ -440,6 +511,7 @@ private fun Enlace(texto: String, onClick: () -> Unit, color: Color = VoraTheme.
         text = texto,
         style = MaterialTheme.typography.labelMedium,
         color = color,
+        textDecoration = TextDecoration.Underline,
         modifier = Modifier
             .clickable(onClick = onClick)
             .padding(VoraTheme.spacing.s8),

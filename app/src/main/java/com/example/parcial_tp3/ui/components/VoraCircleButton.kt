@@ -41,8 +41,9 @@ enum class VoraCircleButtonTone {
  * microfono de Idle (72) y de Listening (80), los tres controles de audio de Speaking (56
  * la pausa, 40 repetir y stop) y el + y el enviar de Conversation (40).
  *
- * El circulo dibujado puede ser mas chico que el area tactil, que nunca baja de 48: es el
- * mismo arreglo que usa el selector de Active Workout.
+ * El circulo dibujado puede ser mas chico que el area tactil, que por omision no baja de
+ * 48, igual que el selector de Active Workout. [touchSize] la achica donde agrandarla
+ * rompe el ancho de la fila, como el "Listen to response" dentro de una burbuja.
  */
 @Composable
 fun VoraCircleButton(
@@ -53,6 +54,7 @@ fun VoraCircleButton(
     tone: VoraCircleButtonTone = VoraCircleButtonTone.Primary,
     size: Dp = VoraTheme.sizes.circleButton,
     iconSize: Dp = VoraTheme.sizes.icon,
+    touchSize: Dp = VoraTheme.sizes.touchTarget,
     enabled: Boolean = true,
 ) {
     val colors = MaterialTheme.colorScheme
@@ -65,7 +67,7 @@ fun VoraCircleButton(
     }
     Box(
         modifier = modifier
-            .size(maxOf(size, VoraTheme.sizes.touchTarget))
+            .size(maxOf(size, touchSize))
             .clip(CircleShape)
             .clickable(enabled = enabled, role = Role.Button, onClick = onClick),
         contentAlignment = Alignment.Center,

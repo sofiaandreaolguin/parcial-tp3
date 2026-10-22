@@ -140,10 +140,11 @@ fun VoraChatAudioFooter(label: String, onPlay: () -> Unit, modifier: Modifier = 
                 tone = VoraCircleButtonTone.Surface,
                 size = VoraTheme.sizes.playCircle,
                 iconSize = VoraTheme.sizes.iconTiny,
+                touchSize = VoraTheme.sizes.playCircle,
             )
             Text(
                 text = label,
-                style = MaterialTheme.typography.labelMedium,
+                style = VoraTheme.text.labelAudio,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
         }
