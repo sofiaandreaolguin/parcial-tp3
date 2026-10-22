@@ -75,7 +75,7 @@ No cumplen un RF, así que siguen siendo demostración, pero conviene declararlo
 
 **Ruta:** el `String` del destino en el `NavHost`. Es una **propuesta de la tarea VC-b**: una vez acordada, no se cambia (la usan los cinco roles).
 
-**Controlador:** el ViewModel que le da el estado. Un mismo ViewModel puede servir a varias pantallas del mismo flujo si comparten datos.
+**Controlador:** el ViewModel que le da el estado. Un mismo ViewModel puede servir a varias pantallas del mismo flujo si comparten datos. **Perfil es la excepción:** sus 6 pantallas tienen un ViewModel propio cada una y el perfil de demostración se comparte por un `ProfileRepository` (acordado el 21/10, sección 9).
 
 **Estado** (lo que pide NAV01):
 - **Funcional:** todo lo que muestra sale de Retrofit o de Room.
@@ -105,7 +105,7 @@ El estado previsto lo confirma el rol dueño del flujo al implementar la pantall
 
 ### A dónde lleva cada control (NAV03)
 
-Leído de los frames el 18/10. Lo que dice *a confirmar* es lectura mía del dibujo, no un dato del Figma: el archivo **no tiene prototipo armado** (el botón ▷ pasa los 41 frames como diapositivas), así que las flechas las definimos nosotras.
+Leído de los frames el 18/10. Lo que dice *a confirmar* es lectura mía del dibujo, no un dato del Figma: el archivo **no tiene prototipo armado** (el botón ▷ pasa los 41 frames como diapositivas), así que las flechas las definimos nosotros.
 
 | Desde | Control | A dónde lleva |
 |---|---|---|
@@ -133,7 +133,7 @@ Leído de los frames el 18/10. Lo que dice *a confirmar* es lectura mía del dib
 
 ### A dónde lleva cada control (NAV03)
 
-Leído de los frames el 18/10. Lo que dice *a confirmar* es lectura mía del dibujo, no un dato del Figma: el archivo **no tiene prototipo armado** (el botón ▷ pasa los 41 frames como diapositivas), así que las flechas las definimos nosotras.
+Leído de los frames el 18/10. Lo que dice *a confirmar* es lectura mía del dibujo, no un dato del Figma: el archivo **no tiene prototipo armado** (el botón ▷ pasa los 41 frames como diapositivas), así que las flechas las definimos nosotros.
 
 | Desde | Control | A dónde lleva |
 |---|---|---|
@@ -167,7 +167,7 @@ Leído de los frames el 18/10. Lo que dice *a confirmar* es lectura mía del dib
 
 ### A dónde lleva cada control (NAV03)
 
-Leído de los frames el 18/10. Lo que dice *a confirmar* es lectura mía del dibujo, no un dato del Figma: el archivo **no tiene prototipo armado** (el botón ▷ pasa los 41 frames como diapositivas), así que las flechas las definimos nosotras.
+Leído de los frames el 18/10. Lo que dice *a confirmar* es lectura mía del dibujo, no un dato del Figma: el archivo **no tiene prototipo armado** (el botón ▷ pasa los 41 frames como diapositivas), así que las flechas las definimos nosotros.
 
 Los 5 estados de `voice` no son navegación: son cambios de `VoiceUiState` en la misma pantalla (ficha 002).
 
@@ -210,7 +210,7 @@ Los 5 estados de `voice` no son navegación: son cambios de `VoiceUiState` en la
 
 ### A dónde lleva cada control (NAV03)
 
-Leído de los frames el 18/10. Lo que dice *a confirmar* es lectura mía del dibujo, no un dato del Figma: el archivo **no tiene prototipo armado** (el botón ▷ pasa los 41 frames como diapositivas), así que las flechas las definimos nosotras.
+Leído de los frames el 18/10. Lo que dice *a confirmar* es lectura mía del dibujo, no un dato del Figma: el archivo **no tiene prototipo armado** (el botón ▷ pasa los 41 frames como diapositivas), así que las flechas las definimos nosotros.
 
 | Desde | Control | A dónde lleva |
 |---|---|---|
@@ -259,7 +259,7 @@ Leído de los frames el 18/10. Lo que dice *a confirmar* es lectura mía del dib
 
 ### A dónde lleva cada control (NAV03)
 
-Leído de los frames el 18/10. Lo que dice *a confirmar* es lectura mía del dibujo, no un dato del Figma: el archivo **no tiene prototipo armado** (el botón ▷ pasa los 41 frames como diapositivas), así que las flechas las definimos nosotras.
+Leído de los frames el 18/10. Lo que dice *a confirmar* es lectura mía del dibujo, no un dato del Figma: el archivo **no tiene prototipo armado** (el botón ▷ pasa los 41 frames como diapositivas), así que las flechas las definimos nosotros.
 
 | Desde | Control | A dónde lleva |
 |---|---|---|
@@ -308,7 +308,7 @@ Leído de los frames el 18/10. Lo que dice *a confirmar* es lectura mía del dib
 
 ### A dónde lleva cada control (NAV03)
 
-Leído de los frames el 18/10. Lo que dice *a confirmar* es lectura mía del dibujo, no un dato del Figma: el archivo **no tiene prototipo armado** (el botón ▷ pasa los 41 frames como diapositivas), así que las flechas las definimos nosotras.
+Leído de los frames el 18/10. Lo que dice *a confirmar* es lectura mía del dibujo, no un dato del Figma: el archivo **no tiene prototipo armado** (el botón ▷ pasa los 41 frames como diapositivas), así que las flechas las definimos nosotros.
 
 | Desde | Control | A dónde lleva |
 |---|---|---|
@@ -332,14 +332,16 @@ Leído de los frames el 18/10. Lo que dice *a confirmar* es lectura mía del dib
 
 | # | Frame de Figma | Ruta | Tipo | Controlador | Estado | Área |
 |---|---|---|---|---|---|---|
-| 32 | Profile / 01 — Dashboard | `profile_dashboard` | Con barra | `ProfileViewModel` | Demostración | Home y Profile |
-| 33 | Profile / 02 — Edit Profile | `edit_profile` | Encima | `ProfileViewModel` | Demostración | Home y Profile |
-| 34 | Profile / 03 — Goals & Preferences | `goals_preferences` | Encima | `ProfileViewModel` | Demostración | Home y Profile |
-| 35 | Profile / 04 — Nutrition Preferences | `nutrition_preferences` | Encima | `ProfileViewModel` | Demostración | Home y Profile |
-| 36 | Profile / 05 — Voice & AI Settings | `voice_ai_settings` | Encima | `ProfileViewModel` | Demostración | Home y Profile |
+| 32 | Profile / 01 — Dashboard | `profile_dashboard` | Con barra | `ProfileDashboardViewModel` | Demostración | Home y Profile |
+| 33 | Profile / 02 — Edit Profile | `edit_profile` | Encima | `EditProfileViewModel` | Demostración | Home y Profile |
+| 34 | Profile / 03 — Goals & Preferences | `goals_preferences` | Encima | `GoalsPreferencesViewModel` | Demostración | Home y Profile |
+| 35 | Profile / 04 — Nutrition Preferences | `nutrition_preferences` | Encima | `NutritionPreferencesViewModel` | Demostración | Home y Profile |
+| 36 | Profile / 05 — Voice & AI Settings | `voice_ai_settings` | Encima | `VoiceAiSettingsViewModel` | Demostración | Home y Profile |
 | 37 | Profile / 06 — Settings | `settings` | Encima | `SettingsViewModel` | Demostración | Home y Profile |
 
 - Perfil de demostración (sin Firebase no se exige login real).
+- **Un ViewModel por pantalla** (acordado el 21/10 con Zaki, tarea VC-q): las 6 pantallas de Perfil no comparten controlador. Es el único flujo con este criterio; en los demás, varias pantallas comparten uno cuando comparten datos (sección 2).
+- **El perfil de demostración se comparte por un `ProfileRepository`**, inyectado por constructor en los 6 ViewModels. Sin eso, lo que se edita en `02`, `03` o `04` no se ve al volver a `01`. Lo arma la zona de Perfil.
 - Profile / 06 es más alta que 850 dp: lleva scroll (UI03).
 - **NAV03:** cada opción de Settings hace lo que muestra el Figma (abre pantalla, abre diálogo o cambia un ajuste). Ninguna queda muerta. Lo que abre cada una se completa al maquetar el frame (sección 12).
 
@@ -347,13 +349,13 @@ Leído de los frames el 18/10. Lo que dice *a confirmar* es lectura mía del dib
 
 ### A dónde lleva cada control (NAV03)
 
-Leído de los frames el 18/10. Lo que dice *a confirmar* es lectura mía del dibujo, no un dato del Figma: el archivo **no tiene prototipo armado** (el botón ▷ pasa los 41 frames como diapositivas), así que las flechas las definimos nosotras.
+Leído de los frames el 18/10. Lo que dice *a confirmar* es lectura mía del dibujo, no un dato del Figma: el archivo **no tiene prototipo armado** (el botón ▷ pasa los 41 frames como diapositivas), así que las flechas las definimos nosotros.
 
 | Desde | Control | A dónde lleva |
 |---|---|---|
 | 01 Dashboard | Engranaje (arriba der.) | `settings` |
 | | "Edit profile" | `edit_profile` |
-| | "Review preferences" (panel VORA) | `voice_ai_settings` · *a confirmar* |
+| | "Review preferences" (panel VORA) | `voice_ai_settings` |
 | | "Your Goals" | `goals_preferences` |
 | | "Your Preferences" | `nutrition_preferences` |
 | | "Connected Data · Synced" | **Sin frame** → aviso de modo demostración |
@@ -372,7 +374,7 @@ Leído de los frames el 18/10. Lo que dice *a confirmar* es lectura mía del dib
 | | Help Centre, Contact Support, Privacy Policy | **Sin frame** → aviso de modo demostración |
 | | **"Log out"** | `sign_in`, **vaciando toda la pila** |
 
-**Ojo con `05 Voice & AI Settings`:** es la única pantalla a la que no le encontré una entrada clara en el Figma. Por defecto la cuelgo de "Review preferences". Si al maquetar `01 Dashboard` aparece otra, se corrige acá. **Una pantalla sin entrada rompe NAV01**, así que no puede quedar suelta.
+**`05 Voice & AI Settings` ya tiene entrada confirmada.** Era la única pantalla a la que no le encontré una entrada clara en el Figma, y quedó colgada de "Review preferences" (panel VORA de `01 Dashboard`). Zaki la confirmó el 21/10 al maquetar `01 Dashboard` (tarea VC-q). **Una pantalla sin entrada rompe NAV01**, así que esta fila no se cambia sin darle antes otra entrada.
 
 ## 10. Las 16 con barra inferior
 
@@ -580,10 +582,10 @@ Las tablas "A dónde lleva cada control" dicen **hacia dónde sale** cada pantal
 | `edit_profile` | `profile_dashboard` "Edit profile" · `settings` fila "Alex Morgan" |
 | `goals_preferences` | `profile_dashboard` "Your Goals" |
 | `nutrition_preferences` | `profile_dashboard` "Your Preferences" |
-| `voice_ai_settings` | ⚠️ `profile_dashboard` "Review preferences" · **sin confirmar** |
+| `voice_ai_settings` | `profile_dashboard` "Review preferences" · confirmado el 21/10 al maquetar `Profile / 01` |
 | `settings` | `profile_dashboard` engranaje · `voice_ai_settings` "Privacy & permissions" |
 
-**Las dos ⚠️ son las únicas entradas sin confirmar.** Las dos se cierran al maquetar `Home / 01` y `Profile / 01`. Si cualquiera de las dos no existe en el frame, esa pantalla queda inalcanzable y hay que buscarle otra entrada antes de entregar.
+**Queda una sola ⚠️: `todays_overview`.** Se cierra al maquetar `Home / 01` (tarea VC-n, Martu). La de `voice_ai_settings` se cerró el 21/10 al maquetar `Profile / 01`. Si esa entrada no existe en el frame, la pantalla queda inalcanzable y hay que buscarle otra antes de entregar.
 
 ### La cuenta
 
@@ -604,7 +606,7 @@ Test del inventario (tarea VC-e, `app/src/test/`): que `RUTAS_CON_BARRA.size == 
 ## 17. Pendientes
 
 1. **Tarea VC-b sin asignar** (acordar rutas, modelos y componentes). Las rutas de la sección 15 y la firma de `VoraBottomBar` salen de ahí; mientras no se acuerden, esto es una propuesta.
-2. **`Progress / 01 — Today's Overview` y `Profile / 05 — Voice & AI Settings` son las dos entradas sin confirmar** de la tabla de la sección 16. Se cierran al maquetar `Home / 01` y `Profile / 01`. Una pantalla sin entrada rompe NAV01.
+2. **`Progress / 01 — Today's Overview` es la única entrada sin confirmar** de la tabla de la sección 16. Se cierra al maquetar `Home / 01` (tarea VC-n, Martu). La de `Profile / 05 — Voice & AI Settings` quedó confirmada el 21/10 al maquetar `Profile / 01` (Zaki, tarea VC-q). Una pantalla sin entrada rompe NAV01.
 3. **El formulario de carga manual de comidas (RF03) no tiene frame propio.** Por ahora "Log Manually" abre `Nutrition / 07 — Food Confirmation` vacío, que ya tiene los campos. La consigna prohíbe inventar pantallas.
 4. **Eliminar una comida (RF04) no tiene control en ningún frame.** `Nutrition / 08` tiene solo ‹, "Edit Meal" y "Duplicate Meal"; `Nutrition / 02` no tiene papelera ni swipe. El "Remove" de `07` saca un ingrediente del borrador, no borra una comida guardada. Lo define la zona de Nutrition antes de maquetar.
 5. **El catálogo de entrenamientos (RF01) se muestra en `Workout / 02 — Your Plan`**, que lista tres con entrada por ítem, igual que devuelve el mock. `Workout / 01` muestra solo el destacado. **NAV04 se demuestra en `02`.**

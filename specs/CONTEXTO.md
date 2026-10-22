@@ -148,7 +148,7 @@ El tema lo arma Tema y componentes en `ui/theme/`. Detalle completo en la secci�
 
 ## 8. Git
 
-- Ramas: `main` y `feature/flujo-tema`. Nada directo en `main`.
+- Ramas: `main` y `tipo/flujo-tema`, con **los mismos tipos que los commits**: `feat/nutrition-eliminar-comida`, `fix/home-texto-cortado`, `docs/...`, `chore/...`. **Es `feat/`, nunca `feature/`.** Nada directo en `main`. Detalle en `METODOLOGIA.md` §10.2.
 - Commits: Conventional Commits en infinitivo (`feat(nutrition): eliminar comida con confirmación`), con `Refs: RF04` al pie. Cada commit compila.
 - Pull request chico (una pantalla o un requisito), con la plantilla. Lo une a `main` **quien lo aprobó**, con merge commit.
 - Cada integrante commitea con su usuario. La IA no figura en ningún commit.

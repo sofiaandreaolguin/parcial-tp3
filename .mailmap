@@ -1,0 +1,7 @@
+# Unifica las grafías de cada integrante en el historial.
+# Sin esto, `git shortlog -sn` muestra 7 filas para 4 personas.
+# Formato: Nombre canónico <mail canónico> Nombre viejo <mail viejo>
+
+Fiorella Lancissi <lancissif@gmail.com> fiorelancissi <107272058+fiorelancissi@users.noreply.github.com>
+Hector de la Fuente <delafuentehector738@gmail.com> Héctor de la fuente <delafuentehector738@gmail.com>
+bullonm <110844997+bullonm@users.noreply.github.com> bullon7 <martubullon@gmail.com>
