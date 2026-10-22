@@ -11,7 +11,7 @@ import androidx.compose.ui.unit.Dp
 import com.example.parcial_tp3.R
 import com.example.parcial_tp3.ui.theme.VoraTheme
 
-/** Foto de perfil de Profile / 01 y 02. Decorativa: el nombre ya está al lado. */
+/** Foto de perfil de Profile / 01 y 02. Decorativa: no suma nada que la pantalla no diga. */
 @Composable
 fun ProfileAvatar(modifier: Modifier = Modifier, size: Dp = VoraTheme.sizes.avatar) {
     Image(

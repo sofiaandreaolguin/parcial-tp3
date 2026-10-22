@@ -62,7 +62,7 @@ fun VoraTextField(
     Column(modifier) {
         if (label != null) {
             Text(text = label, style = VoraTheme.text.fieldLabel, color = colors.onSurfaceVariant)
-            // 4 + los 2 que suma el alto de linea de la etiqueta = los 6 de la lamina
+            // 4 + los 3 que suma el alto de linea de fieldLabel (12 en 18) = 7; en Edit profile mide 8
             Spacer(Modifier.height(VoraTheme.spacing.s4))
         }
         BasicTextField(
