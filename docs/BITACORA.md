@@ -18,7 +18,7 @@ Formato:
 
 ### 2026-10-18 · Fiore · chore: armar la metodología de trabajo con IA en el repo
 - Carril y requisitos: A (configuración, sin código de la app) · organización y entrega en GitHub
-- Plan aprobado: llevar al repo la metodología del grupo (sección 6) para que la usen las cinco: `CLAUDE.md`, `specs/` (contexto, consigna, API, requisitos, plantilla), subagentes revisores, una skill por paso del ciclo, control automático, hook de commits, CI y plantilla de pull request.
+- Plan aprobado: llevar al repo la metodología del grupo (sección 6) para que la usen los cinco: `CLAUDE.md`, `specs/` (contexto, consigna, API, requisitos, plantilla), subagentes revisores, una skill por paso del ciclo, control automático, hook de commits, CI y plantilla de pull request.
 - Qué propuso la IA y qué cambiamos: la IA propuso cuatro carriles según el tamaño del cambio (chico, pantalla, datos, bug) y siete ajustes a la metodología (decisión 001). Fiore pidió que la IA armara solo la metodología y no el código de la app, y que la IA nunca commitee: se agregó además un bloqueo de `git commit` y `git push` en `.claude/settings.json`.
 - Revisores: controles negativos de los scripts (ver decisión 001).
 - Evidencia: guía "Cómo trabajamos VORA" (artifact compartido con el grupo).

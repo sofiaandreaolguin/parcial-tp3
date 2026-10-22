@@ -8,7 +8,7 @@ Fuentes: `Especificación VORA Coach - TP3 - 02-2026` y `TP3 - 2026-02 - Parcial
 
 ## 0. Cómo usar este archivo
 
-**Para las integrantes:** no hace falta leerlo entero de una. Leer primero:
+**Para los integrantes:** no hace falta leerlo entero de una. Leer primero:
 1. Sección 1 (qué se evalúa y en qué orden poner el tiempo).
 2. Sección 3 (las 37 pantallas) y la fila de tu rol en la sección 8.
 3. Sección 7 (cómo trabaja el agente con vos).
@@ -27,7 +27,6 @@ El resto se consulta cuando hace falta. El agente sí lo sigue completo.
 - [ ] Dentro del repo, activar los controles de Git del grupo (sección 6.4): `git config core.hooksPath .githooks`
 - [ ] Aceptar la invitación al repositorio del equipo y clonarlo.
 - [ ] **Python 3.9 o más** y el paquete del profe: correr `python3 mock/server.py` y abrir `http://localhost:8000` para ver que responde.
-- [ ] **Node.js** y CodeBurn (`npm install -g codeburn`).
 - [ ] La herramienta de IA abierta **dentro de la carpeta del repo**, con el plugin del grupo instalado.
 - [ ] Confirmar que el repo tiene `.claude/settings.json` con la atribución apagada (sección 10.6), así la IA no aparece en tus commits.
 - [ ] Las referencias visuales: el conector de Figma (si tenés la copia en borradores) o las imágenes de `docs/figma/`.
@@ -290,11 +289,11 @@ El cuestionario del aula (sección 13.1) pregunta por cosas que **no se pueden a
 
 ## 6. Cómo trabajamos con la IA (la metodología)
 
-Combinamos tres técnicas, cada una donde rinde más, y un sistema de autocontrol (6.4) que hace que la IA encuentre y corrija sus errores antes de que lleguen a nosotras.
+Combinamos tres técnicas, cada una donde rinde más, y un sistema de autocontrol (6.4) que hace que la IA encuentre y corrija sus errores antes de que lleguen a nosotros.
 
 ### 6.1 Para todo el equipo: SDD liviano (spec driven development)
 
-**Qué es:** escribir primero qué tiene que hacer el software y recién después pedirle a la IA que lo programe contra eso. La spec queda escrita en el repo y es la misma para las cinco.
+**Qué es:** escribir primero qué tiene que hacer el software y recién después pedirle a la IA que lo programe contra eso. La spec queda escrita en el repo y es la misma para los cinco.
 
 Nuestra ventaja: **la consigna del profe ya es la spec**. En el repo hay una carpeta `specs/` con:
 
@@ -463,7 +462,7 @@ jobs:
 
 #### Capa 5: agentes revisores con contexto limpio
 
-Son subagentes de Claude Code: archivos en `.claude/agents/` del repo, así los tienen las cinco. Cada uno corre **en su propio contexto**, sin ver la conversación ni el razonamiento de quien programó, y con herramientas de **solo lectura** (no pueden cambiar el código; solo reportan). Se invocan con "usá el subagente revisor-requisitos sobre este cambio".
+Son subagentes de Claude Code: archivos en `.claude/agents/` del repo, así los tienen los cinco. Cada uno corre **en su propio contexto**, sin ver la conversación ni el razonamiento de quien programó, y con herramientas de **solo lectura** (no pueden cambiar el código; solo reportan). Se invocan con "usá el subagente revisor-requisitos sobre este cambio".
 
 `.claude/agents/auditor-spec.md`
 
@@ -546,7 +545,7 @@ Además, Claude Code trae el comando **`/code-review`**, que revisa el cambio en
                                    │
  6. Se corrigen los BLOQUEA / CRÍTICA / ALTA ──► vuelve a 5 (máximo 2 vueltas)
                                    │
- 7. Pull request ──► CI en GitHub ──► revisión de una compañera ──► main
+ 7. Pull request ──► CI en GitHub ──► revisión de otro integrante ──► main
                                    │
  8. Bitácora: qué encontraron los revisores y qué se corrigió
 ```
@@ -569,7 +568,7 @@ Reglas del ciclo:
 7. **No inventar.** Si algo no está en la consigna, en la spec ni en el Figma, preguntar. No crear pantallas ni endpoints que no existen.
 8. **Sistema de diseño siempre (UI02).** Colores, tipografías, espaciados y componentes salen del tema común. Nada de valores escritos a mano en una pantalla.
 9. **Respetar la arquitectura (RF06).** La UI nunca llama a Retrofit ni a un DAO directo. Si una tarea lo tienta, el agente lo frena.
-10. **Respetar las zonas compartidas.** Tema y componentes, navegación y base Room tienen dueña (sección 8). Si una tarea necesita cambiarlas, el agente lo avisa y no lo hace por su cuenta.
+10. **Respetar las zonas compartidas.** Tema y componentes, navegación y base Room tienen responsable (sección 8). Si una tarea necesita cambiarlas, el agente lo avisa y no lo hace por su cuenta.
 11. **Nada de permisos innecesarios (NAV05).** No agregar permisos de micrófono ni cámara si no se usan de verdad.
 12. **Los commits son de la persona.** Cada integrante commitea desde su propia cuenta; el agente no concentra trabajo de varias en un commit ni commitea por otra. El agente redacta mensajes de commit, títulos y descripciones de pull request con las reglas de la sección 10, y propone cómo partir el trabajo en commits atómicos. **Nunca se agrega como autor ni coautor**: nada de `Co-Authored-By`, "Generated with" ni links a la sesión en commits o pull requests (sección 10.6).
 13. **Simulado se marca.** Toda pantalla o acción con datos de demostración queda indicada en `PANTALLAS.md` para documentarla en el README.
@@ -613,7 +612,7 @@ Reglas del ciclo:
 
 Es el reparto que sugiere el profe para equipos de cinco. Cada responsable también participa de la integración. Quién toma cada rol lo decide el grupo.
 
-| Rol | Qué hace | Zona de la que es dueña |
+| Rol | Qué hace | Zona de la que es responsable |
 |---|---|---|
 | Tema y componentes | Tema de Compose sacado del Figma (colores, tipografías, espaciados, formas) y componentes comunes: botones, tarjetas, campos, navegación inferior. Después: Acceso e Inicio | Tema y componentes (UI02) |
 | Navegación e inventario | Inventario con nombres reales de Figma, grafo de navegación de las 37 pantallas (vacías al principio), regreso y botón atrás | Navegación (NAV01 a NAV04) y `PANTALLAS.md` |
@@ -624,7 +623,7 @@ Es el reparto que sugiere el profe para equipos de cinco. Cada responsable tambi
 Notas:
 - Hilt (RF08) y ViewModel (RF07) los arman Workout y Nutrition en sus flujos, con un módulo de Hilt común acordado entre las dos.
 - Tema y componentes y Navegación son lo primero que se necesita: si se atrasan, frenan a las otras tres.
-- Antes de entregar, el grupo revisa entre todas Workout y Nutrition: Retrofit y Room son la condición obligatoria.
+- Antes de entregar, el grupo revisa entre todos Workout y Nutrition: Retrofit y Room son la condición obligatoria.
 
 ---
 
@@ -633,7 +632,7 @@ Notas:
 | Fechas | Qué | Hito del profe |
 |---|---|---|
 | 14 al 16/10 | Acordar rutas, modelos y componentes (lo pide el profe para evitar versiones incompatibles). `CONTEXTO.md`, inventario y tema base | |
-| 17 al 21/10 | Navegación entre todas las áreas, componentes principales, **primera consulta Retrofit y primera inserción y lectura en Room**, todas con al menos un commit significativo | **Hito 1: martes 21/10** (el repo compila) |
+| 17 al 21/10 | Navegación entre todas las áreas, componentes principales, **primera consulta Retrofit y primera inserción y lectura en Room**, todos con al menos un commit significativo | **Hito 1: martes 21/10** (el repo compila) |
 | 22 al 26/10 | Todas las pantallas completas y conectadas; integraciones obligatorias verificadas; ciclo visual por pantalla | |
 | 26 al 27/10 | Corregir diferencias visuales, probar estados de error, documentar lo simulado, README, video de demo, ensayo del recorrido | |
 | 28/10 | Etiqueta `entrega-tp3` y entrega | **Hito 2: entrega** |
@@ -649,11 +648,11 @@ Ojo con la carga de esas semanas: el mismo grupo entrega el TP de Calidad de Sof
 - **Un único repositorio** de GitHub para el equipo.
 - **Cada integrante commitea desde su cuenta**, con cambios propios, significativos y verificables. Tiene que poder identificarse quién hizo cada parte.
 - No acreditan participación: commits vacíos, cambios de formato sin aporte, ni reemplazar todo el trabajo al final.
-- En la demo, cada una **ubica su commit** y explica cómo se integra con el resto.
+- En la demo, cada integrante **ubica su commit** y explica cómo se integra con el resto.
 - Mensajes que describan el cambio y revisión de las contribuciones antes de integrarlas.
 - Al final: etiqueta `entrega-tp3`.
 
-Por eso: **nada de "Squash and merge"** en GitHub. Esa opción junta todos los commits de un pull request en uno solo y se pierde el detalle de qué hizo cada una. Usamos **"Create a merge commit"**, que conserva cada commit con su autora.
+Por eso: **nada de "Squash and merge"** en GitHub. Esa opción junta todos los commits de un pull request en uno solo y se pierde el detalle de qué hizo cada integrante. Usamos **"Create a merge commit"**, que conserva cada commit con su autor.
 
 ### 10.2 Ramas
 
@@ -772,7 +771,7 @@ El reporte del agente (sección 7.1) ya trae casi todo esto: se copia y se ajust
 4. ¿Los tests prueban algo (y tienen su control negativo)?
 5. ¿Se entiende? Nombres claros, sin código muerto.
 
-**Cómo escribir comentarios: Conventional Comments.** Cada comentario arranca con una etiqueta que dice qué tipo de comentario es, así la autora sabe qué es obligatorio y qué es opcional:
+**Cómo escribir comentarios: Conventional Comments.** Cada comentario arranca con una etiqueta que dice qué tipo de comentario es, así quien lo escribió sabe qué es obligatorio y qué es opcional:
 
 ```
 etiqueta (decoración): asunto
@@ -806,9 +805,9 @@ praise: muy claro el mapeo DTO → modelo → Entity, se entiende de una
 nitpick (non-blocking): en Figma este título tiene 4dp más de margen arriba
 ```
 
-**Cómo responde la autora:**
+**Cómo responde quien escribió el cambio:**
 - Contesta cada comentario: lo corrige (y dice en qué commit) o explica por qué no.
-- La autora es responsable de su cambio, no la revisora.
+- Quien escribió el cambio es responsable de él, no quien lo revisa.
 - Los cambios pedidos se agregan como **commits nuevos**; no se reescribe la historia (nada de `push --force`) una vez que la revisión empezó, porque la revisora pierde lo que ya vio.
 - Quien abrió el comentario lo marca como resuelto.
 
@@ -817,12 +816,12 @@ nitpick (non-blocking): en Figma este título tiene 4dp más de margen arriba
 - La IA **redacta** el mensaje de commit, el título y la descripción del pull request siguiendo estas reglas; **la persona los lee, los corrige si hace falta y commitea desde su cuenta**.
 - La IA puede hacer una **primera revisión** de un pull request con Conventional Comments, pero la aprobación la da siempre una integrante (el profe pide revisión del equipo).
 
-**En los commits solo aparecen nuestros usuarios reales.** La IA no figura en ningún commit ni pull request: ni como autora, ni como coautora (`Co-Authored-By`), ni con líneas del tipo "Generated with Claude Code". Cada commit lo firma la integrante que lo hizo, con su usuario de GitHub. El profe evalúa commits propios y significativos de cada una.
+**En los commits solo aparecen nuestros usuarios reales.** La IA no figura en ningún commit ni pull request: ni como autora, ni como coautora (`Co-Authored-By`), ni con líneas del tipo "Generated with Claude Code". Cada commit lo firma quien lo hizo, con su usuario de GitHub. El profe evalúa commits propios y significativos de cada integrante.
 
 Cómo se asegura:
 
 1. **Git con tu usuario real** (sección 0.1): `user.name` y `user.email` iguales a tu cuenta de GitHub.
-2. **Claude Code configurado para no firmar.** En el repo va el archivo `.claude/settings.json` (se commitea, así vale para las cinco) con:
+2. **Claude Code configurado para no firmar.** En el repo va el archivo `.claude/settings.json` (se commitea, así vale para los cinco) con:
 
    ```json
    {
@@ -837,7 +836,7 @@ Cómo se asegura:
    `commit` y `pr` vacíos sacan la línea de coautoría de los commits y la firma de los pull requests; `sessionUrl` en `false` saca el link a la sesión. Si alguien usa otra herramienta de IA, se aplica la misma regla.
 3. **Control antes de cada push:** mirar el último commit con `git log -1` y confirmar que el autor sea tu usuario y que no haya ninguna línea `Co-Authored-By` ni "Generated with". Hay casos reportados en que la configuración no se respeta, así que este control no se saltea. Si aparece, se corrige con `git commit --amend` **antes** de hacer push.
 
-**¿Y la declaración de IA?** La consigna pide declararla **en el README**, no en los commits. Ahí va completa: herramientas, método, qué hizo la IA y qué se corrigió a mano, y los números de CodeBurn (secciones 11.5 y 13).
+**¿Y la declaración de IA?** La consigna pide declararla **en el README**, no en los commits. Ahí va completa: herramientas, método, qué hizo la IA y qué se corrigió a mano, con links a la bitácora y a las decisiones (secciones 11.5 y 13).
 
 ---
 
@@ -859,8 +858,7 @@ docs/
 │   ├── tests/           # salida de los tests de Room y Retrofit, con su control negativo
 │   └── estados/         # capturas de carga, vacío, error y sin conexión (RF02, RF05)
 └── ia/
-    ├── uso-ia.md        # cómo usamos la IA: método, ejemplos de pedidos, qué corregimos
-    └── codeburn/        # resumen semanal de cada integrante (codeburn overview)
+    └── uso-ia.md        # cómo usamos la IA: método, ejemplos de pedidos, qué corregimos
 ```
 
 ### 11.2 La bitácora (`docs/BITACORA.md`)
@@ -908,28 +906,44 @@ Es el detalle de la declaración que pide la consigna:
 - Qué herramientas usamos y para qué.
 - El método (secciones 6 y 7) explicado con ejemplos reales: 3 o 4 pedidos que funcionaron bien y 2 que no, con qué aprendimos.
 - Qué hizo la IA y qué se hizo o se corrigió a mano.
-- Números de CodeBurn por integrante y la evolución del 1-shot semana a semana.
+- Dónde se ve cada cosa en el repo: el commit o el pull request de cada ejemplo, y la entrada de la bitácora que lo cuenta.
 
 Ojo: no pegar conversaciones enteras (son larguísimas y no se leen). Se resume, y se linkea el commit o el pull request.
 
 ### 11.6 Qué no se guarda
 
 - Claves, contraseñas, tokens ni archivos de configuración privada.
-- Datos personales de las integrantes más allá de nombre y usuario de GitHub.
+- Datos personales de los integrantes más allá de nombre y usuario de GitHub.
 
 ---
 
-## 12. Medición del uso de IA: CodeBurn
+## 12. Que la estructura se explique sola
 
-La consigna pide **declarar el uso de IA generativa en el README**. CodeBurn sirve para hacerlo con datos.
+El docente mira **la arquitectura a nivel paquetes y la estructura a nivel archivos**: abre el repo y tiene que entender cómo está armado sin que nadie se lo cuente. Por eso la organización no es cosmética, es parte de lo que se evalúa.
 
-CodeBurn es una herramienta gratuita y local que lee los archivos de sesión de las herramientas de IA y muestra tokens y costo estimado por proyecto, modelo y tipo de tarea. El costo es a precio de API: si se usa una suscripción, no es lo que se pagó, sirve para comparar.
+**Los paquetes dicen la arquitectura.** Con solo leer los nombres se ve de dónde salen los datos y a dónde van:
 
-- Instalar (necesita Node.js): `npm install -g codeburn`
-- Ver el panel: `codeburn`
-- Resumen para copiar al README: `codeburn overview`
-- **Trabajar con la IA siempre dentro de la carpeta del repo**, así CodeBurn lo reconoce como un proyecto aparte.
-- Métrica para mirar cada semana: **1-shot**, el porcentaje de ediciones que salieron bien a la primera. Si sube, estamos dando mejor contexto y mejores controles.
+```
+ui/                    pantallas, componentes, navegación y tema (nunca toca data/)
+  screens/<flujo>/     una carpeta por flujo, los 7 del Figma
+  components/          los comunes, se arman una vez
+  navigation/          las rutas y un grafo por flujo
+  theme/               colores, tipografías, espaciados y formas
+domain/model/          el modelo con el que trabaja la app
+data/
+  remote/              Retrofit: la API y los DTO que devuelve
+  local/               Room: la base, los DAO y las Entity
+  repository/          coordina remoto y local, y traduce los errores
+di/                    los módulos de Hilt que construyen todo eso
+```
+
+Los paquetes que todavía no están (`domain/model`, `data/repository`) se crean con el primer repositorio: no se inventan antes de tener qué poner adentro.
+
+**Los archivos dicen el patrón.** Cada pantalla son cuatro archivos con el mismo nombre y distinto sufijo (`XxxRoute`, `XxxScreen`, `XxxViewModel`, `XxxUiState`): se ve de un vistazo cuál es stateful y cuál stateless (sección 5.1). Y los tres nombres de un mismo dato (`WorkoutDto`, `Workout`, `WorkoutEntity`) muestran que DTO, modelo y Entity están separados, sin abrir ningún archivo (RF06).
+
+**Los documentos dicen cómo trabajamos.** La misma idea aplicada al repositorio: `specs/` qué hay que hacer, `docs/decisiones/` por qué lo hicimos así, `docs/BITACORA.md` cómo fue cada tarea, `docs/evidencia/` con qué lo probamos. El README (sección 13) los enlaza para que se pueda entrar por ahí.
+
+**Eso también es la declaración de uso de IA.** En lugar de medirla con números, se sigue el rastro: cada entrada de la bitácora dice qué propuso la IA y qué corregimos, y linkea el commit o el pull request donde se ve.
 
 ---
 
@@ -937,7 +951,7 @@ CodeBurn es una herramienta gratuita y local que lee los archivos de sesión de 
 
 Lo que exige la consigna, en este orden:
 
-1. Integrantes y qué hizo cada una.
+1. Integrantes y qué hizo cada uno.
 2. Enlace al Figma.
 3. Instrucciones de ejecución y versiones utilizadas (Android Studio, Kotlin, Compose, Retrofit, Room, Hilt).
 4. Servidor y URL usados, y cómo configurar la URL (publicado o local con `10.0.2.2`).
@@ -946,7 +960,7 @@ Lo que exige la consigna, en este orden:
 7. Arquitectura: capas, DTO, modelo y Entity, repositorios, ViewModel, qué construye Hilt y su relación con Dagger.
 8. Enlace al video de demostración.
 9. Las cinco comparaciones visuales (Figma contra app).
-10. Declaración del uso de IA generativa: metodología (secciones 6 y 7) y números de CodeBurn, con link a `docs/ia/uso-ia.md`.
+10. Declaración del uso de IA generativa: metodología (secciones 6 y 7), con link a `docs/ia/uso-ia.md`.
 11. **Cómo llegamos al resultado:** links a `docs/BITACORA.md`, `docs/decisiones/` y `docs/evidencia/` (sección 11), para que el profe pueda seguir el camino de cada parte.
 12. Si hay Firebase: instrucciones y reglas, sin contraseñas ni claves administrativas.
 13. **Preguntas de la entrega:** las respuestas al cuestionario del aula (sección 13.1), con ejemplos y links al código.

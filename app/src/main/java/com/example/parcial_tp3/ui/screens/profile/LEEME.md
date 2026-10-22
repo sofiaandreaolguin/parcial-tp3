@@ -13,6 +13,8 @@ Por cada pantalla, cuatro archivos (`specs/CONTEXTO.md`, secciones 3 y 5):
 | `XxxViewModel.kt` | `@HiltViewModel`, expone un `StateFlow` |
 | `XxxUiState.kt` | El estado que la pantalla muestra |
 
+**Ojo con el ViewModel:** el controlador de cada pantalla sale de la columna *Controlador* de `specs/PANTALLAS.md`; no se decide acá. **No todas las pantallas tienen uno propio:** hay flujos donde varias comparten uno a propósito, porque comparten datos (el borrador de una comida en Nutrition, los estados de Voice). Mirá la tabla de tu flujo antes de crear el archivo. En Perfil, las 6 tienen un ViewModel propio y el perfil de demostración se comparte por un `ProfileRepository` (acordado el 21/10).
+
 ## Las pantallas de este flujo
 
 | Frame de Figma | Ruta | Barra | Estado |

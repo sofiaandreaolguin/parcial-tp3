@@ -2,18 +2,18 @@
 
 Un código por fila, con su responsable y su estado. Se actualiza al cerrar cada pull request (lo propone la skill `cerrar-tarea`).
 
-Estados: **pendiente** · **en curso** · **hecho** (está en `main`) · **verificado** (otra integrante lo probó y dejó evidencia en `docs/evidencia/`).
+Estados: **pendiente** · **en curso** · **hecho** (está en `main`) · **verificado** (otro integrante lo probó y dejó evidencia en `docs/evidencia/`).
 
 ## Fidelidad visual y navegación
 
 | Código | Qué pide | Responsable | Dónde se cubre | Estado | Verificó |
 |---|---|---|---|---|---|
-| UI01 | Maquetación fiel al Figma: estructura, colores, tipografías, espaciados, íconos; sin textos cortados ni superpuestos | Todas, cada una sus pantallas; control visual Zaki | `PANTALLAS.md` | pendiente | |
+| UI01 | Maquetación fiel al Figma: estructura, colores, tipografías, espaciados, íconos; sin textos cortados ni superpuestos | Todos, cada uno las suyas; control visual Zaki | `PANTALLAS.md` | pendiente | |
 | UI02 | Tema propio y componentes reutilizados (corregir uno lo corrige en todas) | Martu | `ui/theme/`, `ui/components/` | pendiente | |
-| UI03 | Consistente en el tamaño del Figma y en otro emulador; lo que no entra se desplaza | Todas; control visual Zaki | `PANTALLAS.md` | pendiente | |
+| UI03 | Consistente en el tamaño del Figma y en otro emulador; lo que no entra se desplaza | Todos; control visual Zaki | `PANTALLAS.md` | pendiente | |
 | NAV01 | Cada pantalla de Figma con su destino y estado (funcional o demostración) en el README | Fiore | `PANTALLAS.md` y README | pendiente | |
 | NAV02 | Recorridos entre áreas; volver, cerrar y cancelar; atrás del sistema coherente | Fiore | Grafos de navegación | pendiente | |
-| NAV03 | Todo control que abre algo lleva a su destino | Todas, cada una sus pantallas | `PANTALLAS.md` | pendiente | |
+| NAV03 | Todo control que abre algo lleva a su destino | Todos, cada uno las suyas | `PANTALLAS.md` | pendiente | |
 | NAV04 | Cada entrenamiento abre su propio detalle; la selección se mantiene | Hector y Sofi | Rutas con id | pendiente | |
 | NAV05 | Coach y análisis de comida simulados con estados claros; sin pedir micrófono ni cámara | Zaki y Sofi | Voice y Nutrition 04 a 06 | pendiente | |
 

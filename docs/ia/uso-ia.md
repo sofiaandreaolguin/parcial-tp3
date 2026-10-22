@@ -11,7 +11,7 @@ Guía completa para el grupo, con ejemplos de cada carril: [`como-trabajamos-vor
 
 Cuatro carriles según el tamaño del cambio (decisión 001): SDD con specs en EARS para la lógica de datos, TDD para Retrofit y Room, ciclo visual contra Figma para las pantallas, revisores en contexto limpio antes de cada pull request y un control automático que no deja dar una tarea por terminada con tests rotos.
 
-## Qué hizo la IA y qué hicimos nosotras
+## Qué hizo la IA y qué hicimos nosotros
 (se completa a partir de la bitácora: una línea por tarea importante)
 
 ## Ejemplos de pedidos

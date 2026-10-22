@@ -1,6 +1,6 @@
 # 003 · Una base Room compartida, armada por la base del proyecto
 
-**Fecha:** 19/10/2026 · **Propuso:** Hector (tarea VC-f, proyecto base) · **Estado:** propuesta, a confirmar con Sofi (dueña de la base Room)
+**Fecha:** 19/10/2026 · **Propuso:** Hector (tarea VC-f, proyecto base) · **Estado:** propuesta, a confirmar con Sofi (responsable de la base Room)
 
 ## Contexto
 La tarea VC-f pide "módulos que proveen Retrofit, la base Room y los DAO". La base Room es zona de Sofi (`CLAUDE.md`), y la Entity y el DAO de comidas son su tarea VC-h. Además, Room no compila una `@Database` sin al menos una Entity. Había que decidir quién crea la base y con qué tablas, sin pisar el trabajo de Sofi.

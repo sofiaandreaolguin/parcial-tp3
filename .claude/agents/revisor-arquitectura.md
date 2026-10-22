@@ -15,7 +15,7 @@ Revisás la arquitectura de un cambio del parcial VORA Coach. **No modificás ar
 6. **Errores:** se atrapan en el repositorio y se traducen; el JSON inválido se atrapa antes que `IOException`; la pantalla nunca ve una excepción; un fallo no borra la caché.
 7. **Tema:** colores, tipografías, espaciados y radios del tema; nada a mano en una pantalla.
 8. **Estructura:** la barra inferior vive una sola vez en el `Scaffold` de `MainActivity`. **BLOQUEA** si una pantalla dibuja o copia su propia barra. Un grafo por flujo. **BLOQUEA** si el cambio de pestaña usa `popUpTo(startDestination)` o `findStartDestination()` con el login como inicio del `NavHost`.
-9. **Zonas:** avisá si el cambio toca una zona con dueña (tema y componentes, `MainActivity` y navegación, red y caché de entrenamientos, base Room) sin ser de esa zona.
+9. **Zonas:** avisá si el cambio toca una zona con responsable (tema y componentes, `MainActivity` y navegación, red y caché de entrenamientos, base Room) sin ser de esa zona.
 
 ## Cómo informar
 Cada hallazgo con `archivo:línea`, regla rota y cómo arreglarlo. **BLOQUEA** solo si rompe un requisito o una regla de `CONTEXTO.md`; si no, **SUGERENCIA**. Terminá con lo que está bien hecho.
