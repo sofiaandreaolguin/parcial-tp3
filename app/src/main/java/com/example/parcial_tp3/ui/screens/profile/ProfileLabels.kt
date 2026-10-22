@@ -9,14 +9,7 @@ import com.example.parcial_tp3.domain.model.Goal
 import com.example.parcial_tp3.domain.model.TrainingDays
 import com.example.parcial_tp3.domain.model.WorkoutType
 
-/** Texto de cada opción del perfil, para usar con stringResource. */
-@StringRes
-fun CoachingStyle.label(): Int = when (this) {
-    CoachingStyle.SUPPORTIVE -> R.string.coaching_supportive
-    CoachingStyle.BALANCED -> R.string.coaching_balanced
-    CoachingStyle.DIRECT -> R.string.coaching_direct
-}
-
+// Texto de cada opción del perfil, para usar con stringResource.
 @StringRes
 fun Gender.label(): Int = when (this) {
     Gender.FEMALE -> R.string.gender_female
@@ -55,4 +48,11 @@ fun WorkoutType.label(): Int = when (this) {
     WorkoutType.HIIT -> R.string.workout_type_hiit
     WorkoutType.MOBILITY -> R.string.workout_type_mobility
     WorkoutType.MIXED -> R.string.workout_type_mixed
+}
+
+@StringRes
+fun CoachingStyle.label(): Int = when (this) {
+    CoachingStyle.SUPPORTIVE -> R.string.coaching_supportive
+    CoachingStyle.BALANCED -> R.string.coaching_balanced
+    CoachingStyle.DIRECT -> R.string.coaching_direct
 }

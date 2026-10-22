@@ -15,6 +15,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.parcial_tp3.R
 import com.example.parcial_tp3.domain.model.CoachingStyle
@@ -92,6 +93,7 @@ fun GoalsScreen(
                 selected = true,
                 onClick = {},
                 subtitle = state.coachingStyle.subtitle()?.let { stringResource(it) },
+                role = Role.RadioButton,
             )
             VoraButton(
                 text = stringResource(R.string.profile_save_preferences),
@@ -104,7 +106,7 @@ fun GoalsScreen(
     }
 }
 
-/** Etiqueta de sección de 13 SemiBold, medida en Profile / 03 (más grande que la de Voice). */
+/** Etiqueta de sección de 13 SemiBold (labelMedium), medida en Profile / 03; VoraSectionLabel es de 10. */
 @Composable
 private fun Section(text: String) {
     Text(
