@@ -64,7 +64,10 @@ fun EditProfileScreen(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-                ProfileAvatar()
+                ProfileAvatar(
+                    modifier = Modifier.padding(top = VoraTheme.spacing.s12),
+                    size = VoraTheme.sizes.avatarLarge,
+                )
                 VoraButton(
                     text = stringResource(R.string.edit_change_photo),
                     onClick = onDemo,
@@ -92,7 +95,7 @@ fun EditProfileScreen(
                 text = stringResource(R.string.edit_info),
                 icon = painterResource(R.drawable.ic_info),
             )
-            Spacer(Modifier.height(VoraTheme.spacing.s24))
+            Spacer(Modifier.height(VoraTheme.spacing.s8))
             VoraButton(
                 text = stringResource(R.string.edit_save),
                 onClick = onSave,
@@ -100,7 +103,7 @@ fun EditProfileScreen(
             )
             Text(
                 text = stringResource(R.string.edit_footer),
-                style = MaterialTheme.typography.bodySmall,
+                style = VoraTheme.text.footnote,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 textAlign = TextAlign.Center,
                 modifier = Modifier.fillMaxWidth(),
