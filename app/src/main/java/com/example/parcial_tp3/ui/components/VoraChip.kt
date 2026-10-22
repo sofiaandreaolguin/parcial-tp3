@@ -94,6 +94,8 @@ enum class VoraTagTone {
     Mint,
     /** Sobre un panel verde: blanco translucido con texto blanco ("MODERATE"). */
     OnDark,
+    /** Menta sobre menta, para las etiquetas sobre el verde de Voice ("SPEAKING"). */
+    MintOnDark,
     /** Verde oscuro con texto blanco, sobre fondo claro: "Synced". */
     Dark,
 }
@@ -113,6 +115,7 @@ fun VoraTag(
     val (fondo, texto) = when (tone) {
         VoraTagTone.Mint -> VoraTheme.colors.mintTranslucent to MaterialTheme.colorScheme.primary
         VoraTagTone.OnDark -> VoraTheme.colors.onDarkSubtle to MaterialTheme.colorScheme.onPrimary
+        VoraTagTone.MintOnDark -> VoraTheme.colors.mintTranslucent to MaterialTheme.colorScheme.secondary
         VoraTagTone.Dark -> MaterialTheme.colorScheme.primary to MaterialTheme.colorScheme.onPrimary
     }
     Text(

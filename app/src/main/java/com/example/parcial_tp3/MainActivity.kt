@@ -70,6 +70,10 @@ fun VoraApp() {
     val destino = backStackEntry?.destination
     val rutaActual = destino?.route
     val llevaBarra = rutaActual != null && rutaActual in RUTAS_CON_BARRA
+    // Las dos del asistente se pintan hasta el borde: en el Figma el verde de Listening,
+    // Processing y Speaking y el blanco del chat van por detras de las barras del sistema.
+    // Se encargan ellas de sus propios margenes. Las otras 35 siguen igual que antes.
+    val aSangre = rutaActual == Rutas.VOICE || rutaActual == Rutas.CONVERSATION
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),
@@ -88,7 +92,7 @@ fun VoraApp() {
             // ser hijo directo del grafo raiz, y sign_in vive adentro de access_graph.
             // El access_graph arranca en sign_in, asi que la primera pantalla es la misma.
             startDestination = Rutas.ACCESS_GRAPH,
-            modifier = Modifier.padding(padding),
+            modifier = if (aSangre) Modifier else Modifier.padding(padding),
         ) {
             accessGraph(nav)
             homeGraph(nav)

@@ -104,4 +104,66 @@
     <string name="workout_type_hiit">HIIT</string>
     <string name="workout_type_mobility">Movilidad</string>
     <string name="workout_type_mixed">Mixto</string>
+    <!-- Asistente VORA (Voice / 01 a 06 y Conversation). Mismas claves que values/strings.xml. -->
+    <string name="voice_coach_title">Coach VORA</string>
+    <string name="voice_online">EN LINEA</string>
+    <string name="voice_idle_title">¿En qué te ayudo?</string>
+    <string name="voice_idle_subtitle">Hablá con naturalidad sobre tu entrenamiento, tu nutrición o tu progreso.</string>
+    <string name="voice_suggested">PREGUNTAS SUGERIDAS</string>
+    <string name="voice_q_workout">Empezar mi entrenamiento</string>
+    <string name="voice_q_breakfast">Registrar mi desayuno</string>
+    <string name="voice_q_dinner">¿Qué ceno hoy?</string>
+    <string name="voice_q_progress">¿Cómo vengo?</string>
+    <string name="voice_last_conversation">ÚLTIMA CONVERSACIÓN</string>
+    <string name="voice_last_time">hace 2 horas</string>
+    <string name="voice_last_question">\"Armame un entrenamiento de 30 minutos.\"</string>
+    <string name="voice_tap_to_talk">TOCÁ PARA HABLAR</string>
+    <string name="voice_type_instead">Escribir en su lugar</string>
+    <string name="voice_cancel">Cancelar</string>
+
+    <string name="voice_listening_title">Escuchando</string>
+    <string name="voice_live_audio">AUDIO EN VIVO</string>
+    <string name="voice_live_transcript">TRANSCRIPCIÓN EN VIVO</string>
+    <string name="voice_transcript_demo">\"Comí pollo, arroz y unas verduras al mediodía...\"</string>
+    <string name="voice_speak_naturally">Hablá tranquila. Te escucho.</string>
+
+    <string name="voice_processing_title">Procesando</string>
+    <string name="voice_thinking">PENSANDO...</string>
+    <string name="voice_captured_demo">\"Comí pollo, arroz y unas verduras al mediodía.\"</string>
+    <string name="voice_checking">Reviso tu objetivo de nutrición...</string>
+
+    <string name="voice_speaking_title">VORA hablando</string>
+    <string name="voice_speaking_tag">HABLANDO</string>
+    <string name="voice_reply_demo">\"Suena a un almuerzo equilibrado. Calculo unas 520 calorías y alrededor de 38 gramos de proteína.\"</string>
+    <string name="voice_repeat">Repetir</string>
+    <string name="voice_pause">Pausar</string>
+    <string name="voice_stop">Detener</string>
+    <string name="voice_tap_to_interrupt">Tocá para interrumpir</string>
+    <string name="voice_elapsed">0:08</string>
+    <string name="voice_remaining">-0:14</string>
+
+    <string name="voice_error_title">Aviso del sistema</string>
+    <string name="voice_error_heading">Perdón, no te entendí</string>
+    <string name="voice_error_body">Probá hablar de nuevo o escribí lo que necesitás. Fijate que el micrófono esté habilitado.</string>
+    <string name="voice_mic_notice_title">Falta acceso al micrófono</string>
+    <string name="voice_mic_notice_body">VORA usa el micrófono para escuchar tus comandos de voz y acompañarte sin manos en tiempo real.</string>
+    <string name="voice_allow_access">Permitir acceso</string>
+    <string name="voice_not_now">Ahora no</string>
+    <string name="voice_try_again">Reintentar</string>
+    <string name="voice_retry">Reintentar</string>
+    <string name="voice_orb">VORA</string>
+
+    <string name="conversation_day">HOY A LAS 12:40</string>
+    <string name="conversation_demo_q1">¿Qué ceno hoy?</string>
+    <string name="conversation_demo_t1">12:41</string>
+    <string name="conversation_demo_a1">Hoy te faltan 36 g para tu objetivo de proteína. Te recomiendo pechuga de pollo grillada con verduras de estación asadas y una porción de yogur griego.</string>
+    <string name="conversation_listen">Escuchar la respuesta (0:14)</string>
+    <string name="conversation_demo_q2">¿Lo podés hacer vegetariano?</string>
+    <string name="conversation_demo_t2">12:42</string>
+    <string name="conversation_demo_a2">Claro. Probá tofu orgánico grillado con verduras asadas, quinoa y yogur griego.</string>
+    <string name="conversation_demo_t3">12:43</string>
+    <string name="conversation_placeholder">Preguntale lo que quieras a VORA...</string>
+    <string name="conversation_send">Enviar</string>
+    <string name="conversation_attach">Agregar</string>
+    <string name="conversation_mic">Entrada de voz</string>
 </resources>

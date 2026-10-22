@@ -4,9 +4,8 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
-import androidx.compose.ui.res.stringResource
-import com.example.parcial_tp3.R
-import com.example.parcial_tp3.ui.components.PantallaVacia
+import com.example.parcial_tp3.ui.screens.voice.ConversationRoute
+import com.example.parcial_tp3.ui.screens.voice.VoiceRoute
 
 /**
  * Asistente VORA: 6 frames en 2 rutas.
@@ -20,16 +19,13 @@ import com.example.parcial_tp3.ui.components.PantallaVacia
 fun NavGraphBuilder.voiceGraph(nav: NavController) {
     navigation(startDestination = Rutas.VOICE, route = Rutas.VOICE_GRAPH) {
         composable(Rutas.VOICE) {
-            PantallaVacia(
-                nombre = stringResource(R.string.pant_voice),
+            VoiceRoute(
                 onVolver = { nav.popBackStack() },
+                onEscribir = { nav.navigate(Rutas.CONVERSATION) },
             )
         }
         composable(Rutas.CONVERSATION) {
-            PantallaVacia(
-                nombre = stringResource(R.string.pant_voice_05),
-                onVolver = { nav.popBackStack() },
-            )
+            ConversationRoute(onVolver = { nav.popBackStack() })
         }
     }
 }

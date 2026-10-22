@@ -55,12 +55,24 @@ object VoraSizes {
     val border = 1.dp
     /** Iconos de navegacion (barra inferior y encabezado), trazo de 2. */
     val icon = 20.dp
+    /** Microfono grande de Voice / 01 y 02. */
+    val iconMic = 28.dp
+    /** Enviar, repetir, stop y el microfono chico del aviso. */
+    val iconSmall = 18.dp
+    /** Escuchar la respuesta, dentro de una burbuja. */
+    val iconTiny = 10.dp
+    /** La onda de voz del centro del orbe. */
+    val iconOrb = 32.dp
+    /** El recargar del centro del orbe apagado (Voice / 06). */
+    val iconOrbMuted = 34.dp
     /** Area tactil minima de un boton de icono. */
     val touchTarget = 48.dp
     /** Borde de una tarjeta de opcion elegida (menta). */
     val borderSelected = 2.dp
     /** Circulo blanco de volver en el encabezado grande (Profile, Settings). */
     val backCircle = 32.dp
+    /** Alto del encabezado de Voice: 12 + el circulo de 32 + 12. */
+    val topBar = 56.dp
     /** Circulo del icono de una fila de Settings. */
     val rowIconCircle = 36.dp
     /** Circulo de check de una tarjeta de opcion. */
@@ -75,10 +87,39 @@ object VoraSizes {
     val statDivider = 38.dp
     /** Botones redondos de - y + del selector (Active Workout). */
     val stepperButton = 36.dp
-    /** Orbe grande de VORA en las pantallas de Voice. */
+    /*
+     * Orbe de VORA. Cada frame de Voice lo dibuja de un tamano distinto, pero siempre con
+     * las mismas proporciones (aro al 90 % del diametro y esfera al 75 %), asi que alcanza
+     * con pasarle el tamano.
+     */
+    /** Idle y Speaking. */
     val orb = 140.dp
+    /** Listening: es el mas grande de los seis. */
+    val orbListening = 170.dp
+    /** Processing. */
+    val orbProcessing = 150.dp
+    /** El apagado del error (Voice / 06). */
+    val orbMuted = 120.dp
     /** Esfera chica de VORA: avatar de Conversation y de las tarjetas "VORA Insight". */
     val orbSmall = 28.dp
+
+    // Botones redondos de icono, medidos en los frames de Voice
+    /** Microfono de Listening, el mas grande. */
+    val micCircleActive = 80.dp
+    /** Microfono de "TAP TO TALK" en Idle. */
+    val micCircle = 72.dp
+    /** Pausa de Speaking: mas grande que repetir y stop, que van de circleButton. */
+    val pauseCircle = 56.dp
+    /** El + y el enviar de la barra de escribir, y los controles de audio. */
+    val circleButton = 40.dp
+    /** Circulo del icono de un aviso (el microfono de Voice / 06). */
+    val iconCircle = 36.dp
+    /** Escuchar la respuesta, dentro de una burbuja de Conversation. */
+    val playCircle = 24.dp
+    /** Alto del campo de la barra de escribir (Voice / 05). */
+    val composerField = 44.dp
+    /** Anillo de carga de Voice / 03 Processing. */
+    val spinner = 16.dp
     /** Barras del grafico: 24 en Training Volume, 18 en Weekly Steps Trend. */
     val barWidth = 24.dp
     val barWidthNarrow = 18.dp

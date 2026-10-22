@@ -24,5 +24,12 @@ if grep -nE 'android\.permission\.(RECORD_AUDIO|CAMERA)' app/src/main/AndroidMan
   fallas=1
 fi
 
+# NAV05: tampoco se pide el permiso desde el código, aunque no esté en el manifiesto
+KT=$(find app/src/main -name '*.kt' 2>/dev/null)
+if [ -n "$KT" ] && grep -nE 'RequestPermission|checkSelfPermission|shouldShowRequestPermissionRationale' $KT >&2; then
+  echo "NAV05: hay código que pide un permiso del sistema. El coach y el análisis de comida son simulados." >&2
+  fallas=1
+fi
+
 [ $fallas -eq 0 ] || exit 2
 exit 0

@@ -310,8 +310,9 @@ Nuestra ventaja: **la consigna del profe ya es la spec**. En el repo hay una car
 2. **Planificar.** La IA propone cómo la va a armar: qué componentes comunes reutiliza, estructura y navegación. **No programa todavía.** La persona lee el plan, lo corrige y lo aprueba.
 3. **Implementar.** Según el plan aprobado, usando solo componentes y valores del tema.
 4. **Verificar.** Captura del emulador, la IA la compara con el frame y lista las diferencias (UI01). Se revisa también en un segundo tamaño de emulador (UI03).
-5. **Iterar** hasta que coincida.
-6. **Commit** con mensaje descriptivo.
+5. **Medir, no mirar.** Mirar dos imágenes y decir "quedó igual" no alcanza: el ojo no distingue `#F7F8F5` de `#FFFFFF` ni 8 de 20 píxeles de margen. Cuando algo del color o de una medida está en duda, se comparan **los mismos puntos** en el frame y en la captura, y se mira el número.
+6. **Iterar** hasta que coincida. Si el revisor y quien implementó no coinciden, **gana el nodo del Figma**: se va a buscar el valor, no se discute la captura.
+7. **Commit** con mensaje descriptivo.
 
 Captura del emulador:
 
@@ -319,6 +320,19 @@ Captura del emulador:
 adb shell screencap -p /sdcard/captura.png
 adb pull /sdcard/captura.png
 ```
+
+Color de un punto, en la captura o en el frame bajado del Figma:
+
+```
+python3 scripts/color.py captura.png 540,130 540,30
+```
+
+**Por qué el paso 5.** Leer bien el nodo no garantiza que salga bien. Dos ejemplos reales de la tarea del asistente (VC-o):
+
+- El encabezado del chat se implementó con el fondo blanco **antes** del margen de la barra de estado, y el blanco se metió detrás de la hora. El nodo estaba bien leído; el orden de los modificadores de Compose, no.
+- El círculo de volver quedó a 8 del borde en vez de a 20, porque el área táctil de 48 alrededor de un círculo de 32 ya aporta 8. El dato estaba bien leído y el resultado salió mal igual.
+
+Las dos pasaron varias revisiones a ojo antes de que un muestreo de color las mostrara en un segundo.
 
 ### 6.3 Para Retrofit y Room: TDD (desarrollo guiado por tests)
 

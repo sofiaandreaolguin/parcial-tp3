@@ -43,9 +43,13 @@ data class VoraExtraColors(
     val mintTranslucent: Color = VoraMintTranslucent,
     val mintBorder: Color = VoraMintBorder,
     val orbHalo: Color = VoraOrbHalo,
+    val orbMutedCore: Color = VoraOrbMutedCore,
+    val noticeIcon: Color = VoraNoticeIcon,
     val onDarkMuted: Color = VoraOnDarkMuted,
     val onDarkBorder: Color = VoraOnDarkBorder,
     val onDarkSubtle: Color = VoraOnDarkSubtle,
+    val onDarkPanel: Color = VoraOnDarkPanel,
+    val onDarkPanelBorder: Color = VoraOnDarkPanelBorder,
     val success: Color = VoraSuccess,
     val textMuted: Color = VoraTextMuted,
 )
@@ -82,4 +86,5 @@ object VoraTheme {
     val spacing = VoraSpacing
     val radius = VoraRadius
     val sizes = VoraSizes
+    val text = VoraTextStyles
 }

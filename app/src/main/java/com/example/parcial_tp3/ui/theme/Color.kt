@@ -28,8 +28,12 @@ val VoraSuccess = Color(0xFF27AE60)
 val VoraMintTranslucent = Color(0x1F65D6B0) // menta al 12 %: avisos y apoyo
 val VoraMintBorder = Color(0x6665D6B0)      // menta al 40 %: borde de los avisos
 val VoraOrbHalo = Color(0x739AA39F)         // texto tenue al 45 %: halo del orbe sobre fondo claro
+val VoraOrbMutedCore = Color(0xFF4A5250)    // esfera del orbe apagado (Voice / 06 Error)
+val VoraNoticeIcon = Color(0xFFFCDEDE)      // rosa del circulo del icono de un aviso (Voice / 06 Error)
 
 // Sobre paneles verdes
 val VoraOnDarkMuted = Color(0xB3FFFFFF)     // blanco al 70 %: datos secundarios
 val VoraOnDarkBorder = Color(0x4DFFFFFF)    // blanco al 30 %: borde de "Details"
 val VoraOnDarkSubtle = Color(0x1FFFFFFF)    // blanco al 12 %: fondo de "MODERATE" y de los - y +
+val VoraOnDarkPanel = Color(0x0DFFFFFF)     // blanco al 5 %: fondo de los paneles de Voice sobre el verde
+val VoraOnDarkPanelBorder = Color(0x1AFFFFFF) // blanco al 10 %: borde de esos paneles
