@@ -70,7 +70,7 @@ class WorkoutsViewModelTest {
         advanceTimeBy(6_000)
         runCurrent()
         backgroundScope.launch { viewModel.uiState.collect {} }
-        advanceUntilIdle()
+        runCurrent()
 
         assertEquals("el repositorio tiene que llamarse una sola vez", 1, repository.llamadas)
         assertEquals(WorkoutsUiState.Content(catalogo), viewModel.uiState.value)

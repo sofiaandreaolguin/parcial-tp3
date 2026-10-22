@@ -150,7 +150,7 @@ class WorkoutRepositoryImplTest {
 
     @Test
     fun `C12 catalogo al cancelar relanza CancellationException`() = runTest {
-        server.enqueue(MockResponse().setBody(cuerpoDelMock).setHeadersDelay(10, TimeUnit.SECONDS))
+        server.enqueue(MockResponse().setBody(cuerpoDelMock).setHeadersDelay(3, TimeUnit.SECONDS))
         var resultado: Result<List<Workout>>? = null
 
         // Red de verdad: la consulta corre en IO y el test espera a que llegue al servidor
