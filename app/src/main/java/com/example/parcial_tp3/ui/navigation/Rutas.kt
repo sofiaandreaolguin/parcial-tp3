@@ -101,7 +101,8 @@ enum class VoraTab(
     HOME(Rutas.HOME_GRAPH, Rutas.HOME_DASHBOARD, R.string.tab_home),
     WORKOUT(Rutas.WORKOUT_GRAPH, Rutas.WORKOUT_DASHBOARD, R.string.tab_workout),
     NUTRITION(Rutas.NUTRITION_GRAPH, Rutas.NUTRITION_DASHBOARD, R.string.tab_nutrition),
-    PROGRESS(Rutas.PROGRESS_GRAPH, Rutas.PROGRESS_DASHBOARD, R.string.tab_progress),
+    // La pestana aterriza en el frame 01, no en el 02: ficha docs/decisiones/005.
+    PROGRESS(Rutas.PROGRESS_GRAPH, Rutas.TODAYS_OVERVIEW, R.string.tab_progress),
     PROFILE(Rutas.PROFILE_GRAPH, Rutas.PROFILE_DASHBOARD, R.string.tab_profile),
 }
 

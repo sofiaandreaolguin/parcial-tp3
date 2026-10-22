@@ -142,7 +142,7 @@ Leído de los frames el 18/10. Lo que dice *a confirmar* es lectura mía del dib
 | | "Start my workout" (chip) | `workout_dashboard` · cruza |
 | | "Log breakfast" (chip) | `add_food` · cruza |
 | | "Start workout" (tarjeta del recomendado) | `workout_details/{workoutId}` · cruza |
-| | Sección "Today's Overview" | `todays_overview` · cruza · *sin confirmar* |
+| | Sección "Today's Overview" | `todays_overview` · cruza · *entrada secundaria* |
 | | Barra inferior | Las otras 4 pestañas |
 | Home / 02 | "Mark all as read" | No navega |
 | | "Upper Body Strength is ready" | `workout_details/{workoutId}` |
@@ -302,7 +302,7 @@ Leído de los frames el 18/10. Lo que dice *a confirmar* es lectura mía del dib
 | 30 | Progress / 05 — Health Trends | `health_trends` | Con barra | `ProgressViewModel` | Demostración | Coach y Progress |
 | 31 | Progress / 06 — Weekly Review | `weekly_review` | Encima | `ProgressViewModel` | Demostración | Coach y Progress |
 
-- **Pantalla base de la pestaña Progress:** se propone `todays_overview` (es el frame 01 y es una de las cinco capturas de referencia del profe). *A confirmar en la tarea VC-b.*
+- **Pantalla base de la pestaña Progress: `todays_overview`.** Confirmado el 22/10 con la respuesta a la duda #2: la pestaña aterriza en el frame 01 y desde ahí "Start Workout" lleva al 02, que es el que tiene los links a 03, 04, 05 y 06. Ficha: `docs/decisiones/005-toda-pantalla-alcanzable.md`.
 - Los datos de demostración usan **la misma forma que los modelos** de Workout y Nutrition, para poder enchufarlos a Room si sobra tiempo.
 - Progress / 02 es más alta que 850 dp: lleva scroll (UI03).
 
@@ -312,7 +312,7 @@ Leído de los frames el 18/10. Lo que dice *a confirmar* es lectura mía del dib
 
 | Desde | Control | A dónde lleva |
 |---|---|---|
-| 01 Today's Overview | "Start Workout" | `pre_workout/{workoutId}` · cruza |
+| 01 Today's Overview | "Start Workout" | `progress_dashboard` · **no es el destino "lógico"**, es el que hace alcanzables 02 a 06 (duda #2) |
 | | Fila "Workout Progress" | `workout_progress` · *a confirmar* |
 | | Fila "Nutrition Target" | `nutrition_progress` · *a confirmar* |
 | | Fila "Activity Target" | `health_trends` · *a confirmar* |
@@ -560,7 +560,7 @@ Las tablas "A dónde lleva cada control" dicen **hacia dónde sale** cada pantal
 | `workout_dashboard` | Pestaña Workout · `home_dashboard` "Start my workout" · `workout_complete` "Done" |
 | `weekly_plan` | `workout_dashboard` calendario · `weekly_review` "View next week's plan →" |
 | `workout_details/{workoutId}` | `workout_dashboard` "Details" · `weekly_plan` cada día · `home_dashboard` "Start workout" · `notifications` "Upper Body Strength is ready" |
-| `pre_workout/{workoutId}` | `workout_dashboard` "Start Workout" · `workout_details` "Start Workout" · `todays_overview` "Start Workout" |
+| `pre_workout/{workoutId}` | `workout_dashboard` "Start Workout" · `workout_details` "Start Workout" |
 | `active_workout/{workoutId}` | `pre_workout` "Start Workout" |
 | `exercise_details/{workoutId}/{exerciseId}` | `workout_details` un ejercicio de la lista |
 | `workout_complete/{workoutId}` | `active_workout` "Finish Workout" |
@@ -572,7 +572,7 @@ Las tablas "A dónde lleva cada control" dicen **hacia dónde sale** cada pantal
 | `photo_analysis` | `nutrition_dashboard` "Photo" · `add_food` "Snap a Photo" |
 | `food_confirmation?mealId={mealId}` | `food_analysis` al terminar · `photo_analysis` "Review & Add" · `meal_details` "Edit Meal" · `add_food` "Log Manually" |
 | `meal_details/{mealId}` | `nutrition_dashboard` una comida · `todays_meals` una comida |
-| `todays_overview` | ⚠️ `home_dashboard`, sección "Today's Overview" · **sin confirmar** |
+| `todays_overview` | **pantalla base de la pestaña Progress** · además `home_dashboard`, sección "Today's Overview" |
 | `progress_dashboard` | Pestaña Progress |
 | `workout_progress` | `progress_dashboard` "Workout · View >" · `workout_dashboard` "View progress" |
 | `nutrition_progress` | `progress_dashboard` "Nutrition · View >" |
@@ -585,7 +585,15 @@ Las tablas "A dónde lleva cada control" dicen **hacia dónde sale** cada pantal
 | `voice_ai_settings` | `profile_dashboard` "Review preferences" · confirmado el 21/10 al maquetar `Profile / 01` |
 | `settings` | `profile_dashboard` engranaje · `voice_ai_settings` "Privacy & permissions" |
 
-**Queda una sola ⚠️: `todays_overview`.** Se cierra al maquetar `Home / 01` (tarea VC-n, Martu). La de `voice_ai_settings` se cerró el 21/10 al maquetar `Profile / 01`. Si esa entrada no existe en el frame, la pantalla queda inalcanzable y hay que buscarle otra antes de entregar.
+> **22/10 · Regla del grupo:** toda pantalla del Figma tiene que ser navegable. Si una queda
+> huérfana se le asigna un control que ya exista en algún frame, con criterio, aunque el
+> recorrido no sea el más lógico del producto. Nunca se inventa un botón que el frame no
+> tenga. Ficha: `docs/decisiones/005-toda-pantalla-alcanzable.md`.
+
+**No queda ninguna ⚠️.** `todays_overview` se cerró el 22/10 con la respuesta a la duda #2:
+pasa a ser la pantalla base de la pestaña Progress, y "Start Workout" del frame 01 lleva al
+02. La de `voice_ai_settings` se cerró el 21/10 al maquetar `Profile / 01`. Las 37 pantallas
+tienen al menos una entrada.
 
 ### La cuenta
 
@@ -606,7 +614,7 @@ Test del inventario (tarea VC-e, `app/src/test/`): que `RUTAS_CON_BARRA.size == 
 ## 17. Pendientes
 
 1. **Tarea VC-b sin asignar** (acordar rutas, modelos y componentes). Las rutas de la sección 15 y la firma de `VoraBottomBar` salen de ahí; mientras no se acuerden, esto es una propuesta.
-2. **`Progress / 01 — Today's Overview` es la única entrada sin confirmar** de la tabla de la sección 16. Se cierra al maquetar `Home / 01` (tarea VC-n, Martu). La de `Profile / 05 — Voice & AI Settings` quedó confirmada el 21/10 al maquetar `Profile / 01` (Zaki, tarea VC-q). Una pantalla sin entrada rompe NAV01.
+2. **Ya no hay entradas sin confirmar.** `Progress / 01 — Today's Overview` se resolvió el 22/10 (duda #2): es la pantalla base de la pestaña Progress y su "Start Workout" lleva a `progress_dashboard`. La de `Profile / 05 — Voice & AI Settings` quedó confirmada el 21/10 al maquetar `Profile / 01` (Zaki, tarea VC-q). Una pantalla sin entrada rompe NAV01, así que si alguna fila cambia hay que revisar esto de nuevo.
 3. **El formulario de carga manual de comidas (RF03) no tiene frame propio.** Por ahora "Log Manually" abre `Nutrition / 07 — Food Confirmation` vacío, que ya tiene los campos. La consigna prohíbe inventar pantallas.
 4. **Eliminar una comida (RF04) no tiene control en ningún frame.** `Nutrition / 08` tiene solo ‹, "Edit Meal" y "Duplicate Meal"; `Nutrition / 02` no tiene papelera ni swipe. El "Remove" de `07` saca un ingrediente del borrador, no borra una comida guardada. Lo define la zona de Nutrition antes de maquetar.
 5. **El catálogo de entrenamientos (RF01) se muestra en `Workout / 02 — Your Plan`**, que lista tres con entrada por ítem, igual que devuelve el mock. `Workout / 01` muestra solo el destacado. **NAV04 se demuestra en `02`.**
