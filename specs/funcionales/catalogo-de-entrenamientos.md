@@ -92,22 +92,22 @@ Casos de la plantilla y cómo se cubren acá:
 ## Tests
 | Criterio | Test | Dónde | Vi el rojo |
 |---|---|---|---|
-| C1 | `` `C1 catalogo getWorkouts pide GET v1 workouts sin parametros` `` | `test/` · `WorkoutApiTest` (MockWebServer) | |
-| C2 | `` `C2 catalogo Gson convierte el JSON del mock en tres WorkoutDto` `` | `test/` · `WorkoutApiTest` (MockWebServer) | |
-| C3 | `` `C3 catalogo toDomain conserva los campos y traduce los tres niveles` `` | `test/` · `WorkoutMappersTest` | |
-| C4 | `` `C4 catalogo cada campo nulo del DTO lanza IllegalArgumentException` `` (5 casos, uno por campo, con mensaje por campo) | `test/` · `WorkoutMappersTest` | |
-| C5 | `` `C5 catalogo un nivel desconocido o con mayusculas lanza IllegalArgumentException` `` (`"pro"` y `"Beginner"`) | `test/` · `WorkoutMappersTest` | |
-| C6 | `` `C6 catalogo con 200 devuelve los tres Workout en orden` `` | `test/` · `WorkoutRepositoryImplTest` (MockWebServer) | |
-| C7 | `` `C7 catalogo con data vacia devuelve exito con lista vacia` `` | `test/` · `WorkoutRepositoryImplTest` (MockWebServer) | |
-| C8 | `` `C8 catalogo con 503 devuelve failure sin lanzar` `` | `test/` · `WorkoutRepositoryImplTest` (MockWebServer) | |
-| C9 | `` `C9 catalogo sin data falla toda la consulta` `` y `` `C9 catalogo con un item invalido falla toda la consulta` `` | `test/` · `WorkoutRepositoryImplTest` (MockWebServer) | |
-| C10 | `` `C10 catalogo con servidor apagado devuelve failure sin lanzar` `` y `` `C10 catalogo con JSON roto devuelve failure sin lanzar` `` | `test/` · `WorkoutRepositoryImplTest` (MockWebServer) | |
-| C11 | `` `C11 catalogo con JSON de otro tipo devuelve failure sin lanzar` `` | `test/` · `WorkoutRepositoryImplTest` (MockWebServer) | |
-| C12 | `` `C12 catalogo al cancelar relanza CancellationException` `` | `test/` · `WorkoutRepositoryImplTest` (MockWebServer con demora) | |
-| C13 | `` `C13 catalogo arranca en Loading y pasa a Content con la lista` `` | `test/` · `WorkoutsViewModelTest` (`FakeWorkoutRepository`) | |
-| C14 | `` `C14 catalogo si el repositorio falla pasa a Error` `` | `test/` · `WorkoutsViewModelTest` (`FakeWorkoutRepository`) | |
-| C15 | `` `C15 catalogo volver a observar no repite la consulta ni pierde la lista` `` | `test/` · `WorkoutsViewModelTest` (`FakeWorkoutRepository`) | |
-| C16 | `./gradlew assembleDebug` (no es un test unitario: la salida va a la evidencia) | build | |
+| C1 | `` `C1 catalogo getWorkouts pide GET v1 workouts sin parametros` `` | `test/` · `WorkoutApiTest` (MockWebServer) | Pasa en rojo (la ruta la fija `@GET`): lleva control negativo |
+| C2 | `` `C2 catalogo Gson convierte el JSON del mock en tres WorkoutDto` `` | `test/` · `WorkoutApiTest` (MockWebServer) | Pasa en rojo (Gson y el DTO): lleva control negativo |
+| C3 | `` `C3 catalogo toDomain conserva los campos y traduce los tres niveles` `` | `test/` · `WorkoutMappersTest` | Sí, 21/10: `expected Workout(id=w01...) but was Workout(id=...)` |
+| C4 | `` `C4 catalogo cada campo nulo del DTO lanza IllegalArgumentException` `` (5 casos, uno por campo, con mensaje por campo) | `test/` · `WorkoutMappersTest` | Sí, 21/10: `nothing was thrown` |
+| C5 | `` `C5 catalogo un nivel desconocido o con mayusculas lanza IllegalArgumentException` `` (`"pro"` y `"Beginner"`) | `test/` · `WorkoutMappersTest` | Sí, 21/10: `nothing was thrown` |
+| C6 | `` `C6 catalogo con 200 devuelve los tres Workout en orden` `` | `test/` · `WorkoutRepositoryImplTest` (MockWebServer) | Sí, 21/10: `but was []` |
+| C7 | `` `C7 catalogo con data vacia devuelve exito con lista vacia` `` | `test/` · `WorkoutRepositoryImplTest` (MockWebServer) | Pasa en rojo (el stub ya devuelve lista vacía): lleva control negativo |
+| C8 | `` `C8 catalogo con 503 devuelve failure sin lanzar` `` | `test/` · `WorkoutRepositoryImplTest` (MockWebServer) | Sí, 21/10: `fue Success([])` |
+| C9 | `` `C9 catalogo sin data falla toda la consulta` `` y `` `C9 catalogo con un item invalido falla toda la consulta` `` | `test/` · `WorkoutRepositoryImplTest` (MockWebServer) | Sí, 21/10, los dos: `fue Success([])` |
+| C10 | `` `C10 catalogo con servidor apagado devuelve failure sin lanzar` `` y `` `C10 catalogo con JSON roto devuelve failure sin lanzar` `` | `test/` · `WorkoutRepositoryImplTest` (MockWebServer) | Sí, 21/10, los dos: `fue Success([])` |
+| C11 | `` `C11 catalogo con JSON de otro tipo devuelve failure sin lanzar` `` | `test/` · `WorkoutRepositoryImplTest` (MockWebServer) | Sí, 21/10: `fue Success([])` |
+| C12 | `` `C12 catalogo al cancelar relanza CancellationException` `` | `test/` · `WorkoutRepositoryImplTest` (MockWebServer con demora) | Sí, 21/10, pero en la condición previa (el stub no llama a la API): lleva control negativo con `runCatching` |
+| C13 | `` `C13 catalogo arranca en Loading y pasa a Content con la lista` `` | `test/` · `WorkoutsViewModelTest` (`FakeWorkoutRepository`) | Sí, 21/10: `but was Loading` |
+| C14 | `` `C14 catalogo si el repositorio falla pasa a Error` `` | `test/` · `WorkoutsViewModelTest` (`FakeWorkoutRepository`) | Sí, 21/10: `fue Loading` |
+| C15 | `` `C15 catalogo volver a observar no repite la consulta ni pierde la lista` `` | `test/` · `WorkoutsViewModelTest` (`FakeWorkoutRepository`) | Sí, 21/10, en la primera observación (`but was Loading`): la consulta única lleva control negativo con `WhileSubscribed` |
+| C16 | `./gradlew assembleDebug` (no es un test unitario: la salida va a la evidencia) | build | Pasa en rojo (el `@Binds` es contrato): lleva control negativo |
 
 - Todo va en `test/`: no se usa Room, así que nada va en `androidTest/` y `control-rapido.sh` corre todos. Los nombres empiezan con "catalogo" para no confundirse con los `C1` y `C2` de `VoraApiTest`, que son de VC-f.
 - Los tests de red arman Retrofit con `NetworkModule.provideRetrofit(OkHttpClient(), server.url("/").toString())`, igual que `VoraApiTest`, así se prueba el mismo conversor que usa la app.
