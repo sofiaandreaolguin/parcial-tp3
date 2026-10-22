@@ -1,11 +1,13 @@
 package com.example.parcial_tp3.domain.model
 
+import java.time.LocalDate
+
 /** Perfil del usuario. Las opciones son enums: la UI las traduce con stringResource. */
 data class Profile(
     val firstName: String,
     val lastName: String,
     val email: String,
-    val birthDate: String,
+    val birthDate: LocalDate,
     val heightCm: Int,
     val weightKg: Int,
     val gender: Gender,

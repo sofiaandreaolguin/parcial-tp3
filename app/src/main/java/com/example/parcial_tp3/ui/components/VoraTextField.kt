@@ -42,6 +42,7 @@ import com.example.parcial_tp3.ui.theme.VoraTheme
  * @param label de strings.xml, ya en mayusculas; null para el campo sin etiqueta
  *   ("Add an ingredient...").
  * @param leadingIcon por ejemplo el + de "Add an ingredient".
+ * @param readOnly muestra el valor sin dejar editarlo y se ve igual (Edit profile de demostracion).
  */
 @Composable
 fun VoraTextField(
@@ -54,13 +55,14 @@ fun VoraTextField(
     singleLine: Boolean = true,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     keyboardActions: KeyboardActions = KeyboardActions.Default,
+    readOnly: Boolean = false,
 ) {
     val colors = MaterialTheme.colorScheme
     val textStyle = MaterialTheme.typography.bodyLarge.copy(color = colors.onSurface)
     Column(modifier) {
         if (label != null) {
-            Text(text = label, style = MaterialTheme.typography.labelSmall, color = colors.onSurfaceVariant)
-            // 4 + los 2 que suma el alto de linea de la etiqueta = los 6 de la lamina
+            Text(text = label, style = VoraTheme.text.fieldLabel, color = colors.onSurfaceVariant)
+            // 4 + los 3 que suma el alto de linea de fieldLabel (12 en 18) = 7; en Edit profile mide 8
             Spacer(Modifier.height(VoraTheme.spacing.s4))
         }
         BasicTextField(
@@ -72,6 +74,7 @@ fun VoraTextField(
                 .semantics { (label ?: placeholder)?.let { contentDescription = it } },
             textStyle = textStyle,
             singleLine = singleLine,
+            readOnly = readOnly,
             keyboardOptions = keyboardOptions,
             keyboardActions = keyboardActions,
             cursorBrush = SolidColor(colors.primary),

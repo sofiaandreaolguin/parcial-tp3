@@ -104,6 +104,25 @@
     <string name="workout_type_hiit">HIIT</string>
     <string name="workout_type_mobility">Movilidad</string>
     <string name="workout_type_mixed">Mixto</string>
+    <string name="gender_female">Femenino</string>
+    <string name="gender_male">Masculino</string>
+    <string name="gender_non_binary">No binario</string>
+    <string name="gender_prefer_not_to_say">Prefiero no decirlo</string>
+
+    <!-- Profile / 02 — Edit Profile -->
+    <string name="edit_change_photo">Cambiar foto</string>
+    <string name="edit_first_name">NOMBRE</string>
+    <string name="edit_last_name">APELLIDO</string>
+    <string name="edit_birth_date">FECHA DE NACIMIENTO</string>
+    <string name="edit_birth_date_pattern">d \'de\' MMMM \'de\' yyyy</string>
+    <string name="edit_height">ALTURA</string>
+    <string name="edit_weight">PESO</string>
+    <string name="edit_gender">GÉNERO</string>
+    <string name="edit_height_value">%1$d cm</string>
+    <string name="edit_weight_value">%1$d kg</string>
+    <string name="edit_info">Se usa para personalizar tus recomendaciones.</string>
+    <string name="edit_save">Guardar cambios</string>
+    <string name="edit_footer">Tu información se usa para personalizar tu experiencia en VORA.</string>
     <!-- Asistente VORA (Voice / 01 a 06 y Conversation). Mismas claves que values/strings.xml. -->
     <string name="voice_coach_title">Coach VORA</string>
     <string name="voice_online">EN LINEA</string>

@@ -3,11 +3,20 @@ package com.example.parcial_tp3.ui.screens.profile
 import androidx.annotation.StringRes
 import com.example.parcial_tp3.R
 import com.example.parcial_tp3.domain.model.Experience
+import com.example.parcial_tp3.domain.model.Gender
 import com.example.parcial_tp3.domain.model.Goal
 import com.example.parcial_tp3.domain.model.TrainingDays
 import com.example.parcial_tp3.domain.model.WorkoutType
 
 /** Texto de cada opción del perfil, para usar con stringResource. */
+@StringRes
+fun Gender.label(): Int = when (this) {
+    Gender.FEMALE -> R.string.gender_female
+    Gender.MALE -> R.string.gender_male
+    Gender.NON_BINARY -> R.string.gender_non_binary
+    Gender.PREFER_NOT_TO_SAY -> R.string.gender_prefer_not_to_say
+}
+
 @StringRes
 fun Goal.label(): Int = when (this) {
     Goal.BUILD_STRENGTH -> R.string.goal_build_strength

@@ -1,6 +1,5 @@
 package com.example.parcial_tp3.ui.screens.profile
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -44,6 +43,7 @@ import com.example.parcial_tp3.ui.components.VoraCard
 import com.example.parcial_tp3.ui.components.VoraListRow
 import com.example.parcial_tp3.ui.components.VoraOrb
 import com.example.parcial_tp3.ui.components.VoraPanel
+import com.example.parcial_tp3.ui.components.VoraSectionLabel
 import com.example.parcial_tp3.ui.components.VoraTag
 import com.example.parcial_tp3.ui.components.VoraTagTone
 import com.example.parcial_tp3.ui.theme.Parcialtp3Theme
@@ -148,13 +148,7 @@ private fun IdentityCard(fullName: String, onEditProfile: () -> Unit) {
             modifier = Modifier.fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            Image(
-                painter = painterResource(R.drawable.avatar),
-                contentDescription = null,
-                modifier = Modifier
-                    .size(VoraTheme.sizes.avatar)
-                    .clip(CircleShape),
-            )
+            ProfileAvatar()
             Spacer(Modifier.height(VoraTheme.spacing.s12))
             Text(
                 text = fullName,
@@ -182,11 +176,7 @@ private fun IdentityCard(fullName: String, onEditProfile: () -> Unit) {
 @Composable
 private fun SnapshotCard(state: ProfileDashboardUiState, goals: String) {
     VoraCard(modifier = Modifier.fillMaxWidth()) {
-        Text(
-            text = stringResource(R.string.profile_snapshot),
-            style = MaterialTheme.typography.labelSmall,
-            color = VoraTheme.colors.textMuted,
-        )
+        VoraSectionLabel(stringResource(R.string.profile_snapshot), color = VoraTheme.colors.textMuted)
         Spacer(Modifier.height(VoraTheme.spacing.s8))
         Column(verticalArrangement = Arrangement.spacedBy(VoraTheme.spacing.s8)) {
             SnapshotRow(stringResource(R.string.profile_snapshot_goal), goals)

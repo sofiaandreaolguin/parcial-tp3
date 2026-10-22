@@ -11,6 +11,7 @@ import com.example.parcial_tp3.domain.model.Profile
 import com.example.parcial_tp3.domain.model.ResponseStyle
 import com.example.parcial_tp3.domain.model.TrainingDays
 import com.example.parcial_tp3.domain.model.WorkoutType
+import java.time.LocalDate
 import javax.inject.Inject
 import javax.inject.Singleton
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -35,7 +36,7 @@ class ProfileRepository @Inject constructor() {
             firstName = "Alex",
             lastName = "Morgan",
             email = "alex@morgan.com",
-            birthDate = "14 March 1995",
+            birthDate = LocalDate.of(1995, 3, 14),
             heightCm = 178,
             weightKg = 76,
             gender = Gender.PREFER_NOT_TO_SAY,

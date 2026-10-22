@@ -88,4 +88,9 @@ object VoraTextStyles {
     val panelBody = manrope(18, FontWeight.Medium, lineHeight = 27)
     val panelBodySmall = manrope(16, FontWeight.Medium, lineHeight = 24)
     val panelQuote = manrope(15, FontWeight.Normal, lineHeight = 23)
+
+    /** Etiqueta de los campos ("FIRST NAME"): 12, medida en Profile / 02 (67 dp de ancho). */
+    val fieldLabel = manrope(12, FontWeight.SemiBold)
+    /** Nota al pie de Edit profile ("Your information is used..."): 12 Regular. */
+    val footnote = manrope(12, FontWeight.Normal)
 }
