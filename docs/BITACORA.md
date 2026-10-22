@@ -114,3 +114,15 @@ Formato:
   - Quedan como sugerencias: test del ViewModel, `birthDate` como texto en inglés y alimentos a evitar sin traducir (se ven recién en 02 y 04), la frase bajo el nombre fija aunque cambien los objetivos, área táctil de 32 del engranaje (igual que `VoraTopBarLarge`), `FontWeight.Medium` en la pantalla y confirmar con Fiore la entrada a 05 desde "Review preferences".
 - Evidencia: `docs/evidencia/visual/profile-01-{411dp,360dp}{,-scrolled}.png` (teléfono real). Build y tests unitarios en verde, `control-rapido.sh` sin fallas.
 - Commit / PR:
+
+### 2026-10-21 · Hector · feat(workout): implementar catálogo de entrenamientos con Retrofit
+- Carril y requisitos: C · RF01 (parcial: catálogo), RF06, RF07 (parcial: carga y rotación), RF08 (parcial: repositorio)
+- Plan aprobado: tarea g del hito 1, primera consulta Retrofit. `GET /v1/workouts` con `WorkoutDto` separado de `Workout`, mapper que no inventa valores, `WorkoutRepository` con `Result` y `WorkoutsViewModel` que carga una sola vez en `init`. Sin `AppError`, `Empty` ni reintento (RF05), sin Room (tarea j) y sin pantallas.
+- Qué propuso la IA y qué cambiamos:
+  - La IA propuso atrapar solo excepciones específicas en el repositorio. Hector preguntó para qué servía, y al comparar se eligió la opción B: relanzar `CancellationException` y después atrapar `Exception`. Cubre el error "desconocido" de `CONTEXTO.md` y la promesa de la interfaz de que todo error llega como `Result.failure`.
+  - Con la implementación, C12 cumplía sus aserciones pero fallaba en el `tearDown`: MockWebServer dormía los 10 s de la demora y `shutdown()` espera a lo sumo 5. La IA no tocó el test y lo consultó. Hector autorizó bajar la demora a 3 s.
+  - El control negativo de C15 (`WhileSubscribed`) mostró que C15 no lo detectaba, porque `advanceUntilIdle()` no corre el colector de `backgroundScope`. La IA lo probó con una copia temporal del test, que después borró, y Hector autorizó cambiar a `runCurrent()`. Ahora C15 falla solo con `expected:<1> but was:<2>`.
+  - Se alineó la spec (decía `setBodyDelay` y el test usa `setHeadersDelay`) y se sumaron al historial los dos cambios de test.
+- Revisores: revisor-requisitos (C1 a C16 cumplen; los dos cambios de test no debilitan nada), revisor-arquitectura y /code-review. Nada BLOQUEA, CRÍTICA ni ALTA. Sugerencias sin aplicar, que quedan para RF05: conservar el código HTTP (`HttpException`), atrapar el JSON roto antes que `IOException`, sacar la carga a `load()` para el reintento, registrar el error en el ViewModel, que C12 con 3 s puede ser inestable en una CI muy lenta (alternativa `SocketPolicy.NO_RESPONSE`) y aclarar en `CLAUDE.md` que el ViewModel sí importa `data.repository`.
+- Evidencia: `docs/evidencia/tests/2026-10-21-catalogo-{rojo,verde}.md`. Test en rojo en el commit `a22a882`. 34 tests unitarios en verde, `assembleDebug` en verde y `reglas.sh` sin fallas. Controles negativos de C1, C2, C7, C12, C15 y C16.
+- Commit / PR:
