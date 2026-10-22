@@ -8,6 +8,7 @@ import androidx.navigation.compose.navigation
 import com.example.parcial_tp3.R
 import com.example.parcial_tp3.ui.components.PantallaVacia
 import com.example.parcial_tp3.ui.screens.profile.EditProfileRoute
+import com.example.parcial_tp3.ui.screens.profile.GoalsRoute
 import com.example.parcial_tp3.ui.screens.profile.ProfileDashboardRoute
 
 /** Perfil: 6 pantallas. Solo 01 con barra; 02 a 06 se abren encima. */
@@ -27,10 +28,7 @@ fun NavGraphBuilder.profileGraph(nav: NavController) {
             EditProfileRoute(onBack = { nav.popBackStack() })
         }
         composable(Rutas.GOALS_PREFERENCES) {
-            PantallaVacia(
-                nombre = stringResource(R.string.pant_profile_03),
-                onVolver = { nav.popBackStack() },
-            )
+            GoalsRoute(onBack = { nav.popBackStack() })
         }
         composable(Rutas.NUTRITION_PREFERENCES) {
             PantallaVacia(
