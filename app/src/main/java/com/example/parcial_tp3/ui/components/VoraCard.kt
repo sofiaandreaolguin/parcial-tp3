@@ -95,6 +95,37 @@ fun VoraPanel(
 }
 
 /**
+ * Tarjeta translucida sobre una pantalla verde: "TODAY'S FOCUS" y "Need anything?" de Workout /
+ * 04 (nodos 1:529 y 1:540). Fondo blanco al 5 % y borde al 10 %, los del panel de Voice
+ * (PanelOscuro de VoiceScreen, que todavia es una copia aparte): en 04 el nodo dice 4 % y
+ * 12 %, y a la vista es lo mismo. Adentro, el texto y los iconos salen blancos solos.
+ *
+ * @param padding y [radius] 16 por defecto, los de Workout / 04; el panel de Voice usa 20.
+ * @param spacing separacion entre los hijos: 8 en Workout / 04, 12 en el panel de Voice.
+ */
+@Composable
+fun VoraCardOnDark(
+    modifier: Modifier = Modifier,
+    padding: Dp = VoraTheme.spacing.s16,
+    radius: Dp = VoraTheme.radius.r16,
+    spacing: Dp = VoraTheme.spacing.s8,
+    content: @Composable ColumnScope.() -> Unit,
+) {
+    val shape = RoundedCornerShape(radius)
+    Column(
+        modifier = modifier
+            .background(VoraTheme.colors.onDarkPanel, shape)
+            .border(VoraTheme.sizes.border, VoraTheme.colors.onDarkPanelBorder, shape)
+            .padding(padding),
+        verticalArrangement = Arrangement.spacedBy(spacing),
+    ) {
+        CompositionLocalProvider(LocalContentColor provides MaterialTheme.colorScheme.onPrimary) {
+            content()
+        }
+    }
+}
+
+/**
  * Fila de Settings y de Profile: icono en un circulo, titulo, subtitulo opcional y flecha.
  *
  * @param icon el icono propio de la fila (cada pantalla trae el suyo del Figma).
@@ -252,6 +283,10 @@ private fun VoraCardPreview() {
                 Text(titulo, style = MaterialTheme.typography.titleLarge)
                 Text(sub, style = MaterialTheme.typography.bodyMedium, color = VoraTheme.colors.onDarkMuted)
                 VoraButton(sub, {}, style = VoraButtonStyle.Cta)
+                VoraCardOnDark(Modifier.fillMaxWidth()) {
+                    Text(titulo, style = MaterialTheme.typography.labelLarge)
+                    Text(sub, style = MaterialTheme.typography.bodyMedium, color = VoraTheme.colors.onDarkMuted)
+                }
             }
             VoraCard(Modifier.fillMaxWidth(), padding = VoraTheme.spacing.s12, radius = VoraTheme.radius.r12) {
                 Text(titulo, style = MaterialTheme.typography.bodyLarge)

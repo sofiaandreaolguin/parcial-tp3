@@ -63,6 +63,10 @@ internal fun CatalogoComponentes() {
                     VoraButton(corto, {}, style = VoraButtonStyle.Cta, size = VoraButtonSize.Small)
                     VoraButton(corto, {}, style = VoraButtonStyle.OutlinedOnDark, size = VoraButtonSize.Small)
                 }
+                VoraCardOnDark(Modifier.fillMaxWidth()) {
+                    Text(corto, style = MaterialTheme.typography.labelLarge)
+                    Text(largo, style = MaterialTheme.typography.bodyMedium, color = VoraTheme.colors.onDarkMuted)
+                }
             }
             VoraCard(Modifier.fillMaxWidth(), padding = VoraTheme.spacing.s12, radius = VoraTheme.radius.r12) {
                 Text(corto, style = MaterialTheme.typography.bodyLarge)
@@ -161,6 +165,8 @@ internal fun CatalogoControles() {
         }
         VoraPanel(Modifier.fillMaxWidth()) {
             VoraOrb(onDark = true, withRipple = true)
+            // el microfono lima de Workout / 04
+            VoraCircleButton(painterResource(R.drawable.ic_mic), corto, {}, tone = VoraCircleButtonTone.Cta)
         }
 
         // Botones redondos, en los tamanos de Voice

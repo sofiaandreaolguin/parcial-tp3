@@ -39,13 +39,16 @@ enum class VoraCircleButtonTone {
     OnDarkSubtle,
     /** Blanco con una sombra suave del color del icono: volver de Login - 01 y 02. */
     Elevated,
+    /** Lima con icono verde: el microfono de "Need anything?" de Workout / 04 (nodo 1:548). */
+    Cta,
 }
 
 /**
  * Boton redondo de icono. Aparece seis veces en el asistente con distinto tamano y color:
  * microfono de Idle (72) y de Listening (80), los tres controles de audio de Speaking (56
  * la pausa, 40 repetir y stop) y el + y el enviar de Conversation (40). En Login - 01 y 02
- * es el volver: blanco de 40 con sombra ([VoraCircleButtonTone.Elevated]).
+ * es el volver: blanco de 40 con sombra ([VoraCircleButtonTone.Elevated]). En Workout / 04, el
+ * microfono lima de 40 ([VoraCircleButtonTone.Cta]).
  *
  * El circulo dibujado puede ser mas chico que el area tactil, que por omision no baja de
  * 48, igual que el selector de Active Workout. [touchSize] la achica donde agrandarla
@@ -77,6 +80,7 @@ fun VoraCircleButton(
         VoraCircleButtonTone.Surface -> colors.background to colors.onSurface
         VoraCircleButtonTone.OnDarkSubtle -> extra.onDarkSubtle to colors.onPrimary
         VoraCircleButtonTone.Elevated -> colors.surface to colors.onSurface
+        VoraCircleButtonTone.Cta -> extra.cta to extra.onAccent
     }
     val tinte = tint ?: tinteDelTono
     Box(
