@@ -229,4 +229,93 @@
     <string name="conversation_send">Send</string>
     <string name="conversation_attach">Add</string>
     <string name="conversation_mic">Voice input</string>
+
+    <!-- Acceso (Login - 01 y 02) -->
+    <string name="access_brand">VORA Coach</string>
+    <string name="access_tagline">ADAPTIVE INTELLIGENCE</string>
+    <string name="access_badge_ai">AI</string>
+    <string name="access_language">EN</string>
+    <string name="access_email_label">Email Address</string>
+    <string name="access_email_placeholder">alex.morgan@email.com</string>
+    <string name="access_password_label">Password</string>
+    <string name="access_password_placeholder" translatable="false">••••••••••••</string>
+    <string name="access_show_password">Show password</string>
+    <string name="access_hide_password">Hide password</string>
+    <string name="access_apple">Continue with Apple</string>
+    <string name="access_google">Continue with Google</string>
+    <string name="access_biometric">Sign in with biometrics</string>
+    <string name="access_error_email">Enter a valid email address</string>
+    <string name="access_error_password">Use at least 8 characters</string>
+    <string name="access_error_name">Enter your full name</string>
+    <string name="sign_in_subtitle">Your strength, nutrition, and progress plan in one place.</string>
+    <string name="sign_in_forgot">Forgot your password?</string>
+    <string name="sign_in_action">Sign In</string>
+    <string name="sign_in_or_continue">Or continue with</string>
+    <string name="sign_in_encrypted">End-to-end encrypted biometric sign-in</string>
+    <string name="sign_in_no_account">Don\'t have an account?</string>
+    <string name="sign_in_sign_up_link">Sign up here</string>
+    <string name="sign_up_name_label">Full Name</string>
+    <string name="sign_up_name_placeholder" translatable="false">Alex Morgan</string>
+    <string name="sign_up_password_placeholder">At least 8 characters</string>
+    <string name="sign_up_secure">8+ secure characters</string>
+    <string name="sign_up_password_help">Password help?</string>
+    <string name="sign_up_action">Sign Up</string>
+    <string name="sign_up_or">Or sign up with</string>
+    <string name="sign_up_biometric">Biometric sign-in</string>
+    <string name="sign_up_issues">Having account issues?</string>
+    <string name="sign_up_recover">Recover</string>
+    <string name="sign_up_have_account">Already have an account?</string>
+    <string name="sign_up_sign_in_link">Sign In</string>
+
+    <!-- Workout / 01 — Dashboard. Los "_demo" son de demostracion: no salen del servidor. -->
+    <string name="workout_goal">Workout Goal</string>
+    <string name="workout_title">Workouts</string>
+    <string name="workout_open_plan">Open weekly plan</string>
+    <string name="workout_ready">READY FOR TODAY?</string>
+    <string name="workout_level_beginner_tag">BEGINNER</string>
+    <string name="workout_level_intermediate_tag">INTERMEDIATE</string>
+    <string name="workout_level_advanced_tag">ADVANCED</string>
+    <plurals name="workout_summary">
+        <item quantity="one">%1$d min • %2$d exercise</item>
+        <item quantity="other">%1$d min • %2$d exercises</item>
+    </plurals>
+    <string name="workout_start">Start Workout</string>
+    <string name="workout_details">Details</string>
+    <string name="workout_loading">Loading workouts</string>
+    <string name="workout_error">We couldn\'t load your workouts.</string>
+    <string name="workout_empty">There are no workouts yet.</string>
+    <string name="workout_recommends">VORA RECOMMENDS</string>
+    <string name="workout_recommends_demo">Your last upper-body session was 4 days ago. Today is a great opportunity to hit your strength volume targets.</string>
+    <string name="workout_week_activity">This Week\'s Activity</string>
+    <string-array name="workout_week_initials">
+        <item>M</item>
+        <item>T</item>
+        <item>W</item>
+        <item>T</item>
+        <item>F</item>
+        <item>S</item>
+        <item>S</item>
+    </string-array>
+    <string-array name="workout_week_names">
+        <item>Monday</item>
+        <item>Tuesday</item>
+        <item>Wednesday</item>
+        <item>Thursday</item>
+        <item>Friday</item>
+        <item>Saturday</item>
+        <item>Sunday</item>
+    </string-array>
+    <string name="workout_day_rest">Zzz</string>
+    <string name="workout_day_today">FIT</string>
+    <string name="workout_day_done_desc">%1$s: done</string>
+    <string name="workout_day_rest_desc">%1$s: rest</string>
+    <string name="workout_day_today_desc">%1$s: today</string>
+    <string name="workout_progress">Your Progress</string>
+    <string name="workout_view_progress">View progress</string>
+    <string name="workout_streak">STREAK</string>
+    <string name="workout_streak_demo">4 Days</string>
+    <string name="workout_completed">WORKOUTS</string>
+    <string name="workout_completed_demo">3/5 complete</string>
+    <string name="workout_volume">VOL. LIFTED</string>
+    <string name="workout_volume_demo">8,420 kg</string>
 </resources>

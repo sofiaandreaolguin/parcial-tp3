@@ -6,6 +6,8 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.LineHeightStyle
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.sp
 import com.example.parcial_tp3.R
 
@@ -65,6 +67,9 @@ val VoraTypography = Typography(
  * No se tocan los roles de la tabla de arriba: el resto de la app sigue eligiendo por
  * funcion, y estos son el caso puntual de un flujo con su propia escala.
  */
+/** El texto ocupa toda su caja de interlineado, como en el Figma. */
+private val SIN_RECORTE = LineHeightStyle(LineHeightStyle.Alignment.Center, LineHeightStyle.Trim.None)
+
 @Immutable
 object VoraTextStyles {
     /** "How can I help?" de Voice / 01. */
@@ -93,4 +98,47 @@ object VoraTextStyles {
     val fieldLabel = manrope(12, FontWeight.SemiBold)
     /** Nota al pie de Edit profile ("Your information is used..."): 12 Regular. */
     val footnote = manrope(12, FontWeight.Normal)
+
+    // Acceso (Login - 01 y 02), medidos en docs/figma/Login Flow.png contra una captura: los
+    // textos de Login van un punto abajo de la lamina (24 en vez de 26, 14 en vez de 15...).
+    /** "VORA Coach": 24 Bold apretado (138 dp de ancho en el frame). */
+    val accessTitle = manrope(24, FontWeight.Bold).copy(letterSpacing = (-0.3).sp)
+    /** Bajada, texto de los campos y "Don't have an account?": 14 Regular. */
+    val accessBody = manrope(14, FontWeight.Normal, lineHeight = 20)
+    /** "ADAPTIVE INTELLIGENCE": 12 SemiBold espaciado (166 dp de ancho en el frame). */
+    val accessTagline = manrope(12, FontWeight.SemiBold).copy(letterSpacing = 1.2.sp)
+    /** "Sign In →": 16 Bold en 24 (nodo "Sign In" del Figma, 53 x 24). */
+    val accessCta = manrope(16, FontWeight.Bold, lineHeight = 24)
+    /** "Sign up here": como la bajada, en negrita y subrayado. */
+    val accessBodyLink = accessBody.copy(fontWeight = FontWeight.Bold, textDecoration = TextDecoration.Underline)
+    /** Los 12 puntos del placeholder de la contrasena, separados como en el frame. */
+    val accessPasswordDots = accessBody.copy(letterSpacing = 3.sp)
+    // Login - 02 (SignUp): otra escala, leida de los nodos del frame 4002:2. Las etiquetas, los
+    // campos y la nota van sin el recorte de interlineado que Compose aplica por omision
+    // (Trim.Both): con el recorte, un 16 en 24 ocupa 22 y cada etiqueta quedaba 2 dp mas corta
+    // que su caja del Figma (medido). El titulo y la frase lo conservan: ver VoraBrandHeader.
+    /** "VORA Coach" de SignUp: 28 Bold en 28 (163 dp de ancho). */
+    val accessTitleLarge = manrope(28, FontWeight.Bold, lineHeight = 28).copy(letterSpacing = (-0.3).sp)
+    /** "ADAPTIVE INTELLIGENCE" de SignUp: un poco mas abierto (171 dp de ancho). */
+    val accessTaglineWide = accessTagline.copy(letterSpacing = 1.4.sp, lineHeight = 17.sp)
+    /** Etiquetas de SignUp ("Full Name") y los textos de abajo de la tarjeta: 16 Regular en 24. */
+    val accessLabelLarge = manrope(16, FontWeight.Normal, lineHeight = 24).copy(lineHeightStyle = SIN_RECORTE)
+    /** Texto de los campos de SignUp: 16 Regular en 22. */
+    val accessInputLarge = manrope(16, FontWeight.Normal, lineHeight = 22).copy(lineHeightStyle = SIN_RECORTE)
+    /** "Recover": como accessLabelLarge, en negrita y subrayado. */
+    val accessLabelLargeLink = accessLabelLarge.copy(fontWeight = FontWeight.Bold, textDecoration = TextDecoration.Underline)
+    /** "8+ secure characters": 12 en 17. */
+    val accessNote = manrope(12, FontWeight.Normal, lineHeight = 17).copy(lineHeightStyle = SIN_RECORTE)
+    /** "Password help?": accessNote subrayado. */
+    val accessNoteLink = accessNote.copy(textDecoration = TextDecoration.Underline)
+    /** "Forgot your password?": 12 Medium. */
+    val accessLink = manrope(12, FontWeight.Medium)
+    /** "AI" de la insignia del logo. */
+    val accessBadge = manrope(10, FontWeight.Bold, lineHeight = 12)
+
+    /** Panel verde de Workout / 01: titulo "Upper Body Strength" (22 SemiBold) y "READY FOR TODAY?" (12 Bold). */
+    val panelTitle = manrope(22, FontWeight.SemiBold)
+    val panelLabel = manrope(12, FontWeight.Bold)
+    /** El "Zzz" de los dias de descanso de Workout / 01: 9 SemiBold. */
+    val micro = manrope(9, FontWeight.SemiBold)
 }

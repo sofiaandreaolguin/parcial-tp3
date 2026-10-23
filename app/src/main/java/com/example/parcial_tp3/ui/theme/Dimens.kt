@@ -102,6 +102,15 @@ object VoraSizes {
     val orbMuted = 120.dp
     /** Esfera chica de VORA: avatar de Conversation y de las tarjetas "VORA Insight". */
     val orbSmall = 28.dp
+    /** Orbe de las notas del coach: 20 en "VORA RECOMMENDS" (Workout / 01), 16 en 03 y 07. */
+    val orbNoteLarge = 20.dp
+    val orbNote = 16.dp
+
+    /** "This Week's Activity" de Workout / 01: una columna de 36 por dia con un circulo de 28. */
+    val dayColumn = 36.dp
+    val dayCircle = 28.dp
+    /** Sombra del panel verde de Workout / 01: 0 8 8, desenfoque y corrimiento hacia abajo de 8. */
+    val panelShadow = 8.dp
 
     // Botones redondos de icono, medidos en los frames de Voice
     /** Microfono de Listening, el mas grande. */
@@ -132,6 +141,48 @@ object VoraSizes {
     val avatar = 72.dp
     /** Foto de Profile / 02 Edit profile, mas grande que en el Dashboard (160 px a 2x). */
     val avatarLarge = 80.dp
+
+    // Acceso (Login - 01 y 02), medidos en docs/figma/Login Flow.png
+    /** Circulo blanco de volver y selector de idioma: 40 y 30 de alto (nodos del Figma). */
+    val accessBack = 40.dp
+    val languagePill = 30.dp
+    /** Chevron del idioma (14), y escudo y flecha de "Sign In" (16). */
+    val accessChevron = 14.dp
+    val accessIconSmall = 16.dp
+    /** Logo: aro blanco de 72 (5 de ancho) e insignia "AI" de 28 x 20. */
+    val accessLogo = 72.dp
+    val accessLogoRing = 5.dp
+    val accessBadgeWidth = 28.dp
+    val accessBadgeHeight = 20.dp
+    /** Resplandor del fondo ("Top Decorative Ambient Glow", circulo de 320 desenfocado): centro a
+     *  64 dp del borde de arriba; el radio de 260 incluye el desenfoque. */
+    val accessGlowY = 64.dp
+    val accessGlowRadius = 260.dp
+    /** Flecha de volver: en el frame mide 8 x 13 (el vector de la lamina es de 7 x 10). */
+    val accessBackIconWidth = 10.dp
+    val accessBackIconHeight = 14.dp
+    /** Sombras: suave en el circulo de volver y el logo, lima debajo de "Sign In". */
+    val accessShadow = 4.dp
+    val accessShadowSoft = 2.dp
+    val accessShadowLogo = 8.dp
+    val accessShadowCta = 12.dp
+    /** Ancho de la bajada: corta en "progress plan / in one place." como el frame. */
+    val accessSubtitle = 276.dp
+    /** SignUp: orbe de 56, campos de 52, boton principal y sociales de 48, tilde de 13. */
+    val accessLogoSmall = 56.dp
+    /** Insignia "AI" del orbe de SignUp: arranca en (33, 39) del orbe y sobresale. */
+    val accessBadgeOffsetX = 33.dp
+    val accessBadgeOffsetY = 39.dp
+    val accessFieldOutlined = 52.dp
+    val accessCtaCompact = 48.dp
+    val socialButtonLarge = 48.dp
+    val accessCheck = 13.dp
+    /** Flecha de "Sign Up" y escudo de "Biometric sign-in": 14. */
+    val accessIconTiny = 14.dp
+    /** Campos de 55 de alto, boton principal de 56 y botones sociales de 46. */
+    val accessField = 55.dp
+    val accessCta = 56.dp
+    val socialButton = 46.dp
 }
 
 /** Las formas de Material 3 apuntan a los mismos radios, asi los componentes de M3 coinciden. */

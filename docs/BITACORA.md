@@ -170,6 +170,48 @@ Formato:
     - los tres ViewModel de Profile repiten el mismo `map` + `stateIn`;
     - no hay tests de los ViewModel.
 - Evidencia: `docs/evidencia/visual/profile-03-{411dp,360dp}{,-scrolled}.png` (teléfono real). Build y tests unitarios en verde, `control-rapido.sh` sin fallas.
+
+### 2026-10-22 · Martu · feat(access): maquetar Login - 01 SignIn según Figma
+- Carril y requisitos: B (pantalla) · UI01, UI02, UI03, NAV02, NAV03, RF07, RF08 · tarea VC-n (1 de 4)
+- Plan aprobado: un PR por pantalla (SignIn, SignUp, Home Dashboard, Notifications). Paso 0 en la zona de tema y componentes: íconos que faltaban, aviso de demostración compartido y piezas de Acceso. `AuthViewModel` compartido por SignIn y SignUp, del grafo `access_graph`.
+- Qué propuso la IA y qué cambiamos:
+  - La IA midió el frame sobre la imagen exportada y propuso los textos un punto abajo de la lámina. Con el conector del Figma (archivo `LKv4KQzpss9FUJpCDPOVaF`, frame `2007:214`) se confirmó casi todo y se corrigió lo que no: el botón es 16 y no 17, los campos 55 y no 54, el selector 30, el escudo 16, y cuatro espacios de 2 a 4 dp.
+  - Login no usa la lámina: paleta propia aislada en `VoraTheme.colors.access` y errores de formulario que el Figma no dibuja (ficha `docs/decisiones/006-login-paleta-propia-y-errores.md`).
+  - La IA envolvió el ojo de la contraseña en una caja de 48 dp por el área táctil; al ver que agrandaba el campo a 72 se volvió atrás, porque Compose ya extiende el toque de un `clickable` chico a 48.
+  - Martu pidió hacer en esta tarea lo que era de Fiore: SignIn se pinta hasta el borde (`RUTAS_A_SANGRE` en `Rutas.kt`, que ahora usa `MainActivity`) y `PANTALLAS.md` y el LEEME de access dicen `popUpTo(access_graph)`, que es lo que hace el código.
+- Revisores: `revisor-visual` APROBADA (sugirió el placeholder de puntos y el color del escudo, aplicados); `revisor-requisitos` y `revisor-arquitectura` sin nada que bloquee; `/code-review` con 7 hallazgos: 3 corregidos (email sin espacios, degradé con `drawWithCache`, medidas del resplandor con nombre), 1 sin cambio necesario (área táctil) y 3 que quedan (test de `AuthViewModel`, reusar `VoraCircleButton` para volver, y la barra de estado, que después se resolvió). Se aplicaron también: la Route pide el ViewModel del grafo sin valor por defecto, tokens en vez de cuentas para sombras y flecha, y el estilo de "Sign up here" en el tema.
+- Pendiente: `AuthViewModelTest` (carril C, en otra sesión con `tests-rojo`). SignUp entra a `RUTAS_A_SANGRE` cuando se maquete.
+- Evidencia: `assembleDebug` y `testDebugUnitTest` en verde (49 tests), `control-rapido.sh` sin fallas. Capturas en `docs/evidencia/visual/login-01-{394dp,360dp,360dp-scroll}.png` (Pixel 9 Pro con densidad ajustada). Recorrido en el emulador: Sign In vacío muestra los errores; con datos válidos entra a Home y atrás cierra la app; "Listo" del teclado entra; "Sign up here" va a SignUp y al volver se conserva el email; el texto sobrevive a la rotación.
+- Commit / PR: `dd35857`, `854f637`, `c6adf0f`, `4bdfea2` · PR #18
+
+### 2026-10-23 · Martu · feat(access): maquetar Login - 02 SignUp según Figma
+- Carril y requisitos: B (pantalla) · UI01, UI02, UI03, NAV02, NAV03, RF07, RF08 · tarea VC-n (2 de 4)
+- Plan aprobado: PR 2 de 4 de la tarea n, en una rama que sale de `feat/access-sign-in` (PR #18 todavía abierto). Reusa las piezas de Acceso y el `AuthViewModel` del grafo.
+- Qué propuso la IA y qué cambiamos:
+  - Las medidas salieron de los nodos del Figma (frame `4002:2`) y los colores de la imagen exportada. SignUp no es SignIn con otro formulario: tiene su propia escala (título 28, etiquetas 16, campos blancos de 52 con borde gris, botón de 48, orbe de 56 con degradé lima a verde). Se resolvió con variantes de los mismos componentes (`compact`, `style`, `AccessOutlined`, `lines`, `height`), sin copiarlos.
+  - La IA comparó mal el botón contra el Figma (se olvidó un margen) y dio por buena una tarjeta que terminaba 11 dp antes. El revisor visual lo notó, aunque ubicó mal el hueco; midiendo campo por campo apareció la causa: Compose recorta el interlineado por omisión (`Trim.Both`) y cada etiqueta de 16/24 ocupaba 22. Se sacó el recorte en los estilos de SignUp y la tarjeta quedó a 1 dp del frame. En el título de 28 eso no alcanzó (Compose ubica la letra 5 dp más abajo con o sin recorte) y se compensó en los espacios del encabezado, con el porqué en el comentario.
+  - Al probar apareció un bug: como el formulario es compartido, un "Sign Up" fallido dejaba SignIn en rojo. Ahora `onSwitchScreen()` borra los errores (no lo escrito) al pasar de una pantalla a la otra, también con el atrás del sistema (`BackHandler`).
+  - `/code-review` encontró dos bugs de doble toque: "Sign up here" apilaba dos SignUp y la flecha podía sacar también el login y dejar la pila vacía. Se corrigieron con `launchSingleTop` y `popBackStack(sign_in)`.
+  - El tilde de "8+ secure characters" se prende con 8 caracteres; en el Figma está siempre prendido porque el frame es estático. El tercer botón social del nodo mide 46 (copia de SignIn): en la app los tres miden 48.
+- Revisores: `revisor-visual` CON CAMBIOS (espaciado de la tarjeta, corregido como se cuenta arriba; quedan como sugerencia los íconos que no son los del Figma, la flecha de "Sign Up" más fina y que al hacer scroll el contenido pasa por debajo de la barra de estado); `revisor-requisitos` y `revisor-arquitectura` sin nada que bloquee; se aplicaron el divisor sin líneas transparentes, la medida del brillo del orbe comentada y la tabla NAV03 y el LEEME al día. `/code-review`: 2 corregidos (doble toque), 3 sugerencias (armazón y pie compartidos entre SignIn y SignUp, divisor, ya corregido).
+- Pendiente: `AuthViewModelTest` (carril C): `signUp` con nombre vacío, `signUp` válido y `onSwitchScreen`.
+- Evidencia: `assembleDebug` y `testDebugUnitTest` en verde, `control-rapido.sh` sin fallas. Capturas en `docs/evidencia/visual/login-02-{394dp,360dp,360dp-scroll}.png`. Posiciones medidas contra los nodos a ±1 dp (título, frase, tarjeta, tres campos, botón y fin de tarjeta). Recorrido: "Sign Up" vacío muestra tres errores; flecha, atrás del sistema y "Sign In" vuelven a SignIn sin errores viejos; doble toque en "Sign up here" y en la flecha no rompe la pila; con datos entra a Home y atrás cierra la app.
+- Commit / PR:
+
+### 2026-10-22 · Hector · feat(workout): maquetar Workout / 01 Dashboard según Figma
+- Carril y requisitos: B · UI01, UI03, NAV03 · tarea k (PR 1 de 10 del flujo Workout)
+- Plan aprobado: las 7 pantallas de Workout en un PR por pantalla. 01 y 02 usan el catálogo real (`WorkoutsViewModel`); de 03 a 07 van con datos de demostración detrás de una interfaz `WorkoutDetailRepository`, para que la tarea del detalle (`GET /v1/workouts/{id}`, carril C aparte) solo cambie la implementación. Lo que no es dibujo (mock, base del detalle, sesión simulada) va en PR propios.
+- Qué propuso la IA y qué cambiamos:
+  - El conector de Figma no tenía acceso al archivo del grupo. Hector pasó una copia a su nombre (`SfJjENBxckjdZUbLllD6fJ`) y las medidas salieron de los nodos, no de la exportación.
+  - La tarjeta "VORA RECOMMENDS" se repite en 01, 03 y 07 y no existía. La IA preguntó antes de tocar la zona de Martu. Hector eligió crear `VoraCoachNote` y avisarle en el PR, igual que con el ícono `ic_calendar` (sacado del SVG del nodo), el tamaño `Medium` de `VoraButton` (14 SemiBold, 12/16, el del panel) y los tokens nuevos del tema.
+  - El panel muestra el primer entrenamiento del catálogo del mock: la etiqueta dice el nivel real (BEGINNER) en vez de "MODERATE", y no va "Focus: Chest & Back" porque la API no trae ese dato.
+  - Para probar en el emulador: el servidor publicado del profe estaba caído, y en el `Pixel_10_Pro` (Android 17) la app no llega a `10.0.2.2` aunque la consola sí. Se levantó el mock local del paquete del profe con `py` y se usó `adb reverse tcp:8000 tcp:8000` con `api.baseUrl=http://127.0.0.1:8000/`. El emulador `Medium_Phone` (Android 37.1 de 16 KB) se colgaba y se dejó de usar.
+- Revisores:
+  - revisor-visual, dos vueltas. La primera dio CON CAMBIOS: faltaba la sombra del panel (0 8 8, verde al 6 %) y los divisores de "Your Progress" quedaban 5 a 9 dp corridos porque el `weight` incluía el borde y el padding. Se corrigieron las dos. Segunda vuelta: APROBADA, con los divisores a menos de 1 dp del Figma.
+  - revisor-arquitectura: nada bloquea. El ALTA es que el error no tiene reintento, que necesita cambiar el ViewModel y queda para la tarea de estados (RF05).
+  - /code-review: se corrigió TalkBack, que leía la inicial ("T: done") y ahora lee el día completo. También se arreglaron dos cosas del revisor de arquitectura: un sangrado antes de `package` y el recorrido de los días con `zip` en vez de índice.
+  - Quedan como sugerencias, para Martu: el área táctil del calendario (40 dp) y de "View progress", un tono con borde en `VoraCircleButton`, mover la sombra adentro de `VoraPanel`, tokens para "FIT" y los valores de progreso en Bold, el borde de "Details" al 30 % contra 25 % del Figma, y actualizar la tabla de componentes de CONTEXTO §9. Para la tarea de estados: el error con reintento. Desvío visual aceptado: los dos divisores de "Your Progress" llegan hasta abajo.
+- Evidencia: `docs/evidencia/visual/workout-01-{394dp,360dp,360dp-scrolled}.png` (Pixel 10 Pro a 394 y 360 dp). `installDebug` y `testDebugUnitTest` en verde (49 tests), `reglas.sh` sin fallas. Los cuatro controles llevan a donde dice `PANTALLAS.md` y rotar no repite la consulta (0 `GET` en el log).
 - Commit / PR:
 
 ### 2026-10-23 · Zaki · feat(profile): maquetar Profile / 04 Nutrition preferences según Figma
