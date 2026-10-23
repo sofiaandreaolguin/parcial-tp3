@@ -34,6 +34,7 @@ fun NutritionPreferencesScreen(
     state: NutritionPreferencesUiState,
     onBack: () -> Unit,
     onSave: () -> Unit,
+    onDemo: () -> Unit,
 ) {
     Column(
         modifier = Modifier
@@ -59,7 +60,7 @@ fun NutritionPreferencesScreen(
             ProfileSectionLabel(stringResource(R.string.nutrition_diet))
             ProfileChipRow {
                 Diet.entries.forEach { diet ->
-                    VoraChip(stringResource(diet.label()), selected = diet == state.diet, onClick = {})
+                    VoraChip(stringResource(diet.label()), selected = diet == state.diet, onClick = onDemo)
                 }
             }
             ProfileSectionLabel(stringResource(R.string.nutrition_enjoy))
@@ -68,7 +69,7 @@ fun NutritionPreferencesScreen(
                     VoraChip(
                         text = stringResource(food.label()),
                         selected = food in state.foodsEnjoyed,
-                        onClick = {},
+                        onClick = onDemo,
                         selectedStyle = VoraChipSelectedStyle.Outline,
                     )
                 }
@@ -86,7 +87,7 @@ fun NutritionPreferencesScreen(
                     VoraChip(
                         text = food,
                         selected = false,
-                        onClick = {},
+                        onClick = onDemo,
                         trailingIcon = painterResource(R.drawable.ic_remove),
                         trailingTint = MaterialTheme.colorScheme.error,
                     )
@@ -105,7 +106,7 @@ fun NutritionPreferencesScreen(
                 VoraOptionCard(
                     title = stringResource(priority.label()),
                     selected = priority in state.priorities,
-                    onClick = {},
+                    onClick = onDemo,
                 )
             }
             VoraButton(
@@ -132,6 +133,7 @@ private fun NutritionPreferencesScreenPreview() {
             ),
             onBack = {},
             onSave = {},
+            onDemo = {},
         )
     }
 }

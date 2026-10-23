@@ -167,6 +167,30 @@
     <string name="food_fruit">Fruta</string>
     <string name="priority_hit_protein">Llegar a mi meta de proteína</string>
     <string name="priority_eat_consistently">Comer de forma más constante</string>
+    <!-- Profile / 05 — Voice & AI Settings (VORA Coach) -->
+    <string name="coach_title">VORA Coach</string>
+    <string name="coach_intro">Elegí cómo se comunica VORA y cómo te acompaña.</string>
+    <string name="coach_style">ESTILO DE COACHING</string>
+    <string name="coach_active_voice">VOZ ACTIVA</string>
+    <string name="coach_voice_name">VORA Voice 01</string>
+    <string name="coach_preview">Escuchar</string>
+    <string name="coach_speaking">CÓMO HABLA</string>
+    <string name="coach_speak_aloud">Leer las respuestas en voz alta</string>
+    <string name="coach_autoplay">Reproducir el coaching automáticamente</string>
+    <string name="coach_interruptions">Permitir interrupciones</string>
+    <string name="coach_interruptions_hint">Podés interrumpir a VORA mientras habla.</string>
+    <string name="coach_response">ESTILO DE RESPUESTA</string>
+    <string name="response_concise">Concisa</string>
+    <string name="response_concise_sub">Respuestas rápidas</string>
+    <string name="response_balanced">Equilibrada</string>
+    <string name="response_balanced_sub">El detalle justo, sin abrumar</string>
+    <string name="response_detailed">Detallada</string>
+    <string name="response_detailed_sub">Más explicación y contexto</string>
+    <string name="coach_voice_feedback">Respuesta por voz</string>
+    <string name="coach_haptic">Vibración</string>
+    <string name="coach_control_title">Vos tenés el control</string>
+    <string name="coach_control_body">Administrá los permisos del micrófono y los datos conectados desde Ajustes.</string>
+    <string name="coach_privacy_link">Privacidad y permisos</string>
     <!-- Asistente VORA (Voice / 01 a 06 y Conversation). Mismas claves que values/strings.xml. -->
     <string name="voice_coach_title">Coach VORA</string>
     <string name="voice_online">EN LINEA</string>

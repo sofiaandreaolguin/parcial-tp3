@@ -11,6 +11,7 @@ import com.example.parcial_tp3.ui.screens.profile.EditProfileRoute
 import com.example.parcial_tp3.ui.screens.profile.GoalsRoute
 import com.example.parcial_tp3.ui.screens.profile.NutritionPreferencesRoute
 import com.example.parcial_tp3.ui.screens.profile.ProfileDashboardRoute
+import com.example.parcial_tp3.ui.screens.profile.VoiceSettingsRoute
 
 /** Perfil: 6 pantallas. Solo 01 con barra; 02 a 06 se abren encima. */
 fun NavGraphBuilder.profileGraph(nav: NavController) {
@@ -35,9 +36,9 @@ fun NavGraphBuilder.profileGraph(nav: NavController) {
             NutritionPreferencesRoute(onBack = { nav.popBackStack() })
         }
         composable(Rutas.VOICE_AI_SETTINGS) {
-            PantallaVacia(
-                nombre = stringResource(R.string.pant_profile_05),
-                onVolver = { nav.popBackStack() },
+            VoiceSettingsRoute(
+                onBack = { nav.popBackStack() },
+                onPrivacy = { nav.navigate(Rutas.SETTINGS) },
             )
         }
         composable(Rutas.SETTINGS) {
