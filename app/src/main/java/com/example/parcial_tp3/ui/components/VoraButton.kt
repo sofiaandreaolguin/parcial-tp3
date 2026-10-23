@@ -54,8 +54,11 @@ enum class VoraButtonStyle {
     TextMuted,
 }
 
-/** Chico: 13 SemiBold con padding 8/16 (Home). Grande: 15 Bold con padding 14/24 (Edit profile). */
-enum class VoraButtonSize { Small, Large }
+/**
+ * Chico: 13 SemiBold con padding 8/16 (Home). Mediano: 14 SemiBold con padding 12/16 (panel
+ * de Workout / 01). Grande: 15 Bold con padding 14/24 (Edit profile).
+ */
+enum class VoraButtonSize { Small, Medium, Large }
 
 /**
  * Boton de VORA, siempre en forma de pildora. Sin estado: recibe el texto y avisa el toque.
@@ -92,11 +95,13 @@ fun VoraButton(
 
     val textStyle: TextStyle = when (size) {
         VoraButtonSize.Small -> MaterialTheme.typography.labelMedium
+        VoraButtonSize.Medium -> MaterialTheme.typography.labelLarge
         VoraButtonSize.Large -> MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Bold)
     }.let { if (style == VoraButtonStyle.TextMuted) it.copy(textDecoration = TextDecoration.Underline) else it }
 
     val (vertical, horizontal) = when (size) {
         VoraButtonSize.Small -> VoraTheme.spacing.s8 to VoraTheme.spacing.s16
+        VoraButtonSize.Medium -> VoraTheme.spacing.s12 to VoraTheme.spacing.s16
         VoraButtonSize.Large -> VoraTheme.spacing.s14 to VoraTheme.spacing.s24
     }
 
