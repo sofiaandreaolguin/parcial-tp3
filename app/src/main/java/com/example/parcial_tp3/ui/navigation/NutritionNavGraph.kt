@@ -9,6 +9,7 @@ import androidx.navigation.compose.navigation
 import androidx.navigation.navArgument
 import com.example.parcial_tp3.R
 import com.example.parcial_tp3.ui.components.PantallaVacia
+import com.example.parcial_tp3.ui.screens.nutrition.NutritionDashboardRoute
 
 /**
  * Nutricion: 8 pantallas. 01, 02, 03, 06, 07 y 08 con barra; 04 y 05 encima.
@@ -22,7 +23,13 @@ fun NavGraphBuilder.nutritionGraph(nav: NavController) {
     navigation(startDestination = Rutas.NUTRITION_DASHBOARD, route = Rutas.NUTRITION_GRAPH) {
 
         composable(Rutas.NUTRITION_DASHBOARD) {
-            PantallaVacia(nombre = stringResource(R.string.pant_nutrition_01))
+            NutritionDashboardRoute(
+                onHistory = { nav.navigate(Rutas.TODAYS_MEALS) },
+                onMeal = { mealId -> nav.navigate(Rutas.mealDetails(mealId)) },
+                onAddDinner = { nav.navigate(Rutas.ADD_FOOD) },
+                onVoice = { nav.navigate(Rutas.VOICE_FOOD_LOGGING) },
+                onPhoto = { nav.navigate(Rutas.PHOTO_ANALYSIS) },
+            )
         }
 
         composable(Rutas.TODAYS_MEALS) {
