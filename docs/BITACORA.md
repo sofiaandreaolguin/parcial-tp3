@@ -256,3 +256,16 @@ Formato:
 - Pendiente: `HomeViewModelTest` (carril C) con un `Clock` inyectado, para probar el saludo, la suma del día y el tope del anillo; la fecha de "hoy" se fija al crear el ViewModel (ficha 007).
 - Evidencia: `assembleDebug` y `testDebugUnitTest` en verde, `control-rapido.sh` sin fallas. Capturas en `docs/evidencia/visual/home-01-{394dp,394dp-scroll,360dp,360dp-scroll}.png`. Posiciones contra los nodos a ±2 dp (panel, botón de voz, tarjetas, fila de datos y recomendado). Recorrido: campana, "Start voice session", "Start my workout", "Log breakfast", "Start workout" y las tarjetas del anillo y de nutrición van a su destino y atrás vuelve a Home.
 - Commit / PR:
+
+### 2026-10-23 · Hector · feat(workout): base del detalle de entrenamiento con datos de demostración
+- Carril y requisitos: C · NAV04, RF01 (parcial), RF06, RF07, RF08 · tarea k, PR 3 de 10
+- Plan aprobado: modelos `WorkoutDetail` y `Exercise` con la forma de `API.md`, interfaz `WorkoutDetailRepository`, `DemoWorkoutDetailRepository` con `@Binds`, y `WorkoutDetailViewModel` que lee `workoutId` y `exerciseId` de la ruta para 03, 04 y 06. Sin pantallas. El detalle real cambia solo el `@Binds` y borra la demo.
+- Qué propuso la IA y qué cambiamos:
+  - El plan decía que el mock solo traía w01 completo. La IA encontró los tres entrenamientos completos en `fixtures.json` (de ahí arma `server.py` el detalle), así que w02 y w03 se copiaron y no se inventaron.
+  - La IA propuso que un `exerciseId` que no está en el entrenamiento (o vacío) y un `workoutId` que falta den `Error`; Hector lo aprobó.
+  - Las tres skills del carril C (spec, rojo, implementar) se hicieron en la misma sesión, con el acuerdo de Hector, porque la IA no podía abrir sesiones nuevas.
+  - `/code-review` y `revisor-arquitectura` marcaron que la demo calculaba `exerciseCount` desde la lista, así que D2 no podía fallar: ahora copia el 3 del mock.
+- Revisores: auditor-spec (8 hallazgos, ninguno bloqueaba; 7 corregidos en la spec y 1 confirmado por Hector), revisor-requisitos (los 11 criterios se cumplen), revisor-arquitectura (nada bloquea), `/code-review` (2 BAJA: uno corregido; el fake con `idsPedidos` mutable queda como sugerencia).
+- Pendiente: el detalle real `GET /v1/workouts/{workoutId}` (RF01 parte 2) es obligatorio antes del 28/10. Errores propios y reintento, con la tarea de estados (RF05).
+- Evidencia: `docs/evidencia/tests/2026-10-23-detalle-demo.md` (rojo de los 10 tests, verde con 59 tests y controles negativos de C6, C7 y C8). `assembleDebug` en verde y `reglas.sh` sin fallas.
+- Commit / PR:
