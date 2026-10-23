@@ -28,7 +28,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.parcial_tp3.R
@@ -180,40 +179,20 @@ private fun SnapshotCard(state: ProfileDashboardUiState, goals: String) {
         VoraSectionLabel(stringResource(R.string.profile_snapshot), color = VoraTheme.colors.textMuted)
         Spacer(Modifier.height(VoraTheme.spacing.s8))
         Column(verticalArrangement = Arrangement.spacedBy(VoraTheme.spacing.s8)) {
-            SnapshotRow(stringResource(R.string.profile_snapshot_goal), goals)
-            SnapshotRow(
+            ProfileInfoRow(stringResource(R.string.profile_snapshot_goal), goals)
+            ProfileInfoRow(
                 stringResource(R.string.profile_snapshot_experience),
                 stringResource(state.experience.label()),
             )
-            SnapshotRow(
+            ProfileInfoRow(
                 stringResource(R.string.profile_snapshot_training),
                 stringResource(R.string.profile_per_week, stringResource(state.trainingDays.label())),
             )
-            SnapshotRow(
+            ProfileInfoRow(
                 stringResource(R.string.profile_snapshot_workout),
                 stringResource(R.string.profile_workout_long, stringResource(state.workoutType.label())),
             )
         }
-    }
-}
-
-@Composable
-private fun SnapshotRow(label: String, value: String) {
-    Row(modifier = Modifier.fillMaxWidth()) {
-        Text(
-            text = label,
-            style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-        )
-        Spacer(Modifier.size(VoraTheme.spacing.s12))
-        Text(
-            text = value,
-            style = MaterialTheme.typography.bodyMedium,
-            fontWeight = FontWeight.Medium,
-            color = MaterialTheme.colorScheme.onSurface,
-            textAlign = TextAlign.End,
-            modifier = Modifier.weight(1f),
-        )
     }
 }
 

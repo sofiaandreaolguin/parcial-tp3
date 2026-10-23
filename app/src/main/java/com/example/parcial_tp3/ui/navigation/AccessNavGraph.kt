@@ -5,10 +5,8 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.compose.runtime.remember
-import androidx.compose.ui.res.stringResource
-import com.example.parcial_tp3.R
-import com.example.parcial_tp3.ui.components.PantallaVacia
 import com.example.parcial_tp3.ui.screens.access.SignInRoute
+import com.example.parcial_tp3.ui.screens.access.SignUpRoute
 
 /** Acceso: Login - 01 y 02. Sin barra, antes de entrar a la app. */
 fun NavGraphBuilder.accessGraph(nav: NavController) {
@@ -19,12 +17,19 @@ fun NavGraphBuilder.accessGraph(nav: NavController) {
             SignInRoute(
                 accessGraph = acceso,
                 onSignedIn = { nav.entrarAHome() },
-                onSignUp = { nav.navigate(Rutas.SIGN_UP) },
+                // launchSingleTop: un doble toque no apila dos SignUp
+                onSignUp = { nav.navigate(Rutas.SIGN_UP) { launchSingleTop = true } },
             )
         }
 
-        composable(Rutas.SIGN_UP) {
-            PantallaVacia(nombre = stringResource(R.string.pant_login_02))
+        composable(Rutas.SIGN_UP) { entry ->
+            val acceso = remember(entry) { nav.getBackStackEntry(Rutas.ACCESS_GRAPH) }
+            SignUpRoute(
+                accessGraph = acceso,
+                onSignedIn = { nav.entrarAHome() },
+                // hasta sign_in y no un pop a ciegas: un doble toque no saca tambien el login
+                onBack = { nav.popBackStack(Rutas.SIGN_IN, inclusive = false) },
+            )
         }
     }
 }

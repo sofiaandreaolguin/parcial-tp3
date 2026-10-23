@@ -77,33 +77,41 @@ fun VoraTextField(
 ) {
     val colors = MaterialTheme.colorScheme
     val access = VoraTheme.colors.access
-    val esAcceso = variant == VoraTextFieldVariant.Access
-    val textStyle = if (esAcceso) {
-        VoraTheme.text.accessBody.copy(color = access.ink)
-    } else {
-        MaterialTheme.typography.bodyLarge.copy(color = colors.onSurface)
+    val conBorde = variant == VoraTextFieldVariant.AccessOutlined
+    val esAcceso = variant == VoraTextFieldVariant.Access || conBorde
+    val textStyle = when (variant) {
+        VoraTextFieldVariant.Access -> VoraTheme.text.accessBody.copy(color = access.ink)
+        VoraTextFieldVariant.AccessOutlined -> VoraTheme.text.accessInputLarge.copy(color = access.ink)
+        VoraTextFieldVariant.Default -> MaterialTheme.typography.bodyLarge.copy(color = colors.onSurface)
     }
-    val hint = if (esAcceso) access.hint else VoraTheme.colors.textMuted
-    val fondo = if (esAcceso) access.field else colors.surface
+    val hint = when (variant) {
+        VoraTextFieldVariant.Access -> access.hint
+        VoraTextFieldVariant.AccessOutlined -> access.outline
+        VoraTextFieldVariant.Default -> VoraTheme.colors.textMuted
+    }
+    val icono = if (conBorde) access.ink else hint
+    val fondo = if (variant == VoraTextFieldVariant.Access) access.field else colors.surface
     val borde: Color = when {
         error != null -> colors.error
+        conBorde -> access.outline
         esAcceso -> access.border
         else -> colors.outline
     }
-    val radio = if (esAcceso) VoraTheme.radius.r16 else VoraTheme.radius.r12
+    val radio = if (variant == VoraTextFieldVariant.Access) VoraTheme.radius.r16 else VoraTheme.radius.r12
+    val alto = if (conBorde) VoraTheme.sizes.accessFieldOutlined else VoraTheme.sizes.accessField
     Column(modifier) {
         if (label != null) {
             Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
                 Text(
                     text = label,
-                    style = VoraTheme.text.fieldLabel,
+                    style = if (conBorde) VoraTheme.text.accessLabelLarge else VoraTheme.text.fieldLabel,
                     color = if (esAcceso) access.ink else colors.onSurfaceVariant,
                     modifier = Modifier.weight(1f),
                 )
                 labelAction?.invoke()
             }
-            // Edit profile: 4 + los 3 del alto de linea = 8. Login: 6 entre la etiqueta y el campo.
-            Spacer(Modifier.height(if (esAcceso) VoraTheme.spacing.s6 else VoraTheme.spacing.s4))
+            // Edit profile: 4 + los 3 del alto de linea = 8. Login - 01: 6. Login - 02: 4.
+            Spacer(Modifier.height(if (esAcceso && !conBorde) VoraTheme.spacing.s6 else VoraTheme.spacing.s4))
         }
         BasicTextField(
             value = value,
@@ -126,7 +134,7 @@ fun VoraTextField(
                 val shape = RoundedCornerShape(radio)
                 Row(
                     modifier = Modifier
-                        .then(if (esAcceso) Modifier.heightIn(min = VoraTheme.sizes.accessField) else Modifier)
+                        .then(if (esAcceso) Modifier.heightIn(min = alto) else Modifier)
                         .background(fondo, shape)
                         .border(VoraTheme.sizes.border, borde, shape)
                         .padding(horizontal = VoraTheme.spacing.s16, vertical = VoraTheme.spacing.s12),
@@ -134,7 +142,7 @@ fun VoraTextField(
                     horizontalArrangement = Arrangement.spacedBy(VoraTheme.spacing.s10),
                 ) {
                     if (leadingIcon != null) {
-                        Icon(painter = leadingIcon, contentDescription = null, tint = hint)
+                        Icon(painter = leadingIcon, contentDescription = null, tint = icono)
                     }
                     Box(Modifier.weight(1f)) {
                         if (value.isEmpty() && placeholder != null) {
@@ -159,6 +167,8 @@ enum class VoraTextFieldVariant {
     Default,
     /** Login - 01: fondo verdoso, radio 16, 55 de alto, etiqueta como oracion. */
     Access,
+    /** Login - 02: blanco con borde gris, radio 12, 52 de alto, etiqueta de 16 e iconos verdes. */
+    AccessOutlined,
 }
 
 @Preview(showBackground = true)

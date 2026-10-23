@@ -32,6 +32,6 @@ Por cada pantalla, cuatro archivos (`specs/CONTEXTO.md`, secciones 3 y 5):
 - Para reemplazar la pantalla de relleno: en el grafo de tu flujo (`ui/navigation/AccessNavGraph.kt`), cambiá `PantallaVacia(...)` por tu `XxxRoute(...)`.
 - Al entrar se navega a `home_dashboard` con `popUpTo(access_graph) { inclusive = true }` (`entrarAHome()` en `AccessNavGraph.kt`): todo el acceso sale de la pila y el botón atrás no vuelve ahí (NAV02). Sirve igual desde SignIn y desde SignUp.
 - SignIn y SignUp comparten un `AuthViewModel` **del grafo**: la Route recibe la entrada de `access_graph` y hace `hiltViewModel(entrada)`. Con `hiltViewModel()` a secas cada pantalla tendría el suyo y se perdería lo escrito.
-- Se pintan hasta el borde (`RUTAS_A_SANGRE` en `Rutas.kt`): el fondo pasa por detrás de la barra de estado y la pantalla pone `statusBarsPadding()` y `navigationBarsPadding()`. Al maquetar SignUp, sumá `Rutas.SIGN_UP` a ese conjunto.
-- La flecha ‹ de arriba a la izquierda no tiene a dónde volver: se dibuja sin acción.
+- Se pintan hasta el borde (`RUTAS_A_SANGRE` en `Rutas.kt`): el fondo pasa por detrás de la barra de estado y la pantalla pone `statusBarsPadding()` y `navigationBarsPadding()`.
+- La flecha ‹ de arriba a la izquierda: en SignIn no tiene a dónde volver y se dibuja sin acción; en SignUp vuelve a SignIn (igual que "Sign In" de abajo y el atrás del sistema), con `popBackStack(sign_in)` para que un doble toque no saque también el login.
 - Sin Firebase es un acceso de demostración: valida el formulario y entra.
