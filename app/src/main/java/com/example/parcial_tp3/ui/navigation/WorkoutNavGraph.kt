@@ -9,6 +9,7 @@ import androidx.navigation.compose.navigation
 import androidx.navigation.navArgument
 import com.example.parcial_tp3.R
 import com.example.parcial_tp3.ui.components.PantallaVacia
+import com.example.parcial_tp3.ui.screens.workout.PreWorkoutRoute
 import com.example.parcial_tp3.ui.screens.workout.WeeklyPlanRoute
 import com.example.parcial_tp3.ui.screens.workout.WorkoutDashboardRoute
 import com.example.parcial_tp3.ui.screens.workout.WorkoutDetailsRoute
@@ -50,9 +51,10 @@ fun NavGraphBuilder.workoutGraph(nav: NavController) {
             route = Rutas.PRE_WORKOUT,
             arguments = listOf(navArgument(Rutas.ARG_WORKOUT_ID) { type = NavType.StringType }),
         ) {
-            PantallaVacia(
-                nombre = stringResource(R.string.pant_workout_04),
-                onVolver = { nav.popBackStack() },
+            PreWorkoutRoute(
+                onClose = { nav.popBackStack() },
+                onAskVora = { nav.navigate(Rutas.VOICE) },
+                onStartWorkout = { id -> nav.navigate(Rutas.activeWorkout(id)) },
             )
         }
 
