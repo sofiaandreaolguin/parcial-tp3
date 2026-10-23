@@ -224,4 +224,56 @@
     <string name="sign_in_encrypted">End-to-end encrypted biometric sign-in</string>
     <string name="sign_in_no_account">Don\'t have an account?</string>
     <string name="sign_in_sign_up_link">Sign up here</string>
+
+    <!-- Workout / 01 — Dashboard. Los "_demo" son de demostracion: no salen del servidor. -->
+    <string name="workout_goal">Workout Goal</string>
+    <string name="workout_title">Workouts</string>
+    <string name="workout_open_plan">Open weekly plan</string>
+    <string name="workout_ready">READY FOR TODAY?</string>
+    <string name="workout_level_beginner_tag">BEGINNER</string>
+    <string name="workout_level_intermediate_tag">INTERMEDIATE</string>
+    <string name="workout_level_advanced_tag">ADVANCED</string>
+    <plurals name="workout_summary">
+        <item quantity="one">%1$d min • %2$d exercise</item>
+        <item quantity="other">%1$d min • %2$d exercises</item>
+    </plurals>
+    <string name="workout_start">Start Workout</string>
+    <string name="workout_details">Details</string>
+    <string name="workout_loading">Loading workouts</string>
+    <string name="workout_error">We couldn\'t load your workouts.</string>
+    <string name="workout_empty">There are no workouts yet.</string>
+    <string name="workout_recommends">VORA RECOMMENDS</string>
+    <string name="workout_recommends_demo">Your last upper-body session was 4 days ago. Today is a great opportunity to hit your strength volume targets.</string>
+    <string name="workout_week_activity">This Week\'s Activity</string>
+    <string-array name="workout_week_initials">
+        <item>M</item>
+        <item>T</item>
+        <item>W</item>
+        <item>T</item>
+        <item>F</item>
+        <item>S</item>
+        <item>S</item>
+    </string-array>
+    <string-array name="workout_week_names">
+        <item>Monday</item>
+        <item>Tuesday</item>
+        <item>Wednesday</item>
+        <item>Thursday</item>
+        <item>Friday</item>
+        <item>Saturday</item>
+        <item>Sunday</item>
+    </string-array>
+    <string name="workout_day_rest">Zzz</string>
+    <string name="workout_day_today">FIT</string>
+    <string name="workout_day_done_desc">%1$s: done</string>
+    <string name="workout_day_rest_desc">%1$s: rest</string>
+    <string name="workout_day_today_desc">%1$s: today</string>
+    <string name="workout_progress">Your Progress</string>
+    <string name="workout_view_progress">View progress</string>
+    <string name="workout_streak">STREAK</string>
+    <string name="workout_streak_demo">4 Days</string>
+    <string name="workout_completed">WORKOUTS</string>
+    <string name="workout_completed_demo">3/5 complete</string>
+    <string name="workout_volume">VOL. LIFTED</string>
+    <string name="workout_volume_demo">8,420 kg</string>
 </resources>

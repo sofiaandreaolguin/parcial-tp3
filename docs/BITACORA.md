@@ -183,3 +183,19 @@ Formato:
 - Pendiente: `AuthViewModelTest` (carril C, en otra sesión con `tests-rojo`). SignUp entra a `RUTAS_A_SANGRE` cuando se maquete.
 - Evidencia: `assembleDebug` y `testDebugUnitTest` en verde (49 tests), `control-rapido.sh` sin fallas. Capturas en `docs/evidencia/visual/login-01-{394dp,360dp,360dp-scroll}.png` (Pixel 9 Pro con densidad ajustada). Recorrido en el emulador: Sign In vacío muestra los errores; con datos válidos entra a Home y atrás cierra la app; "Listo" del teclado entra; "Sign up here" va a SignUp y al volver se conserva el email; el texto sobrevive a la rotación.
 - Commit / PR:
+
+### 2026-10-22 · Hector · feat(workout): maquetar Workout / 01 Dashboard según Figma
+- Carril y requisitos: B · UI01, UI03, NAV03 · tarea k (PR 1 de 10 del flujo Workout)
+- Plan aprobado: las 7 pantallas de Workout en un PR por pantalla. 01 y 02 usan el catálogo real (`WorkoutsViewModel`); de 03 a 07 van con datos de demostración detrás de una interfaz `WorkoutDetailRepository`, para que la tarea del detalle (`GET /v1/workouts/{id}`, carril C aparte) solo cambie la implementación. Lo que no es dibujo (mock, base del detalle, sesión simulada) va en PR propios.
+- Qué propuso la IA y qué cambiamos:
+  - El conector de Figma no tenía acceso al archivo del grupo. Hector pasó una copia a su nombre (`SfJjENBxckjdZUbLllD6fJ`) y las medidas salieron de los nodos, no de la exportación.
+  - La tarjeta "VORA RECOMMENDS" se repite en 01, 03 y 07 y no existía. La IA preguntó antes de tocar la zona de Martu. Hector eligió crear `VoraCoachNote` y avisarle en el PR, igual que con el ícono `ic_calendar` (sacado del SVG del nodo), el tamaño `Medium` de `VoraButton` (14 SemiBold, 12/16, el del panel) y los tokens nuevos del tema.
+  - El panel muestra el primer entrenamiento del catálogo del mock: la etiqueta dice el nivel real (BEGINNER) en vez de "MODERATE", y no va "Focus: Chest & Back" porque la API no trae ese dato.
+  - Para probar en el emulador: el servidor publicado del profe estaba caído, y en el `Pixel_10_Pro` (Android 17) la app no llega a `10.0.2.2` aunque la consola sí. Se levantó el mock local del paquete del profe con `py` y se usó `adb reverse tcp:8000 tcp:8000` con `api.baseUrl=http://127.0.0.1:8000/`. El emulador `Medium_Phone` (Android 37.1 de 16 KB) se colgaba y se dejó de usar.
+- Revisores:
+  - revisor-visual, dos vueltas. La primera dio CON CAMBIOS: faltaba la sombra del panel (0 8 8, verde al 6 %) y los divisores de "Your Progress" quedaban 5 a 9 dp corridos porque el `weight` incluía el borde y el padding. Se corrigieron las dos. Segunda vuelta: APROBADA, con los divisores a menos de 1 dp del Figma.
+  - revisor-arquitectura: nada bloquea. El ALTA es que el error no tiene reintento, que necesita cambiar el ViewModel y queda para la tarea de estados (RF05).
+  - /code-review: se corrigió TalkBack, que leía la inicial ("T: done") y ahora lee el día completo. También se arreglaron dos cosas del revisor de arquitectura: un sangrado antes de `package` y el recorrido de los días con `zip` en vez de índice.
+  - Quedan como sugerencias, para Martu: el área táctil del calendario (40 dp) y de "View progress", un tono con borde en `VoraCircleButton`, mover la sombra adentro de `VoraPanel`, tokens para "FIT" y los valores de progreso en Bold, el borde de "Details" al 30 % contra 25 % del Figma, y actualizar la tabla de componentes de CONTEXTO §9. Para la tarea de estados: el error con reintento. Desvío visual aceptado: los dos divisores de "Your Progress" llegan hasta abajo.
+- Evidencia: `docs/evidencia/visual/workout-01-{394dp,360dp,360dp-scrolled}.png` (Pixel 10 Pro a 394 y 360 dp). `installDebug` y `testDebugUnitTest` en verde (49 tests), `reglas.sh` sin fallas. Los cuatro controles llevan a donde dice `PANTALLAS.md` y rotar no repite la consulta (0 `GET` en el log).
+- Commit / PR:

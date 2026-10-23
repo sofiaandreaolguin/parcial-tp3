@@ -113,4 +113,10 @@ object VoraTextStyles {
     val accessLink = manrope(12, FontWeight.Medium)
     /** "AI" de la insignia del logo. */
     val accessBadge = manrope(10, FontWeight.Bold, lineHeight = 12)
+
+    /** Panel verde de Workout / 01: titulo "Upper Body Strength" (22 SemiBold) y "READY FOR TODAY?" (12 Bold). */
+    val panelTitle = manrope(22, FontWeight.SemiBold)
+    val panelLabel = manrope(12, FontWeight.Bold)
+    /** El "Zzz" de los dias de descanso de Workout / 01: 9 SemiBold. */
+    val micro = manrope(9, FontWeight.SemiBold)
 }

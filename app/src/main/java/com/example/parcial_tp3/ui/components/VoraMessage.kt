@@ -18,6 +18,7 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import com.example.parcial_tp3.R
 import com.example.parcial_tp3.ui.theme.Parcialtp3Theme
 import com.example.parcial_tp3.ui.theme.VoraTheme
@@ -88,6 +89,53 @@ fun VoraAdvice(
     }
 }
 
+/**
+ * Nota del coach: orbe, etiqueta y texto en verde sobre menta translucida. Aparece en
+ * Workout / 01 ("VORA RECOMMENDS"), 03 ("VORA COACH NOTE") y 07 ("VORA INSIGHT"); el
+ * texto es 13 con alto de linea 1,4 en las tres.
+ *
+ * La de 01 es la destacada ([featured]): orbe de 20, etiqueta de 13, separacion 12 y borde
+ * menta al 25 %. Las de 03 y 07 van sin borde, con orbe de 16, etiqueta de 12 y separacion 8.
+ *
+ * @param label de strings.xml, ya en mayusculas.
+ * @param padding y [radius] 16 por defecto; 12 en Workout / 03.
+ */
+@Composable
+fun VoraCoachNote(
+    label: String,
+    text: String,
+    modifier: Modifier = Modifier,
+    featured: Boolean = false,
+    padding: Dp = VoraTheme.spacing.s16,
+    radius: Dp = VoraTheme.radius.r16,
+) {
+    val shape = RoundedCornerShape(radius)
+    Column(
+        modifier = modifier
+            .fillMaxWidth()
+            .background(VoraTheme.colors.mintTranslucent, shape)
+            .then(
+                if (featured) Modifier.border(VoraTheme.sizes.border, VoraTheme.colors.mintBorderSoft, shape)
+                else Modifier,
+            )
+            .padding(padding),
+        verticalArrangement = Arrangement.spacedBy(if (featured) VoraTheme.spacing.s12 else VoraTheme.spacing.s8),
+    ) {
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(if (featured) VoraTheme.spacing.s8 else VoraTheme.spacing.s6),
+        ) {
+            VoraOrb(size = if (featured) VoraTheme.sizes.orbNoteLarge else VoraTheme.sizes.orbNote)
+            Text(
+                text = label,
+                style = if (featured) MaterialTheme.typography.labelMedium else VoraTheme.text.fieldLabel,
+                color = MaterialTheme.colorScheme.primary,
+            )
+        }
+        Text(text = text, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.primary)
+    }
+}
+
 @Preview(showBackground = true)
 @Composable
 private fun VoraMessagePreview() {
@@ -102,6 +150,8 @@ private fun VoraMessagePreview() {
             VoraInfoMessage(texto, icon = painterResource(R.drawable.ic_info))
             VoraInfoMessage(texto)
             VoraAdvice(stringResource(R.string.tab_progress).uppercase(), texto)
+            VoraCoachNote(stringResource(R.string.tab_workout).uppercase(), texto, featured = true)
+            VoraCoachNote(stringResource(R.string.tab_workout).uppercase(), texto)
         }
     }
 }
