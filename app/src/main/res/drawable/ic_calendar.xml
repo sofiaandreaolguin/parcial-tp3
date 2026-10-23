@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Icono del Figma de VORA (calendar de Workout / 01), trazo de 2. El color lo pone el componente con tint. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="20dp"
+    android:height="20dp"
+    android:viewportWidth="20"
+    android:viewportHeight="20">
+    <path
+        android:pathData="M7.33333 3.5V4.83344M7.33333 4.83344V6.16688M7.33333 4.83344H5.33333C4.59695 4.83344 4 5.43044 4 6.16688V8.83376M7.33333 4.83344H12.6667M12.6667 3.5V4.83344M12.6667 4.83344V6.16688M12.6667 4.83344H14.6667C15.403 4.83344 16 5.43044 16 6.16688V8.83376M4 8.83376H16M4 8.83376V15.501C4 16.2374 4.59695 16.8344 5.33333 16.8344H14.6667C15.403 16.8344 16 16.2374 16 15.501V8.83376"
+        android:strokeWidth="2"
+        android:strokeColor="#FF000000"
+        android:strokeLineCap="round"
+        android:fillColor="#00000000" />
+</vector>
