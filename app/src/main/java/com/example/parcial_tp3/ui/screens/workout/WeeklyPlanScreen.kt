@@ -34,9 +34,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.example.parcial_tp3.R
 import com.example.parcial_tp3.domain.model.Workout
 import com.example.parcial_tp3.domain.model.WorkoutLevel
+import com.example.parcial_tp3.ui.components.VoraButton
+import com.example.parcial_tp3.ui.components.VoraButtonSize
+import com.example.parcial_tp3.ui.components.VoraButtonStyle
 import com.example.parcial_tp3.ui.components.VoraCard
 import com.example.parcial_tp3.ui.components.VoraInfoMessage
 import com.example.parcial_tp3.ui.components.VoraOrb
+import com.example.parcial_tp3.ui.components.VoraPanel
 import com.example.parcial_tp3.ui.theme.Parcialtp3Theme
 import com.example.parcial_tp3.ui.theme.VoraTheme
 
@@ -272,17 +276,14 @@ private fun DayCard(
     }
 }
 
-/** Panel de 16 de radio y de padding: más chico que [com.example.parcial_tp3.ui.components.VoraPanel]. */
+/**
+ * Usa [VoraPanel] y [VoraButton] aunque el nodo no coincide del todo: el panel del Figma es
+ * de radio 16 con separacion 12 y las pildoras son de 12 Regular, padding 6/12 y blanco al
+ * 8 %. A la vista es igual, y asi un cambio en los componentes llega tambien aca.
+ */
 @Composable
 private fun AdjustPanel(onAdjust: () -> Unit) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .clip(RoundedCornerShape(VoraTheme.radius.r16))
-            .background(MaterialTheme.colorScheme.primary)
-            .padding(VoraTheme.spacing.s16),
-        verticalArrangement = Arrangement.spacedBy(VoraTheme.spacing.s12),
-    ) {
+    VoraPanel(modifier = Modifier.fillMaxWidth(), padding = VoraTheme.spacing.s16) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(VoraTheme.spacing.s8),
@@ -303,24 +304,16 @@ private fun AdjustPanel(onAdjust: () -> Unit) {
             horizontalArrangement = Arrangement.spacedBy(VoraTheme.spacing.s8),
             verticalArrangement = Arrangement.spacedBy(VoraTheme.spacing.s8),
         ) {
-            AdjustPrompt(stringResource(R.string.weekly_adjust_tired), onAdjust)
-            AdjustPrompt(stringResource(R.string.weekly_adjust_move), onAdjust)
+            listOf(R.string.weekly_adjust_tired, R.string.weekly_adjust_move).forEach { texto ->
+                VoraButton(
+                    text = stringResource(texto),
+                    onClick = onAdjust,
+                    style = VoraButtonStyle.SubtleOnDark,
+                    size = VoraButtonSize.Small,
+                )
+            }
         }
     }
-}
-
-@Composable
-private fun AdjustPrompt(text: String, onClick: () -> Unit) {
-    Text(
-        text = text,
-        style = VoraTheme.text.footnote,
-        color = MaterialTheme.colorScheme.onPrimary,
-        modifier = Modifier
-            .clip(RoundedCornerShape(VoraTheme.radius.pill))
-            .background(VoraTheme.colors.onDarkChip)
-            .clickable(role = Role.Button, onClick = onClick)
-            .padding(horizontal = VoraTheme.spacing.s12, vertical = VoraTheme.spacing.s6),
-    )
 }
 
 @Preview(showBackground = true, heightDp = 900)
