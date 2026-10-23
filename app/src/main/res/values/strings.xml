@@ -450,4 +450,41 @@
     <string name="home_workout_meta">%1$s • %2$s</string>
     <string name="home_estimated_volume">Estimated Vol: %1$s kg</string>
     <string name="home_start_workout">Start workout</string>
+
+    <!-- Nutrition / 01 — Dashboard (datos de demostración: Room llega con la tarea l) -->
+    <string name="nutrition_dash_date">TUESDAY, 8 SEPTEMBER</string>
+    <string name="nutrition_dash_open_calendar">Open calendar</string>
+    <string name="nutrition_dash_calories_label">CALORIES CONSUMED</string>
+    <string name="nutrition_dash_calories_value">1,420</string>
+    <string name="nutrition_dash_calories_goal">Goal: 2,100 kcal</string>
+    <string name="nutrition_dash_calories_percent">67%</string>
+    <string name="nutrition_dash_protein">Protein</string>
+    <string name="nutrition_dash_protein_now">104g</string>
+    <string name="nutrition_dash_protein_goal">/140g</string>
+    <string name="nutrition_dash_carbs">Carbs</string>
+    <string name="nutrition_dash_carbs_now">152g</string>
+    <string name="nutrition_dash_carbs_goal">/220g</string>
+    <string name="nutrition_dash_fat">Fat</string>
+    <string name="nutrition_dash_fat_now">48g</string>
+    <string name="nutrition_dash_fat_goal">/65g</string>
+    <string name="nutrition_dash_advice">You\'re on track today. A protein-rich dinner would help you reach your target.</string>
+    <string name="nutrition_dash_meals">Today\'s Meals</string>
+    <string name="nutrition_dash_history">View History</string>
+    <string name="nutrition_dash_breakfast">Breakfast</string>
+    <string name="nutrition_dash_breakfast_items">Greek yoghurt · berries · granola</string>
+    <string name="nutrition_dash_breakfast_kcal">420 kcal</string>
+    <string name="nutrition_dash_lunch">Lunch</string>
+    <string name="nutrition_dash_lunch_items">Chicken · rice · vegetables</string>
+    <string name="nutrition_dash_lunch_kcal">520 kcal</string>
+    <string name="nutrition_dash_snack">Snack</string>
+    <string name="nutrition_dash_snack_items">Protein shake</string>
+    <string name="nutrition_dash_snack_kcal">240 kcal</string>
+    <string name="nutrition_dash_dinner">Dinner</string>
+    <string name="nutrition_dash_dinner_empty">Not logged yet</string>
+    <string name="nutrition_dash_add">+ Add</string>
+    <string name="nutrition_dash_vora_title">Tell Vora what you ate</string>
+    <string name="nutrition_dash_vora_body">Vora will automatically estimate the portions, ingredients, and log the nutrition details.</string>
+    <string name="nutrition_dash_voice">Voice</string>
+    <string name="nutrition_dash_photo">Photo</string>
+    <string name="nutrition_dash_search">Search</string>
 </resources>
