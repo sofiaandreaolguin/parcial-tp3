@@ -144,32 +144,32 @@ Casos de la plantilla y cómo se cubren acá:
 ## Tests
 | Criterio | Test | Dónde | Vi el rojo |
 |---|---|---|---|
-| C1 | `` `C1 sesion arranca en Loading y pasa a Content con los valores iniciales` `` | `test/` · `ui/screens/workout/ActiveWorkoutViewModelTest` | |
-| C2 | `` `C2 sesion pide al repositorio el workoutId de la ruta` `` | `test/` · `ActiveWorkoutViewModelTest` | |
-| C3 | `` `C3 sesion sin workoutId pasa a Error sin llamar al repositorio` `` (sin la clave, `""` y `"  "`) | `test/` · `ActiveWorkoutViewModelTest` | |
-| C4 | `` `C4 sesion si el repositorio falla pasa a Error` `` | `test/` · `ActiveWorkoutViewModelTest` | |
-| C5 | `` `C5 sesion con detalle sin ejercicios pasa a Error` `` | `test/` · `ActiveWorkoutViewModelTest` | |
-| C6 | `` `C6 sesion completar serie pasa a la siguiente y arranca el descanso` `` | `test/` · `ActiveWorkoutViewModelTest` | |
-| C7 | `` `C7 sesion completar la ultima serie de un ejercicio pasa al siguiente` `` | `test/` · `ActiveWorkoutViewModelTest` | |
-| C8 | `` `C8 sesion completar la ultima serie de todo termina sin descanso` `` | `test/` · `ActiveWorkoutViewModelTest` | |
-| C9 | `` `C9 sesion terminada ignora completar serie` `` | `test/` · `ActiveWorkoutViewModelTest` | |
-| C10 | `` `C10 sesion ejercicio sin descanso no arranca descanso` `` (`restSeconds` 0 y -5) | `test/` · `ActiveWorkoutViewModelTest` | |
-| C11 | `` `C11 sesion el descanso baja de a un segundo y se queda en cero` `` | `test/` · `ActiveWorkoutViewModelTest` | |
-| C12 | `` `C12 sesion mas 30 suma al descanso y sigue contando` `` | `test/` · `ActiveWorkoutViewModelTest` | |
-| C13 | `` `C13 sesion mas 30 sin descanso no hace nada` `` | `test/` · `ActiveWorkoutViewModelTest` | |
-| C14 | `` `C14 sesion skip corta el descanso` `` | `test/` · `ActiveWorkoutViewModelTest` | |
-| C15 | `` `C15 sesion completar durante el descanso arranca uno nuevo y cuenta uno solo` `` | `test/` · `ActiveWorkoutViewModelTest` | |
-| C16 | `` `C16 sesion mas y menos cambian el peso de a 2 y medio` `` | `test/` · `ActiveWorkoutViewModelTest` | |
-| C17 | `` `C17 sesion el peso no baja de cero` `` | `test/` · `ActiveWorkoutViewModelTest` | |
-| C18 | `` `C18 sesion cada serie guarda su peso y suma el volumen` `` | `test/` · `ActiveWorkoutViewModelTest` | |
-| C19 | `` `C19 sesion terminar corta el descanso y conserva el avance` `` | `test/` · `ActiveWorkoutViewModelTest` | |
-| C20 | `` `C20 sesion terminar antes cuenta solo los ejercicios completos` `` | `test/` · `ActiveWorkoutViewModelTest` | |
-| C26 | `` `C26 sesion despues de terminar se puede seguir` `` | `test/` · `ActiveWorkoutViewModelTest` | |
-| C21 | `` `C21 sesion elegir dificultad la guarda y la cambia` `` | `test/` · `ActiveWorkoutViewModelTest` | |
-| C22 | `` `C22 sesion sin Content los eventos no cambian nada` `` (en `Loading` y en `Error`) | `test/` · `ActiveWorkoutViewModelTest` | |
-| C23 | `` `C23 sesion volver a observar no repite la consulta ni pierde el avance` `` | `test/` · `ActiveWorkoutViewModelTest` | |
-| C24 | `` `C24 sesion el descanso sigue contando sin observar` `` | `test/` · `ActiveWorkoutViewModelTest` | |
-| C25 | `./gradlew assembleDebug` (no es un test unitario: la salida va a la evidencia) | build | |
+| C1 | `` `C1 sesion arranca en Loading y pasa a Content con los valores iniciales` `` | `test/` · `ui/screens/workout/ActiveWorkoutViewModelTest` | Sí: `expected Content(...) but was Loading` |
+| C2 | `` `C2 sesion pide al repositorio el workoutId de la ruta` `` | `test/` · `ActiveWorkoutViewModelTest` | Sí: `expected [w02] but was []` |
+| C3 | `` `C3 sesion sin workoutId pasa a Error sin llamar al repositorio` `` (sin la clave, `""` y `"  "`) | `test/` · `ActiveWorkoutViewModelTest` | Sí: `sin la clave tiene que ser Error, fue Loading` |
+| C4 | `` `C4 sesion si el repositorio falla pasa a Error` `` | `test/` · `ActiveWorkoutViewModelTest` | Sí: `tiene que ser Error, fue Loading` |
+| C5 | `` `C5 sesion con detalle sin ejercicios pasa a Error` `` | `test/` · `ActiveWorkoutViewModelTest` | Sí: `tiene que ser Error, fue Loading` |
+| C6 | `` `C6 sesion completar serie pasa a la siguiente y arranca el descanso` `` | `test/` · `ActiveWorkoutViewModelTest` | Sí, en la carga: `la sesion tiene que estar en Content, fue Loading`. Falta verlo por el criterio |
+| C7 | `` `C7 sesion completar la ultima serie de un ejercicio pasa al siguiente` `` | `test/` · `ActiveWorkoutViewModelTest` | Sí, en la carga: `la sesion tiene que estar en Content, fue Loading`. Falta verlo por el criterio |
+| C8 | `` `C8 sesion completar la ultima serie de todo termina sin descanso` `` | `test/` · `ActiveWorkoutViewModelTest` | Sí, en la carga: `la sesion tiene que estar en Content, fue Loading`. Falta verlo por el criterio |
+| C9 | `` `C9 sesion terminada ignora completar serie` `` | `test/` · `ActiveWorkoutViewModelTest` | Sí, en la carga: `la sesion tiene que estar en Content, fue Loading`. Falta verlo por el criterio |
+| C10 | `` `C10 sesion ejercicio sin descanso no arranca descanso` `` (`restSeconds` 0 y -5) | `test/` · `ActiveWorkoutViewModelTest` | Sí, en la carga: `la sesion tiene que estar en Content, fue Loading`. Falta verlo por el criterio |
+| C11 | `` `C11 sesion el descanso baja de a un segundo y se queda en cero` `` | `test/` · `ActiveWorkoutViewModelTest` | Sí, en la carga: `la sesion tiene que estar en Content, fue Loading`. Falta verlo por el criterio |
+| C12 | `` `C12 sesion mas 30 suma al descanso y sigue contando` `` | `test/` · `ActiveWorkoutViewModelTest` | Sí, en la carga: `la sesion tiene que estar en Content, fue Loading`. Falta verlo por el criterio |
+| C13 | `` `C13 sesion mas 30 sin descanso no hace nada` `` | `test/` · `ActiveWorkoutViewModelTest` | Sí, en la carga: `la sesion tiene que estar en Content, fue Loading`. Falta verlo por el criterio |
+| C14 | `` `C14 sesion skip corta el descanso` `` | `test/` · `ActiveWorkoutViewModelTest` | Sí, en la carga: `la sesion tiene que estar en Content, fue Loading`. Falta verlo por el criterio |
+| C15 | `` `C15 sesion completar durante el descanso arranca uno nuevo y cuenta uno solo` `` | `test/` · `ActiveWorkoutViewModelTest` | Sí, en la carga: `la sesion tiene que estar en Content, fue Loading`. Falta verlo por el criterio |
+| C16 | `` `C16 sesion mas y menos cambian el peso de a 2 y medio` `` | `test/` · `ActiveWorkoutViewModelTest` | Sí, en la carga: `la sesion tiene que estar en Content, fue Loading`. Falta verlo por el criterio |
+| C17 | `` `C17 sesion el peso no baja de cero` `` | `test/` · `ActiveWorkoutViewModelTest` | Sí, en la carga: `la sesion tiene que estar en Content, fue Loading`. Falta verlo por el criterio |
+| C18 | `` `C18 sesion cada serie guarda su peso y suma el volumen` `` | `test/` · `ActiveWorkoutViewModelTest` | Sí, en la carga: `la sesion tiene que estar en Content, fue Loading`. Falta verlo por el criterio |
+| C19 | `` `C19 sesion terminar corta el descanso y conserva el avance` `` | `test/` · `ActiveWorkoutViewModelTest` | Sí, en la carga: `la sesion tiene que estar en Content, fue Loading`. Falta verlo por el criterio |
+| C20 | `` `C20 sesion terminar antes cuenta solo los ejercicios completos` `` | `test/` · `ActiveWorkoutViewModelTest` | Sí, en la carga: `la sesion tiene que estar en Content, fue Loading`. Falta verlo por el criterio |
+| C26 | `` `C26 sesion despues de terminar se puede seguir` `` | `test/` · `ActiveWorkoutViewModelTest` | Sí, en la carga: `la sesion tiene que estar en Content, fue Loading`. Falta verlo por el criterio |
+| C21 | `` `C21 sesion elegir dificultad la guarda y la cambia` `` | `test/` · `ActiveWorkoutViewModelTest` | Sí, en la carga: `la sesion tiene que estar en Content, fue Loading`. Falta verlo por el criterio |
+| C22 | `` `C22 sesion sin Content los eventos no cambian nada` `` (en `Loading` y en `Error`) | `test/` · `ActiveWorkoutViewModelTest` | Sí, en la carga: `expected Content(...) but was Loading` (la parte en Loading pasa). Falta verlo por el criterio |
+| C23 | `` `C23 sesion volver a observar no repite la consulta ni pierde el avance` `` | `test/` · `ActiveWorkoutViewModelTest` | Sí, en la carga: `la sesion tiene que estar en Content, fue Loading`. Falta verlo por el criterio |
+| C24 | `` `C24 sesion el descanso sigue contando sin observar` `` | `test/` · `ActiveWorkoutViewModelTest` | Sí, en la carga: `la sesion tiene que estar en Content, fue Loading`. Falta verlo por el criterio |
+| C25 | `./gradlew assembleDebug` (no es un test unitario: la salida va a la evidencia) | build | Pasó en rojo: `BUILD SUCCESSFUL` con la firma vacía. Control pendiente: sacar `@Inject` |
 
 - Todo va en `test/`: no hay Room. Los nombres empiezan con "sesion" para no confundirse con los `C1`… del catálogo y del detalle.
 - Se reusa `FakeWorkoutDetailRepository` (guarda los ids y retiene la respuesta con un `CompletableDeferred`) y `MainDispatcherRule` (`StandardTestDispatcher`, que comparte el reloj virtual con `runTest`).
@@ -184,6 +184,7 @@ Casos de la plantilla y cómo se cubren acá:
   - C15: control con dos corrutinas de descanso a la vez (sin cancelar la anterior), que da 58.
   - C23: control con `flow { }.stateIn(viewModelScope, WhileSubscribed(5_000), Loading)`, que vuelve a consultar.
   - C25: control sacando `@Inject` del constructor y viendo que el build falla.
+- Rojo (23/10), con la firma vacía: el estado queda siempre en `Loading`. C1 a C5 fallan por su criterio; C6 a C26 fallan antes, en la carga. En `implementar`, primero la carga (C1 a C5) y correr los tests: C6 a C26 tienen que fallar por su criterio. Los que pasen con los eventos vacíos (se espera C9, C13, C17 y C22) llevan su control negativo antes de programar el resto.
 
 ## Auditoría
 - auditor-spec (2026-10-23): 13 hallazgos, 3 bloqueaban.
@@ -194,3 +195,4 @@ Casos de la plantilla y cómo se cubren acá:
 - 2026-10-23. Spec creada para el PR 7 de la tarea k, entrevistando a Hector. Decidió: el descanso cuenta de verdad en el ViewModel; el peso arranca en 45 kg y cambia de a 2,5 kg; al terminar la última serie se queda en 05 hasta tocar "Finish Workout"; 07 comparte la instancia de 05; la dificultad vive en el ViewModel; "Complete Set" durante el descanso lo corta y completa la serie.
 - 2026-10-23. Auditoría corregida (ver arriba). Se suman C24 (el descanso sigue al rotar) y C26 (después de terminar se puede seguir); el build pasa de C24 a C25.
 - 2026-10-23. Hector aprueba la spec.
+- 2026-10-23. Tests en rojo: los 25 de `ActiveWorkoutViewModelTest` fallan por aserción (ver "Vi el rojo"); el build pasa con la firma vacía.
