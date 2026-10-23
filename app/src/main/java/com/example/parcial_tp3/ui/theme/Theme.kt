@@ -50,6 +50,7 @@ data class VoraExtraColors(
     val onDarkMuted: Color = VoraOnDarkMuted,
     val onDarkBorder: Color = VoraOnDarkBorder,
     val onDarkSubtle: Color = VoraOnDarkSubtle,
+    val onDarkChip: Color = VoraOnDarkChip,
     val onDarkPanel: Color = VoraOnDarkPanel,
     val onDarkPanelBorder: Color = VoraOnDarkPanelBorder,
     val success: Color = VoraSuccess,

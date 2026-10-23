@@ -214,6 +214,21 @@ Formato:
 - Evidencia: `docs/evidencia/visual/workout-01-{394dp,360dp,360dp-scrolled}.png` (Pixel 10 Pro a 394 y 360 dp). `installDebug` y `testDebugUnitTest` en verde (49 tests), `reglas.sh` sin fallas. Los cuatro controles llevan a donde dice `PANTALLAS.md` y rotar no repite la consulta (0 `GET` en el log).
 - Commit / PR:
 
+### 2026-10-22 · Hector · feat(workout): maquetar Workout / 02 Weekly Plan según Figma
+- Carril y requisitos: B · UI01, UI03, NAV03, NAV04, RF01 (el catálogo en pantalla) · tarea k (PR 2 de 10 del flujo Workout)
+- Plan aprobado: 02 reutiliza el `WorkoutsViewModel` de 01 y reparte el catálogo real en una semana de ejemplo. Hoy es el martes 8, el miércoles es de recuperación y los entrenamientos van en martes, jueves y sábado. Cada tarjeta y cada día con entrenamiento del calendario abre `workout_details/{workoutId}` con su propio id. "I'm tired today" y "Move Wed workout to Fri" muestran el aviso de demostración.
+- Qué propuso la IA y qué cambiamos:
+  - El frame dibuja solo dos días con entrenamiento. La IA propuso sumar una tarjeta (SATURDAY) para que se vean los tres del catálogo del mock y cada uno abra el suyo. Hector lo aprobó. La tarjeta de recuperación del miércoles queda como en el Figma y no navega, porque no es un entrenamiento del catálogo (en el mock es `type: recovery`).
+  - Faltaban tres medidas en el tema: la píldora del calendario (42), el orbe de la tarjeta (24) y el fondo de las píldoras del panel (blanco al 8 %). La IA preguntó antes de tocar la zona de Martu. Hector aprobó sumarlos con el nodo del Figma en el KDoc y avisarle en el PR.
+  - La tarjeta de hoy, la etiqueta "READY", el panel de 16 y sus píldoras quedan `private` en la Screen, porque los componentes comunes no los cubren (`VoraCard` tiene el borde fijo, `VoraTag` Mint es translúcida y `VoraPanel` es de 20).
+  - La IA quiso dejar un test de Compose para NAV04 (cada tarjeta manda su id), pero no corre en el `Pixel_10_Pro`: Espresso 3.5.1 llama a `InputManager.getInstance`, que no existe en Android 17. Se sacó el test y queda como pendiente subir Espresso. Además, `connectedDebugAndroidTest` desinstala la app, así que hay que reinstalarla antes de las capturas.
+- Revisores:
+  - revisor-visual: APROBADA en la primera vuelta. Diferencias menores sin corregir: la píldora del día y las tarjetas miden unos 3 dp más de alto por el interlineado de 20 del tema, y el orbe chico de `VoraOrb` muestra un aro claro.
+  - revisor-arquitectura: nada bloquea. La ALTA es que los tokens tocan la zona de Martu, y se resuelve avisándole en el PR. Quedan como sugerencias: el error sin reintento (RF05, tarea de estados), sacar el reparto a una función pura, un tono de `VoraTag` menta lleno, un estilo `OnDark` en `VoraChip`, radio y padding en `VoraPanel`, compartir el `WorkoutsViewModel` entre 01 y 02 por la entrada del grafo, y mover `LoadingCard` a un archivo común del flujo.
+  - /code-review: se sacó un `toSortedMap()` que sobraba y se comentó que la semana de ejemplo muestra hasta cuatro entrenamientos.
+- Evidencia: `docs/evidencia/visual/workout-02-{394dp,394dp-scrolled,360dp,360dp-scrolled}.png` (Pixel 10 Pro a 394 y 360 dp, con el mock local). `installDebug` y `testDebugUnitTest` en verde (49 tests), `reglas.sh` sin fallas. En el emulador: la tarjeta del jueves y la píldora del sábado abren 03, y las píldoras del panel muestran el aviso.
+- Commit / PR:
+
 ### 2026-10-23 · Zaki · feat(profile): maquetar Profile / 04 Nutrition preferences según Figma
 - Carril y requisitos: B · UI01, UI02, UI03, NAV02, NAV03
 - Plan aprobado: rama 4 de 6 del flujo Profile. Antes de la pantalla, un commit que comparte las piezas que se repiten en el flujo: `ProfileSectionLabel` (de 03) y `ProfileInfoRow` (de 01). La pantalla solo se dibuja con los datos del perfil de demostración.

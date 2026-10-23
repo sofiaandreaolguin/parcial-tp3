@@ -105,10 +105,14 @@ object VoraSizes {
     /** Orbe de las notas del coach: 20 en "VORA RECOMMENDS" (Workout / 01), 16 en 03 y 07. */
     val orbNoteLarge = 20.dp
     val orbNote = 16.dp
+    /** Orbe de la tarjeta "Active Recovery" de Workout / 02 (nodo 1:378). */
+    val orbCard = 24.dp
 
     /** "This Week's Activity" de Workout / 01: una columna de 36 por dia con un circulo de 28. */
     val dayColumn = 36.dp
     val dayCircle = 28.dp
+    /** Calendario de Workout / 02 (nodo 1:343): pildora de 42 de ancho por dia, padding 4 y 8. */
+    val calendarDay = 42.dp
     /** Sombra del panel verde de Workout / 01: 0 8 8, desenfoque y corrimiento hacia abajo de 8. */
     val panelShadow = 8.dp
 
