@@ -132,6 +132,37 @@ object VoraSizes {
     val avatar = 72.dp
     /** Foto de Profile / 02 Edit profile, mas grande que en el Dashboard (160 px a 2x). */
     val avatarLarge = 80.dp
+
+    // Acceso (Login - 01 y 02), medidos en docs/figma/Login Flow.png
+    /** Circulo blanco de volver y selector de idioma: 40 y 30 de alto (nodos del Figma). */
+    val accessBack = 40.dp
+    val languagePill = 30.dp
+    /** Chevron del idioma (14), y escudo y flecha de "Sign In" (16). */
+    val accessChevron = 14.dp
+    val accessIconSmall = 16.dp
+    /** Logo: aro blanco de 72 (5 de ancho) e insignia "AI" de 28 x 20. */
+    val accessLogo = 72.dp
+    val accessLogoRing = 5.dp
+    val accessBadgeWidth = 28.dp
+    val accessBadgeHeight = 20.dp
+    /** Resplandor del fondo ("Top Decorative Ambient Glow", circulo de 320 desenfocado): centro a
+     *  64 dp del borde de arriba; el radio de 260 incluye el desenfoque. */
+    val accessGlowY = 64.dp
+    val accessGlowRadius = 260.dp
+    /** Flecha de volver: en el frame mide 8 x 13 (el vector de la lamina es de 7 x 10). */
+    val accessBackIconWidth = 10.dp
+    val accessBackIconHeight = 14.dp
+    /** Sombras: suave en el circulo de volver y el logo, lima debajo de "Sign In". */
+    val accessShadow = 4.dp
+    val accessShadowSoft = 2.dp
+    val accessShadowLogo = 8.dp
+    val accessShadowCta = 12.dp
+    /** Ancho de la bajada: corta en "progress plan / in one place." como el frame. */
+    val accessSubtitle = 276.dp
+    /** Campos de 55 de alto, boton principal de 56 y botones sociales de 46. */
+    val accessField = 55.dp
+    val accessCta = 56.dp
+    val socialButton = 46.dp
 }
 
 /** Las formas de Material 3 apuntan a los mismos radios, asi los componentes de M3 coinciden. */
