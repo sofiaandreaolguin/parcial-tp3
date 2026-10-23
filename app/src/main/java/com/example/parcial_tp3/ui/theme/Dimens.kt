@@ -102,6 +102,15 @@ object VoraSizes {
     val orbMuted = 120.dp
     /** Esfera chica de VORA: avatar de Conversation y de las tarjetas "VORA Insight". */
     val orbSmall = 28.dp
+    /** Orbe de las notas del coach: 20 en "VORA RECOMMENDS" (Workout / 01), 16 en 03 y 07. */
+    val orbNoteLarge = 20.dp
+    val orbNote = 16.dp
+
+    /** "This Week's Activity" de Workout / 01: una columna de 36 por dia con un circulo de 28. */
+    val dayColumn = 36.dp
+    val dayCircle = 28.dp
+    /** Sombra del panel verde de Workout / 01: 0 8 8, desenfoque y corrimiento hacia abajo de 8. */
+    val panelShadow = 8.dp
 
     // Botones redondos de icono, medidos en los frames de Voice
     /** Microfono de Listening, el mas grande. */
