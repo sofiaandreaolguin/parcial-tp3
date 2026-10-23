@@ -344,7 +344,7 @@ private fun VoraPanelCard(onVoice: () -> Unit, onPhoto: () -> Unit, onSearch: ()
 private fun NutritionDashboardScreenPreview() {
     Parcialtp3Theme {
         NutritionDashboardScreen(
-            state = NutritionViewModel().uiState.value,
+            state = nutritionDemoState(),
             onCalendar = {},
             onHistory = {},
             onMeal = {},

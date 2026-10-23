@@ -329,7 +329,6 @@ Formato:
   - Se aceptó el aire de más de unos 11 dp en la cabecera de "Today's Meals" (padding del `VoraButton` de texto) y el texto del panel en el 70 % del tema en vez del 60 % del Figma.
   - Las barras de macros copian lo que dibuja el Figma (77, 72 y 77 de 98), que no es el cociente de los gramos.
 - Revisores: revisor-visual, tres vueltas (la 2.ª quedó CON CAMBIOS por "Search" y la 3.ª APROBADA); revisor-arquitectura CON CAMBIOS con 2 MEDIA; `/code-review` con 8 observaciones sin bloqueo. Sin aplicar, quedan como sugerencias:
-  - la preview construye el `NutritionViewModel` en vez de un estado de demo aparte;
   - `FontWeight.Bold` a mano en las kcal;
   - el círculo del calendario mide 40 y el área táctil mínima es 48;
   - los pesos de los botones están ajustados al inglés a 360 dp y no se probaron en español ni con letra grande;
@@ -337,6 +336,7 @@ Formato:
   - `MealRow` y `PendingMealRow` repiten el diseño;
   - el nombre privado `VoraPanelCard`;
   - `NutritionViewModel` no se comparte entre 01 y 02 si cada Route lo pide con `hiltViewModel()` (para la tarea l).
+- La CI (`lintDebug`) falló en el PR por la preview, que construía el `NutritionViewModel` (`ViewModelConstructorInComposable` y `StateFlowValueCalledInComposition`). Local solo corríamos build y tests, no lint. Se pasó el estado de demo a `NutritionDemoData.kt`, que usan el ViewModel y la preview, y ya pasa `lintDebug` en local.
 - Pendiente: la lógica de Room (guardar, listar por fecha y total) es la tarea l; ahí los datos de la pantalla pasan de `@StringRes` a valores reales y el estado necesita cargando, vacío y error (RF07). Si el grupo quiere un encabezado general, se decide en este PR.
 - Evidencia: `docs/evidencia/visual/nutrition-01-{411dp,360dp}{,-scroll}.png` (emulador de 1080x2424 a 420 dpi y el mismo con `wm size` a 360 dp). `assembleDebug` y `testDebugUnitTest` en verde, `reglas.sh` exit 0.
 - Commit / PR:
