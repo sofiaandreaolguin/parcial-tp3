@@ -167,6 +167,30 @@
     <string name="food_fruit">Fruit</string>
     <string name="priority_hit_protein">Hit protein targets</string>
     <string name="priority_eat_consistently">Eat more consistently</string>
+    <!-- Profile / 05 — Voice & AI Settings (VORA Coach) -->
+    <string name="coach_title">VORA Coach</string>
+    <string name="coach_intro">Choose how VORA communicates and coaches you.</string>
+    <string name="coach_style">COACHING STYLE</string>
+    <string name="coach_active_voice">ACTIVE VOICE</string>
+    <string name="coach_voice_name">VORA Voice 01</string>
+    <string name="coach_preview">Preview</string>
+    <string name="coach_speaking">SPEAKING BEHAVIOUR</string>
+    <string name="coach_speak_aloud">Speak responses aloud</string>
+    <string name="coach_autoplay">Auto-play coaching</string>
+    <string name="coach_interruptions">Allow interruptions</string>
+    <string name="coach_interruptions_hint">Interrupt VORA anytime while it’s speaking.</string>
+    <string name="coach_response">RESPONSE STYLE</string>
+    <string name="response_concise">Concise</string>
+    <string name="response_concise_sub">Quick answers</string>
+    <string name="response_balanced">Balanced</string>
+    <string name="response_balanced_sub">Useful detail without overwhelming</string>
+    <string name="response_detailed">Detailed</string>
+    <string name="response_detailed_sub">More explanation and context</string>
+    <string name="coach_voice_feedback">Voice feedback</string>
+    <string name="coach_haptic">Haptic feedback</string>
+    <string name="coach_control_title">Your control matters</string>
+    <string name="coach_control_body">Manage microphone permissions and connected data from Settings.</string>
+    <string name="coach_privacy_link">Privacy &amp; permissions</string>
     <!-- Asistente VORA (Voice / 01 a 06 y Conversation). Textos del Figma, en ingles. -->
     <string name="voice_coach_title">VORA Coach</string>
     <string name="voice_online">ONLINE</string>
