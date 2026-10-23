@@ -218,7 +218,7 @@ private fun TodayPanel(
 }
 
 @Composable
-internal fun LoadingCard() {
+internal fun LoadingCard(text: String = stringResource(R.string.workout_loading)) {
     VoraCard(modifier = Modifier.fillMaxWidth()) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -229,7 +229,7 @@ internal fun LoadingCard() {
                 strokeWidth = VoraTheme.sizes.borderSelected,
             )
             Text(
-                text = stringResource(R.string.workout_loading),
+                text = text,
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
