@@ -394,6 +394,14 @@
     <string name="pre_workout_ask_title">¿Necesitás algo?</string>
     <string name="pre_workout_ask_example_demo">“Recomendame una entrada en calor de pecho”</string>
     <string name="pre_workout_ask_mic">Hablar con VORA</string>
+    <string name="exercise_title">Guía del ejercicio</string>
+    <string name="exercise_help">Ayuda</string>
+    <string name="exercise_target">Trabaja: %1$s</string>
+    <string name="exercise_steps">Cómo se hace</string>
+    <string name="exercise_cues">CLAVES DE TÉCNICA</string>
+    <string name="exercise_cue_bullet">• %1$s</string>
+    <string name="exercise_ask_demo">Preguntale a Vora: “Explicame variantes de agarre”</string>
+    <string name="exercise_back">Volver al entrenamiento</string>
     <string name="weekly_title">Tu plan</string>
     <string name="weekly_subtitle">Pensado según tus objetivos y tu recuperación.</string>
     <string-array name="weekly_days_short">

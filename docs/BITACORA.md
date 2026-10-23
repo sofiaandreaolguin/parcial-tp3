@@ -414,3 +414,16 @@ Formato:
 - Revisores: no se corrieron revisores en contexto limpio sobre los tests.
 - Evidencia: `testDebugUnitTest` con 87 tests en verde (28 nuevos), `assembleDebug` y `control-rapido.sh` sin fallas. Los controles negativos se corrieron sobre `HEAD` limpio y se restauró con `git checkout`.
 - Commit / PR:
+
+### 2026-10-23 · Hector · feat(workout): maquetar Workout / 06 Exercise Details según Figma
+- Carril y requisitos: B · UI01, UI03, NAV03, NAV04, RF01 (muestra el ejercicio elegido del detalle de demostración) · tarea k, PR 6 de 10
+- Plan aprobado: `ExerciseDetailsScreen` y `ExerciseDetailsRoute` sobre `WorkoutDetailViewModel` (con `exerciseId` en la ruta ya devuelve el ejercicio elegido), textos en los dos idiomas y la Route en lugar de `PantallaVacia` en `WorkoutNavGraph`. ‹ y "Back to Workout" → `popBackStack()`, "Ask Vora" → `voice`, ayuda → aviso de demostración. Medidas del nodo 1:628.
+- Qué propuso la IA y qué cambiamos:
+  - El frame trae 5 pasos y 2 cues del remo, y el modelo trae una instrucción y un tip por ejercicio. La IA propuso mostrar los datos reales en lugar del texto del Figma, y Hector lo eligió: así lo que se lee siempre es del ejercicio elegido. No hay textos `_demo` de pasos ni de cues.
+  - En el repo no había foto. Hector eligió exportar la del Figma (nodo 1:649) como `drawable-nodpi/exercise_demo.jpg`, igual que `avatar.png`: 1200 × 549 y 90 KB, recortada como en el frame. Es decorativa y la misma para todos los ejercicios.
+  - "Rate this workout difficulty" no está en este frame: es de 07 ("Great / Good / Tough"). La ayuda no tiene destino en `PANTALLAS.md`, así que muestra el aviso de demostración.
+  - La fila "Ask Vora" quedó como función privada de la pantalla, hecha con colores y medidas del tema. `VoraInfoMessage` es la más parecida, pero tiene borde, no tiene flecha y no se puede tocar.
+  - El chevron de "Ask Vora" no se ve en el Figma: el nodo 1:669 mide 100 dentro de un marco de 16 que lo recorta. Se dibuja a 16 y queda anotado en el KDoc.
+- Revisores: revisor-visual APROBADA en la primera vuelta; las medidas coinciden a ±1 dp. Avisó que la flecha y la ayuda quedan unos 8 dp más cerca del borde, que viene de `VoraTopBar` y pasa lo mismo en 03 y 04. revisor-arquitectura sin nada que bloquee: se aplicó el `when (state)` que cubre todos los estados. Quedan: el reintento del error (RF05, igual que 03 y 04) y que el detalle de demostración está en castellano. `/code-review`: 6 sugerencias, ninguna aplicada. La más importante es que dos toques seguidos en volver hacen dos `popBackStack()`; es el mismo patrón de 03 y 04, y la navegación es de Fiore. Las otras: la proporción de la foto como token del tema, la foto a 146 dp de alto en 360, el texto del error que habla del entrenamiento, las comillas tipográficas y la fila Ask Vora como componente.
+- Evidencia: `docs/evidencia/visual/workout-06-{394dp,360dp}.png` (emulador, densidad 520 y 569). `testDebugUnitTest` (59 tests, 0 fallas) y `assembleDebug` en verde, `reglas.sh` sin fallas. Recorrido en el emulador: Workout → Details → Sentadilla abre 06; la ayuda muestra el aviso; "Ask Vora" abre Voice y atrás vuelve a 06; "Back to Workout" vuelve a 03.
+- Commit / PR:

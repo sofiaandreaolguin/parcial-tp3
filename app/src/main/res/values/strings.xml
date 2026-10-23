@@ -396,6 +396,14 @@
     <string name="pre_workout_ask_title">Need anything?</string>
     <string name="pre_workout_ask_example_demo">“Recommend a chest warm-up”</string>
     <string name="pre_workout_ask_mic">Talk to VORA</string>
+    <string name="exercise_title">Exercise Guide</string>
+    <string name="exercise_help">Help</string>
+    <string name="exercise_target">Target: %1$s</string>
+    <string name="exercise_steps">Performance Steps</string>
+    <string name="exercise_cues">PRO FORM CUES</string>
+    <string name="exercise_cue_bullet">• %1$s</string>
+    <string name="exercise_ask_demo">Ask Vora: “Explain grip variations”</string>
+    <string name="exercise_back">Back to Workout</string>
     <string name="weekly_title">Your Plan</string>
     <string name="weekly_subtitle">Designed around your goals and recovery.</string>
     <string-array name="weekly_days_short">
