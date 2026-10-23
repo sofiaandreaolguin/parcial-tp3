@@ -3,9 +3,12 @@ package com.example.parcial_tp3.ui.screens.profile
 import androidx.annotation.StringRes
 import com.example.parcial_tp3.R
 import com.example.parcial_tp3.domain.model.CoachingStyle
+import com.example.parcial_tp3.domain.model.Diet
 import com.example.parcial_tp3.domain.model.Experience
+import com.example.parcial_tp3.domain.model.Food
 import com.example.parcial_tp3.domain.model.Gender
 import com.example.parcial_tp3.domain.model.Goal
+import com.example.parcial_tp3.domain.model.NutritionPriority
 import com.example.parcial_tp3.domain.model.TrainingDays
 import com.example.parcial_tp3.domain.model.WorkoutType
 
@@ -55,4 +58,31 @@ fun CoachingStyle.label(): Int = when (this) {
     CoachingStyle.SUPPORTIVE -> R.string.coaching_supportive
     CoachingStyle.BALANCED -> R.string.coaching_balanced
     CoachingStyle.DIRECT -> R.string.coaching_direct
+}
+
+@StringRes
+fun Diet.label(): Int = when (this) {
+    Diet.EVERYTHING -> R.string.diet_everything
+    Diet.VEGETARIAN -> R.string.diet_vegetarian
+    Diet.VEGAN -> R.string.diet_vegan
+    Diet.PESCATARIAN -> R.string.diet_pescatarian
+    Diet.OTHER -> R.string.diet_other
+}
+
+@StringRes
+fun Food.label(): Int = when (this) {
+    Food.CHICKEN -> R.string.food_chicken
+    Food.EGGS -> R.string.food_eggs
+    Food.FISH -> R.string.food_fish
+    Food.RICE -> R.string.food_rice
+    Food.PASTA -> R.string.food_pasta
+    Food.GREEK_YOGHURT -> R.string.food_greek_yoghurt
+    Food.VEGETABLES -> R.string.food_vegetables
+    Food.FRUIT -> R.string.food_fruit
+}
+
+@StringRes
+fun NutritionPriority.label(): Int = when (this) {
+    NutritionPriority.HIT_PROTEIN -> R.string.priority_hit_protein
+    NutritionPriority.EAT_CONSISTENTLY -> R.string.priority_eat_consistently
 }
