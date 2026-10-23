@@ -71,20 +71,21 @@ fun VoraCard(
 
 /**
  * Panel verde destacado ("READY FOR TODAY?" de Workout, "VORA knows your goals" de
- * Profile): radio 20, padding 20 y separacion de 16. Adentro, el texto y los iconos salen
+ * Profile): radio 20, padding 20 (16 en el panel del coach de Home) y separacion de 16. Adentro, el texto y los iconos salen
  * blancos solos. Los botones de adentro van en tamano chico ([VoraButtonSize.Small]),
  * separados 8.
  */
 @Composable
 fun VoraPanel(
     modifier: Modifier = Modifier,
+    padding: Dp = VoraTheme.spacing.s20,
     content: @Composable ColumnScope.() -> Unit,
 ) {
     Column(
         modifier = modifier
             .clip(RoundedCornerShape(VoraTheme.radius.r20))
             .background(MaterialTheme.colorScheme.primary)
-            .padding(VoraTheme.spacing.s20),
+            .padding(padding),
         verticalArrangement = Arrangement.spacedBy(VoraTheme.spacing.s16),
     ) {
         CompositionLocalProvider(LocalContentColor provides MaterialTheme.colorScheme.onPrimary) {

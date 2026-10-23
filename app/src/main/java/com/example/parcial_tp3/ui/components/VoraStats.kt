@@ -34,11 +34,13 @@ data class VoraStat(val label: String, val value: String)
  * Todas las columnas tienen el mismo ancho.
  *
  * @param stats las etiquetas llegan de strings.xml ya en mayusculas.
+ * @param alignStart cada columna alineada a la izquierda, a 12 del divisor (Home / 01).
  */
 @Composable
 fun VoraStatRow(
     stats: List<VoraStat>,
     modifier: Modifier = Modifier,
+    alignStart: Boolean = false,
 ) {
     VoraCard(modifier = modifier.fillMaxWidth(), padding = VoraTheme.spacing.s12) {
         Row(verticalAlignment = Alignment.CenterVertically) {
@@ -53,14 +55,15 @@ fun VoraStatRow(
                 Column(
                     modifier = Modifier
                         .weight(1f)
+                        .then(if (alignStart && i > 0) Modifier.padding(start = VoraTheme.spacing.s12) else Modifier)
                         .semantics(mergeDescendants = true) {},
-                    horizontalAlignment = Alignment.CenterHorizontally,
+                    horizontalAlignment = if (alignStart) Alignment.Start else Alignment.CenterHorizontally,
                 ) {
                     Text(
                         text = stat.label,
                         style = MaterialTheme.typography.bodySmall,
                         color = VoraTheme.colors.textMuted,
-                        textAlign = TextAlign.Center,
+                        textAlign = if (alignStart) TextAlign.Start else TextAlign.Center,
                     )
                     Spacer(Modifier.height(VoraTheme.spacing.s2))
                     Text(
@@ -68,7 +71,7 @@ fun VoraStatRow(
                         style = MaterialTheme.typography.titleSmall,
                         fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.onSurface,
-                        textAlign = TextAlign.Center,
+                        textAlign = if (alignStart) TextAlign.Start else TextAlign.Center,
                     )
                 }
             }

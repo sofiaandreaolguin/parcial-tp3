@@ -146,6 +146,21 @@ object VoraSizes {
     /** Foto de Profile / 02 Edit profile, mas grande que en el Dashboard (160 px a 2x). */
     val avatarLarge = 80.dp
 
+    // Home / 01 (nodos del frame 2007:3)
+    /** Foto del saludo y campana: 40. */
+    val avatarSmall = 40.dp
+    /** Orbe del panel del coach. */
+    val orbHome = 36.dp
+    /** Anillo "Daily Goal": 64 con trazo de 5 (medido a 2x). */
+    val ringSmall = 64.dp
+    val ringStrokeSmall = 5.dp
+    /** Barras de proteinas y carbohidratos: 6 (la lamina dibuja 4). */
+    val progressBarThick = 6.dp
+    /** Boton "Start voice session": 43 de alto. */
+    val homeVoiceCta = 43.dp
+    /** Iconos de 16: microfono, destello y calendario. */
+    val iconXSmall = 16.dp
+
     // Acceso (Login - 01 y 02), medidos en docs/figma/Login Flow.png
     /** Circulo blanco de volver y selector de idioma: 40 y 30 de alto (nodos del Figma). */
     val accessBack = 40.dp

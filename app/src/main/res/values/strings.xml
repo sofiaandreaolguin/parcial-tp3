@@ -351,4 +351,40 @@
     <string name="weekly_adjust_body">Tell VORA what changed (e.g., sleep, muscle soreness, or schedule cuts) and your coach will realign the week dynamically.</string>
     <string name="weekly_adjust_tired">I\'m tired today</string>
     <string name="weekly_adjust_move">Move Wed workout to Fri</string>
+
+    <!-- Home / 01 — Dashboard -->
+    <string name="home_greeting_morning">Good morning</string>
+    <string name="home_greeting_afternoon">Good afternoon</string>
+    <string name="home_greeting_evening">Good evening</string>
+    <string name="home_full_name">%1$s %2$s</string>
+    <string name="home_notifications">Notifications</string>
+    <string name="home_ai_online">AI ONLINE</string>
+    <string name="home_quote">\"How can I support your fitness targets today?\"</string>
+    <string name="home_quote_sub">Tap the mic to talk naturally. I\'ll plan or log for you.</string>
+    <string name="home_voice_cta">Start voice session</string>
+    <string name="home_start_my_workout">Start my workout</string>
+    <string name="home_log_breakfast">Log breakfast</string>
+    <string name="home_on_track">You\'re on track. A protein-rich dinner would help you reach your daily target.</string>
+    <string name="home_overview">Today\'s Overview</string>
+    <string name="home_daily_goal">Daily Goal</string>
+    <string name="home_percent">%1$d%%</string>
+    <string name="home_nutrition">Nutrition</string>
+    <string name="home_kcal_goal">\u0020/ %1$s kcal</string>
+    <string name="home_protein">Protein</string>
+    <string name="home_carbs">Carbs</string>
+    <string name="home_grams">%1$dg</string>
+    <string name="home_grams_goal">\u0020/ %1$dg</string>
+    <string name="home_steps">STEPS</string>
+    <string name="home_distance">DISTANCE</string>
+    <string name="home_active_kcal">ACTIVE KCAL</string>
+    <string name="home_distance_value">%1$s km</string>
+    <string name="home_kcal_value">%1$s kcal</string>
+    <string name="home_recommended">RECOMMENDED WORKOUT</string>
+    <string name="home_today">TODAY</string>
+    <string name="home_level_beginner">Beginner</string>
+    <string name="home_level_intermediate">Intermediate</string>
+    <string name="home_level_advanced">Advanced</string>
+    <string name="home_workout_meta">%1$s • %2$s</string>
+    <string name="home_estimated_volume">Estimated Vol: %1$s kg</string>
+    <string name="home_start_workout">Start workout</string>
 </resources>

@@ -99,6 +99,17 @@ object VoraTextStyles {
     /** Nota al pie de Edit profile ("Your information is used..."): 12 Regular. */
     val footnote = manrope(12, FontWeight.Normal)
 
+    // Home / 01 (nodos del frame 2007:3)
+    /** La pregunta del panel del coach: 22 Medium en 30. Con 0.3 de espaciado la primera linea
+     *  mide 248 dp como en el frame y corta en "your / fitness" (sin el, "fitness" entraba arriba). */
+    val homeQuote = manrope(22, FontWeight.Medium, lineHeight = 30).copy(letterSpacing = 0.3.sp)
+    /** "VORA Coach" del panel: 15 Medium. */
+    val homeCoachName = manrope(15, FontWeight.Medium, lineHeight = 19)
+    /** El tamano compacto de VoraButton ("Start my workout" de Home): 13 Medium en 16. */
+    val buttonCompact = manrope(13, FontWeight.Medium, lineHeight = 16)
+    /** Los valores fuertes de Home: "72%" del anillo y "1,420" de nutricion, 16 Bold. */
+    val homeValue = manrope(16, FontWeight.Bold, lineHeight = 22)
+
     // Acceso (Login - 01 y 02), medidos en docs/figma/Login Flow.png contra una captura: los
     // textos de Login van un punto abajo de la lamina (24 en vez de 26, 14 en vez de 15...).
     /** "VORA Coach": 24 Bold apretado (138 dp de ancho en el frame). */
