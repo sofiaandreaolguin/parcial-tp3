@@ -182,6 +182,27 @@ internal fun CatalogoControles() {
             VoraCircleButton(painterResource(R.drawable.ic_send), corto, {}, iconSize = VoraTheme.sizes.iconSmall)
             VoraCircleButton(painterResource(R.drawable.ic_plus), corto, {}, tone = VoraCircleButtonTone.Surface)
         }
+        // El volver de Login: elevado, con accion (SignUp) y sin accion (SignIn)
+        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(VoraTheme.spacing.s12)) {
+            VoraCircleButton(
+                painterResource(R.drawable.ic_back),
+                corto,
+                {},
+                tone = VoraCircleButtonTone.Elevated,
+                size = VoraTheme.sizes.accessBack,
+                iconSize = VoraTheme.sizes.accessBackIcon,
+                touchSize = VoraTheme.sizes.accessBack,
+            )
+            VoraCircleButton(
+                painterResource(R.drawable.ic_back),
+                null,
+                null,
+                tone = VoraCircleButtonTone.Elevated,
+                size = VoraTheme.sizes.accessBack,
+                iconSize = VoraTheme.sizes.accessBackIcon,
+                touchSize = VoraTheme.sizes.accessBack,
+            )
+        }
 
         // Etiqueta de seccion, aviso y conversacion
         VoraSectionLabel(stringResource(R.string.voice_suggested))
