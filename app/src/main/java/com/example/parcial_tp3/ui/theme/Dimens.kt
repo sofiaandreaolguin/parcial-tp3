@@ -156,6 +156,10 @@ object VoraSizes {
     val ringStrokeSmall = 5.dp
     /** Barras de proteinas y carbohidratos: 6 (la lamina dibuja 4). */
     val progressBarThick = 6.dp
+    /** Punto de notificacion sin leer (Home / 02): 6. */
+    val unreadDot = 6.dp
+    /** Caja del icono de una notificacion: 36, con el icono de 16 al centro. */
+    val notificationIconBox = 36.dp
     /** Boton "Start voice session": 43 de alto. */
     val homeVoiceCta = 43.dp
     /** Iconos de 16: microfono, destello y calendario. */
