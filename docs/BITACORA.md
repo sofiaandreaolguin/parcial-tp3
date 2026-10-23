@@ -317,3 +317,26 @@ Formato:
     - los textos del Figma que pueden leerse raros en la demo ("Renews 14 June 2026", "Apple Watch").
 - Evidencia: `docs/evidencia/visual/profile-06-{411dp,360dp}{,-scrolled}.png` (teléfono real). Build y tests unitarios en verde, `control-rapido.sh` sin fallas. Zaki probó en el teléfono que, después de Log out, atrás cierra la app.
 - Commit / PR:
+
+### 2026-10-23 · Sofi · feat(nutrition): maquetar Nutrition / 01 Dashboard según Figma
+- Carril y requisitos: B · UI01, UI03, NAV03 · tarea m, PR 1 de 8
+- Plan aprobado: pantalla 01 con `NutritionViewModel` (compartido con 02) y datos de demostración. Todo texto, incluidos los números de ejemplo, en `strings.xml` y `values-es` como `@StringRes`; solo el avance del anillo y de las barras queda como número en el ViewModel. Voice, Photo, View History, las comidas y "+ Add" de Dinner navegan según NAV03; calendario y Search muestran el aviso demo. Sin Room ni búsqueda de alimentos (tarea l y VC-y).
+- Qué propuso la IA y qué cambiamos:
+  - La IA propuso un componente `VoraScreenHeader` (etiqueta, título de 24 y acción). El grupo prefirió no crearlo todavía y esperar al revisor; no se hizo y el encabezado quedó privado en la pantalla. Se midieron los encabezados de las 37 pantallas: el patrón sirve para Nutrition 01 y 02 y Workout 01 (con otra etiqueta de 13); Nutrition 03, 06, 07 y 08 piden `VoraTopBar` con un parámetro de estilo de título, no un componente nuevo.
+  - Los íconos de cámara y lupa faltaban: Martu no los iba a hacer y se exportaron del Figma como vectores a `res/drawable`.
+  - El revisor visual marcó que el círculo del calendario no se veía (`VoraCircleButton` no tiene el tono blanco con borde). Sofi eligió dibujarlo en la pantalla.
+  - El revisor marcó "Search" cortado a 360 dp. Se pasó el panel y "+ Add" a `VoraButtonSize.Compact`, que no alcanzó, y después se repartió el ancho con pesos distintos (0,93 / 0,98 / 1,09). Los tres botones ya no miden lo mismo como en el Figma.
+  - Se aceptó el aire de más de unos 11 dp en la cabecera de "Today's Meals" (padding del `VoraButton` de texto) y el texto del panel en el 70 % del tema en vez del 60 % del Figma.
+  - Las barras de macros copian lo que dibuja el Figma (77, 72 y 77 de 98), que no es el cociente de los gramos.
+- Revisores: revisor-visual, tres vueltas (la 2.ª quedó CON CAMBIOS por "Search" y la 3.ª APROBADA); revisor-arquitectura CON CAMBIOS con 2 MEDIA; `/code-review` con 8 observaciones sin bloqueo. Sin aplicar, quedan como sugerencias:
+  - la preview construye el `NutritionViewModel` en vez de un estado de demo aparte;
+  - `FontWeight.Bold` a mano en las kcal;
+  - el círculo del calendario mide 40 y el área táctil mínima es 48;
+  - los pesos de los botones están ajustados al inglés a 360 dp y no se probaron en español ni con letra grande;
+  - las barras no coinciden con los gramos que muestran;
+  - `MealRow` y `PendingMealRow` repiten el diseño;
+  - el nombre privado `VoraPanelCard`;
+  - `NutritionViewModel` no se comparte entre 01 y 02 si cada Route lo pide con `hiltViewModel()` (para la tarea l).
+- Pendiente: la lógica de Room (guardar, listar por fecha y total) es la tarea l; ahí los datos de la pantalla pasan de `@StringRes` a valores reales y el estado necesita cargando, vacío y error (RF07). Si el grupo quiere un encabezado general, se decide en este PR.
+- Evidencia: `docs/evidencia/visual/nutrition-01-{411dp,360dp}{,-scroll}.png` (emulador de 1080x2424 a 420 dpi y el mismo con `wm size` a 360 dp). `assembleDebug` y `testDebugUnitTest` en verde, `reglas.sh` exit 0.
+- Commit / PR:
