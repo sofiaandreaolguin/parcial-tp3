@@ -36,6 +36,7 @@ import com.example.parcial_tp3.domain.model.Experience
 import com.example.parcial_tp3.domain.model.Goal
 import com.example.parcial_tp3.domain.model.TrainingDays
 import com.example.parcial_tp3.domain.model.WorkoutType
+import com.example.parcial_tp3.ui.components.VoraAvatar
 import com.example.parcial_tp3.ui.components.VoraButton
 import com.example.parcial_tp3.ui.components.VoraButtonSize
 import com.example.parcial_tp3.ui.components.VoraButtonStyle
@@ -148,7 +149,7 @@ private fun IdentityCard(fullName: String, onEditProfile: () -> Unit) {
             modifier = Modifier.fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            ProfileAvatar()
+            VoraAvatar()
             Spacer(Modifier.height(VoraTheme.spacing.s12))
             Text(
                 text = fullName,

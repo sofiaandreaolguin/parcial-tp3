@@ -24,6 +24,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.parcial_tp3.R
 import com.example.parcial_tp3.domain.model.Gender
+import com.example.parcial_tp3.ui.components.VoraAvatar
 import com.example.parcial_tp3.ui.components.VoraButton
 import com.example.parcial_tp3.ui.components.VoraButtonSize
 import com.example.parcial_tp3.ui.components.VoraButtonStyle
@@ -65,7 +66,7 @@ fun EditProfileScreen(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-                ProfileAvatar(
+                VoraAvatar(
                     modifier = Modifier.padding(top = VoraTheme.spacing.s12),
                     size = VoraTheme.sizes.avatarLarge,
                 )
