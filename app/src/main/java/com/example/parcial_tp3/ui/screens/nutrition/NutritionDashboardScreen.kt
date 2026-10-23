@@ -1,23 +1,31 @@
 package com.example.parcial_tp3.ui.screens.nutrition
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
@@ -27,8 +35,6 @@ import com.example.parcial_tp3.ui.components.VoraButton
 import com.example.parcial_tp3.ui.components.VoraButtonSize
 import com.example.parcial_tp3.ui.components.VoraButtonStyle
 import com.example.parcial_tp3.ui.components.VoraCard
-import com.example.parcial_tp3.ui.components.VoraCircleButton
-import com.example.parcial_tp3.ui.components.VoraCircleButtonTone
 import com.example.parcial_tp3.ui.components.VoraInfoMessage
 import com.example.parcial_tp3.ui.components.VoraOrb
 import com.example.parcial_tp3.ui.components.VoraPanel
@@ -90,11 +96,27 @@ private fun Header(date: String, onCalendar: () -> Unit) {
                 modifier = Modifier.semantics { heading() },
             )
         }
-        VoraCircleButton(
-            icon = painterResource(R.drawable.ic_calendar),
+        CalendarButton(onCalendar)
+    }
+}
+
+// El frame lo dibuja blanco con borde (nodo 1:745); VoraCircleButton no tiene ese tono.
+@Composable
+private fun CalendarButton(onClick: () -> Unit) {
+    Box(
+        modifier = Modifier
+            .size(VoraTheme.sizes.circleButton)
+            .clip(CircleShape)
+            .background(MaterialTheme.colorScheme.surface)
+            .border(VoraTheme.sizes.border, MaterialTheme.colorScheme.outline, CircleShape)
+            .clickable(role = Role.Button, onClick = onClick),
+        contentAlignment = Alignment.Center,
+    ) {
+        Icon(
+            painter = painterResource(R.drawable.ic_calendar),
             contentDescription = stringResource(R.string.nutrition_dash_open_calendar),
-            onClick = onCalendar,
-            tone = VoraCircleButtonTone.Surface,
+            tint = MaterialTheme.colorScheme.primary,
+            modifier = Modifier.size(VoraTheme.sizes.icon),
         )
     }
 }
@@ -260,7 +282,7 @@ private fun PendingMealRow(meal: PendingMealSummary, onAdd: () -> Unit) {
             VoraButton(
                 text = stringResource(R.string.nutrition_dash_add),
                 onClick = onAdd,
-                size = VoraButtonSize.Small,
+                size = VoraButtonSize.Compact,
             )
         }
     }
@@ -291,25 +313,25 @@ private fun VoraPanelCard(onVoice: () -> Unit, onPhoto: () -> Unit, onSearch: ()
                 VoraButton(
                     text = stringResource(R.string.nutrition_dash_voice),
                     onClick = onVoice,
-                    modifier = Modifier.weight(1f),
+                    modifier = Modifier.weight(VOICE_WEIGHT),
                     style = VoraButtonStyle.Cta,
-                    size = VoraButtonSize.Small,
+                    size = VoraButtonSize.Compact,
                     icon = painterResource(R.drawable.ic_mic),
                 )
                 VoraButton(
                     text = stringResource(R.string.nutrition_dash_photo),
                     onClick = onPhoto,
-                    modifier = Modifier.weight(1f),
+                    modifier = Modifier.weight(PHOTO_WEIGHT),
                     style = VoraButtonStyle.SubtleOnDark,
-                    size = VoraButtonSize.Small,
+                    size = VoraButtonSize.Compact,
                     icon = painterResource(R.drawable.ic_camera),
                 )
                 VoraButton(
                     text = stringResource(R.string.nutrition_dash_search),
                     onClick = onSearch,
-                    modifier = Modifier.weight(1f),
+                    modifier = Modifier.weight(SEARCH_WEIGHT),
                     style = VoraButtonStyle.SubtleOnDark,
-                    size = VoraButtonSize.Small,
+                    size = VoraButtonSize.Compact,
                     icon = painterResource(R.drawable.ic_search),
                 )
             }
@@ -333,3 +355,9 @@ private fun NutritionDashboardScreenPreview() {
         )
     }
 }
+
+// Los tres botones del panel miden lo mismo en el Figma, pero con el padding de Compact "Search" se
+// corta a 360 dp. Se reparte el ancho según el largo de cada texto; la suma sigue siendo 3.
+private const val VOICE_WEIGHT = 0.93f
+private const val PHOTO_WEIGHT = 0.98f
+private const val SEARCH_WEIGHT = 1.09f
