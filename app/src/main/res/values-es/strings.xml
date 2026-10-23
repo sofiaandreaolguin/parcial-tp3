@@ -485,4 +485,31 @@
     <string name="nutrition_dash_voice">Voz</string>
     <string name="nutrition_dash_photo">Foto</string>
     <string name="nutrition_dash_search">Buscar</string>
+
+    <!-- Nutrition / 02 — Today's Meals (datos de demostración) -->
+    <string name="nutrition_meals_label">CRONOLOGÍA</string>
+    <string name="nutrition_meals_total">%1$s kcal</string>
+    <string name="nutrition_meals_yoghurt">Yogur griego (0% grasa)</string>
+    <string name="nutrition_meals_yoghurt_qty">200g</string>
+    <string name="nutrition_meals_yoghurt_kcal">150 kcal</string>
+    <string name="nutrition_meals_blueberries">Arándanos frescos</string>
+    <string name="nutrition_meals_blueberries_qty">75g</string>
+    <string name="nutrition_meals_blueberries_kcal">60 kcal</string>
+    <string name="nutrition_meals_granola">Granola orgánica con miel</string>
+    <string name="nutrition_meals_granola_qty">50g</string>
+    <string name="nutrition_meals_granola_kcal">210 kcal</string>
+    <string name="nutrition_meals_chicken">Pechuga de pollo a la plancha</string>
+    <string name="nutrition_meals_chicken_qty">180g</string>
+    <string name="nutrition_meals_chicken_kcal">280 kcal</string>
+    <string name="nutrition_meals_rice">Arroz basmati</string>
+    <string name="nutrition_meals_rice_qty">150g</string>
+    <string name="nutrition_meals_rice_kcal">190 kcal</string>
+    <string name="nutrition_meals_vegetables">Verduras al vapor</string>
+    <string name="nutrition_meals_vegetables_qty">100g</string>
+    <string name="nutrition_meals_vegetables_kcal">50 kcal</string>
+    <string name="nutrition_meals_shake">Batido de proteína</string>
+    <string name="nutrition_meals_shake_qty">350ml (con agua)</string>
+    <string name="nutrition_meals_shake_kcal">240 kcal</string>
+    <string name="nutrition_meals_dinner_empty">Todavía no registraste la cena</string>
+    <string name="nutrition_meals_add_dinner">+ Agregar cena</string>
 </resources>

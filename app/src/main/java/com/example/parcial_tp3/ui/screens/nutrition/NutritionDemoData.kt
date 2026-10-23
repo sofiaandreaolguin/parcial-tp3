@@ -57,6 +57,64 @@ fun nutritionDemoState() = NutritionUiState(
         name = R.string.nutrition_dash_dinner,
         hint = R.string.nutrition_dash_dinner_empty,
     ),
+    loggedMeals = listOf(
+        LoggedMeal(
+            1,
+            R.string.nutrition_dash_breakfast,
+            R.string.nutrition_dash_breakfast_kcal,
+            listOf(
+                IngredientSummary(
+                    R.string.nutrition_meals_yoghurt,
+                    R.string.nutrition_meals_yoghurt_qty,
+                    R.string.nutrition_meals_yoghurt_kcal,
+                ),
+                IngredientSummary(
+                    R.string.nutrition_meals_blueberries,
+                    R.string.nutrition_meals_blueberries_qty,
+                    R.string.nutrition_meals_blueberries_kcal,
+                ),
+                IngredientSummary(
+                    R.string.nutrition_meals_granola,
+                    R.string.nutrition_meals_granola_qty,
+                    R.string.nutrition_meals_granola_kcal,
+                ),
+            ),
+        ),
+        LoggedMeal(
+            2,
+            R.string.nutrition_dash_lunch,
+            R.string.nutrition_dash_lunch_kcal,
+            listOf(
+                IngredientSummary(
+                    R.string.nutrition_meals_chicken,
+                    R.string.nutrition_meals_chicken_qty,
+                    R.string.nutrition_meals_chicken_kcal,
+                ),
+                IngredientSummary(
+                    R.string.nutrition_meals_rice,
+                    R.string.nutrition_meals_rice_qty,
+                    R.string.nutrition_meals_rice_kcal,
+                ),
+                IngredientSummary(
+                    R.string.nutrition_meals_vegetables,
+                    R.string.nutrition_meals_vegetables_qty,
+                    R.string.nutrition_meals_vegetables_kcal,
+                ),
+            ),
+        ),
+        LoggedMeal(
+            3,
+            R.string.nutrition_dash_snack,
+            R.string.nutrition_dash_snack_kcal,
+            listOf(
+                IngredientSummary(
+                    R.string.nutrition_meals_shake,
+                    R.string.nutrition_meals_shake_qty,
+                    R.string.nutrition_meals_shake_kcal,
+                ),
+            ),
+        ),
+    ),
 )
 
 // 1.420 de 2.100 kcal.

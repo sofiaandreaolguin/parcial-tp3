@@ -16,6 +16,7 @@ data class NutritionUiState(
     @StringRes val advice: Int,
     val meals: List<MealSummary>,
     val pendingMeal: PendingMealSummary,
+    val loggedMeals: List<LoggedMeal>,
 )
 
 enum class MacroKind { PROTEIN, CARBS, FAT }
@@ -39,4 +40,18 @@ data class MealSummary(
 data class PendingMealSummary(
     @StringRes val name: Int,
     @StringRes val hint: Int,
+)
+
+/** Una comida registrada de Nutrition / 02: mismo id y mismos kcal que su fila de [MealSummary]. */
+data class LoggedMeal(
+    val id: Long,
+    @StringRes val name: Int,
+    @StringRes val kcal: Int,
+    val ingredients: List<IngredientSummary>,
+)
+
+data class IngredientSummary(
+    @StringRes val name: Int,
+    @StringRes val quantity: Int,
+    @StringRes val kcal: Int,
 )
