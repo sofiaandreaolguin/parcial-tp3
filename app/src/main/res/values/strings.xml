@@ -508,6 +508,33 @@
     <string name="nutrition_dash_photo">Photo</string>
     <string name="nutrition_dash_search">Search</string>
 
+    <!-- Nutrition / 02 — Today's Meals (datos de demostración) -->
+    <string name="nutrition_meals_label">TIMELINE</string>
+    <string name="nutrition_meals_total">%1$s kcal</string>
+    <string name="nutrition_meals_yoghurt">Greek Yoghurt (0% Fat)</string>
+    <string name="nutrition_meals_yoghurt_qty">200g</string>
+    <string name="nutrition_meals_yoghurt_kcal">150 kcal</string>
+    <string name="nutrition_meals_blueberries">Fresh Blueberries</string>
+    <string name="nutrition_meals_blueberries_qty">75g</string>
+    <string name="nutrition_meals_blueberries_kcal">60 kcal</string>
+    <string name="nutrition_meals_granola">Organic Honey Granola</string>
+    <string name="nutrition_meals_granola_qty">50g</string>
+    <string name="nutrition_meals_granola_kcal">210 kcal</string>
+    <string name="nutrition_meals_chicken">Grilled Chicken Breast</string>
+    <string name="nutrition_meals_chicken_qty">180g</string>
+    <string name="nutrition_meals_chicken_kcal">280 kcal</string>
+    <string name="nutrition_meals_rice">Basmati Rice</string>
+    <string name="nutrition_meals_rice_qty">150g</string>
+    <string name="nutrition_meals_rice_kcal">190 kcal</string>
+    <string name="nutrition_meals_vegetables">Mixed Steamed Vegetables</string>
+    <string name="nutrition_meals_vegetables_qty">100g</string>
+    <string name="nutrition_meals_vegetables_kcal">50 kcal</string>
+    <string name="nutrition_meals_shake">Whey Protein Shake</string>
+    <string name="nutrition_meals_shake_qty">350ml (water)</string>
+    <string name="nutrition_meals_shake_kcal">240 kcal</string>
+    <string name="nutrition_meals_dinner_empty">Dinner is not logged yet</string>
+    <string name="nutrition_meals_add_dinner">+ Add Dinner</string>
+
     <!-- Home / 02 — Notifications -->
     <string name="notifications_title">Notifications</string>
     <string name="notifications_mark_all">Mark all as read</string>
