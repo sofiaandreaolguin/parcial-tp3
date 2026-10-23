@@ -11,6 +11,7 @@ import com.example.parcial_tp3.R
 import com.example.parcial_tp3.ui.components.PantallaVacia
 import com.example.parcial_tp3.ui.screens.workout.WeeklyPlanRoute
 import com.example.parcial_tp3.ui.screens.workout.WorkoutDashboardRoute
+import com.example.parcial_tp3.ui.screens.workout.WorkoutDetailsRoute
 
 /**
  * Entrenamiento: 7 pantallas. 01 y 02 con barra, 03 a 07 encima.
@@ -38,9 +39,10 @@ fun NavGraphBuilder.workoutGraph(nav: NavController) {
             route = Rutas.WORKOUT_DETAILS,
             arguments = listOf(navArgument(Rutas.ARG_WORKOUT_ID) { type = NavType.StringType }),
         ) {
-            PantallaVacia(
-                nombre = stringResource(R.string.pant_workout_03),
-                onVolver = { nav.popBackStack() },
+            WorkoutDetailsRoute(
+                onBack = { nav.popBackStack() },
+                onExercise = { id, exerciseId -> nav.navigate(Rutas.exerciseDetails(id, exerciseId)) },
+                onStartWorkout = { id -> nav.navigate(Rutas.preWorkout(id)) },
             )
         }
 

@@ -343,6 +343,22 @@
     <string name="workout_level_beginner">Principiante</string>
     <string name="workout_level_intermediate">Intermedio</string>
     <string name="workout_level_advanced">Avanzado</string>
+    <string name="details_title">Resumen del entrenamiento</string>
+    <string name="details_minutes">%1$d min</string>
+    <plurals name="details_exercises">
+        <item quantity="one">%1$d ejercicio</item>
+        <item quantity="other">%1$d ejercicios</item>
+    </plurals>
+    <string name="details_separator">•</string>
+    <string name="details_focus">Foco: %1$s</string>
+    <string name="details_focus_separator">" • "</string>
+    <string name="details_coach_note">NOTA DEL COACH VORA</string>
+    <string name="details_coach_note_demo">Según tu última sesión, VORA sugiere mantener los mismos pesos y enfocarte en repeticiones controladas hoy.</string>
+    <string name="details_exercise_number">%1$02d</string>
+    <string name="details_exercise_summary">%1$d × %2$d • Descanso %3$d s</string>
+    <string name="details_edit">Editar entrenamiento</string>
+    <string name="details_loading">Cargando entrenamiento</string>
+    <string name="details_error">No pudimos cargar este entrenamiento.</string>
     <string name="weekly_title">Tu plan</string>
     <string name="weekly_subtitle">Pensado según tus objetivos y tu recuperación.</string>
     <string-array name="weekly_days_short">

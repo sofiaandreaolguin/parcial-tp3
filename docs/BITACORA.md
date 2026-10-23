@@ -285,4 +285,16 @@ Formato:
     - `ProfileSectionLabel` lleva el padding en el `modifier` por defecto;
     - en español, "VORA Coach" convive con "Coach VORA" de Voice.
 - Evidencia: `docs/evidencia/visual/profile-05-{411dp,360dp}{,-scrolled}.png` (teléfono real). Build y tests unitarios en verde, `control-rapido.sh` sin fallas.
+
+### 2026-10-23 · Hector · feat(workout): maquetar Workout / 03 Workout Details según Figma
+- Carril y requisitos: B · UI01, UI03, NAV03, NAV04, RF01 (muestra el detalle de demostración) · tarea k, PR 4 de 10
+- Plan aprobado: `WorkoutDetailsScreen` y `WorkoutDetailsRoute` sobre el `WorkoutDetailViewModel` del PR #24, textos en los dos idiomas y la Route en lugar de `PantallaVacia` en `WorkoutNavGraph`. Fila → `exercise_details`, Start Workout → `pre_workout`, Edit workout → aviso demo.
+- Qué propuso la IA y qué cambiamos:
+  - El conector no tenía acceso al Figma del grupo; Hector pasó una copia y las medidas salieron del nodo 1:424.
+  - La IA propuso sumar al tema un estilo de 26 SemiBold y un botón de borde verde de 44, como en 02. Hector decidió no calcar al 100 % y usar lo que ya hay: título 26 Bold, botones Large de 48 y "Edit workout" con el Outlined gris. Las diferencias quedan anotadas en el KDoc y pedidas a Martu.
+  - Los datos de la pantalla son los de la demo (copiados del mock), no los del dibujo: con el detalle real no cambia lo que se ve.
+  - `LoadingCard` de 01 ahora recibe el texto, para decir "Loading workout".
+- Revisores: revisor-visual CON CAMBIOS (texto y fondo de "Edit workout", KDoc incompleto: se anotaron) y APROBADA en la segunda vuelta; revisor-arquitectura sin nada que bloquee (las dos ALTA: el reintento es de RF05 y quedó pendiente; la tipografía armada con `.copy` se cambió por estilos del tema); `/code-review` con 3 arreglos (línea de datos con `FlowRow`, separadores sin TalkBack, Focus oculto si no hay ejercicios) y el doble toque como sugerencia.
+- Pendiente para Martu: botón con borde y texto verdes sin relleno, botón de 44 con 15 SemiBold, título 26 SemiBold, número 14 Bold y nombre de fila 15 SemiBold, y un tamaño `exerciseBadge` de 32 (nodos 1:443, 1:460, 1:506 y 1:508).
+- Evidencia: `docs/evidencia/visual/workout-03-{394dp,360dp}.png` (Pixel 10 Pro, con la captura del emulador porque `adb screencap` sale negro en Android 17). `testDebugUnitTest` y `assembleDebug` en verde, `reglas.sh` sin fallas. En el emulador: Workout → Details abre 03 con "Fuerza inicial".
 - Commit / PR:
