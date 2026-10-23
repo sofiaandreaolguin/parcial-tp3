@@ -218,7 +218,7 @@ private fun TodayPanel(
 }
 
 @Composable
-private fun LoadingCard() {
+internal fun LoadingCard() {
     VoraCard(modifier = Modifier.fillMaxWidth()) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
