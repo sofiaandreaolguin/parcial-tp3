@@ -340,3 +340,17 @@ Formato:
 - Pendiente: la lógica de Room (guardar, listar por fecha y total) es la tarea l; ahí los datos de la pantalla pasan de `@StringRes` a valores reales y el estado necesita cargando, vacío y error (RF07). Si el grupo quiere un encabezado general, se decide en este PR.
 - Evidencia: `docs/evidencia/visual/nutrition-01-{411dp,360dp}{,-scroll}.png` (emulador de 1080x2424 a 420 dpi y el mismo con `wm size` a 360 dp). `assembleDebug` y `testDebugUnitTest` en verde, `reglas.sh` exit 0.
 - Commit / PR:
+
+### 2026-10-23 · Martu · feat(home): maquetar Home / 02 Notifications según Figma
+- Carril y requisitos: B (pantalla) · UI01, UI02, UI03, NAV02, NAV03, NAV04, RF07, RF08 · tarea VC-n (4 de 4, cierra la tarea)
+- Plan aprobado: PR 4 de 4 de la tarea n, en una rama que sale de `main`. Cuatro notificaciones de demostración agrupadas en hoy y ayer, "Mark all as read" y cada una a su destino de `PANTALLAS.md`.
+- Qué propuso la IA y qué cambiamos:
+  - Las medidas salieron de los nodos del frame Home / 02 y los colores de la imagen exportada (lámina). Se reusó `VoraCard`; se sumaron dos estilos, dos medidas y el ícono de la llama (la mancuerna y la manzana son los de la barra).
+  - Las tarjetas salían 1 a 2.5 dp más altas que en el Figma y la última quedaba 8 dp más abajo. Medido línea por línea, la fila del remitente ocupa más en Compose: con 2 (no 4) hasta el título, las cuatro caen a ±3 dp.
+  - El título de cada tarjeta salía más liviano y más ancho que en el frame (234 contra 227 dp): pasó a SemiBold con −0.35 de espaciado y mide 229.
+  - "Protein target…" usaba la navegación de pestaña y atrás volvía a Home; ahora usa navegación común y vuelve a Notifications, como "Log breakfast" de Home (anotado en `PANTALLAS.md`).
+  - Abrir una notificación la marca como leída; la de la racha no tiene destino y no se puede tocar.
+- Revisores: `revisor-visual` CON CAMBIOS (peso y ancho del título: corregido; la sección de ayer queda 3 dp abajo y el destello del coach es más fino que el del frame: quedan); `revisor-requisitos` y `revisor-arquitectura` sin nada que bloquee. Se aplicaron: datos de demostración en `NotificationsDemoData` (la preview ya no crea el ViewModel), "Unread" como estado de la tarjeta para TalkBack, minutos para lo de menos de una hora, `MINUTES_PER_HOUR` y el KDoc del ViewModel con lo que de verdad dura el estado de leída. `/code-review`: 3 corregidos, 1 que queda (la notificación dice "Upper Body Strength" y `w01` en la API es "Fuerza inicial", igual que en Home).
+- Pendiente: `NotificationsViewModelTest` (carril C): estado inicial con dos sin leer, `onOpen` marca solo esa, `markAllAsRead` y la partición hoy / ayer.
+- Evidencia: `assembleDebug` y `testDebugUnitTest` en verde, `control-rapido.sh` sin fallas. Capturas en `docs/evidencia/visual/home-02-{394dp,360dp}.png`. Tarjetas contra los nodos a ±3 dp. Recorrido: dos sin leer al entrar; la del coach va a `weekly_review` y queda leída; "Upper Body Strength" abre `workout_details/w01`; "Protein target" abre Nutrition / 01 y atrás vuelve; la racha no navega; "Mark all as read" deja cero sin leer y sobrevive a la rotación; atrás vuelve a Home.
+- Commit / PR:
