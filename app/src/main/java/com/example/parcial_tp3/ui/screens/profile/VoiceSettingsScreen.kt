@@ -26,6 +26,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.parcial_tp3.R
@@ -80,28 +81,35 @@ fun VoiceSettingsScreen(
             )
             ActiveVoiceCard(onPreview = onDemo)
             ProfileSectionLabel(stringResource(R.string.coach_speaking))
-            VoraCard(modifier = Modifier.fillMaxWidth()) {
+            VoraCard(modifier = Modifier.fillMaxWidth(), padding = VoraTheme.spacing.s6) {
                 ToggleRow(stringResource(R.string.coach_speak_aloud), state.speakAloud, onDemo)
                 ToggleRow(stringResource(R.string.coach_autoplay), state.autoPlay, onDemo)
                 ToggleRow(stringResource(R.string.coach_interruptions), state.allowInterruptions, onDemo)
                 Text(
                     text = stringResource(R.string.coach_interruptions_hint),
-                    style = MaterialTheme.typography.bodySmall,
+                    style = VoraTheme.text.footnote,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
-                    modifier = Modifier.padding(top = VoraTheme.spacing.s8),
+                    modifier = Modifier.padding(start = VoraTheme.spacing.s6, end = VoraTheme.spacing.s6, top = VoraTheme.spacing.s6),
                 )
             }
             ProfileSectionLabel(stringResource(R.string.coach_response))
-            ResponseStyle.entries.forEach { style ->
-                VoraOptionCard(
-                    title = stringResource(style.label()),
-                    selected = style == state.responseStyle,
-                    onClick = onDemo,
-                    subtitle = stringResource(style.subtitle()),
-                    role = Role.RadioButton,
-                )
+            Column(verticalArrangement = Arrangement.spacedBy(VoraTheme.spacing.s8)) {
+                ResponseStyle.entries.forEach { style ->
+                    VoraOptionCard(
+                        title = stringResource(style.label()),
+                        selected = style == state.responseStyle,
+                        onClick = onDemo,
+                        subtitle = stringResource(style.subtitle()),
+                        role = Role.RadioButton,
+                    )
+                }
             }
-            VoraCard(modifier = Modifier.fillMaxWidth()) {
+            VoraCard(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = VoraTheme.spacing.s8),
+                padding = VoraTheme.spacing.s6,
+            ) {
                 ToggleRow(stringResource(R.string.coach_voice_feedback), state.voiceFeedback, onDemo)
                 ToggleRow(stringResource(R.string.coach_haptic), state.hapticFeedback, onDemo)
             }
@@ -112,7 +120,11 @@ fun VoiceSettingsScreen(
 
 @Composable
 private fun ActiveVoiceCard(onPreview: () -> Unit) {
-    VoraCard(modifier = Modifier.fillMaxWidth()) {
+    VoraCard(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = VoraTheme.spacing.s8),
+    ) {
         ProfileSectionLabel(stringResource(R.string.coach_active_voice), modifier = Modifier)
         Row(
             modifier = Modifier.padding(top = VoraTheme.spacing.s12),
@@ -149,14 +161,17 @@ private fun ActiveVoiceCard(onPreview: () -> Unit) {
     }
 }
 
-/** Fila con interruptor: se toca la fila entera, el interruptor solo dibuja (KDoc de VoraToggle). */
+/**
+ * Fila con interruptor: se toca la fila entera, el interruptor solo dibuja (KDoc de VoraToggle).
+ * 36 de alto y 12 al borde con el padding 6 de la tarjeta, como en el Figma (no llega a 48).
+ */
 @Composable
 private fun ToggleRow(text: String, checked: Boolean, onToggle: () -> Unit) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .toggleable(value = checked, role = Role.Switch, onValueChange = { onToggle() })
-            .padding(vertical = VoraTheme.spacing.s6),
+            .padding(VoraTheme.spacing.s6),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Text(
@@ -175,6 +190,7 @@ private fun ControlCard(onPrivacy: () -> Unit) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
+            .padding(top = VoraTheme.spacing.s8)
             .background(VoraTheme.colors.mintTranslucent, shape)
             .border(VoraTheme.sizes.border, VoraTheme.colors.mintBorderSoft, shape)
             .padding(VoraTheme.spacing.s16),
@@ -182,7 +198,8 @@ private fun ControlCard(onPrivacy: () -> Unit) {
     ) {
         Text(
             text = stringResource(R.string.coach_control_title),
-            style = MaterialTheme.typography.titleSmall,
+            style = MaterialTheme.typography.bodyLarge,
+            fontWeight = FontWeight.SemiBold,
             color = MaterialTheme.colorScheme.onSurface,
         )
         Text(
