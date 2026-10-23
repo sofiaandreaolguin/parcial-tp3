@@ -134,6 +134,17 @@ val RUTAS_CON_BARRA: Set<String> = setOf(
 )
 
 /**
+ * Las que se pintan por detras de las barras del sistema (sin el padding del Scaffold) y se
+ * encargan de sus propios margenes con statusBarsPadding y navigationBarsPadding.
+ * SignUp entra cuando deje de ser PantallaVacia.
+ */
+val RUTAS_A_SANGRE: Set<String> = setOf(
+    Rutas.SIGN_IN,
+    Rutas.VOICE,
+    Rutas.CONVERSATION,
+)
+
+/**
  * Las que se abren encima: sin barra, con volver o cerrar propio.
  *
  * Son 15 rutas para 19 frames, porque los 5 estados de Voice comparten [Rutas.VOICE].

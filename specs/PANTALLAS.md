@@ -99,7 +99,7 @@ El estado previsto lo confirma el rol dueño del flujo al implementar la pantall
 | 2 | Login - 02 — SignUp | `sign_up` | Acceso | `AuthViewModel` | Demostración | Acceso |
 
 - **Entrada:** el `NavHost` arranca en `access_graph`, que a su vez arranca en `sign_in`. El `startDestination` del `NavHost` tiene que ser un **hijo directo** del grafo raíz: poner `sign_in` directo revienta en cuanto abrís la app.
-- **Salida:** al entrar se navega a `home_dashboard` con `popUpTo(sign_in) { inclusive = true }`, así el botón atrás del sistema no vuelve al login (NAV02).
+- **Salida:** al entrar se navega a `home_dashboard` con `popUpTo(access_graph) { inclusive = true }`, así el botón atrás del sistema no vuelve al login (NAV02). Se saca **todo el grafo** y no solo `sign_in`: desde SignUp el login queda debajo, y además se libera el `AuthViewModel`, que es del grafo (acordado el 22/10).
 - Sin Firebase es un acceso de demostración: valida el formulario y entra. Firebase es extra; si se hace, esta fila pasa a **Funcional**.
 - Ojo visual: acá el botón es **lima sobre tarjeta clara**, distinto de la lámina de componentes.
 
@@ -438,7 +438,7 @@ Son las que **no puede cerrar una sola persona**: necesitan algo de otra zona. A
 | Voice / 05 — Conversation | Coach y Progress | Workout (solo si se hace EXT01: Retrofit y Room) | Únicamente si se encara el extra: endpoint del coach y tabla del historial |
 | Progress / 03 y 04 | Coach y Progress | Workout y Nutrition (forma de los modelos) | Que los datos de ejemplo usen los modelos `Workout` y `Meal`, para poder conectarlos después si sobra tiempo |
 | Profile / 06 — Settings | Home y Profile | Navegación e inventario | Qué opción abre pantalla, cuál abre diálogo y cuál solo cambia un ajuste (NAV03) |
-| De Login 01 a Home | Acceso | Navegación e inventario | El `popUpTo(sign_in) { inclusive = true }` lo pone el grafo de acceso |
+| De Login 01 a Home | Acceso | Navegación e inventario | El `popUpTo(access_graph) { inclusive = true }` lo pone el grafo de acceso (`entrarAHome()`) |
 
 ---
 

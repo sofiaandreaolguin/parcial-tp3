@@ -199,4 +199,29 @@
     <string name="conversation_send">Send</string>
     <string name="conversation_attach">Add</string>
     <string name="conversation_mic">Voice input</string>
+
+    <!-- Acceso (Login - 01 y 02) -->
+    <string name="access_brand">VORA Coach</string>
+    <string name="access_tagline">ADAPTIVE INTELLIGENCE</string>
+    <string name="access_badge_ai">AI</string>
+    <string name="access_language">EN</string>
+    <string name="access_email_label">Email Address</string>
+    <string name="access_email_placeholder">alex.morgan@email.com</string>
+    <string name="access_password_label">Password</string>
+    <string name="access_password_placeholder" translatable="false">••••••••••••</string>
+    <string name="access_show_password">Show password</string>
+    <string name="access_hide_password">Hide password</string>
+    <string name="access_apple">Continue with Apple</string>
+    <string name="access_google">Continue with Google</string>
+    <string name="access_biometric">Sign in with biometrics</string>
+    <string name="access_error_email">Enter a valid email address</string>
+    <string name="access_error_password">Use at least 8 characters</string>
+    <string name="access_error_name">Enter your full name</string>
+    <string name="sign_in_subtitle">Your strength, nutrition, and progress plan in one place.</string>
+    <string name="sign_in_forgot">Forgot your password?</string>
+    <string name="sign_in_action">Sign In</string>
+    <string name="sign_in_or_continue">Or continue with</string>
+    <string name="sign_in_encrypted">End-to-end encrypted biometric sign-in</string>
+    <string name="sign_in_no_account">Don\'t have an account?</string>
+    <string name="sign_in_sign_up_link">Sign up here</string>
 </resources>
