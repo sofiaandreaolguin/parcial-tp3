@@ -340,23 +340,61 @@ Formato:
 - Pendiente: la lógica de Room (guardar, listar por fecha y total) es la tarea l; ahí los datos de la pantalla pasan de `@StringRes` a valores reales y el estado necesita cargando, vacío y error (RF07). Si el grupo quiere un encabezado general, se decide en este PR.
 - Evidencia: `docs/evidencia/visual/nutrition-01-{411dp,360dp}{,-scroll}.png` (emulador de 1080x2424 a 420 dpi y el mismo con `wm size` a 360 dp). `assembleDebug` y `testDebugUnitTest` en verde, `reglas.sh` exit 0.
 - Commit / PR:
-
 ### 2026-10-23 · Sofi · feat(nutrition): maquetar Nutrition / 02 Today's Meals según Figma
 - Carril y requisitos: B · UI01, UI03, NAV03 · tarea m, PR 2 de 8
 - Plan aprobado: pantalla 02 con el mismo `NutritionViewModel` que el Dashboard; el estado suma solo las comidas con sus ingredientes (gramos y kcal), con los mismos ids (1, 2 y 3) y las mismas kcal que las filas del Dashboard. Tocar una comida abre `meal_details/{id}` y "+ Add Dinner" abre `add_food`. Con scroll (UI03); la barra la pone el Scaffold.
 - Qué propuso la IA y qué cambiamos:
-  - La tarjeta punteada "Dinner is not logged yet" no tiene componente (`VoraCard` dibuja su borde sólido por dentro y no se le puede cambiar desde afuera). La IA frenó y planteó pedírselo a Martu o dibujarla en la pantalla. Sofi eligió dibujarla en la pantalla, como `dashedBorder` privado, porque la tarea VC-r (estados de carga, vacío y error de las consultas remotas) no la cubre: es un elemento del estado normal del frame, no el vacío de una consulta.
-  - Se midió el borde sobre el nodo 1:925: 4 px de trazo y 4 de hueco, 1 px, color `outline`. Las tres tarjetas con comida son sólidas; solo la de la cena vacía es discontinua.
-  - La píldora "1,420 kcal" se rellena en el Figma con verde al 8 %; sobre el fondo da `#E5E9E6`, que es el `outline` del tema, así que se usó ese token en vez de inventar un alfa.
-  - El mock del Figma no cierra: Breakfast 420 + Lunch 520 + Snack 240 suman 1.180, y el total que dibuja el Figma (Dashboard y 02) es 1,420. Se dejó 1,420 como pidió el grupo; con Room el total será la suma real.
-  - `lintDebug` (que el PR 1 nos mostró que hay que correr) marcó un error propio: "Yogur griego (0% grasa)" se leía como un formato `% g`. Se marcó esa string con `formatted="false"`.
+    - La tarjeta punteada "Dinner is not logged yet" no tiene componente (`VoraCard` dibuja su borde sólido por dentro y no se le puede cambiar desde afuera). La IA frenó y planteó pedírselo a Martu o dibujarla en la pantalla. Sofi eligió dibujarla en la pantalla, como `dashedBorder` privado, porque la tarea VC-r (estados de carga, vacío y error de las consultas remotas) no la cubre: es un elemento del estado normal del frame, no el vacío de una consulta.
+    - Se midió el borde sobre el nodo 1:925: 4 px de trazo y 4 de hueco, 1 px, color `outline`. Las tres tarjetas con comida son sólidas; solo la de la cena vacía es discontinua.
+    - La píldora "1,420 kcal" se rellena en el Figma con verde al 8 %; sobre el fondo da `#E5E9E6`, que es el `outline` del tema, así que se usó ese token en vez de inventar un alfa.
+    - El mock del Figma no cierra: Breakfast 420 + Lunch 520 + Snack 240 suman 1.180, y el total que dibuja el Figma (Dashboard y 02) es 1,420. Se dejó 1,420 como pidió el grupo; con Room el total será la suma real.
+    - `lintDebug` (que el PR 1 nos mostró que hay que correr) marcó un error propio: "Yogur griego (0% grasa)" se leía como un formato `% g`. Se marcó esa string con `formatted="false"`.
 - Revisores: revisor-visual APROBADO en la primera vuelta; revisor-arquitectura sin BLOQUEA ni CRÍTICA; `/code-review` sin bloqueos. Sin aplicar, quedan como sugerencias:
-  - `HorizontalDivider` sin `thickness = VoraTheme.sizes.border`;
-  - la tarjeta de la cena se dibuja siempre: con Room tiene que mostrarse solo si no hay una cena registrada;
-  - `caloriesConsumed` es un `@StringRes` de demostración: con Room pasa a ser un número y el total sale de sumar las comidas;
-  - `dashedBorder` es privado de esta pantalla: si otra pantalla necesita un estado vacío igual, conviene subirlo a `ui/components` (Martu);
-  - el comentario que explicaba por qué la píldora usa `outline` se sacó a pedido de Sofi, aunque el revisor y `/code-review` lo marcaron: el motivo (verde al 8 % sobre el fondo da `#E5E9E6`) queda en esta entrada;
-  - el texto del Figma dice "Today's Meals" con apóstrofo recto en el nodo 1:869; el render lo muestra curvo, no es una diferencia;
-  - el listado por fecha de RF04 no tiene frame: hoy la pantalla muestra solo hoy (tarea l).
+    - `HorizontalDivider` sin `thickness = VoraTheme.sizes.border`;
+    - la tarjeta de la cena se dibuja siempre: con Room tiene que mostrarse solo si no hay una cena registrada;
+    - `caloriesConsumed` es un `@StringRes` de demostración: con Room pasa a ser un número y el total sale de sumar las comidas;
+    - `dashedBorder` es privado de esta pantalla: si otra pantalla necesita un estado vacío igual, conviene subirlo a `ui/components` (Martu);
+    - el comentario que explicaba por qué la píldora usa `outline` se sacó a pedido de Sofi, aunque el revisor y `/code-review` lo marcaron: el motivo (verde al 8 % sobre el fondo da `#E5E9E6`) queda en esta entrada;
+    - el texto del Figma dice "Today's Meals" con apóstrofo recto en el nodo 1:869; el render lo muestra curvo, no es una diferencia;
+    - el listado por fecha de RF04 no tiene frame: hoy la pantalla muestra solo hoy (tarea l).
 - Evidencia: `docs/evidencia/visual/nutrition-02-{411dp,360dp}{,-scroll}.png` (emulador de 1080x2424 a 420 dpi y el mismo con `wm size` a 360 dp; al final se devolvió el tamaño). `assembleDebug`, `testDebugUnitTest` y `lintDebug` (0 errores) en verde, `reglas.sh` exit 0. A mano: una comida abre Meal Details, "+ Add Dinner" abre Add Food y atrás vuelve a 02.
+- Commit / PR:
+
+
+### 2026-10-23 · Martu · refactor(components): armazón, pie y botón de volver compartidos en Acceso
+- Carril y requisitos: B (componentes) · UI02 · tarea VC-n
+- Plan aprobado: aplicar las tres sugerencias que quedaron de `/code-review` en SignIn y SignUp, sin cambiar nada visible, en un PR chico después de que se unieran #20 y #23.
+- Qué propuso la IA y qué cambiamos:
+  - `VoraAccessScaffold` (fondo hasta el borde, márgenes de las barras y del teclado, scroll y pie abajo) y `VoraAccessFooterLink` ("Don't have an account? Sign up here" y "Already have an account? Sign In") reemplazan la estructura que SignIn y SignUp repetían.
+  - El círculo de volver pasa a ser `VoraCircleButton` con un tono nuevo, `Elevated` (blanco con sombra del color del ícono), `tint` opcional y `onClick` que puede ser `null` (la flecha de SignIn se dibuja sin acción y TalkBack no la anuncia como botón).
+  - En la primera versión la sombra desaparecía: `VoraCircleButton` recorta el área táctil en círculo para el efecto del toque, y ese recorte se comía la sombra. Se vio comparando las capturas píxel a píxel; para el tono `Elevated` el toque usa un `ripple` redondo sin recortar y los demás tonos siguen igual.
+- Revisores: `revisor-arquitectura` sin nada que bloquee; confirmó que los usos de `VoraCircleButton` en Voice y en el chat no cambian (pasan `onClick` y no usan `Elevated`). Se aplicaron sus sugerencias: un solo token para la sombra del volver (`buttonShadow`, había quedado repetido con `accessShadow`), se sacó el ancho de flecha que quedó sin uso, el tono `Elevated` en la preview y en el catálogo (con y sin acción) y nombres claros en vez de `(f, t)`. Quedó como estaba el área táctil de 40 del volver (igual que antes; agrandarla corre el círculo). `/code-review`: se actualizó el KDoc de `VoraCircleButton` (uso en Login y diferencia entre `onClick = null` y `enabled = false`); quedan como sugerencia que `iconSize` sea cuadrado (de ahí el medio píxel de la flecha). Las capturas se repitieron después de estos cambios y siguen idénticas.
+- Evidencia: `assembleDebug` y `testDebugUnitTest` en verde, `control-rapido.sh` sin fallas. Capturas de SignIn y SignUp en 394 y 360 dp, con y sin scroll, antes (en `main`) y después: idénticas debajo de la barra de estado, salvo 229 píxeles de antialiasing en la flecha de volver a 394 dp (el ícono pasó de una caja de 10 × 14 a una de 14 × 14 con la misma escala; a 360 dp sale idéntico). Recorrido: la flecha de SignIn no hace nada, la de SignUp vuelve a SignIn y se sigue entrando a Home.
+
+### 2026-10-23 · Martu · feat(home): maquetar Home / 02 Notifications según Figma
+- Carril y requisitos: B (pantalla) · UI01, UI02, UI03, NAV02, NAV03, NAV04, RF07, RF08 · tarea VC-n (4 de 4, cierra la tarea)
+- Plan aprobado: PR 4 de 4 de la tarea n, en una rama que sale de `main`. Cuatro notificaciones de demostración agrupadas en hoy y ayer, "Mark all as read" y cada una a su destino de `PANTALLAS.md`.
+- Qué propuso la IA y qué cambiamos:
+  - Las medidas salieron de los nodos del frame Home / 02 y los colores de la imagen exportada (lámina). Se reusó `VoraCard`; se sumaron dos estilos, dos medidas y el ícono de la llama (la mancuerna y la manzana son los de la barra).
+  - Las tarjetas salían 1 a 2.5 dp más altas que en el Figma y la última quedaba 8 dp más abajo. Medido línea por línea, la fila del remitente ocupa más en Compose: con 2 (no 4) hasta el título, las cuatro caen a ±3 dp.
+  - El título de cada tarjeta salía más liviano y más ancho que en el frame (234 contra 227 dp): pasó a SemiBold con −0.35 de espaciado y mide 229.
+  - "Protein target…" usaba la navegación de pestaña y atrás volvía a Home; ahora usa navegación común y vuelve a Notifications, como "Log breakfast" de Home (anotado en `PANTALLAS.md`).
+  - Abrir una notificación la marca como leída; la de la racha no tiene destino y no se puede tocar.
+- Revisores: `revisor-visual` CON CAMBIOS (peso y ancho del título: corregido; la sección de ayer queda 3 dp abajo y el destello del coach es más fino que el del frame: quedan); `revisor-requisitos` y `revisor-arquitectura` sin nada que bloquee. Se aplicaron: datos de demostración en `NotificationsDemoData` (la preview ya no crea el ViewModel), "Unread" como estado de la tarjeta para TalkBack, minutos para lo de menos de una hora, `MINUTES_PER_HOUR` y el KDoc del ViewModel con lo que de verdad dura el estado de leída. `/code-review`: 3 corregidos, 1 que queda (la notificación dice "Upper Body Strength" y `w01` en la API es "Fuerza inicial", igual que en Home).
+- Pendiente: `NotificationsViewModelTest` (carril C): estado inicial con dos sin leer, `onOpen` marca solo esa, `markAllAsRead` y la partición hoy / ayer.
+- Evidencia: `assembleDebug` y `testDebugUnitTest` en verde, `control-rapido.sh` sin fallas. Capturas en `docs/evidencia/visual/home-02-{394dp,360dp}.png`. Tarjetas contra los nodos a ±3 dp. Recorrido: dos sin leer al entrar; la del coach va a `weekly_review` y queda leída; "Upper Body Strength" abre `workout_details/w01`; "Protein target" abre Nutrition / 01 y atrás vuelve; la racha no navega; "Mark all as read" deja cero sin leer y sobrevive a la rotación; atrás vuelve a Home.
+- Commit / PR:
+
+### 2026-10-23 · Hector · feat(workout): maquetar Workout / 04 Pre Workout según Figma
+- Carril y requisitos: B · UI01, UI03, NAV03, NAV04, RF01 (muestra el detalle de demostración) · tarea k, PR 5 de 10
+- Plan aprobado: `PreWorkoutScreen` y `PreWorkoutRoute` sobre `WorkoutDetailViewModel`, textos en los dos idiomas y la Route en lugar de `PantallaVacia` en `WorkoutNavGraph`. X → `popBackStack()`, micrófono → `voice`, Start Workout → `active_workout/{workoutId}`. Medidas del nodo 1:510.
+- Qué propuso la IA y qué cambiamos:
+  - La IA propuso reutilizar lo que había y anotar las diferencias. No había ninguna tarjeta para fondo verde (Voice tiene una copia privada) ni un botón redondo lima. Hector eligió crearlos en `ui/components/` en vez de dejarlos en la pantalla: `VoraCardOnDark` y el tono `Cta` de `VoraCircleButton`, en un commit aparte para que los revise Martu.
+  - Para que el verde pase por detrás de la barra de estado, como en el Figma, Hector aprobó agregar `Rutas.PRE_WORKOUT` a `RUTAS_A_SANGRE` (zona de Fiore; se le avisa en el PR).
+  - Antes de programar, Hector pidió revisar lo nuevo de `main` (#30, componentes de Acceso): no traía nada para esta pantalla y la rama se adelantó hasta ahí.
+  - El nivel no se muestra porque el frame no lo tiene. "YOUR LAST SESSION" usa el nombre del primer ejercicio; las series, el foco y los consejos son de demostración (`pre_workout_*_demo`).
+  - El revisor de arquitectura avisó que los íconos de la barra de estado podían quedar oscuros al volver de Voice. Se reprodujo en el emulador (micrófono → atrás: hora y batería en negro sobre verde) y se cambió el efecto para que también se apliquen al reanudar la pantalla.
+- Revisores: revisor-visual APROBADA en la primera vuelta (observaciones menores dentro de lo aceptado: la X unos 7 dp corrida, el encabezado 5 dp más bajo por el alto de `VoraTopBar`, el orbe chico con aro). revisor-arquitectura sin nada que bloquee: se corrigieron los íconos de la barra y el KDoc de `VoraCardOnDark`. `/code-review`: además, los íconos se ponen blancos al entrar para que no se vean oscuros durante la animación. Quedan como sugerencia: pasar el `PanelOscuro` de Voice a `VoraCardOnDark`, el reintento del error (RF05, también falta en 03), compartir los datos de la preview con 03 y agregar los componentes nuevos a CONTEXTO §9.
+- Pendiente para Fiore: revisar la línea de `RUTAS_A_SANGRE` y ajustar la fila 64 de `PANTALLAS.md` (además de arrancar la sesión, son de demostración el foco, la última sesión y el consejo).
+- Evidencia: `docs/evidencia/visual/workout-04-{394dp,360dp}.png` (emulador, densidad 520 y 569). `testDebugUnitTest` y `assembleDebug` en verde, `reglas.sh` sin fallas. Recorrido en el emulador después del arreglo: Pre Workout con íconos blancos → micrófono abre Voice (íconos oscuros sobre claro) → atrás vuelve con íconos blancos → la X vuelve a Workout con íconos oscuros.
 - Commit / PR:

@@ -4,23 +4,15 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.BoxWithConstraints
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
-import androidx.compose.foundation.layout.imePadding
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.statusBarsPadding
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -37,9 +29,10 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.parcial_tp3.R
-import com.example.parcial_tp3.ui.components.VoraAccessBackground
 import com.example.parcial_tp3.ui.components.VoraAccessButton
 import com.example.parcial_tp3.ui.components.VoraAccessCard
+import com.example.parcial_tp3.ui.components.VoraAccessFooterLink
+import com.example.parcial_tp3.ui.components.VoraAccessScaffold
 import com.example.parcial_tp3.ui.components.VoraAccessTopBar
 import com.example.parcial_tp3.ui.components.VoraBrandHeader
 import com.example.parcial_tp3.ui.components.VoraSocialButton
@@ -71,87 +64,62 @@ fun SignUpScreen(
     onDemo: () -> Unit,
 ) {
     val access = VoraTheme.colors.access
-    VoraAccessBackground {
-        BoxWithConstraints {
-            Column(
-                modifier = Modifier
-                    .verticalScroll(rememberScrollState())
-                    .heightIn(min = maxHeight)
-                    // va hasta el borde (RUTAS_A_SANGRE), como SignIn
-                    .statusBarsPadding()
-                    .navigationBarsPadding()
-                    .imePadding()
-                    .padding(horizontal = VoraTheme.spacing.s24),
-                verticalArrangement = Arrangement.SpaceBetween,
-            ) {
-                Column {
-                    Spacer(Modifier.height(VoraTheme.spacing.s8))
-                    VoraAccessTopBar(
-                        language = stringResource(R.string.access_language),
-                        onLanguage = onDemo,
-                        onBack = onBack,
-                    )
-                    Spacer(Modifier.height(VoraTheme.spacing.s20))
-                    VoraBrandHeader(compact = true)
-                    Spacer(Modifier.height(VoraTheme.spacing.s20))
-                    SignUpForm(state, onFullNameChange, onEmailChange, onPasswordChange, onTogglePassword, onSignUp, onDemo)
-                    Spacer(Modifier.height(VoraTheme.spacing.s16))
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = VoraTheme.spacing.s4),
-                        horizontalArrangement = Arrangement.spacedBy(VoraTheme.spacing.s6, Alignment.CenterHorizontally),
-                        verticalAlignment = Alignment.CenterVertically,
-                    ) {
-                        Icon(
-                            painter = painterResource(R.drawable.ic_shield),
-                            contentDescription = null,
-                            tint = access.ink,
-                            modifier = Modifier.size(VoraTheme.sizes.accessIconTiny),
-                        )
-                        Text(
-                            text = stringResource(R.string.sign_up_biometric),
-                            style = VoraTheme.text.accessLabelLarge,
-                            color = access.ink,
-                        )
-                    }
-                    Spacer(Modifier.height(VoraTheme.spacing.s10))
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.spacedBy(VoraTheme.spacing.s4, Alignment.CenterHorizontally),
-                    ) {
-                        Text(
-                            text = stringResource(R.string.sign_up_issues),
-                            style = VoraTheme.text.accessLabelLarge,
-                            color = access.ink,
-                        )
-                        Text(
-                            text = stringResource(R.string.sign_up_recover),
-                            style = VoraTheme.text.accessLabelLargeLink,
-                            color = access.ink,
-                            modifier = Modifier.clickable(role = Role.Button, onClick = onDemo),
-                        )
-                    }
-                }
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = VoraTheme.spacing.s16, bottom = VoraTheme.spacing.s20),
-                    horizontalArrangement = Arrangement.spacedBy(VoraTheme.spacing.s4, Alignment.CenterHorizontally),
-                ) {
-                    Text(
-                        text = stringResource(R.string.sign_up_have_account),
-                        style = VoraTheme.text.accessBody,
-                        color = access.text,
-                    )
-                    Text(
-                        text = stringResource(R.string.sign_up_sign_in_link),
-                        style = VoraTheme.text.accessBodyLink,
-                        color = access.text,
-                        modifier = Modifier.clickable(role = Role.Button, onClick = onSignIn),
-                    )
-                }
-            }
+    VoraAccessScaffold(
+        footer = {
+            VoraAccessFooterLink(
+                question = stringResource(R.string.sign_up_have_account),
+                link = stringResource(R.string.sign_up_sign_in_link),
+                onClick = onSignIn,
+                modifier = Modifier.padding(top = VoraTheme.spacing.s16, bottom = VoraTheme.spacing.s20),
+            )
+        },
+    ) {
+        Spacer(Modifier.height(VoraTheme.spacing.s8))
+        VoraAccessTopBar(
+            language = stringResource(R.string.access_language),
+            onLanguage = onDemo,
+            onBack = onBack,
+        )
+        Spacer(Modifier.height(VoraTheme.spacing.s20))
+        VoraBrandHeader(compact = true)
+        Spacer(Modifier.height(VoraTheme.spacing.s20))
+        SignUpForm(state, onFullNameChange, onEmailChange, onPasswordChange, onTogglePassword, onSignUp, onDemo)
+        Spacer(Modifier.height(VoraTheme.spacing.s16))
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = VoraTheme.spacing.s4),
+            horizontalArrangement = Arrangement.spacedBy(VoraTheme.spacing.s6, Alignment.CenterHorizontally),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Icon(
+                painter = painterResource(R.drawable.ic_shield),
+                contentDescription = null,
+                tint = access.ink,
+                modifier = Modifier.size(VoraTheme.sizes.accessIconTiny),
+            )
+            Text(
+                text = stringResource(R.string.sign_up_biometric),
+                style = VoraTheme.text.accessLabelLarge,
+                color = access.ink,
+            )
+        }
+        Spacer(Modifier.height(VoraTheme.spacing.s10))
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(VoraTheme.spacing.s4, Alignment.CenterHorizontally),
+        ) {
+            Text(
+                text = stringResource(R.string.sign_up_issues),
+                style = VoraTheme.text.accessLabelLarge,
+                color = access.ink,
+            )
+            Text(
+                text = stringResource(R.string.sign_up_recover),
+                style = VoraTheme.text.accessLabelLargeLink,
+                color = access.ink,
+                modifier = Modifier.clickable(role = Role.Button, onClick = onDemo),
+            )
         }
     }
 }

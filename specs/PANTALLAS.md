@@ -148,7 +148,7 @@ Leído de los frames el 18/10. Lo que dice *a confirmar* es lectura mía del dib
 | | Barra inferior | Las otras 4 pestañas |
 | Home / 02 | "Mark all as read" | No navega |
 | | "Upper Body Strength is ready" | `workout_details/{workoutId}` |
-| | "Protein target milestone alert" | `nutrition_dashboard` |
+| | "Protein target milestone alert" | `nutrition_dashboard` con navegación común y no de pestaña: atrás vuelve a Notifications (una notificación es una entrada lateral; "Log breakfast" de Home hace lo mismo con `add_food`) |
 | | "Your weekly health review is ready" | `weekly_review` |
 
 ## 5. Asistente VORA (6 pantallas)

@@ -63,6 +63,10 @@ internal fun CatalogoComponentes() {
                     VoraButton(corto, {}, style = VoraButtonStyle.Cta, size = VoraButtonSize.Small)
                     VoraButton(corto, {}, style = VoraButtonStyle.OutlinedOnDark, size = VoraButtonSize.Small)
                 }
+                VoraCardOnDark(Modifier.fillMaxWidth()) {
+                    Text(corto, style = MaterialTheme.typography.labelLarge)
+                    Text(largo, style = MaterialTheme.typography.bodyMedium, color = VoraTheme.colors.onDarkMuted)
+                }
             }
             VoraCard(Modifier.fillMaxWidth(), padding = VoraTheme.spacing.s12, radius = VoraTheme.radius.r12) {
                 Text(corto, style = MaterialTheme.typography.bodyLarge)
@@ -161,6 +165,8 @@ internal fun CatalogoControles() {
         }
         VoraPanel(Modifier.fillMaxWidth()) {
             VoraOrb(onDark = true, withRipple = true)
+            // el microfono lima de Workout / 04
+            VoraCircleButton(painterResource(R.drawable.ic_mic), corto, {}, tone = VoraCircleButtonTone.Cta)
         }
 
         // Botones redondos, en los tamanos de Voice
@@ -181,6 +187,27 @@ internal fun CatalogoControles() {
             )
             VoraCircleButton(painterResource(R.drawable.ic_send), corto, {}, iconSize = VoraTheme.sizes.iconSmall)
             VoraCircleButton(painterResource(R.drawable.ic_plus), corto, {}, tone = VoraCircleButtonTone.Surface)
+        }
+        // El volver de Login: elevado, con accion (SignUp) y sin accion (SignIn)
+        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(VoraTheme.spacing.s12)) {
+            VoraCircleButton(
+                painterResource(R.drawable.ic_back),
+                corto,
+                {},
+                tone = VoraCircleButtonTone.Elevated,
+                size = VoraTheme.sizes.accessBack,
+                iconSize = VoraTheme.sizes.accessBackIcon,
+                touchSize = VoraTheme.sizes.accessBack,
+            )
+            VoraCircleButton(
+                painterResource(R.drawable.ic_back),
+                null,
+                null,
+                tone = VoraCircleButtonTone.Elevated,
+                size = VoraTheme.sizes.accessBack,
+                iconSize = VoraTheme.sizes.accessBackIcon,
+                touchSize = VoraTheme.sizes.accessBack,
+            )
         }
 
         // Etiqueta de seccion, aviso y conversacion

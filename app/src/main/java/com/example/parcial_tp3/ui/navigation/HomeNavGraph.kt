@@ -4,11 +4,10 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
-import androidx.compose.ui.res.stringResource
-import com.example.parcial_tp3.R
 import com.example.parcial_tp3.irAPestana
-import com.example.parcial_tp3.ui.components.PantallaVacia
 import com.example.parcial_tp3.ui.screens.home.HomeRoute
+import com.example.parcial_tp3.ui.screens.home.NotificationDestination
+import com.example.parcial_tp3.ui.screens.home.NotificationsRoute
 
 /** Inicio: Home / 01 y 02. Las dos con barra. */
 fun NavGraphBuilder.homeGraph(nav: NavController) {
@@ -25,7 +24,18 @@ fun NavGraphBuilder.homeGraph(nav: NavController) {
             )
         }
         composable(Rutas.NOTIFICATIONS) {
-            PantallaVacia(nombre = stringResource(R.string.pant_home_02))
+            NotificationsRoute(
+                onDestination = { destino ->
+                    when (destino) {
+                        NotificationDestination.WeeklyReview -> nav.navigate(Rutas.WEEKLY_REVIEW) { launchSingleTop = true }
+                        is NotificationDestination.WorkoutDetails ->
+                            nav.navigate(Rutas.workoutDetails(destino.workoutId)) { launchSingleTop = true }
+                        // navegacion comun y no de pestana: asi atras vuelve a Notifications
+                        NotificationDestination.Nutrition -> nav.navigate(Rutas.NUTRITION_DASHBOARD) { launchSingleTop = true }
+                        NotificationDestination.None -> Unit
+                    }
+                },
+            )
         }
     }
 }

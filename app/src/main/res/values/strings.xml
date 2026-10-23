@@ -384,6 +384,18 @@
     <string name="details_edit">Edit workout</string>
     <string name="details_loading">Loading workout</string>
     <string name="details_error">We couldn\'t load this workout.</string>
+    <string name="pre_workout_get_ready">GET READY</string>
+    <string name="pre_workout_focus_label">TODAY\'S FOCUS</string>
+    <string name="pre_workout_focus_title_demo">Controlled Repetitions</string>
+    <string name="pre_workout_focus_body_demo">Keep concentric lifts explosive and focus on a slow, 2-second eccentric return for maximal hypertrophy stimulus.</string>
+    <string name="pre_workout_last_session_label">YOUR LAST SESSION</string>
+    <string name="pre_workout_last_session_title">%1$s Volume</string>
+    <string name="pre_workout_last_session_demo">Set 1: 40 kg × 10 • Set 2: 40 kg × 9 • Set 3: 37.5 kg × 10</string>
+    <string name="pre_workout_coach_tip_label">VORA\'S COACH TIP</string>
+    <string name="pre_workout_coach_tip_demo">“Start slightly lighter on your first set. If your form feels exceptionally robust, increase the load.”</string>
+    <string name="pre_workout_ask_title">Need anything?</string>
+    <string name="pre_workout_ask_example_demo">“Recommend a chest warm-up”</string>
+    <string name="pre_workout_ask_mic">Talk to VORA</string>
     <string name="weekly_title">Your Plan</string>
     <string name="weekly_subtitle">Designed around your goals and recovery.</string>
     <string-array name="weekly_days_short">
@@ -514,4 +526,26 @@
     <string name="nutrition_meals_shake_kcal">240 kcal</string>
     <string name="nutrition_meals_dinner_empty">Dinner is not logged yet</string>
     <string name="nutrition_meals_add_dinner">+ Add Dinner</string>
+
+    <!-- Home / 02 — Notifications -->
+    <string name="notifications_title">Notifications</string>
+    <string name="notifications_mark_all">Mark all as read</string>
+    <string name="notifications_today">TODAY</string>
+    <string name="notifications_yesterday">YESTERDAY</string>
+    <string name="notifications_unread">Unread</string>
+    <string name="notifications_minutes_ago">%1$dm ago</string>
+    <string name="notifications_hours_ago">%1$dh ago</string>
+    <string name="notifications_days_ago">%1$dd ago</string>
+    <string name="notification_coach_sender">VORA Coach</string>
+    <string name="notification_coach_title">Your weekly health review is ready.</string>
+    <string name="notification_coach_body">We noticed your training consistency improved by 14% over the last week.</string>
+    <string name="notification_workout_sender">Workout Plan</string>
+    <string name="notification_workout_title">Upper Body Strength is ready.</string>
+    <string name="notification_workout_body">Equipped for home/gym. Approx. 42 minutes.</string>
+    <string name="notification_nutrition_sender">Nutrition Goal</string>
+    <string name="notification_nutrition_title">Protein target milestone alert.</string>
+    <string name="notification_nutrition_body">You require 36g more of protein to hit today\'s UK performance baseline.</string>
+    <string name="notification_streak_sender">Milestone Reached</string>
+    <string name="notification_streak_title">4-day workout streak logged!</string>
+    <string name="notification_streak_body">Outstanding work, Alex. Let\'s make it 5 today.</string>
 </resources>

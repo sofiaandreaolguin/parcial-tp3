@@ -382,6 +382,18 @@
     <string name="details_edit">Editar entrenamiento</string>
     <string name="details_loading">Cargando entrenamiento</string>
     <string name="details_error">No pudimos cargar este entrenamiento.</string>
+    <string name="pre_workout_get_ready">PREPARATE</string>
+    <string name="pre_workout_focus_label">FOCO DE HOY</string>
+    <string name="pre_workout_focus_title_demo">Repeticiones controladas</string>
+    <string name="pre_workout_focus_body_demo">Subí con fuerza y bajá lento, en 2 segundos, para estimular al máximo la hipertrofia.</string>
+    <string name="pre_workout_last_session_label">TU ÚLTIMA SESIÓN</string>
+    <string name="pre_workout_last_session_title">Volumen de %1$s</string>
+    <string name="pre_workout_last_session_demo">Serie 1: 40 kg × 10 • Serie 2: 40 kg × 9 • Serie 3: 37,5 kg × 10</string>
+    <string name="pre_workout_coach_tip_label">CONSEJO DE VORA</string>
+    <string name="pre_workout_coach_tip_demo">“Empezá con un poco menos de peso en la primera serie. Si la técnica se siente firme, subí la carga.”</string>
+    <string name="pre_workout_ask_title">¿Necesitás algo?</string>
+    <string name="pre_workout_ask_example_demo">“Recomendame una entrada en calor de pecho”</string>
+    <string name="pre_workout_ask_mic">Hablar con VORA</string>
     <string name="weekly_title">Tu plan</string>
     <string name="weekly_subtitle">Pensado según tus objetivos y tu recuperación.</string>
     <string-array name="weekly_days_short">
@@ -512,4 +524,26 @@
     <string name="nutrition_meals_shake_kcal">240 kcal</string>
     <string name="nutrition_meals_dinner_empty">Todavía no registraste la cena</string>
     <string name="nutrition_meals_add_dinner">+ Agregar cena</string>
+
+    <!-- Home / 02 — Notifications -->
+    <string name="notifications_title">Notificaciones</string>
+    <string name="notifications_mark_all">Marcar todo como leído</string>
+    <string name="notifications_today">HOY</string>
+    <string name="notifications_yesterday">AYER</string>
+    <string name="notifications_unread">Sin leer</string>
+    <string name="notifications_minutes_ago">hace %1$d min</string>
+    <string name="notifications_hours_ago">hace %1$d h</string>
+    <string name="notifications_days_ago">hace %1$d d</string>
+    <string name="notification_coach_sender">VORA Coach</string>
+    <string name="notification_coach_title">Tu resumen semanal de salud está listo.</string>
+    <string name="notification_coach_body">Tu constancia en los entrenamientos mejoró un 14 % la última semana.</string>
+    <string name="notification_workout_sender">Plan de entrenamiento</string>
+    <string name="notification_workout_title">Upper Body Strength está listo.</string>
+    <string name="notification_workout_body">Para casa o gimnasio. Unos 42 minutos.</string>
+    <string name="notification_nutrition_sender">Objetivo de nutrición</string>
+    <string name="notification_nutrition_title">Alerta de objetivo de proteínas.</string>
+    <string name="notification_nutrition_body">Te faltan 36 g de proteínas para llegar a tu objetivo de hoy.</string>
+    <string name="notification_streak_sender">Logro alcanzado</string>
+    <string name="notification_streak_title">¡Racha de 4 días de entrenamiento!</string>
+    <string name="notification_streak_body">Excelente, Alex. Vamos por el día 5.</string>
 </resources>
