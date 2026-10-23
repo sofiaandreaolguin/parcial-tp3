@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.parcial_tp3.ui.components.rememberDemoToast
 
 @Composable
 fun NutritionPreferencesRoute(
@@ -11,5 +12,11 @@ fun NutritionPreferencesRoute(
     viewModel: NutritionPreferencesViewModel = hiltViewModel(),
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
-    NutritionPreferencesScreen(state = state, onBack = onBack, onSave = onBack)
+    val demo = rememberDemoToast()
+    NutritionPreferencesScreen(
+        state = state,
+        onBack = onBack,
+        onSave = { demo(); onBack() },
+        onDemo = demo,
+    )
 }

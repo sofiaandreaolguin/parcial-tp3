@@ -12,10 +12,11 @@ fun EditProfileRoute(
     viewModel: EditProfileViewModel = hiltViewModel(),
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
+    val demo = rememberDemoToast()
     EditProfileScreen(
         state = state,
         onBack = onBack,
-        onSave = onBack,
-        onDemo = rememberDemoToast(),
+        onSave = { demo(); onBack() },
+        onDemo = demo,
     )
 }

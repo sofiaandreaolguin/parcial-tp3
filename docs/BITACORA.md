@@ -270,6 +270,22 @@ Formato:
 - Evidencia: `docs/evidencia/tests/2026-10-23-detalle-demo.md` (rojo de los 10 tests, verde con 59 tests y controles negativos de C6, C7 y C8). `assembleDebug` en verde y `reglas.sh` sin fallas.
 - Commit / PR:
 
+### 2026-10-23 · Zaki · feat(profile): maquetar Profile / 05 VORA Coach según Figma
+- Carril y requisitos: B · UI01, UI03, NAV01, NAV02, NAV03, NAV05
+- Plan aprobado: rama 5 de 6 del flujo Profile. Incluye, en un commit aparte, los avisos de modo demostración en los controles sin función de 02, 03 y 04: era muy chico para su propio PR y es del mismo flujo. La pantalla 05 solo se dibuja con los ajustes del perfil de demostración. "Privacy & permissions" navega a Settings, y así se cierra la entrada a 05 desde "Review preferences" (NAV01).
+- Qué propuso la IA y qué cambiamos:
+  - Zaki pidió que todo control sin función del flujo avise modo demostración en vez de no responder. La IA lo cableó en los Route con `rememberDemoToast()`, y los botones Save avisan y vuelven.
+  - `ProfileSectionLabel` sumó un `modifier` para usarlo dentro de la tarjeta de voz activa sin el aire de arriba.
+- Revisores:
+  - revisor-visual, dos vueltas. La primera marcó las tarjetas de interruptores más altas, los espacios entre bloques y dos tamaños de texto, y Zaki eligió corregirlos (filas de 36 con 12 al borde, 20 entre bloques, nota en 12, título en 15). La segunda: aprobada. Quedaron aceptadas las diferencias de componentes de Martu (botón Preview y texto del selector) y los textos de 14.
+  - revisor-arquitectura y /code-review: nada bloqueante.
+  - Quedan como sugerencias:
+    - el campo "Add an ingredient…" no avisa al tocarlo (`VoraTextField` no tiene `onClick`);
+    - el enlace "Privacy & permissions" tiene un área táctil chica y no usa `launchSingleTop`;
+    - `ProfileSectionLabel` lleva el padding en el `modifier` por defecto;
+    - en español, "VORA Coach" convive con "Coach VORA" de Voice.
+- Evidencia: `docs/evidencia/visual/profile-05-{411dp,360dp}{,-scrolled}.png` (teléfono real). Build y tests unitarios en verde, `control-rapido.sh` sin fallas.
+
 ### 2026-10-23 · Hector · feat(workout): maquetar Workout / 03 Workout Details según Figma
 - Carril y requisitos: B · UI01, UI03, NAV03, NAV04, RF01 (muestra el detalle de demostración) · tarea k, PR 4 de 10
 - Plan aprobado: `WorkoutDetailsScreen` y `WorkoutDetailsRoute` sobre el `WorkoutDetailViewModel` del PR #24, textos en los dos idiomas y la Route en lugar de `PantallaVacia` en `WorkoutNavGraph`. Fila → `exercise_details`, Start Workout → `pre_workout`, Edit workout → aviso demo.
