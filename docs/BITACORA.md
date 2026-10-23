@@ -171,3 +171,19 @@ Formato:
     - no hay tests de los ViewModel.
 - Evidencia: `docs/evidencia/visual/profile-03-{411dp,360dp}{,-scrolled}.png` (teléfono real). Build y tests unitarios en verde, `control-rapido.sh` sin fallas.
 - Commit / PR:
+
+### 2026-10-23 · Zaki · feat(profile): maquetar Profile / 04 Nutrition preferences según Figma
+- Carril y requisitos: B · UI01, UI02, UI03, NAV02, NAV03
+- Plan aprobado: rama 4 de 6 del flujo Profile. Antes de la pantalla, un commit que comparte las piezas que se repiten en el flujo: `ProfileSectionLabel` (de 03) y `ProfileInfoRow` (de 01). La pantalla solo se dibuja con los datos del perfil de demostración.
+- Qué propuso la IA y qué cambiamos:
+  - Siguiendo la regla de Zaki (componente solo si se repite en el flujo), la IA esperó al segundo uso para extraer la etiqueta de sección y la fila etiqueta-valor, y midió en el Figma de 04 que la etiqueta es la misma de 03 antes de compartirla.
+  - Los alimentos a evitar se muestran como texto del usuario, sin traducir; los valores de Meal preferences, que no se editan en el Figma, van en `strings.xml`.
+  - El revisor visual marcó un campo de ingrediente más compacto en el Figma, el texto de los chips en 13 y la bajada algo más grande. Zaki decidió aceptarlas: son diferencias menores y dos de ellas cambian componentes de toda la app.
+- Revisores:
+  - revisor-visual: una vuelta, con las diferencias menores aceptadas.
+  - revisor-arquitectura y /code-review: nada bloqueante. Las dos MEDIA son de accesibilidad en `VoraChip` (rol de casilla en elección única y la ⊗ sin descripción) y quedan como pedido para Martu.
+  - /code-review marcó la fila de chips repetida entre 03 y 04; pasó a `ProfileChipRow`, compartida en el flujo.
+  - Queda como sugerencia:
+    - los ViewModel de Profile repiten el mismo `map` + `stateIn`. Se dejó así a propósito: son seis líneas sin lógica, muestran el patrón de la cursada en cada ViewModel y siguen la forma del resto del proyecto. Si se suma persistencia, el repositorio expone el `Flow` de Room (como `MealRepository`) y en cada ViewModel solo cambia el valor inicial del `stateIn`.
+- Evidencia: `docs/evidencia/visual/profile-04-{411dp,360dp}{,-scrolled}.png` (teléfono real). Build y tests unitarios en verde, `control-rapido.sh` sin fallas.
+- Commit / PR:
