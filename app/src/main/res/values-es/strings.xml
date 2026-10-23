@@ -223,4 +223,15 @@
     <string name="sign_in_encrypted">Ingreso biométrico cifrado de punta a punta</string>
     <string name="sign_in_no_account">¿No tenés cuenta?</string>
     <string name="sign_in_sign_up_link">Registrate acá</string>
+    <string name="sign_up_name_label">Nombre completo</string>
+    <string name="sign_up_password_placeholder">Al menos 8 caracteres</string>
+    <string name="sign_up_secure">8+ caracteres seguros</string>
+    <string name="sign_up_password_help">¿Ayuda con la contraseña?</string>
+    <string name="sign_up_action">Registrarme</string>
+    <string name="sign_up_or">O registrate con</string>
+    <string name="sign_up_biometric">Ingreso biométrico</string>
+    <string name="sign_up_issues">¿Problemas con tu cuenta?</string>
+    <string name="sign_up_recover">Recuperar</string>
+    <string name="sign_up_have_account">¿Ya tenés cuenta?</string>
+    <string name="sign_up_sign_in_link">Iniciar sesión</string>
 </resources>
