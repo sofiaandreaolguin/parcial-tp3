@@ -9,6 +9,7 @@ import androidx.navigation.compose.navigation
 import androidx.navigation.navArgument
 import com.example.parcial_tp3.R
 import com.example.parcial_tp3.ui.components.PantallaVacia
+import com.example.parcial_tp3.ui.screens.workout.WeeklyPlanRoute
 import com.example.parcial_tp3.ui.screens.workout.WorkoutDashboardRoute
 
 /**
@@ -30,7 +31,7 @@ fun NavGraphBuilder.workoutGraph(nav: NavController) {
         }
 
         composable(Rutas.WEEKLY_PLAN) {
-            PantallaVacia(nombre = stringResource(R.string.pant_workout_02))
+            WeeklyPlanRoute(onWorkout = { id -> nav.navigate(Rutas.workoutDetails(id)) })
         }
 
         composable(
