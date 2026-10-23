@@ -3,7 +3,6 @@ package com.example.parcial_tp3.ui.screens.profile
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -58,13 +57,13 @@ fun NutritionPreferencesScreen(
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
             ProfileSectionLabel(stringResource(R.string.nutrition_diet))
-            ChipRow {
+            ProfileChipRow {
                 Diet.entries.forEach { diet ->
                     VoraChip(stringResource(diet.label()), selected = diet == state.diet, onClick = {})
                 }
             }
             ProfileSectionLabel(stringResource(R.string.nutrition_enjoy))
-            ChipRow {
+            ProfileChipRow {
                 Food.entries.forEach { food ->
                     VoraChip(
                         text = stringResource(food.label()),
@@ -82,7 +81,7 @@ fun NutritionPreferencesScreen(
                 leadingIcon = painterResource(R.drawable.ic_plus),
                 readOnly = true,
             )
-            ChipRow {
+            ProfileChipRow {
                 state.foodsToAvoid.forEach { food ->
                     VoraChip(
                         text = food,
@@ -118,14 +117,6 @@ fun NutritionPreferencesScreen(
             )
         }
     }
-}
-
-@Composable
-private fun ChipRow(content: @Composable () -> Unit) {
-    FlowRow(
-        horizontalArrangement = Arrangement.spacedBy(VoraTheme.spacing.s8),
-        verticalArrangement = Arrangement.spacedBy(VoraTheme.spacing.s8),
-    ) { content() }
 }
 
 @Preview(showBackground = true, heightDp = 1050)

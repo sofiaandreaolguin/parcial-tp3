@@ -4,7 +4,6 @@ import androidx.annotation.StringRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -75,10 +74,7 @@ fun GoalsScreen(
                 style = VoraSegmentedStyle.Boxes,
             )
             ProfileSectionLabel(stringResource(R.string.goals_workout))
-            FlowRow(
-                horizontalArrangement = Arrangement.spacedBy(VoraTheme.spacing.s8),
-                verticalArrangement = Arrangement.spacedBy(VoraTheme.spacing.s8),
-            ) {
+            ProfileChipRow {
                 WorkoutType.entries.forEach { type ->
                     VoraChip(
                         text = stringResource(type.label()),
