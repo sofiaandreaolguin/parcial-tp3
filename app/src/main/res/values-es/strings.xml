@@ -191,6 +191,29 @@
     <string name="coach_control_title">Vos tenés el control</string>
     <string name="coach_control_body">Administrá los permisos del micrófono y los datos conectados desde Ajustes.</string>
     <string name="coach_privacy_link">Privacidad y permisos</string>
+    <!-- Profile / 06 — Settings -->
+    <string name="settings_account">CUENTA</string>
+    <string name="settings_premium">VORA Premium</string>
+    <string name="settings_premium_sub">Se renueva el 14 de junio de 2026</string>
+    <string name="settings_manage_account">Administrar cuenta</string>
+    <string name="settings_app_preferences">PREFERENCIAS DE LA APP</string>
+    <string name="settings_notifications">Notificaciones</string>
+    <string name="settings_notifications_sub">Recordatorios de entrenamientos y comidas</string>
+    <string name="settings_units">Unidades</string>
+    <string name="settings_units_sub">Métrico (kg, cm, km)</string>
+    <string name="settings_appearance">Apariencia</string>
+    <string name="settings_appearance_sub">Según el sistema</string>
+    <string name="settings_connected_data">DATOS CONECTADOS</string>
+    <string name="settings_health">Salud y actividad</string>
+    <string name="settings_health_sub">Apple Watch y Salud conectados</string>
+    <string name="settings_privacy_security">PRIVACIDAD Y SEGURIDAD</string>
+    <string name="settings_privacy_policy">Política de privacidad</string>
+    <string name="settings_permissions">Permisos y control de datos</string>
+    <string name="settings_support">AYUDA</string>
+    <string name="settings_help">Centro de ayuda</string>
+    <string name="settings_contact">Contactar a soporte</string>
+    <string name="settings_log_out">Cerrar sesión</string>
+    <string name="settings_version">VORA v1.0.0</string>
     <!-- Asistente VORA (Voice / 01 a 06 y Conversation). Mismas claves que values/strings.xml. -->
     <string name="voice_coach_title">Coach VORA</string>
     <string name="voice_online">EN LINEA</string>

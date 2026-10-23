@@ -298,3 +298,22 @@ Formato:
 - Pendiente para Martu: botón con borde y texto verdes sin relleno, botón de 44 con 15 SemiBold, título 26 SemiBold, número 14 Bold y nombre de fila 15 SemiBold, y un tamaño `exerciseBadge` de 32 (nodos 1:443, 1:460, 1:506 y 1:508).
 - Evidencia: `docs/evidencia/visual/workout-03-{394dp,360dp}.png` (Pixel 10 Pro, con la captura del emulador porque `adb screencap` sale negro en Android 17). `testDebugUnitTest` y `assembleDebug` en verde, `reglas.sh` sin fallas. En el emulador: Workout → Details abre 03 con "Fuerza inicial".
 - Commit / PR:
+
+### 2026-10-23 · Zaki · feat(profile): maquetar Profile / 06 Settings según Figma
+- Carril y requisitos: B · UI01, UI03, NAV02, NAV03, NAV05
+- Plan aprobado: rama 6 de 6, la última pantalla del flujo Profile. Se arma con componentes que ya existían (`VoraListRow`, `ProfileSectionLabel`, `VoraButton` Destructive) y los íconos de la rama 1. Alex Morgan abre Edit profile, las demás filas avisan modo demostración y Log out vuelve al login vaciando la pila.
+- Qué propuso la IA y qué cambiamos:
+  - La IA dejó "VORA v1.0.0" como texto del Figma y no lo tomó del build (`versionName` es "1.0" y es zona de otra integrante).
+  - /code-review encontró que Log out no borraba lo que cada pestaña guardaba al cambiar de pestaña. Al volver a entrar, una pestaña podía abrir una pantalla de la sesión anterior. La IA lo confirmó leyendo `irAPestana` y Zaki eligió arreglarlo con `clearBackStack` de cada pestaña antes de ir al login (NAV02).
+  - Con esta pantalla, las 6 rutas de Profile dejan de ser `PantallaVacia`.
+- Revisores:
+  - revisor-visual: aprobada en la primera vuelta. Quedan menores en componentes compartidos (rojo de `VoraButton` Destructive, margen del título de `VoraTopBarLarge`) y unos 3 dp antes de cada etiqueta de sección.
+  - revisor-arquitectura: nada bloqueante.
+  - /code-review: el Log out, corregido.
+  - Quedan como sugerencias:
+    - `launchSingleTop` en las filas que navegan;
+    - el nombre completo armado en dos ViewModel;
+    - el repositorio en memoria no se reinicia al cerrar sesión;
+    - los textos del Figma que pueden leerse raros en la demo ("Renews 14 June 2026", "Apple Watch").
+- Evidencia: `docs/evidencia/visual/profile-06-{411dp,360dp}{,-scrolled}.png` (teléfono real). Build y tests unitarios en verde, `control-rapido.sh` sin fallas. Zaki probó en el teléfono que, después de Log out, atrás cierra la app.
+- Commit / PR:
