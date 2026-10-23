@@ -98,13 +98,14 @@ fun VoraProgressBar(
     modifier: Modifier = Modifier,
     color: Color = MaterialTheme.colorScheme.primary,
     trackColor: Color = MaterialTheme.colorScheme.outline,
+    height: Dp = VoraTheme.sizes.progressBar,
 ) {
     val avance = progress.coerceIn(0f, 1f)
     val shape = RoundedCornerShape(VoraTheme.radius.pill)
     Box(
         modifier = modifier
             .fillMaxWidth()
-            .height(VoraTheme.sizes.progressBar)
+            .height(height)
             .clip(shape)
             .background(trackColor)
             .semantics { progressBarRangeInfo = ProgressBarRangeInfo(avance, 0f..1f) },
