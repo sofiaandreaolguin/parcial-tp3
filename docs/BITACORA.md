@@ -340,3 +340,22 @@ Formato:
 - Pendiente: la lógica de Room (guardar, listar por fecha y total) es la tarea l; ahí los datos de la pantalla pasan de `@StringRes` a valores reales y el estado necesita cargando, vacío y error (RF07). Si el grupo quiere un encabezado general, se decide en este PR.
 - Evidencia: `docs/evidencia/visual/nutrition-01-{411dp,360dp}{,-scroll}.png` (emulador de 1080x2424 a 420 dpi y el mismo con `wm size` a 360 dp). `assembleDebug` y `testDebugUnitTest` en verde, `reglas.sh` exit 0.
 - Commit / PR:
+
+### 2026-10-23 · Sofi · feat(nutrition): maquetar Nutrition / 02 Today's Meals según Figma
+- Carril y requisitos: B · UI01, UI03, NAV03 · tarea m, PR 2 de 8
+- Plan aprobado: pantalla 02 con el mismo `NutritionViewModel` que el Dashboard; el estado suma solo las comidas con sus ingredientes (gramos y kcal), con los mismos ids (1, 2 y 3) y las mismas kcal que las filas del Dashboard. Tocar una comida abre `meal_details/{id}` y "+ Add Dinner" abre `add_food`. Con scroll (UI03); la barra la pone el Scaffold.
+- Qué propuso la IA y qué cambiamos:
+  - La tarjeta punteada "Dinner is not logged yet" no tiene componente (`VoraCard` dibuja su borde sólido por dentro y no se le puede cambiar desde afuera). La IA frenó y planteó pedírselo a Martu o dibujarla en la pantalla. Sofi eligió dibujarla en la pantalla, como `dashedBorder` privado, porque la tarea VC-r (estados de carga, vacío y error de las consultas remotas) no la cubre: es un elemento del estado normal del frame, no el vacío de una consulta.
+  - Se midió el borde sobre el nodo 1:925: 4 px de trazo y 4 de hueco, 1 px, color `outline`. Las tres tarjetas con comida son sólidas; solo la de la cena vacía es discontinua.
+  - La píldora "1,420 kcal" se rellena en el Figma con verde al 8 %; sobre el fondo da `#E5E9E6`, que es el `outline` del tema, así que se usó ese token en vez de inventar un alfa.
+  - El mock del Figma no cierra: Breakfast 420 + Lunch 520 + Snack 240 suman 1.180, y el total que dibuja el Figma (Dashboard y 02) es 1,420. Se dejó 1,420 como pidió el grupo; con Room el total será la suma real.
+  - `lintDebug` (que el PR 1 nos mostró que hay que correr) marcó un error propio: "Yogur griego (0% grasa)" se leía como un formato `% g`. Se marcó esa string con `formatted="false"`.
+- Revisores: revisor-visual APROBADO en la primera vuelta; revisor-arquitectura sin BLOQUEA ni CRÍTICA; `/code-review` sin bloqueos. Sin aplicar, quedan como sugerencias:
+  - `HorizontalDivider` sin `thickness = VoraTheme.sizes.border`;
+  - la tarjeta de la cena se dibuja siempre: con Room tiene que mostrarse solo si no hay una cena registrada;
+  - `caloriesConsumed` es un `@StringRes` de demostración: con Room pasa a ser un número y el total sale de sumar las comidas;
+  - `dashedBorder` es privado de esta pantalla: si otra pantalla necesita un estado vacío igual, conviene subirlo a `ui/components` (Martu);
+  - el texto del Figma dice "Today's Meals" con apóstrofo recto en el nodo 1:869; el render lo muestra curvo, no es una diferencia;
+  - el listado por fecha de RF04 no tiene frame: hoy la pantalla muestra solo hoy (tarea l).
+- Evidencia: `docs/evidencia/visual/nutrition-02-{411dp,360dp}{,-scroll}.png` (emulador de 1080x2424 a 420 dpi y el mismo con `wm size` a 360 dp; al final se devolvió el tamaño). `assembleDebug`, `testDebugUnitTest` y `lintDebug` (0 errores) en verde, `reglas.sh` exit 0. A mano: una comida abre Meal Details, "+ Add Dinner" abre Add Food y atrás vuelve a 02.
+- Commit / PR:

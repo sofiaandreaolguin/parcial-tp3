@@ -85,7 +85,7 @@ private fun Header(total: String) {
                 modifier = Modifier.semantics { heading() },
             )
         }
-        // El frame lo rellena con verde al 8 % (nodo 1:870): sobre el fondo da #E5E9E6, que es el outline.
+
         Text(
             text = total,
             style = MaterialTheme.typography.labelMedium,
