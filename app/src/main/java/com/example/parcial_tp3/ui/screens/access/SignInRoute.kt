@@ -34,7 +34,10 @@ fun SignInRoute(
         onPasswordChange = viewModel::onPasswordChange,
         onTogglePassword = viewModel::onTogglePasswordVisible,
         onSignIn = viewModel::signIn,
-        onSignUp = onSignUp,
+        onSignUp = {
+            viewModel.onSwitchScreen()
+            onSignUp()
+        },
         onDemo = rememberDemoToast(),
     )
 }
