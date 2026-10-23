@@ -54,6 +54,30 @@ data class VoraExtraColors(
     val onDarkPanelBorder: Color = VoraOnDarkPanelBorder,
     val success: Color = VoraSuccess,
     val textMuted: Color = VoraTextMuted,
+    val access: VoraAccessColors = VoraAccessColors(),
+)
+
+/** Los colores propios de Login - 01 y 02 (ver Color.kt). Se leen con `VoraTheme.colors.access`. */
+@Immutable
+data class VoraAccessColors(
+    val glow: Color = VoraAccessGlow,
+    val background: Color = VoraAccessBackground,
+    val ink: Color = VoraAccessInk,
+    val accent: Color = VoraAccessAccent,
+    val text: Color = VoraAccessText,
+    val hint: Color = VoraAccessHint,
+    val field: Color = VoraAccessField,
+    val border: Color = VoraAccessBorder,
+    val cta: Color = VoraAccessCta,
+    val biometric: Color = VoraAccessBiometric,
+    val biometricBorder: Color = VoraAccessBiometricBorder,
+    val biometricIcon: Color = VoraAccessBiometricIcon,
+    val badgeText: Color = VoraAccessBadgeText,
+    val orbLight: Color = VoraAccessOrbLight,
+    val orbMid: Color = VoraAccessOrbMid,
+    val orbDark: Color = VoraAccessOrbDark,
+    val orbHighlight: Color = VoraAccessOrbHighlight,
+    val shield: Color = VoraAccessShield,
 )
 
 private val LocalVoraColors = staticCompositionLocalOf { VoraExtraColors() }

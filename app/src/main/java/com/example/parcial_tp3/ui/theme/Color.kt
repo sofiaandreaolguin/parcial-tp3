@@ -39,3 +39,24 @@ val VoraOnDarkBorder = Color(0x4DFFFFFF)    // blanco al 30 %: borde de "Details
 val VoraOnDarkSubtle = Color(0x1FFFFFFF)    // blanco al 12 %: fondo de "MODERATE" y de los - y +
 val VoraOnDarkPanel = Color(0x0DFFFFFF)     // blanco al 5 %: fondo de los paneles de Voice sobre el verde
 val VoraOnDarkPanelBorder = Color(0x1AFFFFFF) // blanco al 10 %: borde de esos paneles
+
+// Acceso (Login Flow). Los frames de Login no usan la lamina: medidos en
+// docs/figma/Login Flow.png con scripts/color.py (22-oct).
+val VoraAccessGlow = Color(0xFFE3F6ED)         // resplandor menta de arriba
+val VoraAccessBackground = Color(0xFFF3F9F5)   // fondo de la pantalla
+val VoraAccessInk = Color(0xFF0E382F)          // titulo, etiquetas, iconos e insignia AI
+val VoraAccessAccent = Color(0xFF357E69)       // "ADAPTIVE INTELLIGENCE" y "Forgot your password?"
+val VoraAccessText = Color(0xFF6B8780)         // subtitulos, "EN" y "Sign up here"
+val VoraAccessHint = Color(0xFF9BAFA9)         // placeholder e iconos de los campos
+val VoraAccessField = Color(0xFFF8FBF9)        // fondo de los campos
+val VoraAccessBorder = Color(0xFFE2EDE7)       // borde de tarjeta, campos, botones sociales y separador
+val VoraAccessCta = Color(0xFFCCE65E)          // "Sign In →": otro lima que el de la lamina
+val VoraAccessBiometric = Color(0xFFECFDF5)    // fondo del boton de biometria
+val VoraAccessBiometricBorder = Color(0xFFA7F3D0)
+val VoraAccessBiometricIcon = Color(0xFF065F46)
+val VoraAccessBadgeText = Color(0xFF6EE7B7)    // "AI" de la insignia
+val VoraAccessOrbLight = Color(0xFF8DEABE)     // esfera del logo: brillo
+val VoraAccessOrbMid = Color(0xFF3CD59A)
+val VoraAccessOrbDark = Color(0xFF238B68)      // esfera del logo: borde inferior derecho
+val VoraAccessOrbHighlight = Color(0x4DFFFFFF) // brillo del centro del logo: blanco al 30 %
+val VoraAccessShield = Color(0xFF059669)       // escudo de "End-to-end encrypted..."

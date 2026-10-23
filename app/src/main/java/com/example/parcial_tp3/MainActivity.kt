@@ -19,6 +19,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.parcial_tp3.ui.components.VoraBottomBar
+import com.example.parcial_tp3.ui.navigation.RUTAS_A_SANGRE
 import com.example.parcial_tp3.ui.navigation.RUTAS_CON_BARRA
 import com.example.parcial_tp3.ui.navigation.Rutas
 import com.example.parcial_tp3.ui.navigation.VoraTab
@@ -70,10 +71,10 @@ fun VoraApp() {
     val destino = backStackEntry?.destination
     val rutaActual = destino?.route
     val llevaBarra = rutaActual != null && rutaActual in RUTAS_CON_BARRA
-    // Las dos del asistente se pintan hasta el borde: en el Figma el verde de Listening,
-    // Processing y Speaking y el blanco del chat van por detras de las barras del sistema.
-    // Se encargan ellas de sus propios margenes. Las otras 35 siguen igual que antes.
-    val aSangre = rutaActual == Rutas.VOICE || rutaActual == Rutas.CONVERSATION
+    // Se pintan hasta el borde: en el Figma el verde de Listening, Processing y Speaking, el
+    // blanco del chat y el resplandor menta del login van por detras de las barras del sistema.
+    // Se encargan ellas de sus propios margenes. Las demas siguen igual que antes.
+    val aSangre = rutaActual in RUTAS_A_SANGRE
 
     Scaffold(
         modifier = Modifier.fillMaxSize(),

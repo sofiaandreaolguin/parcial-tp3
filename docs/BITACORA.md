@@ -155,6 +155,35 @@ Formato:
 - Evidencia: `docs/evidencia/visual/profile-02-{411dp,360dp,360dp-scrolled}.png` (teléfono real). Build y tests unitarios en verde, `control-rapido.sh` sin fallas.
 - Commit / PR:
 
+### 2026-10-22 · Zaki · feat(profile): maquetar Profile / 03 Your goals según Figma
+- Carril y requisitos: B · UI01, UI02, UI03, NAV02, NAV03
+- Plan aprobado: rama 3 de 6 del flujo Profile. La pantalla solo se dibuja con las opciones del perfil de demostración: tocar no cambia la selección y "Save preferences" vuelve atrás. Todo con componentes que ya existían.
+- Qué propuso la IA y qué cambiamos:
+  - La IA armó la pantalla con `VoraSectionLabel` y el revisor visual midió que las etiquetas del Figma son de 13 y no de 10. Se usó `labelMedium` en una función de la pantalla, sin cambiar el componente que también usa Voice.
+  - El revisor marcó que el check de `VoraOptionCard` va a la altura del título y que la tarjeta es más alta. La IA propuso pasárselo a Martu y Zaki decidió hacerlo en esta rama (check arriba y padding 16), avisándole.
+  - La IA se equivocó al sumar espacio con un `Spacer` dentro de un `spacedBy` (daba 32 y no 20). Lo detectó antes de la captura y lo pasó a `padding(top)`.
+- Revisores:
+  - revisor-visual, dos vueltas. La primera marcó las etiquetas de 13, tres espaciados y la tarjeta de opción. La segunda: aprobada, con una diferencia menor en el alto de los chips (zona de Martu).
+  - revisor-arquitectura y /code-review: nada bloqueante. Se corrigieron dos comentarios, el rol de la tarjeta de coaching (`RadioButton`, elección única) y la traducción de "Supportive" ("De apoyo").
+  - Quedan como sugerencias:
+    - las opciones y los chips siguen siendo tocables sin cambiar nada, y los chips se anuncian como casilla (rol fijo en `VoraChip`);
+    - los tres ViewModel de Profile repiten el mismo `map` + `stateIn`;
+    - no hay tests de los ViewModel.
+- Evidencia: `docs/evidencia/visual/profile-03-{411dp,360dp}{,-scrolled}.png` (teléfono real). Build y tests unitarios en verde, `control-rapido.sh` sin fallas.
+
+### 2026-10-22 · Martu · feat(access): maquetar Login - 01 SignIn según Figma
+- Carril y requisitos: B (pantalla) · UI01, UI02, UI03, NAV02, NAV03, RF07, RF08 · tarea VC-n (1 de 4)
+- Plan aprobado: un PR por pantalla (SignIn, SignUp, Home Dashboard, Notifications). Paso 0 en la zona de tema y componentes: íconos que faltaban, aviso de demostración compartido y piezas de Acceso. `AuthViewModel` compartido por SignIn y SignUp, del grafo `access_graph`.
+- Qué propuso la IA y qué cambiamos:
+  - La IA midió el frame sobre la imagen exportada y propuso los textos un punto abajo de la lámina. Con el conector del Figma (archivo `LKv4KQzpss9FUJpCDPOVaF`, frame `2007:214`) se confirmó casi todo y se corrigió lo que no: el botón es 16 y no 17, los campos 55 y no 54, el selector 30, el escudo 16, y cuatro espacios de 2 a 4 dp.
+  - Login no usa la lámina: paleta propia aislada en `VoraTheme.colors.access` y errores de formulario que el Figma no dibuja (ficha `docs/decisiones/006-login-paleta-propia-y-errores.md`).
+  - La IA envolvió el ojo de la contraseña en una caja de 48 dp por el área táctil; al ver que agrandaba el campo a 72 se volvió atrás, porque Compose ya extiende el toque de un `clickable` chico a 48.
+  - Martu pidió hacer en esta tarea lo que era de Fiore: SignIn se pinta hasta el borde (`RUTAS_A_SANGRE` en `Rutas.kt`, que ahora usa `MainActivity`) y `PANTALLAS.md` y el LEEME de access dicen `popUpTo(access_graph)`, que es lo que hace el código.
+- Revisores: `revisor-visual` APROBADA (sugirió el placeholder de puntos y el color del escudo, aplicados); `revisor-requisitos` y `revisor-arquitectura` sin nada que bloquee; `/code-review` con 7 hallazgos: 3 corregidos (email sin espacios, degradé con `drawWithCache`, medidas del resplandor con nombre), 1 sin cambio necesario (área táctil) y 3 que quedan (test de `AuthViewModel`, reusar `VoraCircleButton` para volver, y la barra de estado, que después se resolvió). Se aplicaron también: la Route pide el ViewModel del grafo sin valor por defecto, tokens en vez de cuentas para sombras y flecha, y el estilo de "Sign up here" en el tema.
+- Pendiente: `AuthViewModelTest` (carril C, en otra sesión con `tests-rojo`). SignUp entra a `RUTAS_A_SANGRE` cuando se maquete.
+- Evidencia: `assembleDebug` y `testDebugUnitTest` en verde (49 tests), `control-rapido.sh` sin fallas. Capturas en `docs/evidencia/visual/login-01-{394dp,360dp,360dp-scroll}.png` (Pixel 9 Pro con densidad ajustada). Recorrido en el emulador: Sign In vacío muestra los errores; con datos válidos entra a Home y atrás cierra la app; "Listo" del teclado entra; "Sign up here" va a SignUp y al volver se conserva el email; el texto sobrevive a la rotación.
+- Commit / PR:
+
 ### 2026-10-22 · Hector · feat(workout): maquetar Workout / 01 Dashboard según Figma
 - Carril y requisitos: B · UI01, UI03, NAV03 · tarea k (PR 1 de 10 del flujo Workout)
 - Plan aprobado: las 7 pantallas de Workout en un PR por pantalla. 01 y 02 usan el catálogo real (`WorkoutsViewModel`); de 03 a 07 van con datos de demostración detrás de una interfaz `WorkoutDetailRepository`, para que la tarea del detalle (`GET /v1/workouts/{id}`, carril C aparte) solo cambie la implementación. Lo que no es dibujo (mock, base del detalle, sesión simulada) va en PR propios.

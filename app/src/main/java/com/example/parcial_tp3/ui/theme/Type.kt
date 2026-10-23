@@ -6,6 +6,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.sp
 import com.example.parcial_tp3.R
 
@@ -93,6 +94,25 @@ object VoraTextStyles {
     val fieldLabel = manrope(12, FontWeight.SemiBold)
     /** Nota al pie de Edit profile ("Your information is used..."): 12 Regular. */
     val footnote = manrope(12, FontWeight.Normal)
+
+    // Acceso (Login - 01 y 02), medidos en docs/figma/Login Flow.png contra una captura: los
+    // textos de Login van un punto abajo de la lamina (24 en vez de 26, 14 en vez de 15...).
+    /** "VORA Coach": 24 Bold apretado (138 dp de ancho en el frame). */
+    val accessTitle = manrope(24, FontWeight.Bold).copy(letterSpacing = (-0.3).sp)
+    /** Bajada, texto de los campos y "Don't have an account?": 14 Regular. */
+    val accessBody = manrope(14, FontWeight.Normal, lineHeight = 20)
+    /** "ADAPTIVE INTELLIGENCE": 12 SemiBold espaciado (166 dp de ancho en el frame). */
+    val accessTagline = manrope(12, FontWeight.SemiBold).copy(letterSpacing = 1.2.sp)
+    /** "Sign In →": 16 Bold en 24 (nodo "Sign In" del Figma, 53 x 24). */
+    val accessCta = manrope(16, FontWeight.Bold, lineHeight = 24)
+    /** "Sign up here": como la bajada, en negrita y subrayado. */
+    val accessBodyLink = accessBody.copy(fontWeight = FontWeight.Bold, textDecoration = TextDecoration.Underline)
+    /** Los 12 puntos del placeholder de la contrasena, separados como en el frame. */
+    val accessPasswordDots = accessBody.copy(letterSpacing = 3.sp)
+    /** "Forgot your password?": 12 Medium. */
+    val accessLink = manrope(12, FontWeight.Medium)
+    /** "AI" de la insignia del logo. */
+    val accessBadge = manrope(10, FontWeight.Bold, lineHeight = 12)
 
     /** Panel verde de Workout / 01: titulo "Upper Body Strength" (22 SemiBold) y "READY FOR TODAY?" (12 Bold). */
     val panelTitle = manrope(22, FontWeight.SemiBold)

@@ -153,6 +153,7 @@ fun VoraListRow(
 
 /**
  * Tarjeta de opcion con circulo de check ("Build strength", "Concise / Balanced").
+ * Padding 16 en los cuatro lados: 76 de alto con subtitulo y 52 sin, medido en Profile / 03.
  * Elegida: fondo menta translucido, borde menta de 2 y circulo verde con check.
  * Sin elegir: blanca, borde fino y circulo vacio.
  *
@@ -183,8 +184,9 @@ fun VoraOptionCard(
             .background(if (selected) VoraTheme.colors.mintTranslucent else MaterialTheme.colorScheme.surface)
             .border(borde, shape)
             .selectable(selected = selected, onClick = onClick, role = role)
-            .padding(horizontal = VoraTheme.spacing.s16, vertical = VoraTheme.spacing.s14),
-        verticalAlignment = Alignment.CenterVertically,
+            .padding(horizontal = VoraTheme.spacing.s16, vertical = VoraTheme.spacing.s16),
+        // check a la altura del titulo, no centrado: con subtitulo largo queda arriba (Profile / 03)
+        verticalAlignment = Alignment.Top,
     ) {
         Column(Modifier.weight(1f)) {
             Text(

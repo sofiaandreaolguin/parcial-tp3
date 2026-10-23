@@ -123,6 +123,20 @@
     <string name="edit_info">Se usa para personalizar tus recomendaciones.</string>
     <string name="edit_save">Guardar cambios</string>
     <string name="edit_footer">Tu información se usa para personalizar tu experiencia en VORA.</string>
+    <!-- Profile / 03 — Goals & Preferences -->
+    <string name="goals_title">Tus objetivos</string>
+    <string name="goals_intro">Contale a VORA hacia dónde vas. Tu coaching se adapta a eso.</string>
+    <string name="goals_primary">OBJETIVO PRINCIPAL — ¿CUÁL ES TU META?</string>
+    <string name="goals_frequency">FRECUENCIA DE ENTRENAMIENTO</string>
+    <string name="goals_workout">PREFERENCIA DE ENTRENAMIENTO</string>
+    <string name="goals_coaching">ESTILO DE COACHING — ¿CÓMO QUERÉS QUE TE ACOMPAÑE VORA?</string>
+    <string name="goal_build_strength_sub">Foco en pesas y carga mecánica</string>
+    <string name="goal_improve_fitness_sub">Acondicionar el sistema cardiovascular y energético</string>
+    <string name="coaching_supportive">De apoyo</string>
+    <string name="coaching_balanced">Equilibrado</string>
+    <string name="coaching_direct">Directo</string>
+    <string name="coaching_balanced_sub">Guía práctica con motivación amable</string>
+    <string name="profile_save_preferences">Guardar preferencias</string>
     <!-- Asistente VORA (Voice / 01 a 06 y Conversation). Mismas claves que values/strings.xml. -->
     <string name="voice_coach_title">Coach VORA</string>
     <string name="voice_online">EN LINEA</string>
@@ -185,6 +199,30 @@
     <string name="conversation_send">Enviar</string>
     <string name="conversation_attach">Agregar</string>
     <string name="conversation_mic">Entrada de voz</string>
+
+    <!-- Acceso (Login - 01 y 02) -->
+    <string name="access_brand">VORA Coach</string>
+    <string name="access_tagline">INTELIGENCIA ADAPTATIVA</string>
+    <string name="access_badge_ai">IA</string>
+    <string name="access_language">ES</string>
+    <string name="access_email_label">Correo electrónico</string>
+    <string name="access_email_placeholder">alex.morgan@email.com</string>
+    <string name="access_password_label">Contraseña</string>
+    <string name="access_show_password">Mostrar contraseña</string>
+    <string name="access_hide_password">Ocultar contraseña</string>
+    <string name="access_apple">Continuar con Apple</string>
+    <string name="access_google">Continuar con Google</string>
+    <string name="access_biometric">Entrar con biometría</string>
+    <string name="access_error_email">Ingresá un correo válido</string>
+    <string name="access_error_password">Usá al menos 8 caracteres</string>
+    <string name="access_error_name">Ingresá tu nombre completo</string>
+    <string name="sign_in_subtitle">Tu plan de fuerza, nutrición y progreso en un solo lugar.</string>
+    <string name="sign_in_forgot">¿Olvidaste tu contraseña?</string>
+    <string name="sign_in_action">Iniciar sesión</string>
+    <string name="sign_in_or_continue">O continuá con</string>
+    <string name="sign_in_encrypted">Ingreso biométrico cifrado de punta a punta</string>
+    <string name="sign_in_no_account">¿No tenés cuenta?</string>
+    <string name="sign_in_sign_up_link">Registrate acá</string>
 
     <!-- Workout / 01 — Dashboard. Los "_demo" son de demostracion: no salen del servidor. -->
     <string name="workout_goal">Objetivo de entrenamiento</string>
