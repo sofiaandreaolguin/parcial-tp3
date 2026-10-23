@@ -184,7 +184,7 @@ Formato:
 - Evidencia: `assembleDebug` y `testDebugUnitTest` en verde (49 tests), `control-rapido.sh` sin fallas. Capturas en `docs/evidencia/visual/login-01-{394dp,360dp,360dp-scroll}.png` (Pixel 9 Pro con densidad ajustada). Recorrido en el emulador: Sign In vacío muestra los errores; con datos válidos entra a Home y atrás cierra la app; "Listo" del teclado entra; "Sign up here" va a SignUp y al volver se conserva el email; el texto sobrevive a la rotación.
 - Commit / PR: `dd35857`, `854f637`, `c6adf0f`, `4bdfea2` · PR #18
 
-### 2026-10-23 · Martu · feat(access): maquetar Login - 02 SignUp según Figma
+### 2026-10-22 · Martu · feat(access): maquetar Login - 02 SignUp según Figma
 - Carril y requisitos: B (pantalla) · UI01, UI02, UI03, NAV02, NAV03, RF07, RF08 · tarea VC-n (2 de 4)
 - Plan aprobado: PR 2 de 4 de la tarea n, en una rama que sale de `feat/access-sign-in` (PR #18 todavía abierto). Reusa las piezas de Acceso y el `AuthViewModel` del grafo.
 - Qué propuso la IA y qué cambiamos:
@@ -228,4 +228,16 @@ Formato:
   - Queda como sugerencia:
     - los ViewModel de Profile repiten el mismo `map` + `stateIn`. Se dejó así a propósito: son seis líneas sin lógica, muestran el patrón de la cursada en cada ViewModel y siguen la forma del resto del proyecto. Si se suma persistencia, el repositorio expone el `Flow` de Room (como `MealRepository`) y en cada ViewModel solo cambia el valor inicial del `stateIn`.
 - Evidencia: `docs/evidencia/visual/profile-04-{411dp,360dp}{,-scrolled}.png` (teléfono real). Build y tests unitarios en verde, `control-rapido.sh` sin fallas.
+
+### 2026-10-22 · Martu · feat(home): maquetar Home / 01 Dashboard según Figma
+- Carril y requisitos: B (pantalla) · UI01, UI02, UI03, NAV02, NAV03, NAV04, RF04, RF07, RF08 · tarea VC-n (3 de 4)
+- Plan aprobado: PR 3 de 4 de la tarea n, en una rama que sale de `main` (no depende de SignUp). Calorías y macros de hoy desde Room; el resto de demostración con la forma de `Workout`.
+- Qué propuso la IA y qué cambiamos:
+  - Las medidas salieron de los nodos del Figma (frame `2007:3`) y los colores de la imagen exportada: Home usa la lámina, así que no hizo falta paleta propia. Se reusaron `VoraPanel`, `VoraButton`, `VoraInfoMessage`, `VoraProgressRing`, `VoraProgressBar`, `VoraStatRow`, `VoraCard`, `VoraOrb`, `VoraTag` y `ProfileAvatar`; lo que el frame dibuja distinto se agregó como parámetro con su valor de antes por defecto (padding del panel, alto de barra, columnas a la izquierda, botón con ícono, estilo sobre verde, tamaño compacto, etiqueta neutra).
+  - Las comillas de la pregunta desaparecían: Android las usa como delimitador en `strings.xml` y hay que escaparlas. La pregunta cortaba en otro lugar que el Figma ("fitness" arriba); medida la primera línea (241 contra 247.5 dp), se le dio 0.3 de espaciado y corta igual.
+  - "Start my workout" y la sección "Today's Overview" navegan como la barra (`irAPestana`), así la pestaña queda marcada y atrás vuelve a Home.
+  - Los totales del día se suman en Kotlin (ficha `docs/decisiones/007-home-totales-del-dia.md`, con la mejora posible para la pregunta 5).
+- Revisores: `revisor-visual` APROBADA (marcó el fondo de "TODAY", que en el nodo no tiene relleno: corregido; el apóstrofo de "Today's" es recto en el nodo, así que se dejó); `revisor-requisitos` y `revisor-arquitectura` sin nada que bloquee. Martu pidió mover `ProfileAvatar` (estaba en `ui/screens/profile`) a `ui/components` como `VoraAvatar`, porque ahora lo usan Profile y Home; en Profile solo cambian el import y el nombre. Se aplicaron también: fechas de la documentación (la IA puso 23/10 tomando la hora UTC de GitHub), estilos en negrita como tokens del tema (`homeValue`), alto mínimo y no fijo en el botón de voz, el porcentaje calculado en el estado, el nombre armado con un string (el orden depende del idioma) y el estilo del botón compacto con nombre genérico (`buttonCompact`). `/code-review`: 2 corregidos (etiquetas de la fila de datos alineadas a la izquierda al cortar; alto de línea del valor grande), 3 que quedan.
+- Pendiente: `HomeViewModelTest` (carril C) con un `Clock` inyectado, para probar el saludo, la suma del día y el tope del anillo; la fecha de "hoy" se fija al crear el ViewModel (ficha 007).
+- Evidencia: `assembleDebug` y `testDebugUnitTest` en verde, `control-rapido.sh` sin fallas. Capturas en `docs/evidencia/visual/home-01-{394dp,394dp-scroll,360dp,360dp-scroll}.png`. Posiciones contra los nodos a ±2 dp (panel, botón de voz, tarjetas, fila de datos y recomendado). Recorrido: campana, "Start voice session", "Start my workout", "Log breakfast", "Start workout" y las tarjetas del anillo y de nutrición van a su destino y atrás vuelve a Home.
 - Commit / PR:

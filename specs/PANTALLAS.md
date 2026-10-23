@@ -129,7 +129,7 @@ Leído de los frames el 18/10. Lo que dice *a confirmar* es lectura mía del dib
 | 4 | Home / 02 — Notifications | `notifications` | Con barra | `NotificationsViewModel` | Demostración | Home y Profile |
 
 - **Entrada:** `home_dashboard` es la pantalla base de la pestaña Home y el destino al que vuelven las demás pestañas (`popUpTo("home_dashboard") { saveState = true }`).
-- **Qué es real en Home / 01:** el entrenamiento recomendado sale de la caché de Workout (Room) y el total de calorías de la tabla de comidas (Room). El resto (pasos, anillos, saludo) es de ejemplo.
+- **Qué es real en Home / 01:** las calorías, proteínas y carbohidratos de hoy salen de la tabla de comidas (Room) y el nombre, del perfil de demostración. El entrenamiento recomendado, los pasos, la distancia y los objetivos diarios son de ejemplo (`HomeDemoData`, con la forma del modelo `Workout`); el recomendado pasa a salir de la caché de Workout cuando cierre la tarea j (propuesto el 22/10 en el PR de Home; a confirmar por el grupo).
 - Home / 01 es más alta que 850 dp: lleva scroll (UI03).
 - Desde el panel del coach de Home / 01 se abre el Asistente VORA (`voice`). *A confirmar con el frame.*
 
@@ -144,7 +144,7 @@ Leído de los frames el 18/10. Lo que dice *a confirmar* es lectura mía del dib
 | | "Start my workout" (chip) | `workout_dashboard` · cruza |
 | | "Log breakfast" (chip) | `add_food` · cruza |
 | | "Start workout" (tarjeta del recomendado) | `workout_details/{workoutId}` · cruza |
-| | Sección "Today's Overview" | `todays_overview` · cruza · *entrada secundaria* |
+| | Sección "Today's Overview" (tarjetas del anillo y de nutrición) | `todays_overview` · cruza · *entrada secundaria*: abre la pestaña Progress como la barra |
 | | Barra inferior | Las otras 4 pestañas |
 | Home / 02 | "Mark all as read" | No navega |
 | | "Upper Body Strength is ready" | `workout_details/{workoutId}` |

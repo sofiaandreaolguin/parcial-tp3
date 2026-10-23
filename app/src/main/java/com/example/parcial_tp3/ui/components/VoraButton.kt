@@ -8,9 +8,13 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -18,6 +22,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.TextStyle
@@ -42,6 +47,8 @@ enum class VoraButtonStyle {
     Mint,
     /** Borde blanco translucido y texto blanco, sobre paneles oscuros: "Details". */
     OutlinedOnDark,
+    /** Blanco al 12 % sin borde y texto blanco, sobre paneles oscuros: "Start my workout" de Home. */
+    SubtleOnDark,
     /** Fondo blanco con borde y texto oscuro: "Start my workout", "Edit workout". */
     Outlined,
     /** Fondo claro de pantalla, sin borde, texto verde, sobre tarjetas blancas: "Edit profile". */
@@ -58,7 +65,13 @@ enum class VoraButtonStyle {
  * Chico: 13 SemiBold con padding 8/16 (Home). Mediano: 14 SemiBold con padding 12/16 (panel
  * de Workout / 01). Grande: 15 Bold con padding 14/24 (Edit profile).
  */
-enum class VoraButtonSize { Small, Medium, Large }
+enum class VoraButtonSize {
+    Small,
+    Medium,
+    Large,
+    /** 13 Medium en 16 con padding 8/12: las acciones del panel de Home (32 de alto). */
+    Compact,
+}
 
 /**
  * Boton de VORA, siempre en forma de pildora. Sin estado: recibe el texto y avisa el toque.
@@ -66,6 +79,8 @@ enum class VoraButtonSize { Small, Medium, Large }
  * Para que ocupe todo el ancho ("Save preferences"), pasar `Modifier.fillMaxWidth()`.
  *
  * @param text de strings.xml.
+ * @param icon icono de 16 antes del texto, separado 8 ("Start voice session").
+ * @param alignStart el contenido va pegado a la izquierda en vez de centrado (Home / 01).
  */
 @Composable
 fun VoraButton(
@@ -74,6 +89,8 @@ fun VoraButton(
     modifier: Modifier = Modifier,
     style: VoraButtonStyle = VoraButtonStyle.Primary,
     size: VoraButtonSize = VoraButtonSize.Large,
+    icon: Painter? = null,
+    alignStart: Boolean = false,
 ) {
     val colors = MaterialTheme.colorScheme
     val extra = VoraTheme.colors
@@ -85,6 +102,7 @@ fun VoraButton(
         VoraButtonStyle.Mint -> Triple(colors.secondary, extra.onAccent, null)
         VoraButtonStyle.OutlinedOnDark ->
             Triple(Color.Transparent, colors.onPrimary, extra.onDarkBorder)
+        VoraButtonStyle.SubtleOnDark -> Triple(extra.onDarkSubtle, colors.onPrimary, null)
         VoraButtonStyle.Outlined -> Triple(colors.surface, colors.onSurface, colors.outline)
         VoraButtonStyle.Soft -> Triple(colors.background, colors.primary, null)
         VoraButtonStyle.Destructive -> Triple(Color.Transparent, colors.error, colors.error)
@@ -97,12 +115,14 @@ fun VoraButton(
         VoraButtonSize.Small -> MaterialTheme.typography.labelMedium
         VoraButtonSize.Medium -> MaterialTheme.typography.labelLarge
         VoraButtonSize.Large -> MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Bold)
+        VoraButtonSize.Compact -> VoraTheme.text.buttonCompact
     }.let { if (style == VoraButtonStyle.TextMuted) it.copy(textDecoration = TextDecoration.Underline) else it }
 
     val (vertical, horizontal) = when (size) {
         VoraButtonSize.Small -> VoraTheme.spacing.s8 to VoraTheme.spacing.s16
         VoraButtonSize.Medium -> VoraTheme.spacing.s12 to VoraTheme.spacing.s16
         VoraButtonSize.Large -> VoraTheme.spacing.s14 to VoraTheme.spacing.s24
+        VoraButtonSize.Compact -> VoraTheme.spacing.s8 to VoraTheme.spacing.s12
     }
 
     Box(
@@ -116,17 +136,23 @@ fun VoraButton(
                 if (esTexto) Modifier.padding(vertical = vertical)
                 else Modifier.padding(vertical = vertical, horizontal = horizontal),
             ),
-        contentAlignment = Alignment.Center,
+        contentAlignment = if (alignStart) Alignment.CenterStart else Alignment.Center,
     ) {
-        // nunca en dos lineas: si no entra, quien lo usa le da mas ancho o lo pasa abajo
-        Text(
-            text = text,
-            style = textStyle,
-            color = texto,
-            maxLines = 1,
-            softWrap = false,
-            overflow = TextOverflow.Ellipsis,
-        )
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            if (icon != null) {
+                Icon(painter = icon, contentDescription = null, tint = texto, modifier = Modifier.size(VoraTheme.sizes.iconXSmall))
+                Spacer(Modifier.width(VoraTheme.spacing.s8))
+            }
+            // nunca en dos lineas: si no entra, quien lo usa le da mas ancho o lo pasa abajo
+            Text(
+                text = text,
+                style = textStyle,
+                color = texto,
+                maxLines = 1,
+                softWrap = false,
+                overflow = TextOverflow.Ellipsis,
+            )
+        }
     }
 }
 

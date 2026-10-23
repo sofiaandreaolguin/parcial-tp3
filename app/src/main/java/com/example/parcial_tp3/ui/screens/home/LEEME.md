@@ -32,4 +32,4 @@ Por cada pantalla, cuatro archivos (`specs/CONTEXTO.md`, secciones 3 y 5):
 - Para reemplazar la pantalla de relleno: en el grafo de tu flujo (`ui/navigation/HomeNavGraph.kt`), cambiá `PantallaVacia(...)` por tu `XxxRoute(...)`.
 - `Home / 01` es más alta que 850 dp: lleva scroll.
 - Es la pantalla que más cruza de flujo: el botón lima abre el coach (`voice`), y los chips llevan a Workout y a Nutrition.
-- **Mirá si la sección "Today's Overview" abre algo.** Si abre, va a `todays_overview`; si no, esa pantalla de Progress queda sin entrada (pendiente 2 de `specs/PANTALLAS.md`).
+- La sección "Today's Overview" (tarjetas del anillo y de nutrición) abre `todays_overview` con la navegación de la pestaña Progress (`irAPestana`), igual que "Start my workout" abre la de Workout: así la barra queda marcada en la pestaña correcta y atrás vuelve a Home.

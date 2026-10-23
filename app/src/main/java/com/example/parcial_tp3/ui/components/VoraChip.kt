@@ -98,6 +98,8 @@ enum class VoraTagTone {
     MintOnDark,
     /** Verde oscuro con texto blanco, sobre fondo claro: "Synced". */
     Dark,
+    /** Sin fondo, texto verde: "TODAY" de Home (el nodo tiene padding pero no relleno). */
+    Neutral,
 }
 
 /**
@@ -117,6 +119,7 @@ fun VoraTag(
         VoraTagTone.OnDark -> VoraTheme.colors.onDarkSubtle to MaterialTheme.colorScheme.onPrimary
         VoraTagTone.MintOnDark -> VoraTheme.colors.mintTranslucent to MaterialTheme.colorScheme.secondary
         VoraTagTone.Dark -> MaterialTheme.colorScheme.primary to MaterialTheme.colorScheme.onPrimary
+        VoraTagTone.Neutral -> Color.Transparent to MaterialTheme.colorScheme.primary
     }
     Text(
         text = text,
