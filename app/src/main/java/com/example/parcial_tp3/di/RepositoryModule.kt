@@ -1,7 +1,9 @@
 package com.example.parcial_tp3.di
 
+import com.example.parcial_tp3.data.repository.DemoWorkoutDetailRepository
 import com.example.parcial_tp3.data.repository.MealRepository
 import com.example.parcial_tp3.data.repository.MealRepositoryImpl
+import com.example.parcial_tp3.data.repository.WorkoutDetailRepository
 import com.example.parcial_tp3.data.repository.WorkoutRepository
 import com.example.parcial_tp3.data.repository.WorkoutRepositoryImpl
 import dagger.Binds
@@ -25,4 +27,9 @@ abstract class RepositoryModule {
     @Binds
     @Singleton
     abstract fun bindWorkoutRepository(impl: WorkoutRepositoryImpl): WorkoutRepository
+
+    // Demostracion: la tarea del detalle real cambia solo esta linea por su implementacion.
+    @Binds
+    @Singleton
+    abstract fun bindWorkoutDetailRepository(impl: DemoWorkoutDetailRepository): WorkoutDetailRepository
 }
