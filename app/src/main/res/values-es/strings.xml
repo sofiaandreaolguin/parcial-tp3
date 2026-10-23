@@ -275,4 +275,37 @@
     <string name="workout_completed_demo">3/5 completos</string>
     <string name="workout_volume">VOL. LEVANTADO</string>
     <string name="workout_volume_demo">8.420 kg</string>
+    <string name="workout_level_beginner">Principiante</string>
+    <string name="workout_level_intermediate">Intermedio</string>
+    <string name="workout_level_advanced">Avanzado</string>
+    <string name="weekly_title">Tu plan</string>
+    <string name="weekly_subtitle">Pensado según tus objetivos y tu recuperación.</string>
+    <string-array name="weekly_days_short">
+        <item>LUN</item>
+        <item>MAR</item>
+        <item>MIÉ</item>
+        <item>JUE</item>
+        <item>VIE</item>
+        <item>SÁB</item>
+        <item>DOM</item>
+    </string-array>
+    <string-array name="weekly_days_long">
+        <item>LUNES</item>
+        <item>MARTES</item>
+        <item>MIÉRCOLES</item>
+        <item>JUEVES</item>
+        <item>VIERNES</item>
+        <item>SÁBADO</item>
+        <item>DOMINGO</item>
+    </string-array>
+    <string name="weekly_day_desc">%1$s %2$d</string>
+    <string name="weekly_today">ENTRENAMIENTO DE HOY</string>
+    <string name="weekly_ready">LISTO</string>
+    <string name="weekly_summary_level">%1$s • %2$s</string>
+    <string name="weekly_recovery_title">Recuperación activa</string>
+    <string name="weekly_recovery_detail">25 min • Movilidad + caminata</string>
+    <string name="weekly_adjust_title">¿NECESITÁS AJUSTAR TU SEMANA?</string>
+    <string name="weekly_adjust_body">Contale a VORA qué cambió (por ejemplo, el sueño, dolor muscular o menos tiempo) y tu coach va a reacomodar la semana.</string>
+    <string name="weekly_adjust_tired">Hoy estoy sin energía</string>
+    <string name="weekly_adjust_move">Pasar el del miércoles al viernes</string>
 </resources>

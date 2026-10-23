@@ -276,4 +276,37 @@
     <string name="workout_completed_demo">3/5 complete</string>
     <string name="workout_volume">VOL. LIFTED</string>
     <string name="workout_volume_demo">8,420 kg</string>
+    <string name="workout_level_beginner">Beginner</string>
+    <string name="workout_level_intermediate">Intermediate</string>
+    <string name="workout_level_advanced">Advanced</string>
+    <string name="weekly_title">Your Plan</string>
+    <string name="weekly_subtitle">Designed around your goals and recovery.</string>
+    <string-array name="weekly_days_short">
+        <item>MON</item>
+        <item>TUE</item>
+        <item>WED</item>
+        <item>THU</item>
+        <item>FRI</item>
+        <item>SAT</item>
+        <item>SUN</item>
+    </string-array>
+    <string-array name="weekly_days_long">
+        <item>MONDAY</item>
+        <item>TUESDAY</item>
+        <item>WEDNESDAY</item>
+        <item>THURSDAY</item>
+        <item>FRIDAY</item>
+        <item>SATURDAY</item>
+        <item>SUNDAY</item>
+    </string-array>
+    <string name="weekly_day_desc">%1$s %2$d</string>
+    <string name="weekly_today">TODAY\'S WORKOUT</string>
+    <string name="weekly_ready">READY</string>
+    <string name="weekly_summary_level">%1$s • %2$s</string>
+    <string name="weekly_recovery_title">Active Recovery</string>
+    <string name="weekly_recovery_detail">25 min • Mobility + Walk</string>
+    <string name="weekly_adjust_title">NEED TO ADJUST YOUR WEEK?</string>
+    <string name="weekly_adjust_body">Tell VORA what changed (e.g., sleep, muscle soreness, or schedule cuts) and your coach will realign the week dynamically.</string>
+    <string name="weekly_adjust_tired">I\'m tired today</string>
+    <string name="weekly_adjust_move">Move Wed workout to Fri</string>
 </resources>
