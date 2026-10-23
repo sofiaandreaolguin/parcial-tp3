@@ -234,4 +234,56 @@
     <string name="sign_up_recover">Recuperar</string>
     <string name="sign_up_have_account">¿Ya tenés cuenta?</string>
     <string name="sign_up_sign_in_link">Iniciar sesión</string>
+
+    <!-- Workout / 01 — Dashboard. Los "_demo" son de demostracion: no salen del servidor. -->
+    <string name="workout_goal">Objetivo de entrenamiento</string>
+    <string name="workout_title">Entrenamientos</string>
+    <string name="workout_open_plan">Abrir el plan semanal</string>
+    <string name="workout_ready">¿LISTO PARA HOY?</string>
+    <string name="workout_level_beginner_tag">PRINCIPIANTE</string>
+    <string name="workout_level_intermediate_tag">INTERMEDIO</string>
+    <string name="workout_level_advanced_tag">AVANZADO</string>
+    <plurals name="workout_summary">
+        <item quantity="one">%1$d min • %2$d ejercicio</item>
+        <item quantity="other">%1$d min • %2$d ejercicios</item>
+    </plurals>
+    <string name="workout_start">Empezar</string>
+    <string name="workout_details">Detalle</string>
+    <string name="workout_loading">Cargando entrenamientos</string>
+    <string name="workout_error">No pudimos cargar tus entrenamientos.</string>
+    <string name="workout_empty">Todavía no hay entrenamientos.</string>
+    <string name="workout_recommends">VORA RECOMIENDA</string>
+    <string name="workout_recommends_demo">Tu última sesión de tren superior fue hace 4 días. Hoy es una gran oportunidad para alcanzar tus objetivos de volumen de fuerza.</string>
+    <string name="workout_week_activity">Actividad de esta semana</string>
+    <string-array name="workout_week_initials">
+        <item>L</item>
+        <item>M</item>
+        <item>M</item>
+        <item>J</item>
+        <item>V</item>
+        <item>S</item>
+        <item>D</item>
+    </string-array>
+    <string-array name="workout_week_names">
+        <item>Lunes</item>
+        <item>Martes</item>
+        <item>Miércoles</item>
+        <item>Jueves</item>
+        <item>Viernes</item>
+        <item>Sábado</item>
+        <item>Domingo</item>
+    </string-array>
+    <string name="workout_day_rest">Zzz</string>
+    <string name="workout_day_today">HOY</string>
+    <string name="workout_day_done_desc">%1$s: hecho</string>
+    <string name="workout_day_rest_desc">%1$s: descanso</string>
+    <string name="workout_day_today_desc">%1$s: hoy</string>
+    <string name="workout_progress">Tu progreso</string>
+    <string name="workout_view_progress">Ver progreso</string>
+    <string name="workout_streak">RACHA</string>
+    <string name="workout_streak_demo">4 días</string>
+    <string name="workout_completed">ENTRENAMIENTOS</string>
+    <string name="workout_completed_demo">3/5 completos</string>
+    <string name="workout_volume">VOL. LEVANTADO</string>
+    <string name="workout_volume_demo">8.420 kg</string>
 </resources>
