@@ -355,6 +355,7 @@ Formato:
   - la tarjeta de la cena se dibuja siempre: con Room tiene que mostrarse solo si no hay una cena registrada;
   - `caloriesConsumed` es un `@StringRes` de demostración: con Room pasa a ser un número y el total sale de sumar las comidas;
   - `dashedBorder` es privado de esta pantalla: si otra pantalla necesita un estado vacío igual, conviene subirlo a `ui/components` (Martu);
+  - el comentario que explicaba por qué la píldora usa `outline` se sacó a pedido de Sofi, aunque el revisor y `/code-review` lo marcaron: el motivo (verde al 8 % sobre el fondo da `#E5E9E6`) queda en esta entrada;
   - el texto del Figma dice "Today's Meals" con apóstrofo recto en el nodo 1:869; el render lo muestra curvo, no es una diferencia;
   - el listado por fecha de RF04 no tiene frame: hoy la pantalla muestra solo hoy (tarea l).
 - Evidencia: `docs/evidencia/visual/nutrition-02-{411dp,360dp}{,-scroll}.png` (emulador de 1080x2424 a 420 dpi y el mismo con `wm size` a 360 dp; al final se devolvió el tamaño). `assembleDebug`, `testDebugUnitTest` y `lintDebug` (0 errores) en verde, `reglas.sh` exit 0. A mano: una comida abre Meal Details, "+ Add Dinner" abre Add Food y atrás vuelve a 02.
