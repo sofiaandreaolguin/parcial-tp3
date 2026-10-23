@@ -1,16 +1,14 @@
 package com.example.parcial_tp3.ui.navigation
 
-import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
-import com.example.parcial_tp3.R
-import com.example.parcial_tp3.ui.components.PantallaVacia
 import com.example.parcial_tp3.ui.screens.profile.EditProfileRoute
 import com.example.parcial_tp3.ui.screens.profile.GoalsRoute
 import com.example.parcial_tp3.ui.screens.profile.NutritionPreferencesRoute
 import com.example.parcial_tp3.ui.screens.profile.ProfileDashboardRoute
+import com.example.parcial_tp3.ui.screens.profile.SettingsRoute
 import com.example.parcial_tp3.ui.screens.profile.VoiceSettingsRoute
 
 /** Perfil: 6 pantallas. Solo 01 con barra; 02 a 06 se abren encima. */
@@ -42,9 +40,15 @@ fun NavGraphBuilder.profileGraph(nav: NavController) {
             )
         }
         composable(Rutas.SETTINGS) {
-            PantallaVacia(
-                nombre = stringResource(R.string.pant_profile_06),
-                onVolver = { nav.popBackStack() },
+            SettingsRoute(
+                onBack = { nav.popBackStack() },
+                onEditProfile = { nav.navigate(Rutas.EDIT_PROFILE) },
+                // cerrar sesión: vacía toda la pila, así atrás no vuelve a Profile
+                onLogOut = {
+                    nav.navigate(Rutas.ACCESS_GRAPH) {
+                        popUpTo(nav.graph.id) { inclusive = true }
+                    }
+                },
             )
         }
     }
