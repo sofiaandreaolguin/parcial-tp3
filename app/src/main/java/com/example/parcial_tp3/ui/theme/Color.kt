@@ -60,3 +60,10 @@ val VoraAccessOrbMid = Color(0xFF3CD59A)
 val VoraAccessOrbDark = Color(0xFF238B68)      // esfera del logo: borde inferior derecho
 val VoraAccessOrbHighlight = Color(0x4DFFFFFF) // brillo del centro del logo: blanco al 30 %
 val VoraAccessShield = Color(0xFF059669)       // escudo de "End-to-end encrypted..."
+
+// Login - 02 (SignUp) tiene su propia variante, medida igual (frame 4002:2)
+val VoraAccessOutline = Color(0xFF6B7280)      // borde y placeholder de los campos de SignUp
+val VoraAccessTaglineDeep = Color(0xFF065F46)  // "ADAPTIVE INTELLIGENCE" de SignUp
+val VoraAccessOrbLime = Color(0xFF98DF72)      // orbe de SignUp: arriba a la derecha
+val VoraAccessOrbMint = Color(0xFF47D592)
+val VoraAccessOrbDeep = Color(0xFF1A6A51)      // orbe de SignUp: abajo a la izquierda

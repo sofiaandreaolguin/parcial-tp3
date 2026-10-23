@@ -78,6 +78,11 @@ data class VoraAccessColors(
     val orbDark: Color = VoraAccessOrbDark,
     val orbHighlight: Color = VoraAccessOrbHighlight,
     val shield: Color = VoraAccessShield,
+    val outline: Color = VoraAccessOutline,
+    val taglineDeep: Color = VoraAccessTaglineDeep,
+    val orbLime: Color = VoraAccessOrbLime,
+    val orbMint: Color = VoraAccessOrbMint,
+    val orbDeep: Color = VoraAccessOrbDeep,
 )
 
 private val LocalVoraColors = staticCompositionLocalOf { VoraExtraColors() }

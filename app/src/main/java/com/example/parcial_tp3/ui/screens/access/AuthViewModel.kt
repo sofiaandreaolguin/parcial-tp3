@@ -36,6 +36,12 @@ class AuthViewModel @Inject constructor() : ViewModel() {
     /** "Sign Up →": lo mismo que SignIn, mas el nombre completo. */
     fun signUp() = submit(requireName = true)
 
+    /**
+     * Al pasar de SignIn a SignUp o al reves se borran los errores y queda lo escrito: si no,
+     * el "Sign Up" fallido deja SignIn en rojo sin que ahi se haya tocado nada.
+     */
+    fun onSwitchScreen() = _uiState.update { it.copy(nameError = null, emailError = null, passwordError = null) }
+
     /** La Route ya navego a Home: se baja la marca para que volver a la pantalla no re-navegue. */
     fun onNavigated() = _uiState.update { it.copy(signedIn = false) }
 

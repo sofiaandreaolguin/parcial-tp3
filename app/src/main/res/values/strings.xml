@@ -224,6 +224,18 @@
     <string name="sign_in_encrypted">End-to-end encrypted biometric sign-in</string>
     <string name="sign_in_no_account">Don\'t have an account?</string>
     <string name="sign_in_sign_up_link">Sign up here</string>
+    <string name="sign_up_name_label">Full Name</string>
+    <string name="sign_up_name_placeholder" translatable="false">Alex Morgan</string>
+    <string name="sign_up_password_placeholder">At least 8 characters</string>
+    <string name="sign_up_secure">8+ secure characters</string>
+    <string name="sign_up_password_help">Password help?</string>
+    <string name="sign_up_action">Sign Up</string>
+    <string name="sign_up_or">Or sign up with</string>
+    <string name="sign_up_biometric">Biometric sign-in</string>
+    <string name="sign_up_issues">Having account issues?</string>
+    <string name="sign_up_recover">Recover</string>
+    <string name="sign_up_have_account">Already have an account?</string>
+    <string name="sign_up_sign_in_link">Sign In</string>
 
     <!-- Workout / 01 — Dashboard. Los "_demo" son de demostracion: no salen del servidor. -->
     <string name="workout_goal">Workout Goal</string>

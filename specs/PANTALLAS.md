@@ -118,6 +118,8 @@ Leído de los frames el 18/10. Lo que dice *a confirmar* es lectura mía del dib
 | Login - 02 — SignUp | "Sign Up →" | `home_dashboard`, sacando el login de la pila |
 | | "Sign In" (abajo) | `sign_in` |
 | | "Recover" / "Password help?" | Aviso de modo demostración |
+| | Flecha ‹ (arriba izq.) y atrás del sistema | `sign_in` (igual que "Sign In") |
+| | Apple / Google / biometría | Aviso de modo demostración (salvo que se haga Firebase) |
 
 ## 4. Inicio (2 pantallas)
 

@@ -168,6 +168,17 @@ object VoraSizes {
     val accessShadowCta = 12.dp
     /** Ancho de la bajada: corta en "progress plan / in one place." como el frame. */
     val accessSubtitle = 276.dp
+    /** SignUp: orbe de 56, campos de 52, boton principal y sociales de 48, tilde de 13. */
+    val accessLogoSmall = 56.dp
+    /** Insignia "AI" del orbe de SignUp: arranca en (33, 39) del orbe y sobresale. */
+    val accessBadgeOffsetX = 33.dp
+    val accessBadgeOffsetY = 39.dp
+    val accessFieldOutlined = 52.dp
+    val accessCtaCompact = 48.dp
+    val socialButtonLarge = 48.dp
+    val accessCheck = 13.dp
+    /** Flecha de "Sign Up" y escudo de "Biometric sign-in": 14. */
+    val accessIconTiny = 14.dp
     /** Campos de 55 de alto, boton principal de 56 y botones sociales de 46. */
     val accessField = 55.dp
     val accessCta = 56.dp
