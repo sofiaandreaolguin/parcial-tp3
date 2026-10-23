@@ -275,4 +275,40 @@
     <string name="workout_completed_demo">3/5 completos</string>
     <string name="workout_volume">VOL. LEVANTADO</string>
     <string name="workout_volume_demo">8.420 kg</string>
+
+    <!-- Home / 01 — Dashboard -->
+    <string name="home_greeting_morning">Buen día</string>
+    <string name="home_greeting_afternoon">Buenas tardes</string>
+    <string name="home_greeting_evening">Buenas noches</string>
+    <string name="home_full_name">%1$s %2$s</string>
+    <string name="home_notifications">Notificaciones</string>
+    <string name="home_ai_online">IA EN LÍNEA</string>
+    <string name="home_quote">\"¿Cómo te ayudo hoy con tus objetivos?\"</string>
+    <string name="home_quote_sub">Tocá el micrófono y hablá con naturalidad. Yo planifico o registro por vos.</string>
+    <string name="home_voice_cta">Empezar sesión de voz</string>
+    <string name="home_start_my_workout">Empezar a entrenar</string>
+    <string name="home_log_breakfast">Registrar desayuno</string>
+    <string name="home_on_track">Vas bien. Una cena con proteínas te ayudaría a llegar a tu objetivo del día.</string>
+    <string name="home_overview">Resumen de hoy</string>
+    <string name="home_daily_goal">Objetivo diario</string>
+    <string name="home_percent">%1$d%%</string>
+    <string name="home_nutrition">Nutrición</string>
+    <string name="home_kcal_goal">\u0020/ %1$s kcal</string>
+    <string name="home_protein">Proteínas</string>
+    <string name="home_carbs">Carbohidratos</string>
+    <string name="home_grams">%1$dg</string>
+    <string name="home_grams_goal">\u0020/ %1$dg</string>
+    <string name="home_steps">PASOS</string>
+    <string name="home_distance">DISTANCIA</string>
+    <string name="home_active_kcal">KCAL ACTIVAS</string>
+    <string name="home_distance_value">%1$s km</string>
+    <string name="home_kcal_value">%1$s kcal</string>
+    <string name="home_recommended">ENTRENAMIENTO RECOMENDADO</string>
+    <string name="home_today">HOY</string>
+    <string name="home_level_beginner">Principiante</string>
+    <string name="home_level_intermediate">Intermedio</string>
+    <string name="home_level_advanced">Avanzado</string>
+    <string name="home_workout_meta">%1$s • %2$s</string>
+    <string name="home_estimated_volume">Vol. estimado: %1$s kg</string>
+    <string name="home_start_workout">Empezar</string>
 </resources>
