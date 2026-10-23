@@ -489,7 +489,7 @@
     <!-- Nutrition / 02 — Today's Meals (datos de demostración) -->
     <string name="nutrition_meals_label">CRONOLOGÍA</string>
     <string name="nutrition_meals_total">%1$s kcal</string>
-    <string name="nutrition_meals_yoghurt">Yogur griego (0% grasa)</string>
+    <string name="nutrition_meals_yoghurt" formatted="false">Yogur griego (0% grasa)</string>
     <string name="nutrition_meals_yoghurt_qty">200g</string>
     <string name="nutrition_meals_yoghurt_kcal">150 kcal</string>
     <string name="nutrition_meals_blueberries">Arándanos frescos</string>
