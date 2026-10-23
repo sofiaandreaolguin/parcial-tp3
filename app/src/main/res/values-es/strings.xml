@@ -137,6 +137,36 @@
     <string name="coaching_direct">Directo</string>
     <string name="coaching_balanced_sub">Guía práctica con motivación amable</string>
     <string name="profile_save_preferences">Guardar preferencias</string>
+    <!-- Profile / 04 — Nutrition Preferences -->
+    <string name="nutrition_title">Preferencias de nutrición</string>
+    <string name="nutrition_intro">Ayudá a VORA a recomendarte comidas que de verdad encajen con tu estilo de vida.</string>
+    <string name="nutrition_diet">PREFERENCIA ALIMENTARIA</string>
+    <string name="nutrition_enjoy">ALIMENTOS QUE TE GUSTAN</string>
+    <string name="nutrition_avoid">ALIMENTOS A EVITAR</string>
+    <string name="nutrition_add_ingredient">Agregá un ingrediente…</string>
+    <string name="nutrition_meals">PREFERENCIAS DE COMIDAS</string>
+    <string name="nutrition_meals_per_day">Comidas por día</string>
+    <string name="nutrition_meals_per_day_value">3 comidas + 1 colación</string>
+    <string name="nutrition_breakfast">Desayuno preferido</string>
+    <string name="nutrition_breakfast_value">Rápido y alto en proteína</string>
+    <string name="nutrition_dinner">Cena preferida</string>
+    <string name="nutrition_dinner_value">Equilibrada</string>
+    <string name="nutrition_matters">¿QUÉ ES LO MÁS IMPORTANTE PARA VOS?</string>
+    <string name="diet_everything">Todo</string>
+    <string name="diet_vegetarian">Vegetariana</string>
+    <string name="diet_vegan">Vegana</string>
+    <string name="diet_pescatarian">Pescetariana</string>
+    <string name="diet_other">Otra</string>
+    <string name="food_chicken">Pollo</string>
+    <string name="food_eggs">Huevos</string>
+    <string name="food_fish">Pescado</string>
+    <string name="food_rice">Arroz</string>
+    <string name="food_pasta">Pasta</string>
+    <string name="food_greek_yoghurt">Yogur griego</string>
+    <string name="food_vegetables">Verduras</string>
+    <string name="food_fruit">Fruta</string>
+    <string name="priority_hit_protein">Llegar a mi meta de proteína</string>
+    <string name="priority_eat_consistently">Comer de forma más constante</string>
     <!-- Asistente VORA (Voice / 01 a 06 y Conversation). Mismas claves que values/strings.xml. -->
     <string name="voice_coach_title">Coach VORA</string>
     <string name="voice_online">EN LINEA</string>

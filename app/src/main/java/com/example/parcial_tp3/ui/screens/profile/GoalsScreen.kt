@@ -4,7 +4,6 @@ import androidx.annotation.StringRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -58,7 +57,7 @@ fun GoalsScreen(
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
-            Section(stringResource(R.string.goals_primary))
+            ProfileSectionLabel(stringResource(R.string.goals_primary))
             Goal.entries.forEach { goal ->
                 VoraOptionCard(
                     title = stringResource(goal.label()),
@@ -67,18 +66,15 @@ fun GoalsScreen(
                     subtitle = goal.subtitle()?.let { stringResource(it) },
                 )
             }
-            Section(stringResource(R.string.goals_frequency))
+            ProfileSectionLabel(stringResource(R.string.goals_frequency))
             VoraSegmentedControl(
                 options = TrainingDays.entries.map { stringResource(it.label()) },
                 selectedIndex = state.trainingDays.ordinal,
                 onSelect = {},
                 style = VoraSegmentedStyle.Boxes,
             )
-            Section(stringResource(R.string.goals_workout))
-            FlowRow(
-                horizontalArrangement = Arrangement.spacedBy(VoraTheme.spacing.s8),
-                verticalArrangement = Arrangement.spacedBy(VoraTheme.spacing.s8),
-            ) {
+            ProfileSectionLabel(stringResource(R.string.goals_workout))
+            ProfileChipRow {
                 WorkoutType.entries.forEach { type ->
                     VoraChip(
                         text = stringResource(type.label()),
@@ -87,7 +83,7 @@ fun GoalsScreen(
                     )
                 }
             }
-            Section(stringResource(R.string.goals_coaching))
+            ProfileSectionLabel(stringResource(R.string.goals_coaching))
             VoraOptionCard(
                 title = stringResource(state.coachingStyle.label()),
                 selected = true,
@@ -104,17 +100,6 @@ fun GoalsScreen(
             )
         }
     }
-}
-
-/** Etiqueta de sección de 13 SemiBold (labelMedium), medida en Profile / 03; VoraSectionLabel es de 10. */
-@Composable
-private fun Section(text: String) {
-    Text(
-        text = text,
-        style = MaterialTheme.typography.labelMedium,
-        color = VoraTheme.colors.textMuted,
-        modifier = Modifier.padding(top = VoraTheme.spacing.s8),
-    )
 }
 
 // El Figma solo dibuja subtítulo en las opciones elegidas; las demás no lo tienen.

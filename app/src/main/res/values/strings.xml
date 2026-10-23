@@ -137,6 +137,36 @@
     <string name="coaching_direct">Direct</string>
     <string name="coaching_balanced_sub">Practical guidance with gentle motivation</string>
     <string name="profile_save_preferences">Save preferences</string>
+    <!-- Profile / 04 — Nutrition Preferences -->
+    <string name="nutrition_title">Nutrition preferences</string>
+    <string name="nutrition_intro">Help VORA make food recommendations that actually fit your lifestyle.</string>
+    <string name="nutrition_diet">DIETARY PREFERENCE</string>
+    <string name="nutrition_enjoy">FOODS YOU ENJOY</string>
+    <string name="nutrition_avoid">FOODS TO AVOID</string>
+    <string name="nutrition_add_ingredient">Add an ingredient…</string>
+    <string name="nutrition_meals">MEAL PREFERENCES</string>
+    <string name="nutrition_meals_per_day">Meals per day</string>
+    <string name="nutrition_meals_per_day_value">3 meals + 1 snack</string>
+    <string name="nutrition_breakfast">Preferred breakfast</string>
+    <string name="nutrition_breakfast_value">Quick &amp; high protein</string>
+    <string name="nutrition_dinner">Preferred dinner</string>
+    <string name="nutrition_dinner_value">Balanced</string>
+    <string name="nutrition_matters">WHAT MATTERS MOST TO YOU?</string>
+    <string name="diet_everything">Everything</string>
+    <string name="diet_vegetarian">Vegetarian</string>
+    <string name="diet_vegan">Vegan</string>
+    <string name="diet_pescatarian">Pescatarian</string>
+    <string name="diet_other">Other</string>
+    <string name="food_chicken">Chicken</string>
+    <string name="food_eggs">Eggs</string>
+    <string name="food_fish">Fish</string>
+    <string name="food_rice">Rice</string>
+    <string name="food_pasta">Pasta</string>
+    <string name="food_greek_yoghurt">Greek yoghurt</string>
+    <string name="food_vegetables">Vegetables</string>
+    <string name="food_fruit">Fruit</string>
+    <string name="priority_hit_protein">Hit protein targets</string>
+    <string name="priority_eat_consistently">Eat more consistently</string>
     <!-- Asistente VORA (Voice / 01 a 06 y Conversation). Textos del Figma, en ingles. -->
     <string name="voice_coach_title">VORA Coach</string>
     <string name="voice_online">ONLINE</string>
