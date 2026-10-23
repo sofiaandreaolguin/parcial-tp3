@@ -155,6 +155,22 @@ Formato:
 - Evidencia: `docs/evidencia/visual/profile-02-{411dp,360dp,360dp-scrolled}.png` (teléfono real). Build y tests unitarios en verde, `control-rapido.sh` sin fallas.
 - Commit / PR:
 
+### 2026-10-22 · Zaki · feat(profile): maquetar Profile / 03 Your goals según Figma
+- Carril y requisitos: B · UI01, UI02, UI03, NAV02, NAV03
+- Plan aprobado: rama 3 de 6 del flujo Profile. La pantalla solo se dibuja con las opciones del perfil de demostración: tocar no cambia la selección y "Save preferences" vuelve atrás. Todo con componentes que ya existían.
+- Qué propuso la IA y qué cambiamos:
+  - La IA armó la pantalla con `VoraSectionLabel` y el revisor visual midió que las etiquetas del Figma son de 13 y no de 10. Se usó `labelMedium` en una función de la pantalla, sin cambiar el componente que también usa Voice.
+  - El revisor marcó que el check de `VoraOptionCard` va a la altura del título y que la tarjeta es más alta. La IA propuso pasárselo a Martu y Zaki decidió hacerlo en esta rama (check arriba y padding 16), avisándole.
+  - La IA se equivocó al sumar espacio con un `Spacer` dentro de un `spacedBy` (daba 32 y no 20). Lo detectó antes de la captura y lo pasó a `padding(top)`.
+- Revisores:
+  - revisor-visual, dos vueltas. La primera marcó las etiquetas de 13, tres espaciados y la tarjeta de opción. La segunda: aprobada, con una diferencia menor en el alto de los chips (zona de Martu).
+  - revisor-arquitectura y /code-review: nada bloqueante. Se corrigieron dos comentarios, el rol de la tarjeta de coaching (`RadioButton`, elección única) y la traducción de "Supportive" ("De apoyo").
+  - Quedan como sugerencias:
+    - las opciones y los chips siguen siendo tocables sin cambiar nada, y los chips se anuncian como casilla (rol fijo en `VoraChip`);
+    - los tres ViewModel de Profile repiten el mismo `map` + `stateIn`;
+    - no hay tests de los ViewModel.
+- Evidencia: `docs/evidencia/visual/profile-03-{411dp,360dp}{,-scrolled}.png` (teléfono real). Build y tests unitarios en verde, `control-rapido.sh` sin fallas.
+
 ### 2026-10-22 · Martu · feat(access): maquetar Login - 01 SignIn según Figma
 - Carril y requisitos: B (pantalla) · UI01, UI02, UI03, NAV02, NAV03, RF07, RF08 · tarea VC-n (1 de 4)
 - Plan aprobado: un PR por pantalla (SignIn, SignUp, Home Dashboard, Notifications). Paso 0 en la zona de tema y componentes: íconos que faltaban, aviso de demostración compartido y piezas de Acceso. `AuthViewModel` compartido por SignIn y SignUp, del grafo `access_graph`.
