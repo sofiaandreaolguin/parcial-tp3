@@ -67,6 +67,8 @@ object VoraSizes {
     val iconOrbMuted = 34.dp
     /** Area tactil minima de un boton de icono. */
     val touchTarget = 48.dp
+    /** Sombra suave del boton redondo elevado: el volver de Login - 01 y 02 (medida a 2x). */
+    val buttonShadow = 4.dp
     /** Borde de una tarjeta de opcion elegida (menta). */
     val borderSelected = 2.dp
     /** Circulo blanco de volver en el encabezado grande (Profile, Settings). */
@@ -177,11 +179,11 @@ object VoraSizes {
      *  64 dp del borde de arriba; el radio de 260 incluye el desenfoque. */
     val accessGlowY = 64.dp
     val accessGlowRadius = 260.dp
-    /** Flecha de volver: en el frame mide 8 x 13 (el vector de la lamina es de 7 x 10). */
-    val accessBackIconWidth = 10.dp
-    val accessBackIconHeight = 14.dp
-    /** Sombras: suave en el circulo de volver y el logo, lima debajo de "Sign In". */
-    val accessShadow = 4.dp
+    /** Flecha de volver: en el frame mide 8 x 13; el vector de la lamina (7 x 10) va en una
+     *  caja de 14 y queda de 9.8 x 14. */
+    val accessBackIcon = 14.dp
+    /** Sombras: suave en el selector de idioma, del logo y lima debajo de "Sign In". La del
+     *  circulo de volver es buttonShadow. */
     val accessShadowSoft = 2.dp
     val accessShadowLogo = 8.dp
     val accessShadowCta = 12.dp

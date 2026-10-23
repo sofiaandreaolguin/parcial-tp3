@@ -2,22 +2,14 @@ package com.example.parcial_tp3.ui.screens.access
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.BoxWithConstraints
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
-import androidx.compose.foundation.layout.imePadding
-import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.statusBarsPadding
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -32,9 +24,10 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.parcial_tp3.R
-import com.example.parcial_tp3.ui.components.VoraAccessBackground
 import com.example.parcial_tp3.ui.components.VoraAccessButton
 import com.example.parcial_tp3.ui.components.VoraAccessCard
+import com.example.parcial_tp3.ui.components.VoraAccessFooterLink
+import com.example.parcial_tp3.ui.components.VoraAccessScaffold
 import com.example.parcial_tp3.ui.components.VoraAccessTopBar
 import com.example.parcial_tp3.ui.components.VoraBrandHeader
 import com.example.parcial_tp3.ui.components.VoraSocialButton
@@ -64,66 +57,40 @@ fun SignInScreen(
     onDemo: () -> Unit,
 ) {
     val access = VoraTheme.colors.access
-    VoraAccessBackground {
-        BoxWithConstraints {
-            Column(
-                modifier = Modifier
-                    .verticalScroll(rememberScrollState())
-                    .heightIn(min = maxHeight)
-                    // va hasta el borde (RUTAS_A_SANGRE): el resplandor pasa por detras de la
-                    // barra de estado y los margenes los pone la pantalla
-                    .statusBarsPadding()
-                    .navigationBarsPadding()
-                    .imePadding()
-                    .padding(horizontal = VoraTheme.spacing.s24),
-                verticalArrangement = Arrangement.SpaceBetween,
-            ) {
-                Column {
-                    Spacer(Modifier.height(VoraTheme.spacing.s8))
-                    VoraAccessTopBar(language = stringResource(R.string.access_language), onLanguage = onDemo)
-                    // 42 hasta el aro del logo, medido en los nodos del Figma
-                    Spacer(Modifier.height(VoraTheme.spacing.s40 + VoraTheme.spacing.s2))
-                    VoraBrandHeader(subtitle = stringResource(R.string.sign_in_subtitle))
-                    Spacer(Modifier.height(VoraTheme.spacing.s24 + VoraTheme.spacing.s4))
-                    SignInForm(state, onEmailChange, onPasswordChange, onTogglePassword, onSignIn, onDemo)
-                    Spacer(Modifier.height(VoraTheme.spacing.s16))
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.spacedBy(VoraTheme.spacing.s8, Alignment.CenterHorizontally),
-                        verticalAlignment = Alignment.CenterVertically,
-                    ) {
-                        Icon(
-                            painter = painterResource(R.drawable.ic_shield_check),
-                            contentDescription = null,
-                            tint = access.shield,
-                            modifier = Modifier.size(VoraTheme.sizes.accessIconSmall),
-                        )
-                        Text(
-                            text = stringResource(R.string.sign_in_encrypted),
-                            style = VoraTheme.text.footnote,
-                            color = access.text,
-                        )
-                    }
-                }
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = VoraTheme.spacing.s40, bottom = VoraTheme.spacing.s20),
-                    horizontalArrangement = Arrangement.spacedBy(VoraTheme.spacing.s4, Alignment.CenterHorizontally),
-                ) {
-                    Text(
-                        text = stringResource(R.string.sign_in_no_account),
-                        style = VoraTheme.text.accessBody,
-                        color = access.text,
-                    )
-                    Text(
-                        text = stringResource(R.string.sign_in_sign_up_link),
-                        style = VoraTheme.text.accessBodyLink,
-                        color = access.text,
-                        modifier = Modifier.clickable(role = Role.Button, onClick = onSignUp),
-                    )
-                }
-            }
+    VoraAccessScaffold(
+        footer = {
+            VoraAccessFooterLink(
+                question = stringResource(R.string.sign_in_no_account),
+                link = stringResource(R.string.sign_in_sign_up_link),
+                onClick = onSignUp,
+                modifier = Modifier.padding(top = VoraTheme.spacing.s40, bottom = VoraTheme.spacing.s20),
+            )
+        },
+    ) {
+        Spacer(Modifier.height(VoraTheme.spacing.s8))
+        VoraAccessTopBar(language = stringResource(R.string.access_language), onLanguage = onDemo)
+        // 42 hasta el aro del logo, medido en los nodos del Figma
+        Spacer(Modifier.height(VoraTheme.spacing.s40 + VoraTheme.spacing.s2))
+        VoraBrandHeader(subtitle = stringResource(R.string.sign_in_subtitle))
+        Spacer(Modifier.height(VoraTheme.spacing.s24 + VoraTheme.spacing.s4))
+        SignInForm(state, onEmailChange, onPasswordChange, onTogglePassword, onSignIn, onDemo)
+        Spacer(Modifier.height(VoraTheme.spacing.s16))
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(VoraTheme.spacing.s8, Alignment.CenterHorizontally),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Icon(
+                painter = painterResource(R.drawable.ic_shield_check),
+                contentDescription = null,
+                tint = access.shield,
+                modifier = Modifier.size(VoraTheme.sizes.accessIconSmall),
+            )
+            Text(
+                text = stringResource(R.string.sign_in_encrypted),
+                style = VoraTheme.text.footnote,
+                color = access.text,
+            )
         }
     }
 }

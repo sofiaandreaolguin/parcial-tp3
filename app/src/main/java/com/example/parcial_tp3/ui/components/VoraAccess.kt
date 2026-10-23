@@ -8,6 +8,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
@@ -16,13 +17,19 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -79,6 +86,63 @@ fun VoraAccessBackground(
 }
 
 /**
+ * El armazon de Login - 01 y 02: el fondo pintado hasta el borde (las dos estan en
+ * RUTAS_A_SANGRE), los margenes de las barras del sistema y del teclado, el margen lateral de
+ * 24 y el scroll. El contenido va arriba y el [footer] queda pegado abajo en pantallas altas;
+ * en las bajas todo hace scroll (UI03).
+ */
+@Composable
+fun VoraAccessScaffold(
+    footer: @Composable () -> Unit,
+    modifier: Modifier = Modifier,
+    content: @Composable ColumnScope.() -> Unit,
+) {
+    VoraAccessBackground(modifier) {
+        BoxWithConstraints {
+            Column(
+                modifier = Modifier
+                    .verticalScroll(rememberScrollState())
+                    .heightIn(min = maxHeight)
+                    .statusBarsPadding()
+                    .navigationBarsPadding()
+                    .imePadding()
+                    .padding(horizontal = VoraTheme.spacing.s24),
+                verticalArrangement = Arrangement.SpaceBetween,
+            ) {
+                Column(content = content)
+                footer()
+            }
+        }
+    }
+}
+
+/**
+ * El pie de Login: "Don't have an account? **Sign up here**" y "Already have an account?
+ * **Sign In**". La pregunta en 14 y el link en negrita subrayado, centrados.
+ */
+@Composable
+fun VoraAccessFooterLink(
+    question: String,
+    link: String,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    val access = VoraTheme.colors.access
+    Row(
+        modifier = modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.spacedBy(VoraTheme.spacing.s4, Alignment.CenterHorizontally),
+    ) {
+        Text(text = question, style = VoraTheme.text.accessBody, color = access.text)
+        Text(
+            text = link,
+            style = VoraTheme.text.accessBodyLink,
+            color = access.text,
+            modifier = Modifier.clickable(role = Role.Button, onClick = onClick),
+        )
+    }
+}
+
+/**
  * Fila de arriba de Login: circulo blanco de volver y selector de idioma "EN ⌄".
  *
  * @param onBack null en SignIn: es la primera pantalla y la flecha no tiene a donde volver
@@ -99,23 +163,17 @@ fun VoraAccessTopBar(
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        Box(
-            modifier = Modifier
-                .size(VoraTheme.sizes.accessBack)
-                .shadow(VoraTheme.sizes.accessShadow, CircleShape, ambientColor = access.ink, spotColor = access.ink)
-                .background(colors.surface, CircleShape)
-                .then(
-                    if (onBack != null) Modifier.clickable(role = Role.Button, onClick = onBack) else Modifier,
-                ),
-            contentAlignment = Alignment.Center,
-        ) {
-            Icon(
-                painter = painterResource(R.drawable.ic_back),
-                contentDescription = if (onBack != null) stringResource(R.string.volver) else null,
-                tint = access.ink,
-                modifier = Modifier.size(VoraTheme.sizes.accessBackIconWidth, VoraTheme.sizes.accessBackIconHeight),
-            )
-        }
+        // el area tactil queda en 40 para no correr el circulo; Compose igual extiende el toque a 48
+        VoraCircleButton(
+            icon = painterResource(R.drawable.ic_back),
+            contentDescription = if (onBack != null) stringResource(R.string.volver) else null,
+            onClick = onBack,
+            tone = VoraCircleButtonTone.Elevated,
+            size = VoraTheme.sizes.accessBack,
+            iconSize = VoraTheme.sizes.accessBackIcon,
+            touchSize = VoraTheme.sizes.accessBack,
+            tint = access.ink,
+        )
         Row(
             modifier = Modifier
                 .height(VoraTheme.sizes.languagePill)
