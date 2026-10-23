@@ -35,6 +35,7 @@ fun GoalsScreen(
     state: GoalsUiState,
     onBack: () -> Unit,
     onSave: () -> Unit,
+    onDemo: () -> Unit,
 ) {
     Column(
         modifier = Modifier
@@ -62,7 +63,7 @@ fun GoalsScreen(
                 VoraOptionCard(
                     title = stringResource(goal.label()),
                     selected = goal in state.goals,
-                    onClick = {},
+                    onClick = onDemo,
                     subtitle = goal.subtitle()?.let { stringResource(it) },
                 )
             }
@@ -70,7 +71,7 @@ fun GoalsScreen(
             VoraSegmentedControl(
                 options = TrainingDays.entries.map { stringResource(it.label()) },
                 selectedIndex = state.trainingDays.ordinal,
-                onSelect = {},
+                onSelect = { onDemo() },
                 style = VoraSegmentedStyle.Boxes,
             )
             ProfileSectionLabel(stringResource(R.string.goals_workout))
@@ -79,7 +80,7 @@ fun GoalsScreen(
                     VoraChip(
                         text = stringResource(type.label()),
                         selected = type == state.workoutType,
-                        onClick = {},
+                        onClick = onDemo,
                     )
                 }
             }
@@ -87,7 +88,7 @@ fun GoalsScreen(
             VoraOptionCard(
                 title = stringResource(state.coachingStyle.label()),
                 selected = true,
-                onClick = {},
+                onClick = onDemo,
                 subtitle = state.coachingStyle.subtitle()?.let { stringResource(it) },
                 role = Role.RadioButton,
             )
@@ -129,6 +130,7 @@ private fun GoalsScreenPreview() {
             ),
             onBack = {},
             onSave = {},
+            onDemo = {},
         )
     }
 }
