@@ -105,6 +105,12 @@ object VoraTextStyles {
     val homeQuote = manrope(22, FontWeight.Medium, lineHeight = 30).copy(letterSpacing = 0.3.sp)
     /** "VORA Coach" del panel: 15 Medium. */
     val homeCoachName = manrope(15, FontWeight.Medium, lineHeight = 19)
+    // Home / 02 (nodos del frame Notifications)
+    /** Remitente ("VORA Coach") y rotulo de seccion ("TODAY"): 12 Medium en 16. */
+    val notificationLabel = manrope(12, FontWeight.Medium, lineHeight = 16)
+    /** Titulo de una notificacion: 15 SemiBold en 19, apretado. Medido: "Your weekly health review
+     *  is ready." ocupa 227 dp en el frame; en Medium sin espaciado salia de 234. */
+    val notificationTitle = manrope(15, FontWeight.SemiBold, lineHeight = 19).copy(letterSpacing = (-0.35).sp)
     /** El tamano compacto de VoraButton ("Start my workout" de Home): 13 Medium en 16. */
     val buttonCompact = manrope(13, FontWeight.Medium, lineHeight = 16)
     /** Los valores fuertes de Home: "72%" del anillo y "1,420" de nutricion, 16 Bold. */

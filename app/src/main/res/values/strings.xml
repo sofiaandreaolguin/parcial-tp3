@@ -487,4 +487,26 @@
     <string name="nutrition_dash_voice">Voice</string>
     <string name="nutrition_dash_photo">Photo</string>
     <string name="nutrition_dash_search">Search</string>
+
+    <!-- Home / 02 — Notifications -->
+    <string name="notifications_title">Notifications</string>
+    <string name="notifications_mark_all">Mark all as read</string>
+    <string name="notifications_today">TODAY</string>
+    <string name="notifications_yesterday">YESTERDAY</string>
+    <string name="notifications_unread">Unread</string>
+    <string name="notifications_minutes_ago">%1$dm ago</string>
+    <string name="notifications_hours_ago">%1$dh ago</string>
+    <string name="notifications_days_ago">%1$dd ago</string>
+    <string name="notification_coach_sender">VORA Coach</string>
+    <string name="notification_coach_title">Your weekly health review is ready.</string>
+    <string name="notification_coach_body">We noticed your training consistency improved by 14% over the last week.</string>
+    <string name="notification_workout_sender">Workout Plan</string>
+    <string name="notification_workout_title">Upper Body Strength is ready.</string>
+    <string name="notification_workout_body">Equipped for home/gym. Approx. 42 minutes.</string>
+    <string name="notification_nutrition_sender">Nutrition Goal</string>
+    <string name="notification_nutrition_title">Protein target milestone alert.</string>
+    <string name="notification_nutrition_body">You require 36g more of protein to hit today\'s UK performance baseline.</string>
+    <string name="notification_streak_sender">Milestone Reached</string>
+    <string name="notification_streak_title">4-day workout streak logged!</string>
+    <string name="notification_streak_body">Outstanding work, Alex. Let\'s make it 5 today.</string>
 </resources>
