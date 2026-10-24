@@ -700,6 +700,15 @@
     <string name="nutrition_voice_type_instead">Escribir en su lugar</string>
     <string name="nutrition_voice_close">Cerrar el registro por voz</string>
     <string name="nutrition_voice_meal_demo">Pollo, arroz y verduras</string>
+    <string name="nutrition_analysis_title">VORA AI</string>
+    <string name="nutrition_analysis_heading">Analizando la comida…</string>
+    <string name="nutrition_analysis_input_label">LO QUE DIJISTE</string>
+    <string name="nutrition_analysis_input_demo">\"Pollo a la plancha, arroz y verduras mixtas\"</string>
+    <string name="nutrition_analysis_step_identifying">Identificando alimentos…</string>
+    <string name="nutrition_analysis_step_estimating">Estimando porciones…</string>
+    <string name="nutrition_analysis_step_calculating">Calculando nutrición…</string>
+    <string name="nutrition_analysis_cancel">Cancelar análisis</string>
+    <string name="nutrition_analysis_close">Cerrar el análisis de la comida</string>
     <!-- Progress / 04 — Nutrition Progress (nodo 1:2032) -->
     <string name="progress_nutrition_title">Progreso de nutrición</string>
     <string name="progress_nutrition_calories">CALORÍAS PROM.</string>
