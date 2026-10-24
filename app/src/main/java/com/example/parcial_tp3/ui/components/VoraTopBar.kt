@@ -176,12 +176,14 @@ fun VoraTopBar(
  * izquierda, con el margen de pantalla de 20.
  *
  * @param title el titulo de la pantalla, de strings.xml ("Your goals", "Settings").
+ * @param actions iconos a la derecha: el "···" de Progress / 03, 04 y 05.
  */
 @Composable
 fun VoraTopBarLarge(
     title: String,
     onBack: () -> Unit,
     modifier: Modifier = Modifier,
+    actions: @Composable RowScope.() -> Unit = {},
 ) {
     Row(
         modifier = modifier
@@ -211,8 +213,11 @@ fun VoraTopBarLarge(
             color = MaterialTheme.colorScheme.onBackground,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
-            modifier = Modifier.semantics { heading() },
+            modifier = Modifier
+                .weight(1f)
+                .semantics { heading() },
         )
+        actions()
     }
 }
 
