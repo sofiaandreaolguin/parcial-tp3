@@ -336,6 +336,7 @@ Leído de los frames el 18/10. Lo que dice *a confirmar* es lectura mía del dib
 | | "Done" | `popBackStack()` |
 | | "Get dinner ideas →" | `voice` · cruza |
 | | "View next week's plan →" | `weekly_plan` · cruza |
+| | Flecha ‹ y atrás del sistema | `popBackStack()` (como "Done") |
 
 ## 9. Perfil (6 pantallas)
 

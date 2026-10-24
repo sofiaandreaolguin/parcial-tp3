@@ -1,16 +1,14 @@
 package com.example.parcial_tp3.ui.navigation
 
-import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
-import com.example.parcial_tp3.R
-import com.example.parcial_tp3.ui.components.PantallaVacia
 import com.example.parcial_tp3.ui.screens.progress.HealthTrendsRoute
 import com.example.parcial_tp3.ui.screens.progress.NutritionProgressRoute
 import com.example.parcial_tp3.ui.screens.progress.ProgressDashboardRoute
 import com.example.parcial_tp3.ui.screens.progress.TodaysOverviewRoute
+import com.example.parcial_tp3.ui.screens.progress.WeeklyReviewRoute
 import com.example.parcial_tp3.ui.screens.progress.WorkoutProgressRoute
 
 /**
@@ -52,9 +50,10 @@ fun NavGraphBuilder.progressGraph(nav: NavController) {
             HealthTrendsRoute(onBack = { nav.popBackStack() })
         }
         composable(Rutas.WEEKLY_REVIEW) {
-            PantallaVacia(
-                nombre = stringResource(R.string.pant_progress_06),
-                onVolver = { nav.popBackStack() },
+            WeeklyReviewRoute(
+                onBack = { nav.popBackStack() },
+                onAskVora = { nav.navigate(Rutas.VOICE) { launchSingleTop = true } },
+                onWeeklyPlan = { nav.navigate(Rutas.WEEKLY_PLAN) { launchSingleTop = true } },
             )
         }
     }

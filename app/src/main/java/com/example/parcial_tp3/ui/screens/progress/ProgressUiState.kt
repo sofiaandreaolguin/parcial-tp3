@@ -14,6 +14,7 @@ data class ProgressUiState(
     val workout: WorkoutProgress,
     val nutrition: NutritionProgress,
     val health: HealthTrends,
+    val review: WeeklyReview,
 )
 
 /** Progress / 01. */
@@ -75,7 +76,8 @@ data class WorkoutProgress(
 
 /**
  * Un dato con etiqueta y valor: la fila "SESSIONS 4 | VOLUME 8,420 kg" de 03 y 04, y cada
- * tarjeta de "FOOD HABITS & PATTERNS" de 04, y la fila "AVG STEPS | AVG DISTANCE" de 05.
+ * tarjeta de "FOOD HABITS & PATTERNS" de 04, la fila "AVG STEPS | AVG DISTANCE" de 05 y la de
+ * "WORKOUTS | AVG STEPS | PROTEIN" de 06.
  */
 data class ProgressMetric(
     @StringRes val label: Int,
@@ -125,4 +127,20 @@ data class HabitSignal(
     @StringRes val title: Int,
     @StringRes val trend: Int,
     val improving: Boolean,
+)
+
+/** Progress / 06. */
+data class WeeklyReview(
+    @StringRes val headline: Int,
+    val summary: List<ProgressMetric>,
+    val wins: List<ReviewPoint>,
+    val improvement: ReviewPoint,
+    /** Las viñetas de "NEXT WEEK'S RECOMMENDATIONS", como recursos de strings.xml. */
+    val recommendations: List<Int>,
+)
+
+/** Un punto de la revisión: un logro de "WHAT WENT WELL" o lo de "WHAT TO IMPROVE". */
+data class ReviewPoint(
+    @StringRes val title: Int,
+    @StringRes val body: Int,
 )
