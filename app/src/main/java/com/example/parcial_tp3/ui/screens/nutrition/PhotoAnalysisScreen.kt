@@ -24,6 +24,7 @@ import androidx.compose.ui.layout.layout
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.sp
 import com.example.parcial_tp3.R
 import com.example.parcial_tp3.ui.components.VoraButton
 import com.example.parcial_tp3.ui.components.VoraButtonStyle
@@ -63,7 +64,7 @@ fun PhotoAnalysisScreen(
         EstimateCard(draft)
         Text(
             text = stringResource(R.string.nutrition_photo_hint),
-            style = MaterialTheme.typography.bodyMedium,
+            style = VoraTheme.text.footnote.copy(lineHeight = HINT_LINE_HEIGHT),
             color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
         Column(verticalArrangement = Arrangement.spacedBy(VoraTheme.spacing.s10)) {
@@ -123,7 +124,7 @@ private fun PhotoTag(text: Int, x: Float, y: Float) {
 @Composable
 private fun EstimateCard(draft: MealDraft) {
     VoraCard(modifier = Modifier.fillMaxWidth()) {
-        Column(verticalArrangement = Arrangement.spacedBy(VoraTheme.spacing.s16)) {
+        Column(verticalArrangement = Arrangement.spacedBy(VoraTheme.spacing.s12)) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween,
@@ -146,9 +147,10 @@ private fun EstimateCard(draft: MealDraft) {
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically,
             ) {
+                // 106 dp de ancho en el frame: 28 SemiBold, no los 24 de la cifra destacada de otras tarjetas.
                 Text(
                     text = stringResource(R.string.nutrition_photo_kcal, draft.kcal),
-                    style = MaterialTheme.typography.headlineSmall,
+                    style = MaterialTheme.typography.headlineMedium,
                     color = MaterialTheme.colorScheme.onSurface,
                 )
                 Row(horizontalArrangement = Arrangement.spacedBy(VoraTheme.spacing.s8)) {
@@ -160,6 +162,9 @@ private fun EstimateCard(draft: MealDraft) {
         }
     }
 }
+
+// La cita del frame es de 12 con 16 entre líneas (337 dp la primera línea); el tema trae 12 con 18.
+private val HINT_LINE_HEIGHT = 16.sp
 
 // Foto del frame: 700 x 440 px a 2x (nodo "meal photo container").
 private const val PHOTO_RATIO = 700f / 440f

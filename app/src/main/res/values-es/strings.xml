@@ -714,7 +714,7 @@
     <string name="nutrition_photo_tag_chicken">Pollo a la plancha (~180 g)</string>
     <string name="nutrition_photo_tag_rice">Arroz basmati (~150 g)</string>
     <string name="nutrition_photo_estimate">ESTIMACIÓN DE VORA</string>
-    <string name="nutrition_photo_estimate_note">Las porciones son estimadas</string>
+    <string name="nutrition_photo_estimate_note">Porciones estimadas</string>
     <string name="nutrition_photo_kcal">%1$d kcal</string>
     <string name="nutrition_photo_protein">P: %1$.0f g</string>
     <string name="nutrition_photo_carbs">C: %1$.0f g</string>
