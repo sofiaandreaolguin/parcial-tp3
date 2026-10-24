@@ -158,4 +158,8 @@ object VoraTextStyles {
     val panelLabel = manrope(12, FontWeight.Bold)
     /** El "Zzz" de los dias de descanso de Workout / 01: 9 SemiBold. */
     val micro = manrope(9, FontWeight.SemiBold)
+
+    // Progress / 01 (nodos del frame 1:1682)
+    /** El consejo de "VORA ADVICE": 14 Regular con alto de linea 1,4. */
+    val advice = manrope(14, FontWeight.Normal, lineHeight = 20)
 }
