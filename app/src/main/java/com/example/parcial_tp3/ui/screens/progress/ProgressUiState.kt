@@ -10,6 +10,7 @@ import com.example.parcial_tp3.domain.model.Workout
  */
 data class ProgressUiState(
     val overview: TodaysOverview,
+    val dashboard: ProgressDashboard,
 )
 
 /** Progress / 01. */
@@ -32,4 +33,28 @@ data class OverviewCategory(
     @StringRes val label: Int,
     @StringRes val detail: Int,
     val percent: Int,
+)
+
+/** Progress / 02. */
+data class ProgressDashboard(
+    val stats: List<DashboardStat>,
+    @StringRes val insight: Int,
+    val areas: List<DashboardArea>,
+    @StringRes val goal: Int,
+    @StringRes val goalBody: Int,
+    val goalPercent: Int,
+)
+
+/** Un dato de "THIS WEEK OVERVIEW": "Workouts completed / 4 workouts / ↑ 1". */
+data class DashboardStat(
+    @StringRes val label: Int,
+    @StringRes val value: Int,
+    @StringRes val trend: Int,
+)
+
+/** Fila Workout, Nutrition o Activity: el tipo decide el ícono y a qué pantalla lleva. */
+data class DashboardArea(
+    val kind: CategoryKind,
+    @StringRes val title: Int,
+    @StringRes val detail: Int,
 )

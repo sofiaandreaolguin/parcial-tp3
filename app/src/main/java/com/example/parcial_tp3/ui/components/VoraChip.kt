@@ -96,6 +96,8 @@ enum class VoraTagTone {
     OnDark,
     /** Menta sobre menta, para las etiquetas sobre el verde de Voice ("SPEAKING"). */
     MintOnDark,
+    /** Blanco translucido con texto lima, sobre el verde: "CONSISTENT" de Progress / 02 (nodo 1:1825). */
+    LimeOnDark,
     /** Verde oscuro con texto blanco, sobre fondo claro: "Synced". */
     Dark,
     /** Sin fondo, texto verde: "TODAY" de Home (el nodo tiene padding pero no relleno). */
@@ -118,6 +120,7 @@ fun VoraTag(
         VoraTagTone.Mint -> VoraTheme.colors.mintTranslucent to MaterialTheme.colorScheme.primary
         VoraTagTone.OnDark -> VoraTheme.colors.onDarkSubtle to MaterialTheme.colorScheme.onPrimary
         VoraTagTone.MintOnDark -> VoraTheme.colors.mintTranslucent to MaterialTheme.colorScheme.secondary
+        VoraTagTone.LimeOnDark -> VoraTheme.colors.onDarkSubtle to VoraTheme.colors.cta
         VoraTagTone.Dark -> MaterialTheme.colorScheme.primary to MaterialTheme.colorScheme.onPrimary
         VoraTagTone.Neutral -> Color.Transparent to MaterialTheme.colorScheme.primary
     }

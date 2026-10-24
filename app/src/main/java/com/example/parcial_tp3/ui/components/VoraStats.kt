@@ -3,12 +3,12 @@ package com.example.parcial_tp3.ui.components
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -80,9 +80,10 @@ fun VoraStatRow(
 }
 
 /**
- * Tarjeta gris de un dato destacado ("Workouts completed / 4 workouts ↑1"): etiqueta,
- * valor grande y, opcional, la tendencia en menta. Va dentro de una tarjeta blanca, de a
- * dos por fila.
+ * Tarjeta gris de un dato destacado ("Workouts completed / 4 workouts ↑1"): etiqueta de 12,
+ * valor de 20 y, opcional, la tendencia de 11 en menta, a 6 del valor y sobre su misma linea
+ * de base. Va dentro de una tarjeta blanca, de a dos por fila. Medidas de Progress / 02
+ * (nodo 1:1797).
  *
  * @param trend por ejemplo "↑ 6%", de strings.xml; null si no tiene.
  */
@@ -100,20 +101,22 @@ fun VoraStatTile(
             .padding(VoraTheme.spacing.s12),
         verticalArrangement = Arrangement.spacedBy(VoraTheme.spacing.s4),
     ) {
-        Text(text = label, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
-        Row(verticalAlignment = Alignment.Bottom) {
+        Text(text = label, style = VoraTheme.text.footnote, color = MaterialTheme.colorScheme.onSurfaceVariant)
+        // si la tendencia no entra al lado del valor (360 dp), baja entera a la linea de abajo
+        FlowRow(horizontalArrangement = Arrangement.spacedBy(VoraTheme.spacing.s6)) {
             Text(
                 text = value,
                 style = MaterialTheme.typography.titleLarge,
                 color = MaterialTheme.colorScheme.onSurface,
+                modifier = Modifier.alignByBaseline(),
             )
             if (trend != null) {
-                Spacer(Modifier.width(VoraTheme.spacing.s8))
                 Text(
                     text = trend,
-                    style = MaterialTheme.typography.labelMedium,
+                    style = VoraTheme.text.label,
                     color = MaterialTheme.colorScheme.secondary,
-                    modifier = Modifier.padding(bottom = VoraTheme.spacing.s2),
+                    softWrap = false,
+                    modifier = Modifier.alignByBaseline(),
                 )
             }
         }

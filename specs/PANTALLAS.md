@@ -323,7 +323,7 @@ Leído de los frames el 18/10. Lo que dice *a confirmar* es lectura mía del dib
 | | "Nutrition · View >" | `nutrition_progress` |
 | | "Activity · View >" | `health_trends` |
 | | "See weekly review →" | `weekly_review` |
-| | Week / Month / 3 Months | No navega: filtra en la misma pantalla |
+| | Week / Month / 3 Months | No navega. Queda fijo en Week (datos de demostración); Month y 3 Months muestran el aviso de modo demostración |
 | 03, 04 y 05 | Flecha ‹ | `popBackStack()` |
 | | "···" (arriba der.) | Aviso de modo demostración |
 | 06 Weekly Review | "Ask VORA" (lima) | `voice` · cruza |

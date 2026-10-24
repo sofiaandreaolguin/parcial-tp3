@@ -599,4 +599,39 @@
     <string name="progress_overview_current_goal">OBJETIVO ACTUAL</string>
     <string name="progress_overview_weekly_target">META SEMANAL</string>
     <string name="progress_overview_weekly_value">%1$d / %2$d entrenamientos</string>
+
+    <!-- Progress / 02 — Dashboard (datos de demostración) -->
+    <string name="progress_dash_workouts">Entrenamientos hechos</string>
+    <string name="progress_dash_workouts_value">4 entrenamientos</string>
+    <string name="progress_dash_workouts_trend">↑ 1</string>
+    <string name="progress_dash_steps">Pasos por día</string>
+    <string name="progress_dash_steps_value">7.842</string>
+    <string name="progress_dash_steps_trend">↑ 6 %</string>
+    <string name="progress_dash_protein">Proteínas por día</string>
+    <string name="progress_dash_protein_value">104 g</string>
+    <string name="progress_dash_protein_trend">↑ 9 %</string>
+    <string name="progress_dash_streak">Racha activa</string>
+    <string name="progress_dash_streak_value">4 días</string>
+    <string name="progress_dash_streak_trend">🔥</string>
+    <string name="progress_dash_insight" formatted="false">\"Completaste 4 entrenamientos esta semana y subiste un 8 % el volumen. Tu constancia va por buen camino.\"</string>
+    <string name="progress_dash_area_workout">Entrenamiento</string>
+    <string name="progress_dash_area_workout_detail">3 sesiones • 2.340 kg de volumen</string>
+    <string name="progress_dash_area_nutrition">Nutrición</string>
+    <string name="progress_dash_area_nutrition_detail" formatted="false">104 g de proteínas • 74 % del objetivo</string>
+    <string name="progress_dash_area_activity">Actividad</string>
+    <string name="progress_dash_area_activity_detail">7.842 pasos • 5,6 km por día</string>
+    <string name="progress_dash_goal">Ganar fuerza y mejorar el estado físico</string>
+    <string name="progress_dash_goal_body">Estás construyendo constancia en entrenamiento y nutrición.</string>
+    <string name="progress_dash_title">Tu progreso</string>
+    <string name="progress_dash_subtitle">Las pequeñas mejoras suman.</string>
+    <string name="progress_period_week">Semana</string>
+    <string name="progress_period_month">Mes</string>
+    <string name="progress_period_3_months">3 meses</string>
+    <string name="progress_dash_overview">RESUMEN DE LA SEMANA</string>
+    <string name="progress_dash_insight_label">Análisis de VORA</string>
+    <string name="progress_dash_consistent">CONSTANTE</string>
+    <string name="progress_dash_see_review">Ver resumen semanal</string>
+    <string name="progress_dash_view">Ver</string>
+    <string name="progress_dash_active_goal">OBJETIVO ACTIVO</string>
+    <string name="progress_dash_goal_percent">%1$d%% completo</string>
 </resources>
