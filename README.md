@@ -58,7 +58,7 @@ Después de cambiar `local.properties`, hacé **Sync Project with Gradle Files**
 
 | Servidor | `api.baseUrl` | Cuándo |
 |---|---|---|
-| Mock local desde el emulador | `http://10.0.2.2:8000/` | Para probar la caché sin conexión (RF02) hace falta poder apagar el servidor. Usa el paquete `mock.zip` del docente, descomprimido en `mock/`: **no está en el repo** |
+| Mock local desde el emulador | `http://10.0.2.2:8000/` | Para probar la caché sin conexión (RF02) hace falta poder apagar el servidor. Usa el paquete del docente, que está en `mock/` tal como vino en `mock.zip` |
 | Publicado por el docente | `https://tp3.martinrivas.ar/` | Sin levantar nada. Es el que hay que usar en la versión release |
 | Teléfono físico | `http://<IP-de-la-compu>:8000/` | Con el mock del docente escuchando en `0.0.0.0` |
 
