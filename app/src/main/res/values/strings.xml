@@ -601,4 +601,27 @@
     <string name="progress_overview_current_goal">CURRENT GOAL</string>
     <string name="progress_overview_weekly_target">WEEKLY TARGET</string>
     <string name="progress_overview_weekly_value">%1$d / %2$d Workouts</string>
+
+    <!-- Progress / 02 — Dashboard (datos de demostración) -->
+    <string name="progress_dash_workouts">Workouts completed</string>
+    <string name="progress_dash_workouts_value">4 workouts</string>
+    <string name="progress_dash_workouts_trend">↑ 1</string>
+    <string name="progress_dash_steps">Avg Daily Steps</string>
+    <string name="progress_dash_steps_value">7,842</string>
+    <string name="progress_dash_steps_trend">↑ 6%</string>
+    <string name="progress_dash_protein">Daily Avg Protein</string>
+    <string name="progress_dash_protein_value">104g</string>
+    <string name="progress_dash_protein_trend">↑ 9%</string>
+    <string name="progress_dash_streak">Active Streak</string>
+    <string name="progress_dash_streak_value">4 days</string>
+    <string name="progress_dash_streak_trend">🔥</string>
+    <string name="progress_dash_insight">\"You\'ve completed 4 workouts this week and increased your training volume by 8%. Your consistency is trending in the right direction.\"</string>
+    <string name="progress_dash_area_workout">Workout</string>
+    <string name="progress_dash_area_workout_detail">3 sessions • 2,340 kg volume</string>
+    <string name="progress_dash_area_nutrition">Nutrition</string>
+    <string name="progress_dash_area_nutrition_detail">104g protein • 74% avg target</string>
+    <string name="progress_dash_area_activity">Activity</string>
+    <string name="progress_dash_area_activity_detail">7,842 steps • 5.6 km daily avg</string>
+    <string name="progress_dash_goal">Build strength &amp; improve fitness</string>
+    <string name="progress_dash_goal_body">You\'re building consistency across workouts and nutrition.</string>
 </resources>
