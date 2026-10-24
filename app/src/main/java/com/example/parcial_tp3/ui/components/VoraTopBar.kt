@@ -177,6 +177,8 @@ fun VoraTopBar(
  * izquierda, con el margen de pantalla de 20.
  *
  * @param title el titulo de la pantalla, de strings.xml ("Your goals", "Settings").
+ * @param subtitle linea gris de 12 debajo del titulo: "See how your daily habits are changing."
+ *   de Progress / 05 (nodo 1:2172).
  * @param actions iconos a la derecha: el "···" de Progress / 03, 04 y 05.
  */
 @Composable
@@ -184,6 +186,7 @@ fun VoraTopBarLarge(
     title: String,
     onBack: () -> Unit,
     modifier: Modifier = Modifier,
+    subtitle: String? = null,
     actions: @Composable RowScope.() -> Unit = {},
 ) {
     Row(
@@ -198,16 +201,22 @@ fun VoraTopBarLarge(
             contentDescription = stringResource(R.string.volver),
             onClick = onBack,
         )
-        Text(
-            text = title,
-            style = MaterialTheme.typography.titleLarge,
-            color = MaterialTheme.colorScheme.onBackground,
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis,
-            modifier = Modifier
-                .weight(1f)
-                .semantics { heading() },
-        )
+        Column(
+            modifier = Modifier.weight(1f),
+            verticalArrangement = Arrangement.spacedBy(VoraTheme.spacing.s2),
+        ) {
+            Text(
+                text = title,
+                style = MaterialTheme.typography.titleLarge,
+                color = MaterialTheme.colorScheme.onBackground,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+                modifier = Modifier.semantics { heading() },
+            )
+            if (subtitle != null) {
+                Text(text = subtitle, style = VoraTheme.text.footnote, color = MaterialTheme.colorScheme.onSurfaceVariant)
+            }
+        }
         actions()
     }
 }
