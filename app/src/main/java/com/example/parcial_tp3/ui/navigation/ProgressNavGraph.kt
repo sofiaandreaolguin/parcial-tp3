@@ -9,6 +9,7 @@ import com.example.parcial_tp3.R
 import com.example.parcial_tp3.ui.components.PantallaVacia
 import com.example.parcial_tp3.ui.screens.progress.ProgressDashboardRoute
 import com.example.parcial_tp3.ui.screens.progress.TodaysOverviewRoute
+import com.example.parcial_tp3.ui.screens.progress.WorkoutProgressRoute
 
 /**
  * Progreso: 6 pantallas. 01 a 05 con barra, 06 encima.
@@ -40,7 +41,7 @@ fun NavGraphBuilder.progressGraph(nav: NavController) {
             )
         }
         composable(Rutas.WORKOUT_PROGRESS) {
-            PantallaVacia(nombre = stringResource(R.string.pant_progress_03))
+            WorkoutProgressRoute(onBack = { nav.popBackStack() })
         }
         composable(Rutas.NUTRITION_PROGRESS) {
             PantallaVacia(nombre = stringResource(R.string.pant_progress_04))
