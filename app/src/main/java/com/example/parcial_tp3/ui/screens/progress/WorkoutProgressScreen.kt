@@ -61,7 +61,7 @@ fun WorkoutProgressScreen(
             actions = {
                 VoraTopBarAction(
                     icon = painterResource(R.drawable.ic_more_horizontal),
-                    contentDescription = stringResource(R.string.progress_workout_more),
+                    contentDescription = stringResource(R.string.progress_more),
                     onClick = onMore,
                 )
             },
