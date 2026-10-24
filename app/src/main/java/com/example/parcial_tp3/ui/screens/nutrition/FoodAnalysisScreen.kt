@@ -44,9 +44,6 @@ import com.example.parcial_tp3.ui.theme.VoraTheme
  * Nutrition / 05 — Food Analysis (nodo 1:1077). Va encima y hasta el borde (RUTAS_A_SANGRE),
  * sobre el verde. Simulada: no usa micrófono ni cámara (NAV05).
  *
- * Los colores de los pasos salen de medir el frame: menta (hecho), lima (en curso) y blanco al
- * 12 % en el punto del pendiente. El texto pendiente se lee blanco al 25 a 30 %, y se usa el
- * token de 30 %.
  */
 @Composable
 fun FoodAnalysisScreen(
