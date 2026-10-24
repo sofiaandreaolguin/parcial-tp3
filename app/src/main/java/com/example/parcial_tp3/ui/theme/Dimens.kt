@@ -159,6 +159,13 @@ object VoraSizes {
     /** Anillo "DAILY COMPLETION" de Progress / 01: 60 con trazo de 4,5 (nodo 1:1701). */
     val ringOverview = 60.dp
     val ringStrokeOverview = 4.5.dp
+    // Progress / 02 (nodos del frame 1:1775)
+    /** Orbe del panel "VORA Insight" (nodo 1:1820). */
+    val orbInsight = 40.dp
+    /** Circulo del icono de las filas Workout, Nutrition y Activity (nodo 1:1836). */
+    val areaIcon = 40.dp
+    /** Flecha de "View ›" y de "See weekly review →". */
+    val chevronSmall = 14.dp
     /** Barras de proteinas y carbohidratos: 6 (la lamina dibuja 4). */
     val progressBarThick = 6.dp
     /** Punto de notificacion sin leer (Home / 02): 6. */
