@@ -9,6 +9,7 @@ import androidx.navigation.compose.navigation
 import androidx.navigation.navArgument
 import com.example.parcial_tp3.R
 import com.example.parcial_tp3.ui.components.PantallaVacia
+import com.example.parcial_tp3.ui.screens.nutrition.AddFoodRoute
 import com.example.parcial_tp3.ui.screens.nutrition.NutritionDashboardRoute
 import com.example.parcial_tp3.ui.screens.nutrition.TodaysMealsRoute
 
@@ -41,7 +42,12 @@ fun NavGraphBuilder.nutritionGraph(nav: NavController) {
         }
 
         composable(Rutas.ADD_FOOD) {
-            PantallaVacia(nombre = stringResource(R.string.pant_nutrition_03))
+            AddFoodRoute(
+                onBack = { nav.popBackStack() },
+                onVoice = { nav.navigate(Rutas.VOICE_FOOD_LOGGING) },
+                onPhoto = { nav.navigate(Rutas.PHOTO_ANALYSIS) },
+                onManual = { nav.navigate(Rutas.foodConfirmation()) },
+            )
         }
 
         composable(Rutas.VOICE_FOOD_LOGGING) {
