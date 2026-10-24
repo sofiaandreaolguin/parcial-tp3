@@ -634,4 +634,35 @@
     <string name="progress_dash_view">Ver</string>
     <string name="progress_dash_active_goal">OBJETIVO ACTIVO</string>
     <string name="progress_dash_goal_percent">%1$d%% completo</string>
+    <!-- Progress / 03 — Workout Progress (nodo 1:1904) -->
+    <string name="progress_workout_title">Progreso de entrenamiento</string>
+    <string name="progress_workout_more">Más opciones</string>
+    <string name="progress_workout_sessions">SESIONES</string>
+    <string name="progress_workout_sessions_value">4</string>
+    <string name="progress_workout_volume">VOLUMEN</string>
+    <string name="progress_workout_volume_value">8.420 kg</string>
+    <string name="progress_workout_avg_time">PROMEDIO</string>
+    <string name="progress_workout_avg_time_value">41 min</string>
+    <string name="progress_workout_chart_title">Volumen de entrenamiento</string>
+    <string name="progress_workout_chart_subtitle">KILOS LEVANTADOS POR SESIÓN</string>
+    <string name="progress_workout_volume_change" formatted="false">+8 % vs. la semana pasada</string>
+    <string name="progress_workout_chart_description" formatted="false">Volumen de esta semana: 8.420 kg en 4 sesiones, 8 % más que la semana pasada</string>
+    <string name="progress_workout_best_label">RÉCORD PERSONAL</string>
+    <string name="progress_workout_best_exercise">Remo sentado en polea</string>
+    <string name="progress_workout_best_detail">45 kg × 12 repeticiones</string>
+    <string name="progress_workout_best_improvement">(+5 kg vs. el récord anterior)</string>
+    <string name="progress_workout_insight">\"Tu volumen de entrenamiento subió sin alargar las sesiones. Estás entrenando más eficiente.\"</string>
+    <string name="progress_workout_exercises">PROGRESO POR EJERCICIO</string>
+    <string name="progress_workout_bench">Press de banca</string>
+    <string name="progress_workout_bench_detail">40 kg × 10 repeticiones</string>
+    <string name="progress_workout_bench_change">↑ 2,5 kg</string>
+    <string name="progress_workout_cable_row">Remo en polea</string>
+    <string name="progress_workout_cable_row_detail">45 kg × 12 repeticiones</string>
+    <string name="progress_workout_cable_row_change">↑ 5,0 kg</string>
+    <string name="progress_workout_shoulder">Press de hombros</string>
+    <string name="progress_workout_shoulder_detail">20 kg × 10 repeticiones</string>
+    <string name="progress_workout_stable">→ Estable</string>
+    <string name="progress_workout_lateral">Elevaciones laterales</string>
+    <string name="progress_workout_lateral_detail">8 kg × 12 repeticiones</string>
+    <string name="progress_workout_lateral_change">↑ 1,0 kg</string>
 </resources>

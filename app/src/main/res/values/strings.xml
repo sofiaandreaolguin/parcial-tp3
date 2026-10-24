@@ -636,4 +636,35 @@
     <string name="progress_dash_view">View</string>
     <string name="progress_dash_active_goal">ACTIVE GOAL</string>
     <string name="progress_dash_goal_percent">%1$d%% complete</string>
+    <!-- Progress / 03 — Workout Progress (nodo 1:1904) -->
+    <string name="progress_workout_title">Workout progress</string>
+    <string name="progress_workout_more">More options</string>
+    <string name="progress_workout_sessions">SESSIONS</string>
+    <string name="progress_workout_sessions_value">4</string>
+    <string name="progress_workout_volume">VOLUME</string>
+    <string name="progress_workout_volume_value">8,420 kg</string>
+    <string name="progress_workout_avg_time">AVG TIME</string>
+    <string name="progress_workout_avg_time_value">41 min</string>
+    <string name="progress_workout_chart_title">Training Volume</string>
+    <string name="progress_workout_chart_subtitle">KILOGRAMS LIFTED PER SESSION</string>
+    <string name="progress_workout_volume_change" formatted="false">+8% vs last week</string>
+    <string name="progress_workout_chart_description" formatted="false">Training volume this week: 8,420 kg in 4 sessions, 8% more than last week</string>
+    <string name="progress_workout_best_label">PERSONAL BEST</string>
+    <string name="progress_workout_best_exercise">Seated Cable Row</string>
+    <string name="progress_workout_best_detail">45 kg × 12 reps</string>
+    <string name="progress_workout_best_improvement">(+5 kg vs prev best)</string>
+    <string name="progress_workout_insight">\"Your training volume increased without adding workout duration. That\'s efficiency improving.\"</string>
+    <string name="progress_workout_exercises">EXERCISE PROGRESS</string>
+    <string name="progress_workout_bench">Bench Press</string>
+    <string name="progress_workout_bench_detail">40 kg × 10 reps</string>
+    <string name="progress_workout_bench_change">↑ 2.5 kg</string>
+    <string name="progress_workout_cable_row">Cable Row</string>
+    <string name="progress_workout_cable_row_detail">45 kg × 12 reps</string>
+    <string name="progress_workout_cable_row_change">↑ 5.0 kg</string>
+    <string name="progress_workout_shoulder">Shoulder Press</string>
+    <string name="progress_workout_shoulder_detail">20 kg × 10 reps</string>
+    <string name="progress_workout_stable">→ Stable</string>
+    <string name="progress_workout_lateral">Lateral Raise</string>
+    <string name="progress_workout_lateral_detail">8 kg × 12 reps</string>
+    <string name="progress_workout_lateral_change">↑ 1.0 kg</string>
 </resources>

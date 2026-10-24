@@ -47,6 +47,8 @@ data class VoraExtraColors(
     val orbHalo: Color = VoraOrbHalo,
     val orbMutedCore: Color = VoraOrbMutedCore,
     val noticeIcon: Color = VoraNoticeIcon,
+    val highlight: Color = VoraHighlight,
+    val highlightIcon: Color = VoraHighlightIcon,
     val onDarkMuted: Color = VoraOnDarkMuted,
     val onDarkBorder: Color = VoraOnDarkBorder,
     val onDarkSubtle: Color = VoraOnDarkSubtle,
