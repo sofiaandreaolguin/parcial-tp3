@@ -172,13 +172,15 @@ fun VoraTopBar(
 }
 
 /**
- * El encabezado grande de Profile, Settings, Nutrition Preferences y Progress / 03, 04 y 05: la flecha de volver
- * dentro de un circulo blanco y el titulo de pantalla (20 Bold) a su lado, alineado a la
- * izquierda, con el margen de pantalla de 20.
+ * El encabezado grande de Profile, Settings, Nutrition Preferences y Progress / 03 a 06: la
+ * flecha de volver dentro de un circulo blanco y el titulo de pantalla (20 Bold) a su lado,
+ * alineado a la izquierda, con el margen de pantalla de 20.
  *
  * @param title el titulo de la pantalla, de strings.xml ("Your goals", "Settings").
  * @param subtitle linea gris de 12 debajo del titulo: "See how your daily habits are changing."
  *   de Progress / 05 (nodo 1:2172).
+ * @param onDark sobre el verde de Progress / 06: titulo blanco, subtitulo menta (nodos 1:2302
+ *   y 1:2303) y los botones en su version oscura ([VoraTopBarAction]).
  * @param actions iconos a la derecha: el "···" de Progress / 03, 04 y 05.
  */
 @Composable
@@ -187,8 +189,10 @@ fun VoraTopBarLarge(
     onBack: () -> Unit,
     modifier: Modifier = Modifier,
     subtitle: String? = null,
+    onDark: Boolean = false,
     actions: @Composable RowScope.() -> Unit = {},
 ) {
+    val colors = MaterialTheme.colorScheme
     Row(
         modifier = modifier
             .fillMaxWidth()
@@ -200,6 +204,7 @@ fun VoraTopBarLarge(
             icon = painterResource(R.drawable.ic_back),
             contentDescription = stringResource(R.string.volver),
             onClick = onBack,
+            onDark = onDark,
         )
         Column(
             modifier = Modifier.weight(1f),
@@ -208,13 +213,17 @@ fun VoraTopBarLarge(
             Text(
                 text = title,
                 style = MaterialTheme.typography.titleLarge,
-                color = MaterialTheme.colorScheme.onBackground,
+                color = if (onDark) colors.onPrimary else colors.onBackground,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
                 modifier = Modifier.semantics { heading() },
             )
             if (subtitle != null) {
-                Text(text = subtitle, style = VoraTheme.text.footnote, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                Text(
+                    text = subtitle,
+                    style = VoraTheme.text.footnote,
+                    color = if (onDark) colors.secondary else colors.onSurfaceVariant,
+                )
             }
         }
         actions()
@@ -226,6 +235,8 @@ fun VoraTopBarLarge(
  * volver y el "···" de Progress / 03, 04 y 05.
  *
  * @param contentDescription de strings.xml, para TalkBack.
+ * @param onDark sobre el verde: blanco al 12 % sin borde y el icono blanco (Progress / 06,
+ *   nodo 1:2298).
  */
 @Composable
 fun VoraTopBarAction(
@@ -233,17 +244,23 @@ fun VoraTopBarAction(
     contentDescription: String,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
+    onDark: Boolean = false,
 ) {
+    val colors = MaterialTheme.colorScheme
     Box(
         modifier = modifier
             .size(VoraTheme.sizes.backCircle)
             .clip(CircleShape)
-            .background(MaterialTheme.colorScheme.surface)
-            .border(VoraTheme.sizes.border, MaterialTheme.colorScheme.outline, CircleShape)
+            .background(if (onDark) VoraTheme.colors.onDarkSubtle else colors.surface)
+            .then(if (onDark) Modifier else Modifier.border(VoraTheme.sizes.border, colors.outline, CircleShape))
             .clickable(role = Role.Button, onClick = onClick),
         contentAlignment = Alignment.Center,
     ) {
-        Icon(painter = icon, contentDescription = contentDescription, tint = MaterialTheme.colorScheme.onSurface)
+        Icon(
+            painter = icon,
+            contentDescription = contentDescription,
+            tint = if (onDark) colors.onPrimary else colors.onSurface,
+        )
     }
 }
 
