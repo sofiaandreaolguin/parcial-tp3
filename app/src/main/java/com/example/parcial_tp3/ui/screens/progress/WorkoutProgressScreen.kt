@@ -2,7 +2,6 @@ package com.example.parcial_tp3.ui.screens.progress
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -21,11 +20,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -39,6 +36,7 @@ import com.example.parcial_tp3.ui.components.VoraOrb
 import com.example.parcial_tp3.ui.components.VoraSegmentedControl
 import com.example.parcial_tp3.ui.components.VoraStat
 import com.example.parcial_tp3.ui.components.VoraStatRow
+import com.example.parcial_tp3.ui.components.VoraTopBarAction
 import com.example.parcial_tp3.ui.components.VoraTopBarLarge
 import com.example.parcial_tp3.ui.theme.Parcialtp3Theme
 import com.example.parcial_tp3.ui.theme.VoraTheme
@@ -60,7 +58,13 @@ fun WorkoutProgressScreen(
         VoraTopBarLarge(
             title = stringResource(R.string.progress_workout_title),
             onBack = onBack,
-            actions = { MoreButton(onMore) },
+            actions = {
+                VoraTopBarAction(
+                    icon = painterResource(R.drawable.ic_more_horizontal),
+                    contentDescription = stringResource(R.string.progress_workout_more),
+                    onClick = onMore,
+                )
+            },
         )
         Column(
             modifier = Modifier.padding(
@@ -101,26 +105,6 @@ fun WorkoutProgressScreen(
                 }
             }
         }
-    }
-}
-
-/** "···" en un círculo con borde, como la flecha de [VoraTopBarLarge]. */
-@Composable
-private fun MoreButton(onClick: () -> Unit) {
-    Box(
-        modifier = Modifier
-            .size(VoraTheme.sizes.backCircle)
-            .clip(CircleShape)
-            .background(MaterialTheme.colorScheme.surface)
-            .border(VoraTheme.sizes.border, MaterialTheme.colorScheme.outline, CircleShape)
-            .clickable(role = Role.Button, onClick = onClick),
-        contentAlignment = Alignment.Center,
-    ) {
-        Icon(
-            painter = painterResource(R.drawable.ic_more_horizontal),
-            contentDescription = stringResource(R.string.progress_workout_more),
-            tint = MaterialTheme.colorScheme.onSurface,
-        )
     }
 }
 
