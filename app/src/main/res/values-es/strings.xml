@@ -575,4 +575,28 @@
     <string name="notification_streak_sender">Logro alcanzado</string>
     <string name="notification_streak_title">¡Racha de 4 días de entrenamiento!</string>
     <string name="notification_streak_body">Excelente, Alex. Vamos por el día 5.</string>
+
+    <!-- Progress / 01 — Today's Overview (datos de demostración) -->
+    <string name="progress_overview_date">MARTES, 8 DE SEPTIEMBRE</string>
+    <string name="progress_overview_workout">Entrenamiento</string>
+    <string name="progress_overview_workout_detail">Sin empezar</string>
+    <string name="progress_overview_nutrition">Objetivo de nutrición</string>
+    <string name="progress_overview_nutrition_detail">1.420 / 2.100 kcal</string>
+    <string name="progress_overview_activity">Objetivo de actividad</string>
+    <string name="progress_overview_activity_detail">7.842 pasos</string>
+    <string name="progress_overview_hydration">Hidratación</string>
+    <string name="progress_overview_hydration_detail">1,6 / 2,5 litros</string>
+    <string name="progress_overview_advice">\"Completar el entrenamiento intermedio de hoy y una cena rica en proteínas asegura tu recuperación ideal.\"</string>
+    <string name="progress_overview_title">Resumen de hoy</string>
+    <string name="progress_overview_completion">AVANCE DEL DÍA</string>
+    <string name="progress_percent">%1$d%%</string>
+    <string name="progress_overview_advice_label">CONSEJO DE VORA</string>
+    <string name="progress_overview_breakdowns">Por categoría</string>
+    <string name="progress_overview_workout_label">ENTRENAMIENTO</string>
+    <string name="progress_overview_not_started">SIN EMPEZAR</string>
+    <string name="progress_workout_meta">%1$s • %2$s</string>
+    <string name="progress_overview_start_workout">Empezar entrenamiento</string>
+    <string name="progress_overview_current_goal">OBJETIVO ACTUAL</string>
+    <string name="progress_overview_weekly_target">META SEMANAL</string>
+    <string name="progress_overview_weekly_value">%1$d / %2$d entrenamientos</string>
 </resources>

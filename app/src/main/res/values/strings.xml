@@ -577,4 +577,28 @@
     <string name="notification_streak_sender">Milestone Reached</string>
     <string name="notification_streak_title">4-day workout streak logged!</string>
     <string name="notification_streak_body">Outstanding work, Alex. Let\'s make it 5 today.</string>
+
+    <!-- Progress / 01 — Today's Overview (datos de demostración) -->
+    <string name="progress_overview_date">TUESDAY, 8 SEPTEMBER</string>
+    <string name="progress_overview_workout">Workout Progress</string>
+    <string name="progress_overview_workout_detail">Not started</string>
+    <string name="progress_overview_nutrition">Nutrition Target</string>
+    <string name="progress_overview_nutrition_detail">1,420 / 2,100 kcal</string>
+    <string name="progress_overview_activity">Activity Target</string>
+    <string name="progress_overview_activity_detail">7,842 steps</string>
+    <string name="progress_overview_hydration">Hydration Intake</string>
+    <string name="progress_overview_hydration_detail">1.6 / 2.5 Litres</string>
+    <string name="progress_overview_advice">\"Completing today\'s intermediate workout and a protein-rich dinner will secure your optimal target recovery.\"</string>
+    <string name="progress_overview_title">Today\'s Overview</string>
+    <string name="progress_overview_completion">DAILY COMPLETION</string>
+    <string name="progress_percent">%1$d%%</string>
+    <string name="progress_overview_advice_label">VORA ADVICE</string>
+    <string name="progress_overview_breakdowns">Category Breakdowns</string>
+    <string name="progress_overview_workout_label">WORKOUT</string>
+    <string name="progress_overview_not_started">NOT STARTED</string>
+    <string name="progress_workout_meta">%1$s • %2$s</string>
+    <string name="progress_overview_start_workout">Start Workout</string>
+    <string name="progress_overview_current_goal">CURRENT GOAL</string>
+    <string name="progress_overview_weekly_target">WEEKLY TARGET</string>
+    <string name="progress_overview_weekly_value">%1$d / %2$d Workouts</string>
 </resources>

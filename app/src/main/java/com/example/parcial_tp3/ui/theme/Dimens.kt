@@ -156,6 +156,9 @@ object VoraSizes {
     /** Anillo "Daily Goal": 64 con trazo de 5 (medido a 2x). */
     val ringSmall = 64.dp
     val ringStrokeSmall = 5.dp
+    /** Anillo "DAILY COMPLETION" de Progress / 01: 60 con trazo de 4,5 (nodo 1:1701). */
+    val ringOverview = 60.dp
+    val ringStrokeOverview = 4.5.dp
     /** Barras de proteinas y carbohidratos: 6 (la lamina dibuja 4). */
     val progressBarThick = 6.dp
     /** Punto de notificacion sin leer (Home / 02): 6. */

@@ -13,7 +13,7 @@ Por cada pantalla, cuatro archivos (`specs/CONTEXTO.md`, secciones 3 y 5):
 | `XxxViewModel.kt` | `@HiltViewModel`, expone un `StateFlow` |
 | `XxxUiState.kt` | El estado que la pantalla muestra |
 
-**Ojo con el ViewModel:** el controlador de cada pantalla sale de la columna *Controlador* de `specs/PANTALLAS.md`; no se decide acá. **No todas las pantallas tienen uno propio:** hay flujos donde varias comparten uno a propósito, porque comparten datos (el borrador de una comida en Nutrition, los estados de Voice). Mirá la tabla de tu flujo antes de crear el archivo.
+**Ojo con el ViewModel:** en Progress las 6 pantallas usan `ProgressViewModel` con datos fijos de `ProgressDemoData.kt`. En general, el controlador de cada pantalla sale de la columna *Controlador* de `specs/PANTALLAS.md`; no se decide acá. **No todas las pantallas tienen uno propio:** hay flujos donde varias comparten uno a propósito, porque comparten datos (el borrador de una comida en Nutrition, los estados de Voice). Mirá la tabla de tu flujo antes de crear el archivo.
 
 ## Las pantallas de este flujo
 
@@ -34,7 +34,6 @@ Por cada pantalla, cuatro archivos (`specs/CONTEXTO.md`, secciones 3 y 5):
 - **Colores, tipografías y tamaños salen del tema** (`ui/theme/`). Ninguna pantalla escribe un color a mano.
 - Las pantallas más altas que el frame (unos 850 dp) llevan scroll (UI03).
 - Para reemplazar la pantalla de relleno: en el grafo de tu flujo (`ui/navigation/ProgressNavGraph.kt`), cambiá `PantallaVacia(...)` por tu `XxxRoute(...)`.
-- La pestaña Progress aterriza en **`02 — Dashboard`**, que es la que tiene los links a `03`, `04`, `05` y `06`.
-- **Pendiente 2 de `specs/PANTALLAS.md`:** `01 — Today's Overview` puede quedar sin entrada. La única candidata es la sección "Today's Overview" de `Home / 01`. Coordinalo con quien maquete Home.
+- La pestaña Progress aterriza en **`01 — Today's Overview`**; su "Start Workout" lleva a `02 — Dashboard`, que tiene los links a `03`, `04`, `05` y `06` (ficha `docs/decisiones/005`).
 - Los datos de ejemplo usan **la misma forma que los modelos** `Workout` y `Meal`, para poder enchufarlos a Room si sobra tiempo.
 - `Progress / 02` es más alta que 850 dp: lleva scroll.
