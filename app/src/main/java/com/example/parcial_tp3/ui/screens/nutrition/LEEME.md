@@ -23,7 +23,7 @@ Por cada pantalla, cuatro archivos (`specs/CONTEXTO.md`, secciones 3 y 5):
 | Nutrition / 02 — Today's Meals | `todays_meals` | Con barra | **Funcional** |
 | Nutrition / 03 — Add Food | `add_food` | Con barra | Demostración |
 | Nutrition / 04 — Voice Food Logging | `voice_food_logging` | Encima | Demostración |
-| Nutrition / 05 — Food Analysis | `food_analysis` | Encima | Demostración |
+| Nutrition / 05 — Food Analysis | `food_analysis` | Encima | Demostración: tres pasos con `delay` (~2 s) y pasa sola a `07`; "Cancel analysis", la X y atrás cortan el análisis |
 | Nutrition / 06 — Photo Analysis | `photo_analysis` | Con barra | Demostración |
 | Nutrition / 07 — Food Confirmation | `food_confirmation?mealId={mealId}` | Con barra | **Funcional** |
 | Nutrition / 08 — Meal Details | `meal_details/{mealId}` | Con barra | **Funcional** |
