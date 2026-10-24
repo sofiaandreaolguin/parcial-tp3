@@ -11,7 +11,15 @@ import com.example.parcial_tp3.domain.model.MealType
 data class FoodCaptureUiState(
     @StringRes val transcript: Int = R.string.nutrition_voice_transcript_demo,
     val draft: MealDraft = MealDraft(),
+    val analysisStep: AnalysisStep = AnalysisStep.Identifying,
 )
+
+/** El paso de Nutrition / 05 que se está haciendo; los anteriores están hechos y los siguientes pendientes. */
+enum class AnalysisStep { Identifying, Estimating, Calculating }
+
+sealed interface FoodCaptureEvent {
+    data object AnalysisDone : FoodCaptureEvent
+}
 
 /** Misma forma que `Meal`, con el nombre como recurso para no escribir texto en el código. */
 data class MealDraft(
