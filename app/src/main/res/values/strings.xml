@@ -665,7 +665,7 @@
     <string name="progress_dash_goal_percent">%1$d%% complete</string>
     <!-- Progress / 03 — Workout Progress (nodo 1:1904) -->
     <string name="progress_workout_title">Workout progress</string>
-    <string name="progress_workout_more">More options</string>
+    <string name="progress_more">More options</string>
     <string name="progress_workout_sessions">SESSIONS</string>
     <string name="progress_workout_sessions_value">4</string>
     <string name="progress_workout_volume">VOLUME</string>
@@ -711,4 +711,30 @@
     <string name="nutrition_analysis_step_calculating">Calculating nutrition…</string>
     <string name="nutrition_analysis_cancel">Cancel analysis</string>
     <string name="nutrition_analysis_close">Close food analysis</string>
+    <!-- Progress / 04 — Nutrition Progress (nodo 1:2032) -->
+    <string name="progress_nutrition_title">Nutrition progress</string>
+    <string name="progress_nutrition_calories">AVG CALORIES</string>
+    <string name="progress_nutrition_calories_value">1,980 kcal</string>
+    <string name="progress_nutrition_protein">AVG PROTEIN</string>
+    <string name="progress_nutrition_protein_value">132g</string>
+    <string name="progress_nutrition_target_hit">TARGET HIT</string>
+    <string name="progress_nutrition_target_hit_value">5 / 7 days</string>
+    <string name="progress_nutrition_macro_calories">Calories</string>
+    <string name="progress_nutrition_macro_protein">Protein</string>
+    <string name="progress_nutrition_macro_carbs">Carbs</string>
+    <string name="progress_nutrition_macro_fat">Fat</string>
+    <string name="progress_nutrition_target">DAILY AVG PROTEIN TARGET (140g)</string>
+    <string name="progress_nutrition_hit">HIT</string>
+    <string name="progress_nutrition_miss">MISS</string>
+    <string name="progress_nutrition_analysis">Nutrition Analysis</string>
+    <string name="progress_nutrition_insight">\"Your protein intake has improved this week, especially on workout days. Keeping this consistent will better support your strength goal.\"</string>
+    <string name="progress_nutrition_habits">FOOD HABITS &amp; PATTERNS</string>
+    <string name="progress_nutrition_lunch">Frequent lunch</string>
+    <string name="progress_nutrition_lunch_value">Chicken &amp; Rice Bowl</string>
+    <string name="progress_nutrition_source">Top protein source</string>
+    <string name="progress_nutrition_source_value">Whey &amp; Chicken Breast</string>
+    <string name="progress_nutrition_breakfast">Avg breakfast</string>
+    <string name="progress_nutrition_breakfast_value">420 kcal</string>
+    <string name="progress_nutrition_dinner">Avg dinner</string>
+    <string name="progress_nutrition_dinner_value">610 kcal</string>
 </resources>

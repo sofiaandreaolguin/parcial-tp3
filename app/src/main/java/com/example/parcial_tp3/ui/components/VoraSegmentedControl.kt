@@ -91,7 +91,7 @@ fun VoraSegmentedControl(
             }
             val vertical = when (style) {
                 VoraSegmentedStyle.Pill -> spacing.s8
-                VoraSegmentedStyle.Tabs -> spacing.s4
+                VoraSegmentedStyle.Tabs -> spacing.s6
                 VoraSegmentedStyle.Boxes -> spacing.s10
             }
             Box(
@@ -117,8 +117,9 @@ fun VoraSegmentedControl(
             ) {
                 Text(
                     text = texto,
-                    style = MaterialTheme.typography.labelLarge,
-                    fontWeight = FontWeight.Medium,
+                    // las solapas van en 11 SemiBold (Progress / 04, nodo 1:2070); a 14 no entra "Calories" en 360 dp
+                    style = if (style == VoraSegmentedStyle.Tabs) VoraTheme.text.label else MaterialTheme.typography.labelLarge,
+                    fontWeight = if (style == VoraSegmentedStyle.Tabs) null else FontWeight.Medium,
                     color = when {
                         elegida -> colors.onPrimary
                         style == VoraSegmentedStyle.Boxes -> colors.onSurface

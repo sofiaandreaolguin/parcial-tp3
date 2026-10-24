@@ -12,6 +12,7 @@ data class ProgressUiState(
     val overview: TodaysOverview,
     val dashboard: ProgressDashboard,
     val workout: WorkoutProgress,
+    val nutrition: NutritionProgress,
 )
 
 /** Progress / 01. */
@@ -71,7 +72,10 @@ data class WorkoutProgress(
     val exercises: List<ExerciseTrend>,
 )
 
-/** Un dato de la fila "SESSIONS 4 | VOLUME 8,420 kg | AVG TIME 41 min". */
+/**
+ * Un dato con etiqueta y valor: la fila "SESSIONS 4 | VOLUME 8,420 kg" de 03 y 04, y cada
+ * tarjeta de "FOOD HABITS & PATTERNS" de 04.
+ */
 data class ProgressMetric(
     @StringRes val label: Int,
     @StringRes val value: Int,
@@ -89,4 +93,14 @@ data class ExerciseTrend(
     @StringRes val detail: Int,
     @StringRes val change: Int,
     val improved: Boolean,
+)
+
+/** Progress / 04. */
+data class NutritionProgress(
+    val metrics: List<ProgressMetric>,
+    @StringRes val target: Int,
+    /** De lunes a domingo: true si ese día llegó al objetivo de proteína. */
+    val targetHit: List<Boolean>,
+    @StringRes val insight: Int,
+    val habits: List<ProgressMetric>,
 )

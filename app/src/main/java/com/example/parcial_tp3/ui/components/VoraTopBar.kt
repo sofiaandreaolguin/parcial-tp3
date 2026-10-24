@@ -25,6 +25,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
@@ -192,21 +193,11 @@ fun VoraTopBarLarge(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(VoraTheme.spacing.s14),
     ) {
-        Box(
-            modifier = Modifier
-                .size(VoraTheme.sizes.backCircle)
-                .clip(CircleShape)
-                .background(MaterialTheme.colorScheme.surface)
-                .border(VoraTheme.sizes.border, MaterialTheme.colorScheme.outline, CircleShape)
-                .clickable(role = Role.Button, onClick = onBack),
-            contentAlignment = Alignment.Center,
-        ) {
-            Icon(
-                painter = painterResource(R.drawable.ic_back),
-                contentDescription = stringResource(R.string.volver),
-                tint = MaterialTheme.colorScheme.onSurface,
-            )
-        }
+        VoraTopBarAction(
+            icon = painterResource(R.drawable.ic_back),
+            contentDescription = stringResource(R.string.volver),
+            onClick = onBack,
+        )
         Text(
             text = title,
             style = MaterialTheme.typography.titleLarge,
@@ -218,6 +209,32 @@ fun VoraTopBarLarge(
                 .semantics { heading() },
         )
         actions()
+    }
+}
+
+/**
+ * Icono dentro de un circulo blanco con borde, el boton de [VoraTopBarLarge]: la flecha de
+ * volver y el "···" de Progress / 03, 04 y 05.
+ *
+ * @param contentDescription de strings.xml, para TalkBack.
+ */
+@Composable
+fun VoraTopBarAction(
+    icon: Painter,
+    contentDescription: String,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Box(
+        modifier = modifier
+            .size(VoraTheme.sizes.backCircle)
+            .clip(CircleShape)
+            .background(MaterialTheme.colorScheme.surface)
+            .border(VoraTheme.sizes.border, MaterialTheme.colorScheme.outline, CircleShape)
+            .clickable(role = Role.Button, onClick = onClick),
+        contentAlignment = Alignment.Center,
+    ) {
+        Icon(painter = icon, contentDescription = contentDescription, tint = MaterialTheme.colorScheme.onSurface)
     }
 }
 
