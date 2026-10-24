@@ -331,6 +331,7 @@ Leído de los frames el 18/10. Lo que dice *a confirmar* es lectura mía del dib
 | 04 Nutrition Progress | Week / Month / 3 Months | No navega. Queda fijo en Week (datos de demostración); Month y 3 Months muestran el aviso de modo demostración |
 | | Calories / Protein / Carbs / Fat | No navega. Queda fijo en Protein; los otros muestran el aviso de modo demostración |
 | | Tarjetas de "FOOD HABITS & PATTERNS" | No navegan: no tienen frame de destino |
+| 05 Health Trends | Filas de "HABIT SIGNALS" | No navegan: no tienen frame de destino |
 | 06 Weekly Review | "Ask VORA" (lima) | `voice` · cruza |
 | | "Done" | `popBackStack()` |
 | | "Get dinner ideas →" | `voice` · cruza |

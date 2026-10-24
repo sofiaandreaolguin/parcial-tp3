@@ -32,7 +32,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import com.example.parcial_tp3.R
 import com.example.parcial_tp3.ui.components.VoraBarChart
 import com.example.parcial_tp3.ui.components.VoraCard
-import com.example.parcial_tp3.ui.components.VoraOrb
 import com.example.parcial_tp3.ui.components.VoraSegmentedControl
 import com.example.parcial_tp3.ui.components.VoraStat
 import com.example.parcial_tp3.ui.components.VoraStatRow
@@ -89,14 +88,9 @@ fun WorkoutProgressScreen(
             VoraStatRow(state.metrics.map { VoraStat(stringResource(it.label), stringResource(it.value)) })
             VolumeCard(state)
             PersonalBestCard(state.personalBest)
-            InsightRow(stringResource(state.insight))
+            ProgressInsight(stringResource(state.insight))
             Column(verticalArrangement = Arrangement.spacedBy(VoraTheme.spacing.s8)) {
-                Text(
-                    text = stringResource(R.string.progress_workout_exercises),
-                    style = MaterialTheme.typography.labelLarge,
-                    fontWeight = FontWeight.Bold,
-                    color = VoraTheme.colors.textMuted,
-                )
+                ProgressSectionLabel(stringResource(R.string.progress_workout_exercises))
                 state.exercises.forEach { exercise ->
                     ProgressRow(
                         title = stringResource(exercise.name),
@@ -200,27 +194,6 @@ private fun PersonalBestCard(best: PersonalBest) {
                 color = colors.onSurfaceVariant,
             )
         }
-    }
-}
-
-/**
- * La cita de VORA con el orbe de 40 (nodo 1:1976). No es `VoraInfoMessage`: ese lleva un
- * ícono en vez del orbe y el borde menta al 40 %, y acá el borde es menta entera.
- */
-@Composable
-private fun InsightRow(text: String) {
-    val shape = RoundedCornerShape(VoraTheme.radius.r12)
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(VoraTheme.colors.mintTranslucent, shape)
-            .border(VoraTheme.sizes.border, MaterialTheme.colorScheme.secondary, shape)
-            .padding(VoraTheme.spacing.s12),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(VoraTheme.spacing.s12),
-    ) {
-        VoraOrb(size = VoraTheme.sizes.orbInsight)
-        Text(text = text, style = VoraTheme.text.quote, color = MaterialTheme.colorScheme.primary)
     }
 }
 

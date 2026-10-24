@@ -1,15 +1,18 @@
 package com.example.parcial_tp3.ui.screens.progress
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -19,6 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.text.font.FontWeight
 import com.example.parcial_tp3.ui.components.VoraCard
+import com.example.parcial_tp3.ui.components.VoraOrb
 import com.example.parcial_tp3.ui.theme.VoraTheme
 
 /**
@@ -76,4 +80,37 @@ fun ProgressRow(
             trailing()
         }
     }
+}
+
+/**
+ * La cita de VORA con el orbe de 40 (Progress / 03 nodo 1:1976, 05 nodo 1:2219). No es
+ * `VoraInfoMessage`: ese lleva un ícono en vez del orbe y el borde menta al 40 %, y acá el
+ * borde es menta entera.
+ */
+@Composable
+fun ProgressInsight(text: String) {
+    val shape = RoundedCornerShape(VoraTheme.radius.r12)
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(VoraTheme.colors.mintTranslucent, shape)
+            .border(VoraTheme.sizes.border, MaterialTheme.colorScheme.secondary, shape)
+            .padding(VoraTheme.spacing.s12),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.spacedBy(VoraTheme.spacing.s12),
+    ) {
+        VoraOrb(size = VoraTheme.sizes.orbInsight)
+        Text(text = text, style = VoraTheme.text.quote, color = MaterialTheme.colorScheme.primary)
+    }
+}
+
+/** Título de sección en 14 Bold gris: "EXERCISE PROGRESS", "FOOD HABITS & PATTERNS", "HABIT SIGNALS". */
+@Composable
+fun ProgressSectionLabel(text: String) {
+    Text(
+        text = text,
+        style = MaterialTheme.typography.labelLarge,
+        fontWeight = FontWeight.Bold,
+        color = VoraTheme.colors.textMuted,
+    )
 }
