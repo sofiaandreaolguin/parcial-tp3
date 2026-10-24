@@ -168,6 +168,8 @@ object VoraSizes {
     val chevronSmall = 14.dp
     /** Circulo de cada dia de "DAILY AVG PROTEIN TARGET" de Progress / 04 (nodo 1:2082). */
     val dayTarget = 32.dp
+    /** Circulo del check de "WHAT WENT WELL" de Progress / 06 (nodo 1:2323). */
+    val winCheck = 24.dp
     /** Barras de proteinas y carbohidratos: 6 (la lamina dibuja 4). */
     val progressBarThick = 6.dp
     /** Punto de notificacion sin leer (Home / 02): 6. */
