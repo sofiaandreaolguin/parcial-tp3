@@ -11,6 +11,7 @@ import com.example.parcial_tp3.domain.model.Workout
 data class ProgressUiState(
     val overview: TodaysOverview,
     val dashboard: ProgressDashboard,
+    val workout: WorkoutProgress,
 )
 
 /** Progress / 01. */
@@ -57,4 +58,35 @@ data class DashboardArea(
     val kind: CategoryKind,
     @StringRes val title: Int,
     @StringRes val detail: Int,
+)
+
+/** Progress / 03. */
+data class WorkoutProgress(
+    val metrics: List<ProgressMetric>,
+    /** Kilos levantados por día, de lunes a viernes; 0 es un día sin sesión. */
+    val volumeKg: List<Float>,
+    @StringRes val volumeChange: Int,
+    val personalBest: PersonalBest,
+    @StringRes val insight: Int,
+    val exercises: List<ExerciseTrend>,
+)
+
+/** Un dato de la fila "SESSIONS 4 | VOLUME 8,420 kg | AVG TIME 41 min". */
+data class ProgressMetric(
+    @StringRes val label: Int,
+    @StringRes val value: Int,
+)
+
+data class PersonalBest(
+    @StringRes val exercise: Int,
+    @StringRes val detail: Int,
+    @StringRes val improvement: Int,
+)
+
+/** Fila de "EXERCISE PROGRESS": [improved] decide si la etiqueta va en menta o en gris. */
+data class ExerciseTrend(
+    @StringRes val name: Int,
+    @StringRes val detail: Int,
+    @StringRes val change: Int,
+    val improved: Boolean,
 )

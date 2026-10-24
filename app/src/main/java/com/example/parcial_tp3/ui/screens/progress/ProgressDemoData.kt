@@ -45,4 +45,26 @@ fun progressDemoState() = ProgressUiState(
         goalBody = R.string.progress_dash_goal_body,
         goalPercent = 68,
     ),
+    workout = WorkoutProgress(
+        metrics = listOf(
+            ProgressMetric(R.string.progress_workout_sessions, R.string.progress_workout_sessions_value),
+            ProgressMetric(R.string.progress_workout_volume, R.string.progress_workout_volume_value),
+            ProgressMetric(R.string.progress_workout_avg_time, R.string.progress_workout_avg_time_value),
+        ),
+        // proporcionales a las barras del frame (52, 58, 0, 66 y 72) y suman los 8,420 kg de VOLUME
+        volumeKg = listOf(1765f, 1970f, 0f, 2240f, 2445f),
+        volumeChange = R.string.progress_workout_volume_change,
+        personalBest = PersonalBest(
+            exercise = R.string.progress_workout_best_exercise,
+            detail = R.string.progress_workout_best_detail,
+            improvement = R.string.progress_workout_best_improvement,
+        ),
+        insight = R.string.progress_workout_insight,
+        exercises = listOf(
+            ExerciseTrend(R.string.progress_workout_bench, R.string.progress_workout_bench_detail, R.string.progress_workout_bench_change, improved = true),
+            ExerciseTrend(R.string.progress_workout_cable_row, R.string.progress_workout_cable_row_detail, R.string.progress_workout_cable_row_change, improved = true),
+            ExerciseTrend(R.string.progress_workout_shoulder, R.string.progress_workout_shoulder_detail, R.string.progress_workout_stable, improved = false),
+            ExerciseTrend(R.string.progress_workout_lateral, R.string.progress_workout_lateral_detail, R.string.progress_workout_lateral_change, improved = true),
+        ),
+    ),
 )
