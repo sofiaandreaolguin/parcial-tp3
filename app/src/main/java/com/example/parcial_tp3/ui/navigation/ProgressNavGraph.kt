@@ -7,6 +7,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import com.example.parcial_tp3.R
 import com.example.parcial_tp3.ui.components.PantallaVacia
+import com.example.parcial_tp3.ui.screens.progress.TodaysOverviewRoute
 
 /**
  * Progreso: 6 pantallas. 01 a 05 con barra, 06 encima.
@@ -22,7 +23,12 @@ fun NavGraphBuilder.progressGraph(nav: NavController) {
     navigation(startDestination = Rutas.TODAYS_OVERVIEW, route = Rutas.PROGRESS_GRAPH) {
 
         composable(Rutas.TODAYS_OVERVIEW) {
-            PantallaVacia(nombre = stringResource(R.string.pant_progress_01))
+            TodaysOverviewRoute(
+                onStartWorkout = { nav.navigate(Rutas.PROGRESS_DASHBOARD) },
+                onWorkoutProgress = { nav.navigate(Rutas.WORKOUT_PROGRESS) },
+                onNutritionProgress = { nav.navigate(Rutas.NUTRITION_PROGRESS) },
+                onHealthTrends = { nav.navigate(Rutas.HEALTH_TRENDS) },
+            )
         }
         composable(Rutas.PROGRESS_DASHBOARD) {
             PantallaVacia(nombre = stringResource(R.string.pant_progress_02))

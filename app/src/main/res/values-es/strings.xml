@@ -587,4 +587,16 @@
     <string name="progress_overview_hydration">Hidratación</string>
     <string name="progress_overview_hydration_detail">1,6 / 2,5 litros</string>
     <string name="progress_overview_advice">\"Completar el entrenamiento intermedio de hoy y una cena rica en proteínas asegura tu recuperación ideal.\"</string>
+    <string name="progress_overview_title">Resumen de hoy</string>
+    <string name="progress_overview_completion">AVANCE DEL DÍA</string>
+    <string name="progress_percent">%1$d%%</string>
+    <string name="progress_overview_advice_label">CONSEJO DE VORA</string>
+    <string name="progress_overview_breakdowns">Por categoría</string>
+    <string name="progress_overview_workout_label">ENTRENAMIENTO</string>
+    <string name="progress_overview_not_started">SIN EMPEZAR</string>
+    <string name="progress_workout_meta">%1$s • %2$s</string>
+    <string name="progress_overview_start_workout">Empezar entrenamiento</string>
+    <string name="progress_overview_current_goal">OBJETIVO ACTUAL</string>
+    <string name="progress_overview_weekly_target">META SEMANAL</string>
+    <string name="progress_overview_weekly_value">%1$d / %2$d entrenamientos</string>
 </resources>
