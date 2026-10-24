@@ -711,6 +711,19 @@
     <string name="nutrition_analysis_step_calculating">Calculating nutrition…</string>
     <string name="nutrition_analysis_cancel">Cancel analysis</string>
     <string name="nutrition_analysis_close">Close food analysis</string>
+    <!-- Nutrition / 06 — Photo Analysis -->
+    <string name="nutrition_photo_title">Analyse Meal</string>
+    <string name="nutrition_photo_tag_chicken">Grilled Chicken (~180g)</string>
+    <string name="nutrition_photo_tag_rice">Basmati Rice (~150g)</string>
+    <string name="nutrition_photo_estimate">VORA ESTIMATE</string>
+    <string name="nutrition_photo_estimate_note">Portions are estimated</string>
+    <string name="nutrition_photo_kcal">%1$d kcal</string>
+    <string name="nutrition_photo_protein">P: %1$.0fg</string>
+    <string name="nutrition_photo_carbs">C: %1$.0fg</string>
+    <string name="nutrition_photo_fat">F: %1$.0fg</string>
+    <string name="nutrition_photo_hint">\"Portions and quantities can be refined in the next step before saving.\"</string>
+    <string name="nutrition_photo_review">Review &amp; Add</string>
+    <string name="nutrition_photo_retake">Retake Photo</string>
     <!-- Progress / 04 — Nutrition Progress (nodo 1:2032) -->
     <string name="progress_nutrition_title">Nutrition progress</string>
     <string name="progress_nutrition_calories">AVG CALORIES</string>
