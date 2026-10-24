@@ -624,4 +624,16 @@
     <string name="progress_dash_area_activity_detail">7,842 steps • 5.6 km daily avg</string>
     <string name="progress_dash_goal">Build strength &amp; improve fitness</string>
     <string name="progress_dash_goal_body">You\'re building consistency across workouts and nutrition.</string>
+    <string name="progress_dash_title">Your progress</string>
+    <string name="progress_dash_subtitle">Small improvements add up.</string>
+    <string name="progress_period_week">Week</string>
+    <string name="progress_period_month">Month</string>
+    <string name="progress_period_3_months">3 Months</string>
+    <string name="progress_dash_overview">THIS WEEK OVERVIEW</string>
+    <string name="progress_dash_insight_label">VORA Insight</string>
+    <string name="progress_dash_consistent">CONSISTENT</string>
+    <string name="progress_dash_see_review">See weekly review</string>
+    <string name="progress_dash_view">View</string>
+    <string name="progress_dash_active_goal">ACTIVE GOAL</string>
+    <string name="progress_dash_goal_percent">%1$d%% complete</string>
 </resources>
