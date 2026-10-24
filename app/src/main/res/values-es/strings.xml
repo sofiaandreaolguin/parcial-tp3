@@ -575,4 +575,16 @@
     <string name="notification_streak_sender">Logro alcanzado</string>
     <string name="notification_streak_title">¡Racha de 4 días de entrenamiento!</string>
     <string name="notification_streak_body">Excelente, Alex. Vamos por el día 5.</string>
+
+    <!-- Progress / 01 — Today's Overview (datos de demostración) -->
+    <string name="progress_overview_date">MARTES, 8 DE SEPTIEMBRE</string>
+    <string name="progress_overview_workout">Entrenamiento</string>
+    <string name="progress_overview_workout_detail">Sin empezar</string>
+    <string name="progress_overview_nutrition">Objetivo de nutrición</string>
+    <string name="progress_overview_nutrition_detail">1.420 / 2.100 kcal</string>
+    <string name="progress_overview_activity">Objetivo de actividad</string>
+    <string name="progress_overview_activity_detail">7.842 pasos</string>
+    <string name="progress_overview_hydration">Hidratación</string>
+    <string name="progress_overview_hydration_detail">1,6 / 2,5 litros</string>
+    <string name="progress_overview_advice">\"Completar el entrenamiento intermedio de hoy y una cena rica en proteínas asegura tu recuperación ideal.\"</string>
 </resources>

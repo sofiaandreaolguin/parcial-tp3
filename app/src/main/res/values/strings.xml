@@ -577,4 +577,16 @@
     <string name="notification_streak_sender">Milestone Reached</string>
     <string name="notification_streak_title">4-day workout streak logged!</string>
     <string name="notification_streak_body">Outstanding work, Alex. Let\'s make it 5 today.</string>
+
+    <!-- Progress / 01 — Today's Overview (datos de demostración) -->
+    <string name="progress_overview_date">TUESDAY, 8 SEPTEMBER</string>
+    <string name="progress_overview_workout">Workout Progress</string>
+    <string name="progress_overview_workout_detail">Not started</string>
+    <string name="progress_overview_nutrition">Nutrition Target</string>
+    <string name="progress_overview_nutrition_detail">1,420 / 2,100 kcal</string>
+    <string name="progress_overview_activity">Activity Target</string>
+    <string name="progress_overview_activity_detail">7,842 steps</string>
+    <string name="progress_overview_hydration">Hydration Intake</string>
+    <string name="progress_overview_hydration_detail">1.6 / 2.5 Litres</string>
+    <string name="progress_overview_advice">\"Completing today\'s intermediate workout and a protein-rich dinner will secure your optimal target recovery.\"</string>
 </resources>
