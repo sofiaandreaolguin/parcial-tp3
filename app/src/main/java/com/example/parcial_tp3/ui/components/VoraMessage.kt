@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -57,7 +58,8 @@ fun VoraInfoMessage(
 
 /**
  * Consejo destacado de VORA: invierte la superficie, panel verde con contenido blanco.
- * Destello y etiqueta en menta arriba, el consejo abajo. Radio 16 y padding 16.
+ * Destello de 16 y etiqueta de 13 en menta arriba, el consejo (14 en 1,4) abajo, separados 12.
+ * Radio 16 y padding 16. Medidas de Progress / 01 (nodo 1:1726).
  *
  * @param label de strings.xml, ya en mayusculas ("VORA ADVICE", "VORA INSIGHT").
  */
@@ -72,7 +74,7 @@ fun VoraAdvice(
             .fillMaxWidth()
             .background(MaterialTheme.colorScheme.primary, RoundedCornerShape(VoraTheme.radius.r16))
             .padding(VoraTheme.spacing.s16),
-        verticalArrangement = Arrangement.spacedBy(VoraTheme.spacing.s8),
+        verticalArrangement = Arrangement.spacedBy(VoraTheme.spacing.s12),
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -82,10 +84,11 @@ fun VoraAdvice(
                 painter = painterResource(R.drawable.ic_sparkle),
                 contentDescription = null,
                 tint = MaterialTheme.colorScheme.secondary,
+                modifier = Modifier.size(VoraTheme.sizes.iconXSmall),
             )
-            Text(text = label, style = MaterialTheme.typography.labelSmall, color = MaterialTheme.colorScheme.secondary)
+            Text(text = label, style = MaterialTheme.typography.labelMedium, color = MaterialTheme.colorScheme.secondary)
         }
-        Text(text = text, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onPrimary)
+        Text(text = text, style = VoraTheme.text.advice, color = MaterialTheme.colorScheme.onPrimary)
     }
 }
 

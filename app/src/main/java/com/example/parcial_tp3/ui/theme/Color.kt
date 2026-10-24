@@ -32,6 +32,8 @@ val VoraPanelShadow = Color(0x0F123D35)     // verde al 6 %: sombra del panel de
 val VoraOrbHalo = Color(0x739AA39F)         // texto tenue al 45 %: halo del orbe sobre fondo claro
 val VoraOrbMutedCore = Color(0xFF4A5250)    // esfera del orbe apagado (Voice / 06 Error)
 val VoraNoticeIcon = Color(0xFFFCDEDE)      // rosa del circulo del icono de un aviso (Voice / 06 Error)
+val VoraHighlight = Color(0xFFFAFDF9)       // fondo de "PERSONAL BEST" (Progress / 03, nodo 1:1967)
+val VoraHighlightIcon = Color(0xFFEAF9EE)   // circulo del trofeo de esa tarjeta (nodo 1:1968)
 
 // Sobre paneles verdes
 val VoraOnDarkMuted = Color(0xB3FFFFFF)     // blanco al 70 %: datos secundarios

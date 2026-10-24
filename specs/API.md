@@ -9,7 +9,7 @@ Resumen del contrato del mock del profe (`mock/openapi.json`, `mock/server.py`).
 | Publicado por el docente | `https://tp3.martinrivas.ar/` | Swagger en `https://tp3.martinrivas.ar/docs`. HTTPS: no necesita habilitar HTTP |
 | Local | `http://localhost:8000` | `python3 mock/server.py` (Python 3.9+, sin dependencias). Probador web en `/`, Swagger en `/docs/` |
 | Desde el emulador | `http://10.0.2.2:8000/` | Habilitar HTTP (cleartext) **solo en debug** |
-| Teléfono físico | `http://<IP-de-la-compu>:8000/` | El servidor escucha en `127.0.0.1` por defecto: correrlo con `python3 mock/server.py --host 0.0.0.0` (también hay `--port`, o las variables `HOST`/`PORT`) |
+| Teléfono físico | `http://<IP-de-la-compu>:8000/` | El servidor escucha en `127.0.0.1` por defecto: correrlo con `python3 mock/server.py --host 0.0.0.0` (también hay `--port`, o las variables `HOST`/`PORT`). Con cable USB es más simple `adb reverse tcp:8000 tcp:8000` y `api.baseUrl=http://localhost:8000/`: no depende de la IP ni del firewall |
 | Postman | `{{baseUrl}}` = `http://localhost:8000` | O un mock en Postman Cloud creado desde los ejemplos (respuestas fijas, sin filtros ni validación) |
 
 **Para RF02 y RF05 conviene el servidor local**: hay que poder detenerlo para probar la caché. En Retrofit, la `baseUrl` termina en `/` (clase 9-sep) y conviene sacarla de `BuildConfig` o `local.properties` para cambiar entre local y publicado sin tocar código.

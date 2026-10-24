@@ -402,6 +402,27 @@
     <string name="exercise_cue_bullet">• %1$s</string>
     <string name="exercise_ask_demo">Preguntale a Vora: “Explicame variantes de agarre”</string>
     <string name="exercise_back">Volver al entrenamiento</string>
+    <string name="active_exercise_of">EJERCICIO %1$d DE %2$d</string>
+    <string name="active_finish">Terminar</string>
+    <string name="active_volume_label">VOLUMEN DE TRABAJO</string>
+    <string name="active_reps_target">REPS OBJETIVO</string>
+    <string name="active_set_matrix">SERIES × REPS</string>
+    <string name="active_set_matrix_value">%1$d × %2$d</string>
+    <string name="active_last_session_label">ÚLTIMA SESIÓN</string>
+    <string name="active_last_session_demo">45 kg × 12 reps</string>
+    <string name="active_weight">%1$s kg</string>
+    <string name="active_set">Serie %1$d</string>
+    <string name="active_set_done">Hecha</string>
+    <string name="active_set_current">Actual</string>
+    <string name="active_set_pending">Pendiente</string>
+    <string name="active_resting">Descanso • %1$s</string>
+    <string name="active_rest_time">%1$02d:%2$02d</string>
+    <string name="active_add_rest">+30 s</string>
+    <string name="active_skip_rest">Saltear</string>
+    <string name="active_coach_label">VORA COACH</string>
+    <string name="active_voice_on_demo">Voz activada</string>
+    <string name="active_coach_quote_demo">“Dos repeticiones más. Pecho arriba, abdomen firme y controlá la vuelta de la barra.”</string>
+    <string name="active_complete_set">Completar serie</string>
     <string name="weekly_title">Tu plan</string>
     <string name="weekly_subtitle">Pensado según tus objetivos y tu recuperación.</string>
     <string-array name="weekly_days_short">
@@ -566,4 +587,94 @@
     <string name="notification_streak_sender">Logro alcanzado</string>
     <string name="notification_streak_title">¡Racha de 4 días de entrenamiento!</string>
     <string name="notification_streak_body">Excelente, Alex. Vamos por el día 5.</string>
+
+    <!-- Progress / 01 — Today's Overview (datos de demostración) -->
+    <string name="progress_overview_date">MARTES, 8 DE SEPTIEMBRE</string>
+    <string name="progress_overview_workout">Entrenamiento</string>
+    <string name="progress_overview_workout_detail">Sin empezar</string>
+    <string name="progress_overview_nutrition">Objetivo de nutrición</string>
+    <string name="progress_overview_nutrition_detail">1.420 / 2.100 kcal</string>
+    <string name="progress_overview_activity">Objetivo de actividad</string>
+    <string name="progress_overview_activity_detail">7.842 pasos</string>
+    <string name="progress_overview_hydration">Hidratación</string>
+    <string name="progress_overview_hydration_detail">1,6 / 2,5 litros</string>
+    <string name="progress_overview_advice">\"Completar el entrenamiento intermedio de hoy y una cena rica en proteínas asegura tu recuperación ideal.\"</string>
+    <string name="progress_overview_title">Resumen de hoy</string>
+    <string name="progress_overview_completion">AVANCE DEL DÍA</string>
+    <string name="progress_percent">%1$d%%</string>
+    <string name="progress_overview_advice_label">CONSEJO DE VORA</string>
+    <string name="progress_overview_breakdowns">Por categoría</string>
+    <string name="progress_overview_workout_label">ENTRENAMIENTO</string>
+    <string name="progress_overview_not_started">SIN EMPEZAR</string>
+    <string name="progress_workout_meta">%1$s • %2$s</string>
+    <string name="progress_overview_start_workout">Empezar entrenamiento</string>
+    <string name="progress_overview_current_goal">OBJETIVO ACTUAL</string>
+    <string name="progress_overview_weekly_target">META SEMANAL</string>
+    <string name="progress_overview_weekly_value">%1$d / %2$d entrenamientos</string>
+
+    <!-- Progress / 02 — Dashboard (datos de demostración) -->
+    <string name="progress_dash_workouts">Entrenamientos hechos</string>
+    <string name="progress_dash_workouts_value">4 entrenamientos</string>
+    <string name="progress_dash_workouts_trend">↑ 1</string>
+    <string name="progress_dash_steps">Pasos por día</string>
+    <string name="progress_dash_steps_value">7.842</string>
+    <string name="progress_dash_steps_trend">↑ 6 %</string>
+    <string name="progress_dash_protein">Proteínas por día</string>
+    <string name="progress_dash_protein_value">104 g</string>
+    <string name="progress_dash_protein_trend">↑ 9 %</string>
+    <string name="progress_dash_streak">Racha activa</string>
+    <string name="progress_dash_streak_value">4 días</string>
+    <string name="progress_dash_streak_trend">🔥</string>
+    <string name="progress_dash_insight" formatted="false">\"Completaste 4 entrenamientos esta semana y subiste un 8 % el volumen. Tu constancia va por buen camino.\"</string>
+    <string name="progress_dash_area_workout">Entrenamiento</string>
+    <string name="progress_dash_area_workout_detail">3 sesiones • 2.340 kg de volumen</string>
+    <string name="progress_dash_area_nutrition">Nutrición</string>
+    <string name="progress_dash_area_nutrition_detail" formatted="false">104 g de proteínas • 74 % del objetivo</string>
+    <string name="progress_dash_area_activity">Actividad</string>
+    <string name="progress_dash_area_activity_detail">7.842 pasos • 5,6 km por día</string>
+    <string name="progress_dash_goal">Ganar fuerza y mejorar el estado físico</string>
+    <string name="progress_dash_goal_body">Estás construyendo constancia en entrenamiento y nutrición.</string>
+    <string name="progress_dash_title">Tu progreso</string>
+    <string name="progress_dash_subtitle">Las pequeñas mejoras suman.</string>
+    <string name="progress_period_week">Semana</string>
+    <string name="progress_period_month">Mes</string>
+    <string name="progress_period_3_months">3 meses</string>
+    <string name="progress_dash_overview">RESUMEN DE LA SEMANA</string>
+    <string name="progress_dash_insight_label">Análisis de VORA</string>
+    <string name="progress_dash_consistent">CONSTANTE</string>
+    <string name="progress_dash_see_review">Ver resumen semanal</string>
+    <string name="progress_dash_view">Ver</string>
+    <string name="progress_dash_active_goal">OBJETIVO ACTIVO</string>
+    <string name="progress_dash_goal_percent">%1$d%% completo</string>
+    <!-- Progress / 03 — Workout Progress (nodo 1:1904) -->
+    <string name="progress_workout_title">Progreso de entrenamiento</string>
+    <string name="progress_workout_more">Más opciones</string>
+    <string name="progress_workout_sessions">SESIONES</string>
+    <string name="progress_workout_sessions_value">4</string>
+    <string name="progress_workout_volume">VOLUMEN</string>
+    <string name="progress_workout_volume_value">8.420 kg</string>
+    <string name="progress_workout_avg_time">PROMEDIO</string>
+    <string name="progress_workout_avg_time_value">41 min</string>
+    <string name="progress_workout_chart_title">Volumen de entrenamiento</string>
+    <string name="progress_workout_chart_subtitle">KILOS LEVANTADOS POR SESIÓN</string>
+    <string name="progress_workout_volume_change" formatted="false">+8 % vs. la semana pasada</string>
+    <string name="progress_workout_chart_description" formatted="false">Volumen de esta semana: 8.420 kg en 4 sesiones, 8 % más que la semana pasada</string>
+    <string name="progress_workout_best_label">RÉCORD PERSONAL</string>
+    <string name="progress_workout_best_exercise">Remo sentado en polea</string>
+    <string name="progress_workout_best_detail">45 kg × 12 repeticiones</string>
+    <string name="progress_workout_best_improvement">(+5 kg vs. el récord anterior)</string>
+    <string name="progress_workout_insight">\"Tu volumen de entrenamiento subió sin alargar las sesiones. Estás entrenando más eficiente.\"</string>
+    <string name="progress_workout_exercises">PROGRESO POR EJERCICIO</string>
+    <string name="progress_workout_bench">Press de banca</string>
+    <string name="progress_workout_bench_detail">40 kg × 10 repeticiones</string>
+    <string name="progress_workout_bench_change">↑ 2,5 kg</string>
+    <string name="progress_workout_cable_row">Remo en polea</string>
+    <string name="progress_workout_cable_row_detail">45 kg × 12 repeticiones</string>
+    <string name="progress_workout_cable_row_change">↑ 5,0 kg</string>
+    <string name="progress_workout_shoulder">Press de hombros</string>
+    <string name="progress_workout_shoulder_detail">20 kg × 10 repeticiones</string>
+    <string name="progress_workout_stable">→ Estable</string>
+    <string name="progress_workout_lateral">Elevaciones laterales</string>
+    <string name="progress_workout_lateral_detail">8 kg × 12 repeticiones</string>
+    <string name="progress_workout_lateral_change">↑ 1,0 kg</string>
 </resources>

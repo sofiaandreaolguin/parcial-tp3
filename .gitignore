@@ -19,3 +19,6 @@ local.properties
 
 # Modo "tests en rojo" de la IA (ver CLAUDE.md): nunca se sube
 .tdd-rojo
+
+# Caché de Python del mock
+__pycache__/

@@ -315,16 +315,19 @@ Leído de los frames el 18/10. Lo que dice *a confirmar* es lectura mía del dib
 | Desde | Control | A dónde lleva |
 |---|---|---|
 | 01 Today's Overview | "Start Workout" | `progress_dashboard` · **no es el destino "lógico"**, es el que hace alcanzables 02 a 06 (duda #2) |
-| | Fila "Workout Progress" | `workout_progress` · *a confirmar* |
-| | Fila "Nutrition Target" | `nutrition_progress` · *a confirmar* |
-| | Fila "Activity Target" | `health_trends` · *a confirmar* |
+| | Fila "Workout Progress" | `workout_progress` |
+| | Fila "Nutrition Target" | `nutrition_progress` |
+| | Fila "Activity Target" | `health_trends` |
+| | Fila "Hydration Intake" | Aviso de modo demostración (no tiene frame) |
 | 02 Dashboard | "Workout · View >" | `workout_progress` |
 | | "Nutrition · View >" | `nutrition_progress` |
 | | "Activity · View >" | `health_trends` |
 | | "See weekly review →" | `weekly_review` |
-| | Week / Month / 3 Months | No navega: filtra en la misma pantalla |
+| | Week / Month / 3 Months | No navega. Queda fijo en Week (datos de demostración); Month y 3 Months muestran el aviso de modo demostración |
 | 03, 04 y 05 | Flecha ‹ | `popBackStack()` |
 | | "···" (arriba der.) | Aviso de modo demostración |
+| 03 Workout Progress | Week / Month / 3 Months | No navega. Queda fijo en Week (datos de demostración); Month y 3 Months muestran el aviso de modo demostración |
+| | Filas de "EXERCISE PROGRESS" | No navegan: no tienen frame de destino |
 | 06 Weekly Review | "Ask VORA" (lima) | `voice` · cruza |
 | | "Done" | `popBackStack()` |
 | | "Get dinner ideas →" | `voice` · cruza |
@@ -454,7 +457,7 @@ Cada flujo en su archivo, así cada rol trabaja en el suyo y casi no hay conflic
 | `home_graph` | `HomeNavGraph.kt` | `home_dashboard` | Home |
 | `workout_graph` | `WorkoutNavGraph.kt` | `workout_dashboard` | Workout |
 | `nutrition_graph` | `NutritionNavGraph.kt` | `nutrition_dashboard` | Nutrition |
-| `progress_graph` | `ProgressNavGraph.kt` | `progress_dashboard` | Progress |
+| `progress_graph` | `ProgressNavGraph.kt` | `todays_overview` | Progress |
 | `profile_graph` | `ProfileNavGraph.kt` | `profile_dashboard` | Profile |
 | `voice_graph` | `VoiceNavGraph.kt` | `voice` | (ninguna) |
 
