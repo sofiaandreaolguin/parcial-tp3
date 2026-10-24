@@ -91,12 +91,7 @@ fun NutritionProgressScreen(
             TargetCard(state, onMacro)
             InsightPanel(stringResource(state.insight))
             Column(verticalArrangement = Arrangement.spacedBy(VoraTheme.spacing.s8)) {
-                Text(
-                    text = stringResource(R.string.progress_nutrition_habits),
-                    style = MaterialTheme.typography.labelLarge,
-                    fontWeight = FontWeight.Bold,
-                    color = VoraTheme.colors.textMuted,
-                )
+                ProgressSectionLabel(stringResource(R.string.progress_nutrition_habits))
                 state.habits.chunked(2).forEach { fila ->
                     Row(
                         modifier = Modifier.height(IntrinsicSize.Min),
