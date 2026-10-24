@@ -13,6 +13,7 @@ data class ProgressUiState(
     val dashboard: ProgressDashboard,
     val workout: WorkoutProgress,
     val nutrition: NutritionProgress,
+    val health: HealthTrends,
 )
 
 /** Progress / 01. */
@@ -74,7 +75,7 @@ data class WorkoutProgress(
 
 /**
  * Un dato con etiqueta y valor: la fila "SESSIONS 4 | VOLUME 8,420 kg" de 03 y 04, y cada
- * tarjeta de "FOOD HABITS & PATTERNS" de 04.
+ * tarjeta de "FOOD HABITS & PATTERNS" de 04, y la fila "AVG STEPS | AVG DISTANCE" de 05.
  */
 data class ProgressMetric(
     @StringRes val label: Int,
@@ -103,4 +104,25 @@ data class NutritionProgress(
     val targetHit: List<Boolean>,
     @StringRes val insight: Int,
     val habits: List<ProgressMetric>,
+)
+
+/** Progress / 05. */
+data class HealthTrends(
+    val metrics: List<ProgressMetric>,
+    /** Pasos por día, de lunes a domingo; los que llegan a [stepGoal] van en verde oscuro. */
+    val steps: List<Int>,
+    val stepGoal: Int,
+    @StringRes val insight: Int,
+    val signals: List<HabitSignal>,
+)
+
+/** El tipo decide el ícono de la fila de "HABIT SIGNALS". */
+enum class SignalKind { SLEEP, MOVEMENT, WORKOUT, PROTEIN }
+
+/** Fila de "HABIT SIGNALS": [improving] pone la tendencia en verde con la flecha, si no en gris. */
+data class HabitSignal(
+    val kind: SignalKind,
+    @StringRes val title: Int,
+    @StringRes val trend: Int,
+    val improving: Boolean,
 )

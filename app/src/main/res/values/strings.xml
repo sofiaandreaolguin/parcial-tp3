@@ -728,4 +728,24 @@
     <string name="progress_nutrition_breakfast_value">420 kcal</string>
     <string name="progress_nutrition_dinner">Avg dinner</string>
     <string name="progress_nutrition_dinner_value">610 kcal</string>
+    <!-- Progress / 05 — Health Trends (nodo 1:2156) -->
+    <string name="progress_health_title">Health trends</string>
+    <string name="progress_health_subtitle">See how your daily habits are changing.</string>
+    <string name="progress_health_steps">AVG STEPS</string>
+    <string name="progress_health_steps_value">7,842</string>
+    <string name="progress_health_distance">AVG DISTANCE</string>
+    <string name="progress_health_distance_value">5.6 km</string>
+    <string name="progress_health_kcal">ACTIVE KCAL</string>
+    <string name="progress_health_kcal_value">312 kcal</string>
+    <string name="progress_health_chart_title">Weekly Steps Trend</string>
+    <string name="progress_health_goal">Goal: %1$,d</string>
+    <string name="progress_health_chart_description">Steps this week: an average of 7,842 a day; Wednesday and Friday passed the 8,000 goal</string>
+    <string name="progress_health_insight">\"Your activity has been more consistent over the last two weeks. Your workout days also tend to be your most active days.\"</string>
+    <string name="progress_health_signals">HABIT SIGNALS</string>
+    <string name="progress_health_sleep">Sleep Quality</string>
+    <string name="progress_health_movement">Daily Movement</string>
+    <string name="progress_health_workouts">Workout Frequency</string>
+    <string name="progress_health_protein">Protein Intake</string>
+    <string name="progress_health_improving">Improving</string>
+    <string name="progress_health_consistent">Consistent</string>
 </resources>

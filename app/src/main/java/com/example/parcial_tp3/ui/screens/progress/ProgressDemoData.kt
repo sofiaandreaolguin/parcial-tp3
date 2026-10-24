@@ -83,4 +83,22 @@ fun progressDemoState() = ProgressUiState(
             ProgressMetric(R.string.progress_nutrition_dinner, R.string.progress_nutrition_dinner_value),
         ),
     ),
+    health = HealthTrends(
+        metrics = listOf(
+            ProgressMetric(R.string.progress_health_steps, R.string.progress_health_steps_value),
+            ProgressMetric(R.string.progress_health_distance, R.string.progress_health_distance_value),
+            ProgressMetric(R.string.progress_health_kcal, R.string.progress_health_kcal_value),
+        ),
+        // proporcionales a las barras del frame (45, 59, 61, 56, 71, 59 y 59): promedian los
+        // 7,842 de AVG STEPS y solo miércoles y viernes pasan la meta, como las barras oscuras
+        steps = listOf(6025, 7900, 8167, 7498, 9506, 7899, 7899),
+        stepGoal = 8000,
+        insight = R.string.progress_health_insight,
+        signals = listOf(
+            HabitSignal(SignalKind.SLEEP, R.string.progress_health_sleep, R.string.progress_health_improving, improving = true),
+            HabitSignal(SignalKind.MOVEMENT, R.string.progress_health_movement, R.string.progress_health_consistent, improving = false),
+            HabitSignal(SignalKind.WORKOUT, R.string.progress_health_workouts, R.string.progress_health_improving, improving = true),
+            HabitSignal(SignalKind.PROTEIN, R.string.progress_health_protein, R.string.progress_health_improving, improving = true),
+        ),
+    ),
 )

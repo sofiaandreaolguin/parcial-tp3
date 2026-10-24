@@ -726,4 +726,24 @@
     <string name="progress_nutrition_breakfast_value">420 kcal</string>
     <string name="progress_nutrition_dinner">Cena promedio</string>
     <string name="progress_nutrition_dinner_value">610 kcal</string>
+    <!-- Progress / 05 — Health Trends (nodo 1:2156) -->
+    <string name="progress_health_title">Tendencias de salud</string>
+    <string name="progress_health_subtitle">Mirá cómo cambian tus hábitos diarios.</string>
+    <string name="progress_health_steps">PASOS PROM.</string>
+    <string name="progress_health_steps_value">7.842</string>
+    <string name="progress_health_distance">DISTANCIA PROM.</string>
+    <string name="progress_health_distance_value">5,6 km</string>
+    <string name="progress_health_kcal">KCAL ACTIVAS</string>
+    <string name="progress_health_kcal_value">312 kcal</string>
+    <string name="progress_health_chart_title">Pasos de la semana</string>
+    <string name="progress_health_goal">Meta: %1$,d</string>
+    <string name="progress_health_chart_description">Pasos de esta semana: 7.842 por día en promedio; el miércoles y el viernes pasaron la meta de 8.000</string>
+    <string name="progress_health_insight">\"Tu actividad fue más constante en las últimas dos semanas. Tus días de entrenamiento suelen ser también los más activos.\"</string>
+    <string name="progress_health_signals">SEÑALES DE HÁBITOS</string>
+    <string name="progress_health_sleep">Calidad del sueño</string>
+    <string name="progress_health_movement">Movimiento diario</string>
+    <string name="progress_health_workouts">Frecuencia de entrenamiento</string>
+    <string name="progress_health_protein">Consumo de proteína</string>
+    <string name="progress_health_improving">Mejorando</string>
+    <string name="progress_health_consistent">Estable</string>
 </resources>
