@@ -36,7 +36,7 @@ Si no está claro qué carril es, preguntá antes de empezar.
 - Tests de Room (con el emulador abierto): `./gradlew connectedDebugAndroidTest`
 - Compilar: `./gradlew assembleDebug`
 - Captura del emulador: `adb shell screencap -p /sdcard/captura.png && adb pull /sdcard/captura.png`
-- Mock local: `python3 mock/server.py` (desde el emulador: `http://10.0.2.2:8000/`). El paquete del profe va descomprimido en `mock/`; no está en el repo
+- Mock local: `python3 mock/server.py` (desde el emulador: `http://10.0.2.2:8000/`). El paquete del profe está en `mock/`, tal como vino en `mock.zip`
 - Sesión que escribe tests en rojo: abrirla con `TDD_ROJO=1 claude`, o crear el archivo vacío `.tdd-rojo` en la raíz y borrarlo al terminar.
 
 El control automático (`scripts/control-rapido.sh`) corre solo al final de cada turno: si fallan los tests o las reglas del grupo, no se puede dar la tarea por terminada.
