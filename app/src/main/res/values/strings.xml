@@ -535,6 +535,18 @@
     <string name="nutrition_meals_dinner_empty">Dinner is not logged yet</string>
     <string name="nutrition_meals_add_dinner">+ Add Dinner</string>
 
+    <!-- Nutrition / 03 — Add Food -->
+    <string name="nutrition_add_title">Add Food</string>
+    <string name="nutrition_add_vora_title">Talk to VORA</string>
+    <string name="nutrition_add_vora_quote">\"I had grilled chicken breast with basmati rice.\"</string>
+    <string name="nutrition_add_voice">Start Voice Logging</string>
+    <string name="nutrition_add_photo">Snap a Photo</string>
+    <string name="nutrition_add_photo_hint">Vora estimates sizes and nutrition info.</string>
+    <string name="nutrition_add_search">Search Database</string>
+    <string name="nutrition_add_search_hint">Search millions of local &amp; global food items.</string>
+    <string name="nutrition_add_manual">Log Manually</string>
+    <string name="nutrition_add_manual_hint">Input weight, calories and macros yourself.</string>
+
     <!-- Home / 02 — Notifications -->
     <string name="notifications_title">Notifications</string>
     <string name="notifications_mark_all">Mark all as read</string>

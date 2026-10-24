@@ -533,6 +533,18 @@
     <string name="nutrition_meals_dinner_empty">Todavía no registraste la cena</string>
     <string name="nutrition_meals_add_dinner">+ Agregar cena</string>
 
+    <!-- Nutrition / 03 — Add Food -->
+    <string name="nutrition_add_title">Agregar comida</string>
+    <string name="nutrition_add_vora_title">Hablá con VORA</string>
+    <string name="nutrition_add_vora_quote">\"Comí pechuga de pollo a la plancha con arroz basmati.\"</string>
+    <string name="nutrition_add_voice">Registrar por voz</string>
+    <string name="nutrition_add_photo">Sacar una foto</string>
+    <string name="nutrition_add_photo_hint">Vora estima las porciones y los datos nutricionales.</string>
+    <string name="nutrition_add_search">Buscar en la base</string>
+    <string name="nutrition_add_search_hint">Buscá entre millones de alimentos locales y globales.</string>
+    <string name="nutrition_add_manual">Registrar a mano</string>
+    <string name="nutrition_add_manual_hint">Cargá vos el peso, las calorías y los macros.</string>
+
     <!-- Home / 02 — Notifications -->
     <string name="notifications_title">Notificaciones</string>
     <string name="notifications_mark_all">Marcar todo como leído</string>
