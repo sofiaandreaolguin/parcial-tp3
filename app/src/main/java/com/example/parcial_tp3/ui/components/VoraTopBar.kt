@@ -172,7 +172,7 @@ fun VoraTopBar(
 }
 
 /**
- * El encabezado grande de Profile, Settings y Nutrition Preferences: la flecha de volver
+ * El encabezado grande de Profile, Settings, Nutrition Preferences y Progress / 03, 04 y 05: la flecha de volver
  * dentro de un circulo blanco y el titulo de pantalla (20 Bold) a su lado, alineado a la
  * izquierda, con el margen de pantalla de 20.
  *

@@ -103,8 +103,8 @@ private fun StepsCard(state: HealthTrends) {
             labels = stringArrayResource(R.array.workout_week_initials).toList(),
             description = stringResource(R.string.progress_health_chart_description),
             highlighted = state.steps.indices.filter { state.steps[it] >= state.stepGoal }.toSet(),
+            // sin height: la barra mas alta mide 71 (nodo 1:2209), casi el alto por defecto de 72
             barWidth = VoraTheme.sizes.barWidthNarrow,
-            // la barra mas alta mide 71 (nodo 1:2209), casi el alto por defecto de 72
             modifier = Modifier.padding(top = VoraTheme.spacing.s20),
         )
     }
