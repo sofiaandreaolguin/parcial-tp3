@@ -71,7 +71,7 @@ fun NutritionProgressScreen(
             // el frame deja 22 entre el circulo de volver y el selector; VoraTopBarLarge deja 12
             modifier = Modifier.padding(
                 start = VoraTheme.spacing.screen,
-                top = VoraTheme.spacing.s8,
+                top = VoraTheme.spacing.s10,
                 end = VoraTheme.spacing.screen,
                 bottom = VoraTheme.spacing.s24,
             ),

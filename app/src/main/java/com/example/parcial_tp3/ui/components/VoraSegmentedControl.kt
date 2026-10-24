@@ -119,7 +119,7 @@ fun VoraSegmentedControl(
                     text = texto,
                     // las solapas van en 11 SemiBold (Progress / 04, nodo 1:2070); a 14 no entra "Calories" en 360 dp
                     style = if (style == VoraSegmentedStyle.Tabs) VoraTheme.text.label else MaterialTheme.typography.labelLarge,
-                    fontWeight = if (style == VoraSegmentedStyle.Tabs) FontWeight.SemiBold else FontWeight.Medium,
+                    fontWeight = if (style == VoraSegmentedStyle.Tabs) null else FontWeight.Medium,
                     color = when {
                         elegida -> colors.onPrimary
                         style == VoraSegmentedStyle.Boxes -> colors.onSurface
