@@ -82,7 +82,7 @@ object VoraTextStyles {
     val action = manrope(14, FontWeight.SemiBold)
     /** La cita de "LAST CONVERSATION": mas pesada que el cuerpo. */
     val quote = manrope(13, FontWeight.Medium)
-    /** Las etiquetas de Voice: 11, un punto mas que labelSmall. */
+    /** Las etiquetas de Voice: 11, un punto mas que labelSmall. Tambien las solapas de Progress / 04 (nodo 1:2070). */
     val label = manrope(11, FontWeight.SemiBold)
     /** La hora y los datos sueltos de 11 sin peso. */
     val labelPlain = manrope(11, FontWeight.Normal)

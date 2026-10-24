@@ -67,4 +67,20 @@ fun progressDemoState() = ProgressUiState(
             ExerciseTrend(R.string.progress_workout_lateral, R.string.progress_workout_lateral_detail, R.string.progress_workout_lateral_change, improved = true),
         ),
     ),
+    nutrition = NutritionProgress(
+        metrics = listOf(
+            ProgressMetric(R.string.progress_nutrition_calories, R.string.progress_nutrition_calories_value),
+            ProgressMetric(R.string.progress_nutrition_protein, R.string.progress_nutrition_protein_value),
+            ProgressMetric(R.string.progress_nutrition_target_hit, R.string.progress_nutrition_target_hit_value),
+        ),
+        target = R.string.progress_nutrition_target,
+        targetHit = listOf(true, true, false, true, true, false, true),
+        insight = R.string.progress_nutrition_insight,
+        habits = listOf(
+            ProgressMetric(R.string.progress_nutrition_lunch, R.string.progress_nutrition_lunch_value),
+            ProgressMetric(R.string.progress_nutrition_source, R.string.progress_nutrition_source_value),
+            ProgressMetric(R.string.progress_nutrition_breakfast, R.string.progress_nutrition_breakfast_value),
+            ProgressMetric(R.string.progress_nutrition_dinner, R.string.progress_nutrition_dinner_value),
+        ),
+    ),
 )

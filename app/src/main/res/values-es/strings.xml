@@ -663,7 +663,7 @@
     <string name="progress_dash_goal_percent">%1$d%% completo</string>
     <!-- Progress / 03 — Workout Progress (nodo 1:1904) -->
     <string name="progress_workout_title">Progreso de entrenamiento</string>
-    <string name="progress_workout_more">Más opciones</string>
+    <string name="progress_more">Más opciones</string>
     <string name="progress_workout_sessions">SESIONES</string>
     <string name="progress_workout_sessions_value">4</string>
     <string name="progress_workout_volume">VOLUMEN</string>
@@ -700,4 +700,30 @@
     <string name="nutrition_voice_type_instead">Escribir en su lugar</string>
     <string name="nutrition_voice_close">Cerrar el registro por voz</string>
     <string name="nutrition_voice_meal_demo">Pollo, arroz y verduras</string>
+    <!-- Progress / 04 — Nutrition Progress (nodo 1:2032) -->
+    <string name="progress_nutrition_title">Progreso de nutrición</string>
+    <string name="progress_nutrition_calories">CALORÍAS PROM.</string>
+    <string name="progress_nutrition_calories_value">1.980 kcal</string>
+    <string name="progress_nutrition_protein">PROTEÍNA PROM.</string>
+    <string name="progress_nutrition_protein_value">132 g</string>
+    <string name="progress_nutrition_target_hit">OBJETIVO</string>
+    <string name="progress_nutrition_target_hit_value">5 / 7 días</string>
+    <string name="progress_nutrition_macro_calories">Calorías</string>
+    <string name="progress_nutrition_macro_protein">Proteínas</string>
+    <string name="progress_nutrition_macro_carbs">Carbohid.</string>
+    <string name="progress_nutrition_macro_fat">Grasas</string>
+    <string name="progress_nutrition_target">OBJETIVO DIARIO DE PROTEÍNA (140 g)</string>
+    <string name="progress_nutrition_hit">SÍ</string>
+    <string name="progress_nutrition_miss">NO</string>
+    <string name="progress_nutrition_analysis">Análisis de nutrición</string>
+    <string name="progress_nutrition_insight">\"Tu consumo de proteína mejoró esta semana, sobre todo los días de entrenamiento. Mantenerlo te va a ayudar con tu objetivo de fuerza.\"</string>
+    <string name="progress_nutrition_habits">HÁBITOS Y PATRONES</string>
+    <string name="progress_nutrition_lunch">Almuerzo frecuente</string>
+    <string name="progress_nutrition_lunch_value">Bowl de pollo y arroz</string>
+    <string name="progress_nutrition_source">Principal fuente de proteína</string>
+    <string name="progress_nutrition_source_value">Whey y pechuga de pollo</string>
+    <string name="progress_nutrition_breakfast">Desayuno promedio</string>
+    <string name="progress_nutrition_breakfast_value">420 kcal</string>
+    <string name="progress_nutrition_dinner">Cena promedio</string>
+    <string name="progress_nutrition_dinner_value">610 kcal</string>
 </resources>

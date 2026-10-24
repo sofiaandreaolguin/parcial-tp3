@@ -7,6 +7,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import com.example.parcial_tp3.R
 import com.example.parcial_tp3.ui.components.PantallaVacia
+import com.example.parcial_tp3.ui.screens.progress.NutritionProgressRoute
 import com.example.parcial_tp3.ui.screens.progress.ProgressDashboardRoute
 import com.example.parcial_tp3.ui.screens.progress.TodaysOverviewRoute
 import com.example.parcial_tp3.ui.screens.progress.WorkoutProgressRoute
@@ -44,7 +45,7 @@ fun NavGraphBuilder.progressGraph(nav: NavController) {
             WorkoutProgressRoute(onBack = { nav.popBackStack() })
         }
         composable(Rutas.NUTRITION_PROGRESS) {
-            PantallaVacia(nombre = stringResource(R.string.pant_progress_04))
+            NutritionProgressRoute(onBack = { nav.popBackStack() })
         }
         composable(Rutas.HEALTH_TRENDS) {
             PantallaVacia(nombre = stringResource(R.string.pant_progress_05))
