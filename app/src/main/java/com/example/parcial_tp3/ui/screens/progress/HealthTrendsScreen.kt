@@ -57,10 +57,11 @@ fun HealthTrendsScreen(
             },
         )
         Column(
-            // el frame deja 22 entre el circulo de volver y el contenido; VoraTopBarLarge deja 12
+            // con subtitulo el encabezado es mas alto que el circulo: el frame deja unos 18 entre el
+            // subtitulo y el contenido (nodos 1:2165 y 1:2176); VoraTopBarLarge deja 12
             modifier = Modifier.padding(
                 start = VoraTheme.spacing.screen,
-                top = VoraTheme.spacing.s10,
+                top = VoraTheme.spacing.s6,
                 end = VoraTheme.spacing.screen,
                 bottom = VoraTheme.spacing.s24,
             ),
