@@ -154,9 +154,9 @@ private fun VolumeCard(state: WorkoutProgress) {
             values = state.volumeKg,
             labels = stringArrayResource(R.array.workout_week_initials).take(state.volumeKg.size),
             description = stringResource(R.string.progress_workout_chart_description),
-            // 16 de separacion mas 12 de aire sobre las barras (nodos 1:1940 y 1:1946)
-            modifier = Modifier.padding(top = VoraTheme.spacing.s16 + VoraTheme.spacing.s12),
-            height = VoraTheme.sizes.chartHeightVolume,
+            // la barra mas alta mide 72 (nodo 1:1965), el alto por defecto; con 20 arriba la
+            // tarjeta da los 180 del nodo 1:1940
+            modifier = Modifier.padding(top = VoraTheme.spacing.s20),
         )
     }
 }

@@ -166,8 +166,6 @@ object VoraSizes {
     val areaIcon = 40.dp
     /** Flecha de "View ›" y de "See weekly review →". */
     val chevronSmall = 14.dp
-    /** Alto de las barras de "Training Volume" de Progress / 03 (nodo 1:1948). */
-    val chartHeightVolume = 80.dp
     /** Barras de proteinas y carbohidratos: 6 (la lamina dibuja 4). */
     val progressBarThick = 6.dp
     /** Punto de notificacion sin leer (Home / 02): 6. */
