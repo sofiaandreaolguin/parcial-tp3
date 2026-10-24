@@ -11,6 +11,7 @@ import androidx.navigation.navArgument
 import com.example.parcial_tp3.R
 import com.example.parcial_tp3.ui.components.PantallaVacia
 import com.example.parcial_tp3.ui.screens.nutrition.AddFoodRoute
+import com.example.parcial_tp3.ui.screens.nutrition.FoodAnalysisRoute
 import com.example.parcial_tp3.ui.screens.nutrition.NutritionDashboardRoute
 import com.example.parcial_tp3.ui.screens.nutrition.TodaysMealsRoute
 import com.example.parcial_tp3.ui.screens.nutrition.VoiceFoodLoggingRoute
@@ -58,16 +59,24 @@ fun NavGraphBuilder.nutritionGraph(nav: NavController) {
             val grafo = remember(entrada) { nav.getBackStackEntry(Rutas.NUTRITION_GRAPH) }
             VoiceFoodLoggingRoute(
                 grafo = grafo,
-                onDone = { nav.navigate(Rutas.FOOD_ANALYSIS) },
+                onDone = { nav.navigate(Rutas.FOOD_ANALYSIS) { launchSingleTop = true } },
                 onTypeInstead = { nav.navigate(Rutas.foodConfirmation()) },
                 onClose = { nav.popBackStack() },
             )
         }
 
-        composable(Rutas.FOOD_ANALYSIS) {
-            PantallaVacia(
-                nombre = stringResource(R.string.pant_nutrition_05),
-                onVolver = { nav.popBackStack() },
+        composable(Rutas.FOOD_ANALYSIS) { entrada ->
+            val grafo = remember(entrada) { nav.getBackStackEntry(Rutas.NUTRITION_GRAPH) }
+            FoodAnalysisRoute(
+                grafo = grafo,
+                // 05 sale de la pila: si no, atrás desde 07 dejaría un análisis que ya no corre.
+                onDone = {
+                    nav.navigate(Rutas.foodConfirmation()) {
+                        popUpTo(Rutas.FOOD_ANALYSIS) { inclusive = true }
+                    }
+                },
+                // inclusive y por ruta: un segundo toque no saca también a 04
+                onClose = { nav.popBackStack(Rutas.FOOD_ANALYSIS, inclusive = true) },
             )
         }
 

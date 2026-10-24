@@ -702,6 +702,15 @@
     <string name="nutrition_voice_type_instead">Type instead</string>
     <string name="nutrition_voice_close">Close voice logging</string>
     <string name="nutrition_voice_meal_demo">Chicken, rice and vegetables</string>
+    <string name="nutrition_analysis_title">VORA AI</string>
+    <string name="nutrition_analysis_heading">Analyzing Meal…</string>
+    <string name="nutrition_analysis_input_label">CAPTURED INPUT</string>
+    <string name="nutrition_analysis_input_demo">\"Grilled chicken, rice and mixed vegetables\"</string>
+    <string name="nutrition_analysis_step_identifying">Identifying foods…</string>
+    <string name="nutrition_analysis_step_estimating">Estimating portions…</string>
+    <string name="nutrition_analysis_step_calculating">Calculating nutrition…</string>
+    <string name="nutrition_analysis_cancel">Cancel analysis</string>
+    <string name="nutrition_analysis_close">Close food analysis</string>
     <!-- Progress / 04 — Nutrition Progress (nodo 1:2032) -->
     <string name="progress_nutrition_title">Nutrition progress</string>
     <string name="progress_nutrition_calories">AVG CALORIES</string>

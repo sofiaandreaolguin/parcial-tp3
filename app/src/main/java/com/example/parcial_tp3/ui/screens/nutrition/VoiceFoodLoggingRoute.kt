@@ -23,7 +23,10 @@ fun VoiceFoodLoggingRoute(
 
     VoiceFoodLoggingScreen(
         state = state,
-        onDone = onDone,
+        onDone = {
+            viewModel.onDoneSpeaking()
+            onDone()
+        },
         onTypeInstead = onTypeInstead,
         onClose = onClose,
     )
