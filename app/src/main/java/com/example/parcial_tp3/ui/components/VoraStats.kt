@@ -3,12 +3,12 @@ package com.example.parcial_tp3.ui.components
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -102,7 +102,8 @@ fun VoraStatTile(
         verticalArrangement = Arrangement.spacedBy(VoraTheme.spacing.s4),
     ) {
         Text(text = label, style = VoraTheme.text.footnote, color = MaterialTheme.colorScheme.onSurfaceVariant)
-        Row {
+        // si la tendencia no entra al lado del valor (360 dp), baja entera a la linea de abajo
+        FlowRow(horizontalArrangement = Arrangement.spacedBy(VoraTheme.spacing.s6)) {
             Text(
                 text = value,
                 style = MaterialTheme.typography.titleLarge,
@@ -110,11 +111,11 @@ fun VoraStatTile(
                 modifier = Modifier.alignByBaseline(),
             )
             if (trend != null) {
-                Spacer(Modifier.width(VoraTheme.spacing.s6))
                 Text(
                     text = trend,
                     style = VoraTheme.text.label,
                     color = MaterialTheme.colorScheme.secondary,
+                    softWrap = false,
                     modifier = Modifier.alignByBaseline(),
                 )
             }
