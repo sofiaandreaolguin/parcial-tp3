@@ -694,4 +694,12 @@
     <string name="progress_workout_lateral">Lateral Raise</string>
     <string name="progress_workout_lateral_detail">8 kg × 12 reps</string>
     <string name="progress_workout_lateral_change">↑ 1.0 kg</string>
+    <string name="nutrition_voice_title">Voice Logging</string>
+    <string name="nutrition_voice_listening">Listening…</string>
+    <string name="nutrition_voice_hint">\"Keep talking. I\'m listening.\"</string>
+    <string name="nutrition_voice_transcript_demo">\"I had grilled chicken with rice and some mixed vegetables for lunch.\"</string>
+    <string name="nutrition_voice_done">Done Speaking</string>
+    <string name="nutrition_voice_type_instead">Type instead</string>
+    <string name="nutrition_voice_close">Close voice logging</string>
+    <string name="nutrition_voice_meal_demo">Chicken, rice and vegetables</string>
 </resources>

@@ -59,6 +59,8 @@ enum class VoraButtonStyle {
     Text,
     /** Texto tenue subrayado: "Type instead". */
     TextMuted,
+    /** Texto subrayado sobre fondo verde: "Type instead" de Nutrition / 04. */
+    TextOnDark,
 }
 
 /**
@@ -108,15 +110,17 @@ fun VoraButton(
         VoraButtonStyle.Destructive -> Triple(Color.Transparent, colors.error, colors.error)
         VoraButtonStyle.Text -> Triple(Color.Transparent, colors.primary, null)
         VoraButtonStyle.TextMuted -> Triple(Color.Transparent, colors.onSurfaceVariant, null)
+        VoraButtonStyle.TextOnDark -> Triple(Color.Transparent, extra.onDarkMuted, null)
     }
-    val esTexto = style == VoraButtonStyle.Text || style == VoraButtonStyle.TextMuted
+    val subrayado = style == VoraButtonStyle.TextMuted || style == VoraButtonStyle.TextOnDark
+    val esTexto = style == VoraButtonStyle.Text || subrayado
 
     val textStyle: TextStyle = when (size) {
         VoraButtonSize.Small -> MaterialTheme.typography.labelMedium
         VoraButtonSize.Medium -> MaterialTheme.typography.labelLarge
         VoraButtonSize.Large -> MaterialTheme.typography.bodyLarge.copy(fontWeight = FontWeight.Bold)
         VoraButtonSize.Compact -> VoraTheme.text.buttonCompact
-    }.let { if (style == VoraButtonStyle.TextMuted) it.copy(textDecoration = TextDecoration.Underline) else it }
+    }.let { if (subrayado) it.copy(textDecoration = TextDecoration.Underline) else it }
 
     val (vertical, horizontal) = when (size) {
         VoraButtonSize.Small -> VoraTheme.spacing.s8 to VoraTheme.spacing.s16
@@ -180,6 +184,7 @@ private fun VoraButtonPreview() {
             ) {
                 VoraButton(texto, {}, style = VoraButtonStyle.Cta)
                 VoraButton(texto, {}, style = VoraButtonStyle.OutlinedOnDark)
+                VoraButton(texto, {}, style = VoraButtonStyle.TextOnDark, size = VoraButtonSize.Small)
             }
             Row(horizontalArrangement = Arrangement.spacedBy(VoraTheme.spacing.s24)) {
                 VoraButton(texto, {}, style = VoraButtonStyle.Text, size = VoraButtonSize.Small)

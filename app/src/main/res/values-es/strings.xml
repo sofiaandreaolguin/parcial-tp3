@@ -692,4 +692,12 @@
     <string name="progress_workout_lateral">Elevaciones laterales</string>
     <string name="progress_workout_lateral_detail">8 kg × 12 repeticiones</string>
     <string name="progress_workout_lateral_change">↑ 1,0 kg</string>
+    <string name="nutrition_voice_title">Registro por voz</string>
+    <string name="nutrition_voice_listening">Escuchando…</string>
+    <string name="nutrition_voice_hint">\"Seguí hablando. Te estoy escuchando.\"</string>
+    <string name="nutrition_voice_transcript_demo">\"Almorcé pollo a la plancha con arroz y algunas verduras mixtas.\"</string>
+    <string name="nutrition_voice_done">Terminé de hablar</string>
+    <string name="nutrition_voice_type_instead">Escribir en su lugar</string>
+    <string name="nutrition_voice_close">Cerrar el registro por voz</string>
+    <string name="nutrition_voice_meal_demo">Pollo, arroz y verduras</string>
 </resources>
