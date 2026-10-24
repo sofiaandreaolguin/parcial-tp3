@@ -613,11 +613,11 @@
     <string name="progress_dash_streak">Racha activa</string>
     <string name="progress_dash_streak_value">4 días</string>
     <string name="progress_dash_streak_trend">🔥</string>
-    <string name="progress_dash_insight">\"Completaste 4 entrenamientos esta semana y subiste un 8 % el volumen. Tu constancia va por buen camino.\"</string>
+    <string name="progress_dash_insight" formatted="false">\"Completaste 4 entrenamientos esta semana y subiste un 8 % el volumen. Tu constancia va por buen camino.\"</string>
     <string name="progress_dash_area_workout">Entrenamiento</string>
     <string name="progress_dash_area_workout_detail">3 sesiones • 2.340 kg de volumen</string>
     <string name="progress_dash_area_nutrition">Nutrición</string>
-    <string name="progress_dash_area_nutrition_detail">104 g de proteínas • 74 % del objetivo</string>
+    <string name="progress_dash_area_nutrition_detail" formatted="false">104 g de proteínas • 74 % del objetivo</string>
     <string name="progress_dash_area_activity">Actividad</string>
     <string name="progress_dash_area_activity_detail">7.842 pasos • 5,6 km por día</string>
     <string name="progress_dash_goal">Ganar fuerza y mejorar el estado físico</string>

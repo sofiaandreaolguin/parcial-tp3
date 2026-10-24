@@ -615,11 +615,11 @@
     <string name="progress_dash_streak">Active Streak</string>
     <string name="progress_dash_streak_value">4 days</string>
     <string name="progress_dash_streak_trend">🔥</string>
-    <string name="progress_dash_insight">\"You\'ve completed 4 workouts this week and increased your training volume by 8%. Your consistency is trending in the right direction.\"</string>
+    <string name="progress_dash_insight" formatted="false">\"You\'ve completed 4 workouts this week and increased your training volume by 8%. Your consistency is trending in the right direction.\"</string>
     <string name="progress_dash_area_workout">Workout</string>
     <string name="progress_dash_area_workout_detail">3 sessions • 2,340 kg volume</string>
     <string name="progress_dash_area_nutrition">Nutrition</string>
-    <string name="progress_dash_area_nutrition_detail">104g protein • 74% avg target</string>
+    <string name="progress_dash_area_nutrition_detail" formatted="false">104g protein • 74% avg target</string>
     <string name="progress_dash_area_activity">Activity</string>
     <string name="progress_dash_area_activity_detail">7,842 steps • 5.6 km daily avg</string>
     <string name="progress_dash_goal">Build strength &amp; improve fitness</string>
