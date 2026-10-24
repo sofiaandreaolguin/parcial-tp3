@@ -759,7 +759,7 @@
     <string name="progress_review_title">Tu resumen semanal</string>
     <string name="progress_review_subtitle">Esto cambió esta semana.</string>
     <string name="progress_review_headline">\"Tuviste una gran semana.\"</string>
-    <string name="progress_review_workouts">ENTRENAMIENTOS</string>
+    <string name="progress_review_workouts">ENTRENOS</string>
     <string name="progress_review_workouts_value">4 sesiones</string>
     <string name="progress_review_steps">PASOS PROM.</string>
     <string name="progress_review_steps_value">7.842 pasos</string>

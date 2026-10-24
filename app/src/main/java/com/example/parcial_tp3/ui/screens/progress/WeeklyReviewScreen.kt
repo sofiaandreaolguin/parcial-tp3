@@ -256,11 +256,10 @@ private fun RecommendationsCard(recommendations: List<Int>, onWeeklyPlan: () -> 
             )
             Column(verticalArrangement = Arrangement.spacedBy(VoraTheme.spacing.s10)) {
                 recommendations.forEach { rec ->
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        horizontalArrangement = Arrangement.spacedBy(VoraTheme.spacing.s10),
-                    ) {
-                        VoraStatusDot(colors.primary)
+                    // el punto va con la primera linea aunque el texto ocupe dos: centrado en los
+                    // 18 de alto de bodyMedium
+                    Row(horizontalArrangement = Arrangement.spacedBy(VoraTheme.spacing.s10)) {
+                        VoraStatusDot(colors.primary, Modifier.padding(top = VoraTheme.spacing.s6))
                         Text(text = stringResource(rec), style = MaterialTheme.typography.bodyMedium, color = colors.onSurface)
                     }
                 }
