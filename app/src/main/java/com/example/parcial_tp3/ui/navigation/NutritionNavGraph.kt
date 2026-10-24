@@ -1,5 +1,6 @@
 package com.example.parcial_tp3.ui.navigation
 
+import androidx.compose.runtime.remember
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
@@ -12,6 +13,7 @@ import com.example.parcial_tp3.ui.components.PantallaVacia
 import com.example.parcial_tp3.ui.screens.nutrition.AddFoodRoute
 import com.example.parcial_tp3.ui.screens.nutrition.NutritionDashboardRoute
 import com.example.parcial_tp3.ui.screens.nutrition.TodaysMealsRoute
+import com.example.parcial_tp3.ui.screens.nutrition.VoiceFoodLoggingRoute
 
 /**
  * Nutricion: 8 pantallas. 01, 02, 03, 06, 07 y 08 con barra; 04 y 05 encima.
@@ -50,10 +52,15 @@ fun NavGraphBuilder.nutritionGraph(nav: NavController) {
             )
         }
 
-        composable(Rutas.VOICE_FOOD_LOGGING) {
-            PantallaVacia(
-                nombre = stringResource(R.string.pant_nutrition_04),
-                onVolver = { nav.popBackStack() },
+        composable(Rutas.VOICE_FOOD_LOGGING) { entrada ->
+            // remember: si "X" ya sacó la pantalla mientras anima su salida, buscar la entrada de
+            // nuevo en cada composición tiraría IllegalArgumentException.
+            val grafo = remember(entrada) { nav.getBackStackEntry(Rutas.NUTRITION_GRAPH) }
+            VoiceFoodLoggingRoute(
+                grafo = grafo,
+                onDone = { nav.navigate(Rutas.FOOD_ANALYSIS) },
+                onTypeInstead = { nav.navigate(Rutas.foodConfirmation()) },
+                onClose = { nav.popBackStack() },
             )
         }
 
