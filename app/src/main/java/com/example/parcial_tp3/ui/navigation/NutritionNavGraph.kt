@@ -2,6 +2,7 @@ package com.example.parcial_tp3.ui.navigation
 
 import androidx.compose.runtime.remember
 import androidx.compose.ui.res.stringResource
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavType
@@ -12,7 +13,9 @@ import com.example.parcial_tp3.R
 import com.example.parcial_tp3.ui.components.PantallaVacia
 import com.example.parcial_tp3.ui.screens.nutrition.AddFoodRoute
 import com.example.parcial_tp3.ui.screens.nutrition.FoodAnalysisRoute
+import com.example.parcial_tp3.ui.screens.nutrition.FoodCaptureViewModel
 import com.example.parcial_tp3.ui.screens.nutrition.NutritionDashboardRoute
+import com.example.parcial_tp3.ui.screens.nutrition.PhotoAnalysisRoute
 import com.example.parcial_tp3.ui.screens.nutrition.TodaysMealsRoute
 import com.example.parcial_tp3.ui.screens.nutrition.VoiceFoodLoggingRoute
 
@@ -27,13 +30,14 @@ import com.example.parcial_tp3.ui.screens.nutrition.VoiceFoodLoggingRoute
 fun NavGraphBuilder.nutritionGraph(nav: NavController) {
     navigation(startDestination = Rutas.NUTRITION_DASHBOARD, route = Rutas.NUTRITION_GRAPH) {
 
-        composable(Rutas.NUTRITION_DASHBOARD) {
+        composable(Rutas.NUTRITION_DASHBOARD) { entrada ->
+            val captura = hiltViewModel<FoodCaptureViewModel>(remember(entrada) { nav.getBackStackEntry(Rutas.NUTRITION_GRAPH) })
             NutritionDashboardRoute(
                 onHistory = { nav.navigate(Rutas.TODAYS_MEALS) },
                 onMeal = { mealId -> nav.navigate(Rutas.mealDetails(mealId)) },
                 onAddDinner = { nav.navigate(Rutas.ADD_FOOD) },
                 onVoice = { nav.navigate(Rutas.VOICE_FOOD_LOGGING) },
-                onPhoto = { nav.navigate(Rutas.PHOTO_ANALYSIS) },
+                onPhoto = { abrirFoto(nav, captura) },
             )
         }
 
@@ -44,11 +48,12 @@ fun NavGraphBuilder.nutritionGraph(nav: NavController) {
             )
         }
 
-        composable(Rutas.ADD_FOOD) {
+        composable(Rutas.ADD_FOOD) { entrada ->
+            val captura = hiltViewModel<FoodCaptureViewModel>(remember(entrada) { nav.getBackStackEntry(Rutas.NUTRITION_GRAPH) })
             AddFoodRoute(
                 onBack = { nav.popBackStack() },
                 onVoice = { nav.navigate(Rutas.VOICE_FOOD_LOGGING) },
-                onPhoto = { nav.navigate(Rutas.PHOTO_ANALYSIS) },
+                onPhoto = { abrirFoto(nav, captura) },
                 onManual = { nav.navigate(Rutas.foodConfirmation()) },
             )
         }
@@ -80,8 +85,13 @@ fun NavGraphBuilder.nutritionGraph(nav: NavController) {
             )
         }
 
-        composable(Rutas.PHOTO_ANALYSIS) {
-            PantallaVacia(nombre = stringResource(R.string.pant_nutrition_06))
+        composable(Rutas.PHOTO_ANALYSIS) { entrada ->
+            val grafo = remember(entrada) { nav.getBackStackEntry(Rutas.NUTRITION_GRAPH) }
+            PhotoAnalysisRoute(
+                grafo = grafo,
+                onBack = { nav.popBackStack() },
+                onReview = { nav.navigate(Rutas.foodConfirmation()) { launchSingleTop = true } },
+            )
         }
 
         composable(
@@ -104,4 +114,10 @@ fun NavGraphBuilder.nutritionGraph(nav: NavController) {
             PantallaVacia(nombre = stringResource(R.string.pant_nutrition_08))
         }
     }
+}
+
+// El borrador se carga antes de navegar y no al componer 06: rotar no lo pisa (CONTEXTO §2).
+private fun abrirFoto(nav: NavController, captura: FoodCaptureViewModel) {
+    captura.onPhotoCaptureStarted()
+    nav.navigate(Rutas.PHOTO_ANALYSIS) { launchSingleTop = true }
 }
