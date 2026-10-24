@@ -755,4 +755,32 @@
     <string name="progress_health_protein">Consumo de proteína</string>
     <string name="progress_health_improving">Mejorando</string>
     <string name="progress_health_consistent">Estable</string>
+    <!-- Progress / 06 — Weekly Review (nodo 1:2287) -->
+    <string name="progress_review_title">Tu resumen semanal</string>
+    <string name="progress_review_subtitle">Esto cambió esta semana.</string>
+    <string name="progress_review_headline">\"Tuviste una gran semana.\"</string>
+    <string name="progress_review_workouts">ENTRENAMIENTOS</string>
+    <string name="progress_review_workouts_value">4 sesiones</string>
+    <string name="progress_review_steps">PASOS PROM.</string>
+    <string name="progress_review_steps_value">7.842 pasos</string>
+    <string name="progress_review_protein">PROTEÍNA</string>
+    <string name="progress_review_protein_value">132 g por día</string>
+    <string name="progress_review_went_well">LO QUE SALIÓ BIEN</string>
+    <string name="progress_review_win_consistent">Fuiste constante</string>
+    <string name="progress_review_win_consistent_body">Cuatro entrenamientos completos te ayudaron a mantener tu ritmo semanal.</string>
+    <string name="progress_review_win_protein">Mejoró tu proteína</string>
+    <string name="progress_review_win_protein_body">Llegaste a tu objetivo de proteína 5 de los 7 días.</string>
+    <string name="progress_review_win_volume">Subió tu volumen de entrenamiento</string>
+    <string name="progress_review_win_volume_body" formatted="false">Hiciste un 8 % más de volumen que la semana pasada.</string>
+    <string name="progress_review_to_improve">QUÉ MEJORAR</string>
+    <string name="progress_review_improve_title">Constancia en la cena</string>
+    <string name="progress_review_improve_body">Tu consumo de proteína suele bajar en la cena. Probá planear una cena rica en proteína antes de la noche.</string>
+    <string name="progress_review_dinner_ideas">Ideas para la cena</string>
+    <string name="progress_review_next_week">RECOMENDACIONES PARA LA PRÓXIMA SEMANA</string>
+    <string name="progress_review_rec_schedule">Mantené tu plan de entrenamiento actual.</string>
+    <string name="progress_review_rec_protein">Intentá llegar a 140 g de proteína al menos 6 días.</string>
+    <string name="progress_review_rec_steps">Apuntá a más de 8.000 pasos los días sin entrenamiento.</string>
+    <string name="progress_review_view_plan">Ver el plan de la próxima semana</string>
+    <string name="progress_review_ask_vora">Preguntale a VORA</string>
+    <string name="progress_review_done">Listo</string>
 </resources>

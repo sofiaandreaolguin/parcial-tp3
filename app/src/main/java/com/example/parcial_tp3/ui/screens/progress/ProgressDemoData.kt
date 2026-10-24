@@ -101,4 +101,23 @@ fun progressDemoState() = ProgressUiState(
             HabitSignal(SignalKind.PROTEIN, R.string.progress_health_protein, R.string.progress_health_improving, improving = true),
         ),
     ),
+    review = WeeklyReview(
+        headline = R.string.progress_review_headline,
+        summary = listOf(
+            ProgressMetric(R.string.progress_review_workouts, R.string.progress_review_workouts_value),
+            ProgressMetric(R.string.progress_review_steps, R.string.progress_review_steps_value),
+            ProgressMetric(R.string.progress_review_protein, R.string.progress_review_protein_value),
+        ),
+        wins = listOf(
+            ReviewPoint(R.string.progress_review_win_consistent, R.string.progress_review_win_consistent_body),
+            ReviewPoint(R.string.progress_review_win_protein, R.string.progress_review_win_protein_body),
+            ReviewPoint(R.string.progress_review_win_volume, R.string.progress_review_win_volume_body),
+        ),
+        improvement = ReviewPoint(R.string.progress_review_improve_title, R.string.progress_review_improve_body),
+        recommendations = listOf(
+            R.string.progress_review_rec_schedule,
+            R.string.progress_review_rec_protein,
+            R.string.progress_review_rec_steps,
+        ),
+    ),
 )

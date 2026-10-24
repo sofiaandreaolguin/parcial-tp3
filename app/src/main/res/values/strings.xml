@@ -757,4 +757,32 @@
     <string name="progress_health_protein">Protein Intake</string>
     <string name="progress_health_improving">Improving</string>
     <string name="progress_health_consistent">Consistent</string>
+    <!-- Progress / 06 — Weekly Review (nodo 1:2287) -->
+    <string name="progress_review_title">Your weekly review</string>
+    <string name="progress_review_subtitle">Here\'s what changed this week.</string>
+    <string name="progress_review_headline">\"You had a strong week.\"</string>
+    <string name="progress_review_workouts">WORKOUTS</string>
+    <string name="progress_review_workouts_value">4 sessions</string>
+    <string name="progress_review_steps">AVG STEPS</string>
+    <string name="progress_review_steps_value">7,842 steps</string>
+    <string name="progress_review_protein">PROTEIN</string>
+    <string name="progress_review_protein_value">132g daily</string>
+    <string name="progress_review_went_well">WHAT WENT WELL</string>
+    <string name="progress_review_win_consistent">You stayed consistent</string>
+    <string name="progress_review_win_consistent_body">Four completed workouts helped you maintain your weekly training rhythm.</string>
+    <string name="progress_review_win_protein">Your protein improved</string>
+    <string name="progress_review_win_protein_body">You reached your protein target on 5 of 7 days.</string>
+    <string name="progress_review_win_volume">Your training volume increased</string>
+    <string name="progress_review_win_volume_body" formatted="false">You completed 8% more volume than last week.</string>
+    <string name="progress_review_to_improve">WHAT TO IMPROVE</string>
+    <string name="progress_review_improve_title">Dinner consistency</string>
+    <string name="progress_review_improve_body">Your protein intake tends to drop at dinner. Try planning a protein-rich dinner before the evening.</string>
+    <string name="progress_review_dinner_ideas">Get dinner ideas</string>
+    <string name="progress_review_next_week">NEXT WEEK\'S RECOMMENDATIONS</string>
+    <string name="progress_review_rec_schedule">Keep your current workout schedule.</string>
+    <string name="progress_review_rec_protein">Try to reach 140g protein on at least 6 days.</string>
+    <string name="progress_review_rec_steps">Aim for 8,000+ steps on non-training days.</string>
+    <string name="progress_review_view_plan">View next week\'s plan</string>
+    <string name="progress_review_ask_vora">Ask VORA</string>
+    <string name="progress_review_done">Done</string>
 </resources>
