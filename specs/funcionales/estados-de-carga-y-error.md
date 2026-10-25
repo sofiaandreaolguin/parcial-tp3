@@ -196,7 +196,7 @@ Casos de la plantilla y cómo se cubren acá:
 | C28 | `` `C28 estados sesion onRetry en Error vuelve a consultar y arranca de cero` `` | `test/` · `ActiveWorkoutViewModelTest` | Sí: `expected:<Loading> but was:<Error(...)>` |
 | C29 | `` `C29 estados sesion onRetry en Content no reinicia la sesion` `` | `test/` · `ActiveWorkoutViewModelTest` | Sí: `expected:<[w02, w02]> but was:<[w02]>` |
 | C30 | `` `C30 estados sesion volver a observar despues del reintento no repite la consulta` `` | `test/` · `ActiveWorkoutViewModelTest` | Sí: `expected:<Content(...)>`, sigue en `Error` |
-| C31 a C35 (con C33a a C33e) | Capturas del emulador y de los `@Preview` (C33e), y log del mock | `docs/evidencia/estados/` | No es test unitario |
+| C31 a C35 (con C33a a C33e) | Capturas del emulador y de los `@Preview` (C33e), y log del mock | `docs/evidencia/estados/` | No es test unitario. C34 parcial: falta la comida en Nutrition / 01 hasta que Nutrition / 07 esté en la navegación |
 | C36 | `./gradlew assembleDebug` y `scripts/reglas.sh` | build | Control negativo: un texto escrito a mano en `WorkoutStatusMessage` hace fallar `reglas.sh` |
 
 - Los nombres empiezan con "estados" para no confundirse con los `C1`… del catálogo, del detalle demo, de la sesión y de la caché.
@@ -238,3 +238,24 @@ Casos de la plantilla y cómo se cubren acá:
 - 2026-10-25. Correcciones de la auditoría (ver "Auditoría"): C33 pasa a C33a a C33e. Los demás números no cambian.
 - 2026-10-25. Hector aprueba la spec para los tests en rojo.
 - 2026-10-25. Tests en rojo (Hector, con la skill tests-rojo): `AppErrorTest` nuevo y C2 a C30 sumados a los cinco archivos de la tabla, sin tocar los existentes. `FakeWorkoutRepository` y `FakeWorkoutDetailRepository` suman `encolarRespuesta()`. En `main/` solo firmas: `AppError.kt` con `toAppError()` fijo en `UNKNOWN`, `Error(@StringRes)` y `Empty`, `onRetry()` vacío, los textos nuevos y los `when` de 01 a 07 con `is Error`. `./gradlew testDebugUnitTest`: 216 tests, 23 fallan, todos con `AssertionError` y todos "estados". Pasan en rojo C6, C11, C20 y C25 (control negativo en implementar).
+- 2026-10-25. Implementación (Hector, con la skill implementar), con el plan aprobado. Sin tocar tests, `ui/components/`, `ui/theme/`, navegación, Room ni `NetworkModule`:
+  - `toAppError()` clasifica por tipo, según la tabla. Los dos repositorios devuelven `AppException` por tipo de fallo; si falla Room, `AppException(UNKNOWN)`. El detalle junta sus `catch` en uno solo y usa `toAppError()` para separar el JSON roto de la falta de conexión (`WorkoutNotCachedException` sigue igual).
+  - `WorkoutErrorMessages.kt` (`catalogErrorMessage` y `detailErrorMessage`). Los tres ViewModels cargan desde una `private fun cargar()` que llaman `init` y `onRetry()`; `onRetry()` actúa solo en `Error` (y en `NotAvailableOffline` del detalle) y pone `Loading` antes del `launch`. El catálogo vacío da `Empty`.
+  - `WorkoutStatusMessage.kt` (claro y `onDark`). 01 a 06 suman `onRetry` y cada `XxxRoute` pasa `viewModel::onRetry`. En 06, el `Content` sin ejercicio sigue sin Retry. 07 sin cambios.
+  - `./gradlew testDebugUnitTest`: 216 tests, 0 fallas. `scripts/reglas.sh` sin hallazgos y `./gradlew assembleDebug` compila.
+  - Controles negativos (se rompió el código, se vio el rojo y se deshizo):
+    - C6: devolver `failure` con la respuesta buena. La primera rotura (`desdeRoom` después de `guardar`) no falló, porque Room ya tenía los tres.
+    - C11: `sinConexion = false`.
+    - C20: reintentar cuando aparece un colector (`subscriptionCount`), que falla con `expected:<1> but was:<3>`. Con `stateIn(WhileSubscribed)` falla antes, en la precondición del test.
+    - C25: `onRetry()` sin el control de `workoutId`.
+    - C3, C9 y C1: `IOException` antes que el JSON roto.
+    - C13: `Content(emptyList())`.
+    - C18, C24 y C29: `onRetry()` sin la guarda de estado.
+    - C36: un texto escrito a mano en `WorkoutStatusMessage`, que hace salir a `reglas.sh` con código 2.
+- 2026-10-25. Prueba en el emulador (Hector la pidió a la IA). Capturas `docs/evidencia/estados/estados-*.png` y `estados-log-del-mock.txt`, con una copia del mock en otro puerto y `adb reverse`. El "servidor apagado" se simuló sacando el `adb reverse`.
+  - C31, C32, C33a a C33e y C35 dan lo esperado. Cada apertura y cada Retry suman un solo `GET`, y rotar no suma ninguno. C33d se probó con `error` (en 01 y 03); con `malformed` solo se abrieron las pantallas, sin tocar Retry. En C33a, de 02 solo hay captura con `error`.
+  - C34: 01, 02 y 03 de w01 muestran lo de Room con `error`. **La parte de Nutrition no se pudo probar**: en esta rama Nutrition / 07 (Food Confirmation) todavía es `PantallaVacia` en la navegación, así que no hay cómo guardar una comida desde la app.
+  - C33e: se sumaron `@Preview` con `Error(R.string.workout_error_server)` en 04, 05 y 06, y con `NotAvailableOffline` en 04 y 06. Se abrieron en el emulador con `PreviewActivity`.
+  - En la primera corrida el emulador dio ANR por "no focused window" en el launcher, en la app, en `system` y en System UI. El hilo principal de la app respondía, así que no venía del código. Después de `adb reboot` no se repitió.
+  - Después de sumar las `@Preview`: 216 tests en verde, `reglas.sh` sin hallazgos y `assembleDebug` compila.
+- 2026-10-25. Cierre (skill cerrar-tarea): revisor-requisitos, revisor-arquitectura, revisor-visual y `/code-review` sin nada BLOQUEA, CRÍTICA ni ALTA. Las sugerencias quedaron en `docs/BITACORA.md`.
