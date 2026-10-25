@@ -26,6 +26,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.parcial_tp3.R
@@ -88,6 +89,7 @@ fun VoraToggle(
  *
  * @param onDark true sobre paneles verdes (botones blancos translucidos y texto blanco);
  *   false sobre fondo claro.
+ * @param valueStyle 18 Bold en Active Workout; los gramos de Nutrition / 07 van en 14 (nodo 1:1210).
  */
 @Composable
 fun VoraStepper(
@@ -96,6 +98,7 @@ fun VoraStepper(
     onIncrease: () -> Unit,
     modifier: Modifier = Modifier,
     onDark: Boolean = true,
+    valueStyle: TextStyle = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
 ) {
     val colors = MaterialTheme.colorScheme
     val texto = if (onDark) colors.onPrimary else colors.onSurface
@@ -107,7 +110,7 @@ fun VoraStepper(
         horizontalArrangement = Arrangement.spacedBy(VoraTheme.spacing.s2),
     ) {
         StepperButton(R.drawable.ic_minus, stringResource(R.string.disminuir), onDecrease, fondoBoton, texto)
-        Text(text = value, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold, color = texto)
+        Text(text = value, style = valueStyle, color = texto)
         StepperButton(R.drawable.ic_plus, stringResource(R.string.aumentar), onIncrease, fondoBoton, texto)
     }
 }
