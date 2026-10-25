@@ -44,7 +44,7 @@ import com.example.parcial_tp3.ui.theme.VoraTheme
  */
 @Composable
 fun TodaysMealsScreen(
-    state: NutritionUiState,
+    state: NutritionDemoUiState,
     onMeal: (mealId: Long) -> Unit,
     onAddDinner: () -> Unit,
 ) {

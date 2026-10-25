@@ -1,5 +1,7 @@
 package com.example.parcial_tp3.ui.screens.home
 
+import com.example.parcial_tp3.data.repository.MealDataException
+import com.example.parcial_tp3.data.repository.MealError
 import com.example.parcial_tp3.data.repository.ProfileRepository
 import com.example.parcial_tp3.domain.model.Meal
 import com.example.parcial_tp3.domain.model.MealType
@@ -101,5 +103,17 @@ class HomeViewModelTest {
         val estado = vm.uiState.value
         assertEquals(HomeDemoData.KCAL_GOAL, estado.kcalGoal)
         assertEquals("w01", estado.recommended.id)
+    }
+
+    @Test
+    fun `C44 un error de datos en Home muestra 0 sin romper`() = runTest {
+        val comidas = FakeMealRepository(listOf(comida(500, 30.0, 60.0)))
+        comidas.errorAlLeer = MealDataException(MealError.INVALID_DATA)
+        val vm = HomeViewModel(ProfileRepository(), comidas)
+        observar(vm)
+
+        val estado = vm.uiState.value
+        assertEquals(listOf(0, 0, 0), listOf(estado.kcal, estado.proteinG, estado.carbsG))
+        assertEquals("Alex", estado.firstName)
     }
 }

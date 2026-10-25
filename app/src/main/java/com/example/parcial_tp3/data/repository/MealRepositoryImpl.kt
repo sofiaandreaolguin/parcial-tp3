@@ -5,6 +5,7 @@ import com.example.parcial_tp3.domain.model.Meal
 import java.time.LocalDate
 import javax.inject.Inject
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.map
 
 class MealRepositoryImpl @Inject constructor(
@@ -15,4 +16,11 @@ class MealRepositoryImpl @Inject constructor(
         dao.observeByDate(date.toString()).map { entities -> entities.map { it.toDomain() } }
 
     override suspend fun addMeal(meal: Meal): Long = dao.insert(meal.toEntity())
+
+    // Firmas vacias de la tarea VC-l: las completa la sesion de implementar.
+    override fun observeMeal(id: Long): Flow<Meal?> = emptyFlow()
+
+    override suspend fun updateMeal(meal: Meal) = Unit
+
+    override suspend fun deleteMeal(id: Long) = Unit
 }

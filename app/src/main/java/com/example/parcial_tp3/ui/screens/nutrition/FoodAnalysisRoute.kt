@@ -30,6 +30,8 @@ fun FoodAnalysisRoute(
         viewModel.events.collect { event ->
             when (event) {
                 FoodCaptureEvent.AnalysisDone -> currentOnDone()
+                // Lo escucha 07, que es la que guarda.
+                FoodCaptureEvent.Saved -> Unit
             }
         }
     }

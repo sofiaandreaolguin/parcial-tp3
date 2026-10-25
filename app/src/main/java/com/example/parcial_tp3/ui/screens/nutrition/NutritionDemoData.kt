@@ -3,7 +3,7 @@ package com.example.parcial_tp3.ui.screens.nutrition
 import com.example.parcial_tp3.R
 
 /** Datos de demostración de Nutrition / 01 y 02. La tarea l los reemplaza por lo que sale de Room. */
-fun nutritionDemoState() = NutritionUiState(
+fun nutritionDemoState() = NutritionDemoUiState(
     date = R.string.nutrition_dash_date,
     caloriesConsumed = R.string.nutrition_dash_calories_value,
     caloriesGoal = R.string.nutrition_dash_calories_goal,

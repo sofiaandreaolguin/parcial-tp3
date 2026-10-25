@@ -2,7 +2,10 @@ package com.example.parcial_tp3.ui.screens.nutrition
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.parcial_tp3.data.repository.MealRepository
+import com.example.parcial_tp3.domain.MealForm
 import dagger.hilt.android.lifecycle.HiltViewModel
+import java.time.LocalDate
 import javax.inject.Inject
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
@@ -32,7 +35,9 @@ private const val ANALYSIS_STEP_MS = 700L
  * Al revés no pasa: una captura de voz posterior a una foto conserva el borrador de la foto.
  */
 @HiltViewModel
-class FoodCaptureViewModel @Inject constructor() : ViewModel() {
+class FoodCaptureViewModel @Inject constructor(
+    private val repo: MealRepository,
+) : ViewModel() {
 
     private val _uiState = MutableStateFlow(FoodCaptureUiState())
     val uiState: StateFlow<FoodCaptureUiState> = _uiState.asStateFlow()
@@ -58,6 +63,20 @@ class FoodCaptureViewModel @Inject constructor() : ViewModel() {
     fun onCancelAnalysis() = stopAnalysis()
 
     fun onPhotoCaptureStarted() = _uiState.update { it.copy(draft = PhotoMealDraft) }
+
+    // Firmas vacías de la tarea VC-l (07): las completa la sesión de implementar.
+    fun onManualEntry() = Unit
+
+    /** [draftName] lo resuelve la Route con stringResource: el ViewModel no tiene Context. */
+    @Suppress("UNUSED_PARAMETER")
+    fun onOpenConfirmation(mealId: Long, defaultDate: LocalDate, draftName: String) = Unit
+
+    @Suppress("UNUSED_PARAMETER")
+    fun onFormChange(form: MealForm) = Unit
+
+    fun onSave() = Unit
+
+    fun onDiscard() = Unit
 
     // Cancelar el Job no saca un AnalysisDone que ya está en el canal sin colector: se vacía.
     private fun stopAnalysis() {

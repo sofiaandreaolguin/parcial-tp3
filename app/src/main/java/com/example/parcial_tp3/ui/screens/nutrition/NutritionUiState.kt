@@ -1,12 +1,33 @@
 package com.example.parcial_tp3.ui.screens.nutrition
 
 import androidx.annotation.StringRes
+import com.example.parcial_tp3.domain.model.MealType
+import java.time.LocalDate
+
+/** Lo que muestran Nutrition / 01 y 02 con las comidas de Room de la fecha elegida (RF04, RF07). */
+sealed interface NutritionUiState {
+    data object Loading : NutritionUiState
+    data class Content(
+        val date: LocalDate,
+        val kcal: Int,
+        val kcalGoal: Int,
+        val kcalProgress: Float,
+        val macros: List<MacroTotal>,
+        val meals: List<MealRow>,
+        val pending: MealType?,
+    ) : NutritionUiState
+    data class Error(@StringRes val message: Int) : NutritionUiState
+}
+
+data class MacroTotal(val kind: MacroKind, val grams: Int, val goal: Int, val progress: Float)
+
+data class MealRow(val id: Long, val type: MealType, val name: String, val kcal: Int)
 
 /**
- * Lo que muestran Nutrition / 01 y 02. Todo es de demostración: cada texto es un recurso de
- * strings.xml. Cuando llegue Room (tarea l) las comidas y los totales salen de la misma consulta.
+ * La versión de demostración de 01 y 02: cada texto es un recurso de strings.xml. Queda mientras
+ * las pantallas no dibujen [NutritionUiState] (paso implementar de VC-l).
  */
-data class NutritionUiState(
+data class NutritionDemoUiState(
     @StringRes val date: Int,
     @StringRes val caloriesConsumed: Int,
     @StringRes val caloriesGoal: Int,

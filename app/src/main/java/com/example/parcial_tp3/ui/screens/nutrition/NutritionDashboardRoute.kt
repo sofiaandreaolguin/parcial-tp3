@@ -1,9 +1,7 @@
 package com.example.parcial_tp3.ui.screens.nutrition
 
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.parcial_tp3.ui.components.rememberDemoToast
 
 @Composable
@@ -15,7 +13,9 @@ fun NutritionDashboardRoute(
     onPhoto: () -> Unit,
     viewModel: NutritionViewModel = hiltViewModel(),
 ) {
-    val state by viewModel.uiState.collectAsStateWithLifecycle()
+    // Hasta el paso implementar de VC-l las pantallas siguen con la demostración.
+    @Suppress("UNUSED_VARIABLE") val vm = viewModel
+    val state = nutritionDemoState()
     val showDemoNotice = rememberDemoToast()
     NutritionDashboardScreen(
         state = state,

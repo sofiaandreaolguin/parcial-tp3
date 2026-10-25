@@ -14,6 +14,7 @@ import kotlinx.coroutines.withContext
 import kotlinx.coroutines.withTimeout
 import org.junit.After
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
@@ -110,5 +111,52 @@ class MealDaoTest {
 
         assertEquals(emptyList<MealEntity>(), inicial)
         assertEquals(listOf(desayuno.copy(id = id)), nueva)
+    }
+
+    // C10 a C12 son de specs/funcionales/carga-y-eliminacion-de-comidas.md; los de arriba, de
+    // registro-de-comidas.md (VC-h). Por eso hay dos C10.
+
+    @Test
+    fun C10_update_cambia_los_valores_y_conserva_el_id() = runTest {
+        val id = dao.insert(desayuno)
+        val editada = desayuno.copy(id = id, name = "Avena con miel", kcal = 380, proteinG = 14.0)
+
+        val filas = dao.update(editada)
+
+        assertEquals(1, filas)
+        assertEquals(listOf(editada), dao.observeByDate(hoy).first())
+    }
+
+    @Test
+    fun C11_deleteById_saca_la_comida_y_devuelve_las_filas_borradas() = runTest {
+        val idDesayuno = dao.insert(desayuno)
+        val idAlmuerzo = dao.insert(almuerzo)
+
+        assertEquals(1, dao.deleteById(idDesayuno))
+        assertEquals(listOf(almuerzo.copy(id = idAlmuerzo)), dao.observeByDate(hoy).first())
+
+        assertEquals(0, dao.deleteById(9_999))
+        assertEquals(listOf(almuerzo.copy(id = idAlmuerzo)), dao.observeByDate(hoy).first())
+    }
+
+    @Test
+    fun C12_observeById_emite_la_comida_y_null_al_borrarla() = runTest {
+        val id = dao.insert(desayuno)
+        val emisiones = Channel<MealEntity?>(Channel.UNLIMITED)
+        val job = launch(Dispatchers.Default) {
+            dao.observeById(id).collect { emisiones.send(it) }
+        }
+        // Room consulta en su propio hilo: se usa tiempo real y no el virtual de runTest.
+        val (inicial, trasBorrar) = withContext(Dispatchers.Default) {
+            withTimeout(5_000) {
+                val primera = emisiones.receive()
+                dao.deleteById(id)
+                primera to emisiones.receive()
+            }
+        }
+        job.cancel()
+
+        assertEquals(desayuno.copy(id = id), inicial)
+        assertNull(trasBorrar)
     }
 }

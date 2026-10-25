@@ -50,7 +50,7 @@ import com.example.parcial_tp3.ui.theme.VoraTheme
  */
 @Composable
 fun NutritionDashboardScreen(
-    state: NutritionUiState,
+    state: NutritionDemoUiState,
     onCalendar: () -> Unit,
     onHistory: () -> Unit,
     onMeal: (mealId: Long) -> Unit,
@@ -122,7 +122,7 @@ private fun CalendarButton(onClick: () -> Unit) {
 }
 
 @Composable
-private fun CaloriesCard(state: NutritionUiState) {
+private fun CaloriesCard(state: NutritionDemoUiState) {
     VoraCard(modifier = Modifier.fillMaxWidth(), radius = VoraTheme.radius.r20) {
         Column(verticalArrangement = Arrangement.spacedBy(VoraTheme.spacing.s16)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
@@ -197,7 +197,7 @@ private fun MacroKind.color(): Color = when (this) {
 
 @Composable
 private fun MealsSection(
-    state: NutritionUiState,
+    state: NutritionDemoUiState,
     onHistory: () -> Unit,
     onMeal: (Long) -> Unit,
     onAddDinner: () -> Unit,

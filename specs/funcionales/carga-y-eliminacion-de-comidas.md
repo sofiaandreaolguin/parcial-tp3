@@ -224,56 +224,56 @@ Casos de la plantilla que no aplican: sin conexión, 404, 503 y JSON inválido (
 ## Tests
 | Criterio | Test | Dónde | Vi el rojo |
 |---|---|---|---|
-| C1 | `` `C1 nombre vacio o con solo espacios es REQUIRED` `` | `test/` · `MealValidationTest` | |
-| C2 | `` `C2 el nombre se guarda sin espacios en los bordes` `` | `test/` · `MealValidationTest` | |
-| C3 | `` `C3 sin tipo es TYPE REQUIRED` `` | `test/` · `MealValidationTest` | |
-| C4 | `` `C4 kcal da el resultado de cada fila de la tabla` `` | `test/` · `MealValidationTest` | |
-| C5 | `` `C5 los macros dan el resultado de cada fila de la tabla` `` | `test/` · `MealValidationTest` | |
-| C6 | `` `C6 los macros aceptan coma y punto decimal` `` | `test/` · `MealValidationTest` | |
-| C7 | `` `C7 el cero es valido en kcal y macros` `` | `test/` · `MealValidationTest` | |
-| C8 | `` `C8 trae el error de cada campo invalido` `` | `test/` · `MealValidationTest` | |
-| C9 | `` `C9 un formulario valido da la Meal con el id pedido` `` | `test/` · `MealValidationTest` | |
-| C10 | `C10_update_cambia_los_valores_y_conserva_el_id` | `androidTest/` · `MealDaoTest` | |
-| C11 | `C11_deleteById_saca_la_comida_y_devuelve_las_filas_borradas` | `androidTest/` · `MealDaoTest` | |
-| C12 | `C12_observeById_emite_la_comida_y_null_al_borrarla` | `androidTest/` · `MealDaoTest` | |
-| C13 | `` `C13 observeMeal devuelve Meal y null cuando no existe` `` | `test/` · `MealRepositoryImplTest` | |
-| C14 | `` `C14 updateMeal y deleteMeal llegan al DAO con el mismo id` `` | `test/` · `MealRepositoryImplTest` | |
-| C15 | `C15_un_id_repetido_es_MealDataException_STORAGE` | `androidTest/` · `MealRepositoryRoomTest` | |
-| C16 | `` `C16 una Entity invalida es MealDataException INVALID_DATA` `` | `test/` · `MealRepositoryImplTest` | |
-| C17 | `` `C17 update de una comida borrada es NOT_FOUND` `` | `test/` · `MealRepositoryImplTest` | |
-| C18 | `` `C18 arranca pidiendo la fecha de hoy del Clock` `` | `test/` · `NutritionViewModelTest` | |
-| C19 | `` `C19 elegir una fecha la pide y la guarda en SavedStateHandle` `` | `test/` · `NutritionViewModelTest` | |
-| C20 | `` `C20 al recrearse usa la fecha guardada` `` | `test/` · `NutritionViewModelTest` | |
-| C21 | `` `C21 lista las comidas del dia en orden` `` | `test/` · `NutritionViewModelTest` | |
-| C22 | `` `C22 el total redondea la suma y cambia con cada emision` `` | `test/` · `NutritionViewModelTest` | |
-| C23 | `` `C23 la pendiente es el primer tipo sin comidas` `` | `test/` · `NutritionViewModelTest` | |
-| C24 | `` `C24 un dia sin comidas da total 0 y pendiente BREAKFAST` `` | `test/` · `NutritionViewModelTest` | |
-| C25 | `` `C25 un error de datos pasa a Error y onRetry vuelve a pedir` `` | `test/` · `NutritionViewModelTest` | |
-| C26 | `` `C26 recolectar en menos de 5 s no vuelve a suscribirse` `` | `test/` · `NutritionViewModelTest` | |
-| C27 | `` `C27 los millis del DatePicker son la fecha en UTC` `` | `test/` · `DatePickerDatesTest` | |
-| C28 | `` `C28 con borrador el formulario viene precargado` `` | `test/` · `FoodConfirmationViewModelTest` | |
-| C29 | `` `C29 la carga manual viene vacia aunque antes hubo foto` `` | `test/` · `FoodConfirmationViewModelTest` | |
-| C30 | `` `C30 con id el formulario trae la comida guardada` `` | `test/` · `FoodConfirmationViewModelTest` | |
-| C31 | `` `C31 reabrir con el mismo id conserva lo escrito y no recarga` `` | `test/` · `FoodConfirmationViewModelTest` | |
-| C32 | `` `C32 onDiscard cierra el formulario` `` | `test/` · `FoodConfirmationViewModelTest` | |
-| C33 | `` `C33 un id que no existe es notFound` `` | `test/` · `FoodConfirmationViewModelTest` | |
-| C34 | `` `C34 guardar invalido muestra errores y no escribe` `` | `test/` · `FoodConfirmationViewModelTest` | |
-| C35 | `` `C35 corregir un campo borra solo su error` `` | `test/` · `FoodConfirmationViewModelTest` | |
-| C36 | `` `C36 guardar nueva llama a addMeal emite Saved y limpia` `` | `test/` · `FoodConfirmationViewModelTest` | |
-| C37 | `` `C37 guardar edicion llama a updateMeal con el mismo id` `` | `test/` · `FoodConfirmationViewModelTest` | |
-| C38 | `` `C38 dos toques en guardar escriben una sola vez` `` | `test/` · `FoodConfirmationViewModelTest` | |
-| C39 | `` `C39 si guardar falla conserva lo escrito y no emite Saved` `` | `test/` · `FoodConfirmationViewModelTest` | |
-| C40 | `` `C40 al terminar el analisis de voz el borrador es el de la foto` `` | `test/` · `FoodCaptureViewModelTest` | |
-| C41 | `` `C41 carga la comida de la ruta` `` | `test/` · `MealDetailViewModelTest` | |
-| C42 | `` `C42 no existe es NotFound y un error de datos es Error` `` | `test/` · `MealDetailViewModelTest` | |
-| C43 | `` `C43 Delete pide confirmacion y cancelar no borra` `` | `test/` · `MealDetailViewModelTest` | |
-| C44 | `` `C44 un error de datos en Home muestra 0 sin romper` `` | `test/` · `HomeViewModelTest` | |
-| C45 | `` `C45 confirmar borra una vez y emite Deleted` `` | `test/` · `MealDetailViewModelTest` | |
-| C46 | `` `C46 mientras esta ocupado no repite borrar ni duplicar` `` | `test/` · `MealDetailViewModelTest` | |
-| C47 | `` `C47 el null despues de borrar no muestra NotFound` `` | `test/` · `MealDetailViewModelTest` | |
-| C48 | `` `C48 si borrar o duplicar falla muestra el error y no emite` `` | `test/` · `MealDetailViewModelTest` | |
-| C49 | `` `C49 Duplicate guarda una copia con id 0` `` | `test/` · `MealDetailViewModelTest` | |
-| C50 | `` `C50 recolectar en menos de 5 s no vuelve a pedir la comida` `` | `test/` · `MealDetailViewModelTest` | |
+| C1 | `` `C1 nombre vacio o con solo espacios es REQUIRED` `` | `test/` · `MealValidationTest` | sí, 2026-10-24 |
+| C2 | `` `C2 el nombre se guarda sin espacios en los bordes` `` | `test/` · `MealValidationTest` | sí, 2026-10-24 |
+| C3 | `` `C3 sin tipo es TYPE REQUIRED` `` | `test/` · `MealValidationTest` | sí, 2026-10-24 |
+| C4 | `` `C4 kcal da el resultado de cada fila de la tabla` `` | `test/` · `MealValidationTest` | sí, 2026-10-24 |
+| C5 | `` `C5 los macros dan el resultado de cada fila de la tabla` `` | `test/` · `MealValidationTest` | sí, 2026-10-24 |
+| C6 | `` `C6 los macros aceptan coma y punto decimal` `` | `test/` · `MealValidationTest` | sí, 2026-10-24 |
+| C7 | `` `C7 el cero es valido en kcal y macros` `` | `test/` · `MealValidationTest` | sí, 2026-10-24 |
+| C8 | `` `C8 trae el error de cada campo invalido` `` | `test/` · `MealValidationTest` | sí, 2026-10-24 |
+| C9 | `` `C9 un formulario valido da la Meal con el id pedido` `` | `test/` · `MealValidationTest` | sí, 2026-10-24 |
+| C10 | `C10_update_cambia_los_valores_y_conserva_el_id` | `androidTest/` · `MealDaoTest` | pendiente: compila, falta correrlo con el emulador |
+| C11 | `C11_deleteById_saca_la_comida_y_devuelve_las_filas_borradas` | `androidTest/` · `MealDaoTest` | pendiente: compila, falta correrlo con el emulador |
+| C12 | `C12_observeById_emite_la_comida_y_null_al_borrarla` | `androidTest/` · `MealDaoTest` | pendiente: compila, falta correrlo con el emulador |
+| C13 | `` `C13 observeMeal devuelve Meal y null cuando no existe` `` | `test/` · `MealRepositoryImplTest` | sí, 2026-10-24 |
+| C14 | `` `C14 updateMeal y deleteMeal llegan al DAO con el mismo id` `` | `test/` · `MealRepositoryImplTest` | sí, 2026-10-24 |
+| C15 | `C15_un_id_repetido_es_MealDataException_STORAGE` | `androidTest/` · `MealRepositoryRoomTest` | pendiente: compila, falta correrlo con el emulador |
+| C16 | `` `C16 una Entity invalida es MealDataException INVALID_DATA` `` | `test/` · `MealRepositoryImplTest` | sí, 2026-10-24 |
+| C17 | `` `C17 update de una comida borrada es NOT_FOUND` `` | `test/` · `MealRepositoryImplTest` | sí, 2026-10-24 |
+| C18 | `` `C18 arranca pidiendo la fecha de hoy del Clock` `` | `test/` · `NutritionViewModelTest` | sí, 2026-10-24 |
+| C19 | `` `C19 elegir una fecha la pide y la guarda en SavedStateHandle` `` | `test/` · `NutritionViewModelTest` | sí, 2026-10-24 |
+| C20 | `` `C20 al recrearse usa la fecha guardada` `` | `test/` · `NutritionViewModelTest` | sí, 2026-10-24 |
+| C21 | `` `C21 lista las comidas del dia en orden` `` | `test/` · `NutritionViewModelTest` | sí, 2026-10-24 |
+| C22 | `` `C22 el total redondea la suma y cambia con cada emision` `` | `test/` · `NutritionViewModelTest` | sí, 2026-10-24 |
+| C23 | `` `C23 la pendiente es el primer tipo sin comidas` `` | `test/` · `NutritionViewModelTest` | sí, 2026-10-24 |
+| C24 | `` `C24 un dia sin comidas da total 0 y pendiente BREAKFAST` `` | `test/` · `NutritionViewModelTest` | sí, 2026-10-24 |
+| C25 | `` `C25 un error de datos pasa a Error y onRetry vuelve a pedir` `` | `test/` · `NutritionViewModelTest` | sí, 2026-10-24 |
+| C26 | `` `C26 recolectar en menos de 5 s no vuelve a suscribirse` `` | `test/` · `NutritionViewModelTest` | sí, 2026-10-24 |
+| C27 | `` `C27 los millis del DatePicker son la fecha en UTC` `` | `test/` · `DatePickerDatesTest` | sí, 2026-10-24 |
+| C28 | `` `C28 con borrador el formulario viene precargado` `` | `test/` · `FoodConfirmationViewModelTest` | sí, 2026-10-24 |
+| C29 | `` `C29 la carga manual viene vacia aunque antes hubo foto` `` | `test/` · `FoodConfirmationViewModelTest` | sí, 2026-10-24 |
+| C30 | `` `C30 con id el formulario trae la comida guardada` `` | `test/` · `FoodConfirmationViewModelTest` | sí, 2026-10-24 |
+| C31 | `` `C31 reabrir con el mismo id conserva lo escrito y no recarga` `` | `test/` · `FoodConfirmationViewModelTest` | sí, 2026-10-24 |
+| C32 | `` `C32 onDiscard cierra el formulario` `` | `test/` · `FoodConfirmationViewModelTest` | sí, 2026-10-24 |
+| C33 | `` `C33 un id que no existe es notFound` `` | `test/` · `FoodConfirmationViewModelTest` | sí, 2026-10-24 |
+| C34 | `` `C34 guardar invalido muestra errores y no escribe` `` | `test/` · `FoodConfirmationViewModelTest` | sí, 2026-10-24 |
+| C35 | `` `C35 corregir un campo borra solo su error` `` | `test/` · `FoodConfirmationViewModelTest` | sí, 2026-10-24 |
+| C36 | `` `C36 guardar nueva llama a addMeal emite Saved y limpia` `` | `test/` · `FoodConfirmationViewModelTest` | sí, 2026-10-24 |
+| C37 | `` `C37 guardar edicion llama a updateMeal con el mismo id` `` | `test/` · `FoodConfirmationViewModelTest` | sí, 2026-10-24 |
+| C38 | `` `C38 dos toques en guardar escriben una sola vez` `` | `test/` · `FoodConfirmationViewModelTest` | sí, 2026-10-24 |
+| C39 | `` `C39 si guardar falla conserva lo escrito y no emite Saved` `` | `test/` · `FoodConfirmationViewModelTest` | sí, 2026-10-24 |
+| C40 | `` `C40 al terminar el analisis de voz el borrador es el de la foto` `` | `test/` · `FoodCaptureViewModelTest` | sí, 2026-10-24 |
+| C41 | `` `C41 carga la comida de la ruta` `` | `test/` · `MealDetailViewModelTest` | sí, 2026-10-24 |
+| C42 | `` `C42 no existe es NotFound y un error de datos es Error` `` | `test/` · `MealDetailViewModelTest` | sí, 2026-10-24 |
+| C43 | `` `C43 Delete pide confirmacion y cancelar no borra` `` | `test/` · `MealDetailViewModelTest` | sí, 2026-10-24 |
+| C44 | `` `C44 un error de datos en Home muestra 0 sin romper` `` | `test/` · `HomeViewModelTest` | sí, 2026-10-24 (se cae con `MealDataException` sin atrapar) |
+| C45 | `` `C45 confirmar borra una vez y emite Deleted` `` | `test/` · `MealDetailViewModelTest` | sí, 2026-10-24 |
+| C46 | `` `C46 mientras esta ocupado no repite borrar ni duplicar` `` | `test/` · `MealDetailViewModelTest` | sí, 2026-10-24 |
+| C47 | `` `C47 el null despues de borrar no muestra NotFound` `` | `test/` · `MealDetailViewModelTest` | sí, 2026-10-24 |
+| C48 | `` `C48 si borrar o duplicar falla muestra el error y no emite` `` | `test/` · `MealDetailViewModelTest` | sí, 2026-10-24 |
+| C49 | `` `C49 Duplicate guarda una copia con id 0` `` | `test/` · `MealDetailViewModelTest` | sí, 2026-10-24 |
+| C50 | `` `C50 recolectar en menos de 5 s no vuelve a pedir la comida` `` | `test/` · `MealDetailViewModelTest` | sí, 2026-10-24 |
 | C51 | recorrido a mano | emulador | no aplica |
 | C52 | recorrido a mano | emulador | no aplica |
 
@@ -315,3 +315,4 @@ Casos de la plantilla que no aplican: sin conexión, 404, 503 y JSON inválido (
   - el borrador de voz pasa a ser el de la foto;
   - `NutritionViewModel` se ata al grafo de Nutrition.
 - 2026-10-24. Corregida según la auditoría: de 42 a 52 criterios.
+- 2026-10-24. Tests en rojo (paso 2 de VC-l): fallan los 46 de `test/`, cada uno por el resultado; los 4 de `androidTest/` compilan y quedan para correr con el emulador.

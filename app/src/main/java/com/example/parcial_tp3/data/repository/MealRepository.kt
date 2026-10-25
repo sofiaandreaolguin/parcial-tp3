@@ -15,4 +15,12 @@ interface MealRepository {
 
     /** Guarda la comida y devuelve su id nuevo. */
     suspend fun addMeal(meal: Meal): Long
+
+    /** La comida con ese id, o null si no existe (por ejemplo, porque se elimino). */
+    fun observeMeal(id: Long): Flow<Meal?>
+
+    /** Tira [MealDataException] con NOT_FOUND si la comida ya no existe. */
+    suspend fun updateMeal(meal: Meal)
+
+    suspend fun deleteMeal(id: Long)
 }

@@ -2,16 +2,32 @@ package com.example.parcial_tp3.ui.screens.nutrition
 
 import androidx.annotation.StringRes
 import com.example.parcial_tp3.R
+import com.example.parcial_tp3.domain.FieldError
+import com.example.parcial_tp3.domain.MealField
+import com.example.parcial_tp3.domain.MealForm
 import com.example.parcial_tp3.domain.model.MealType
 
 /**
- *  04 a 07: lo que se escuchó y el borrador de la comida. Todo es de
- * demostración; en la tarea l el borrador se guarda en Room.
+ * 04 a 07: lo que se escuchó, el borrador de la comida y el formulario de 07. El borrador es de
+ * demostración y no se guarda: al confirmar, en Room queda la comida con sus totales.
  */
 data class FoodCaptureUiState(
     @StringRes val transcript: Int = R.string.nutrition_voice_transcript_demo,
-    val draft: MealDraft = MealDraft(),
+    /** null = no hubo captura (carga manual). */
+    val draft: MealDraft? = null,
     val analysisStep: AnalysisStep = AnalysisStep.Identifying,
+    /** null = 07 cerrada. */
+    val confirmation: ConfirmationState? = null,
+)
+
+data class ConfirmationState(
+    /** -1 = nueva. */
+    val mealId: Long,
+    val form: MealForm,
+    val errors: Map<MealField, FieldError> = emptyMap(),
+    val isSaving: Boolean = false,
+    val notFound: Boolean = false,
+    @StringRes val saveError: Int? = null,
 )
 
 /** El paso de Nutrition / 05 que se está haciendo; los anteriores están hechos y los siguientes pendientes. */
@@ -19,6 +35,7 @@ enum class AnalysisStep { Identifying, Estimating, Calculating }
 
 sealed interface FoodCaptureEvent {
     data object AnalysisDone : FoodCaptureEvent
+    data object Saved : FoodCaptureEvent
 }
 
 /** Misma forma que `Meal`. */

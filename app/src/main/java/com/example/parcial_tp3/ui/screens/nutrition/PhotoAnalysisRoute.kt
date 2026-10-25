@@ -20,7 +20,7 @@ fun PhotoAnalysisRoute(
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     PhotoAnalysisScreen(
-        draft = state.draft,
+        draft = state.draft ?: PhotoMealDraft,
         onBack = onBack,
         onReview = onReview,
         onRetake = rememberDemoToast(),

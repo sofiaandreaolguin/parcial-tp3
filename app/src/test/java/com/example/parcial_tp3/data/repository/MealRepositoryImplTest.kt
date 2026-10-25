@@ -8,8 +8,10 @@ import java.time.LocalDate
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.firstOrNull
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNull
 import org.junit.Test
 
 /**
@@ -89,6 +91,69 @@ class MealRepositoryImplTest {
             dao.recibidas,
         )
     }
+
+    private val comidaGuardada = Meal(
+        id = 4,
+        name = "Avena con fruta",
+        date = hoy,
+        type = MealType.BREAKFAST,
+        kcal = 320,
+        proteinG = 12.5,
+        carbsG = 54.0,
+        fatG = 6.25,
+    )
+
+    /** El error que tira [bloque], o null si no tira nada. */
+    private suspend fun errorDe(bloque: suspend () -> Unit): Throwable? =
+        try {
+            bloque()
+            null
+        } catch (e: Throwable) {
+            e
+        }
+
+    private fun assertMealError(esperado: MealError, error: Throwable?) {
+        assertEquals("tiro: $error", esperado, (error as? MealDataException)?.error)
+    }
+
+    @Test
+    fun `C13 observeMeal devuelve Meal y null cuando no existe`() = runTest {
+        dao.porId.value = entityGuardada
+
+        assertEquals(comidaGuardada, repository.observeMeal(4).firstOrNull())
+        assertEquals(4L, dao.idPedido)
+
+        dao.porId.value = null
+        assertNull(repository.observeMeal(4).first())
+    }
+
+    @Test
+    fun `C14 updateMeal y deleteMeal llegan al DAO con el mismo id`() = runTest {
+        repository.updateMeal(comidaGuardada.copy(kcal = 400))
+        repository.deleteMeal(4)
+
+        assertEquals(listOf(entityGuardada.copy(kcal = 400)), dao.actualizadas)
+        assertEquals(listOf(4L), dao.idsBorrados)
+    }
+
+    @Test
+    fun `C16 una Entity invalida es MealDataException INVALID_DATA`() = runTest {
+        dao.emitidas.value = listOf(entityGuardada.copy(type = "BRUNCH"))
+        assertMealError(MealError.INVALID_DATA, errorDe { repository.observeMealsByDate(hoy).first() })
+
+        dao.emitidas.value = listOf(entityGuardada.copy(date = "21/10/2026"))
+        assertMealError(MealError.INVALID_DATA, errorDe { repository.observeMealsByDate(hoy).first() })
+
+        dao.porId.value = entityGuardada.copy(type = "BRUNCH")
+        assertMealError(MealError.INVALID_DATA, errorDe { repository.observeMeal(4).first() })
+    }
+
+    @Test
+    fun `C17 update de una comida borrada es NOT_FOUND`() = runTest {
+        dao.filasActualizadas = 0
+
+        assertMealError(MealError.NOT_FOUND, errorDe { repository.updateMeal(comidaGuardada) })
+    }
 }
 
 /** DAO falso: anota lo que le piden y devuelve lo que el test le deja preparado. */
@@ -107,5 +172,27 @@ private class FakeMealDao : MealDao {
     override fun observeByDate(date: String): Flow<List<MealEntity>> {
         fechaPedida = date
         return emitidas
+    }
+
+    val porId = MutableStateFlow<MealEntity?>(null)
+    var idPedido: Long? = null
+    val actualizadas = mutableListOf<MealEntity>()
+    val idsBorrados = mutableListOf<Long>()
+    var filasActualizadas = 1
+    var filasBorradas = 1
+
+    override fun observeById(id: Long): Flow<MealEntity?> {
+        idPedido = id
+        return porId
+    }
+
+    override suspend fun update(meal: MealEntity): Int {
+        actualizadas += meal
+        return filasActualizadas
+    }
+
+    override suspend fun deleteById(id: Long): Int {
+        idsBorrados += id
+        return filasBorradas
     }
 }
