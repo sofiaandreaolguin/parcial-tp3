@@ -635,3 +635,24 @@ Formato:
   - 02 dice "Today's Meals" aunque se elija otra fecha.
 - Evidencia: `docs/evidencia/tests/2026-10-24-vc-l-verde.md` (169 unitarios y 12 instrumentados en verde, controles negativos de la validación, de C44 y de C10 a C12) y `docs/evidencia/estados/nutrition-0{1,2}-*.png`. Tests en rojo en el commit `910f83e`.
 - Commit / PR:
+
+### 2026-10-25 · Hector · feat(workout): leer el detalle real y guardar catálogo y detalle en Room
+- Carril y requisitos: C, paso 3 (implementar) · RF01 (parte 2), RF02, RF05 (parcial), RF06, RF07, RF08 (parcial). Spec: `specs/funcionales/detalle-y-cache-de-entrenamientos.md` (C1 a C31). Rama `feat/workout-detalle-cache-room`.
+- Plan aprobado: mappers DTO ↔ modelo ↔ Entity en `WorkoutMappers.kt`; cuerpos de `saveSummaries` (upsert parcial que conserva `description`) y `saveDetail` (reemplaza los ejercicios) en `WorkoutDao`; los dos repositorios con red primero y Room de respaldo; el 404 no cae a la caché; `WorkoutNotCachedException` solo con una `IOException` que no es `MalformedJsonException` ni `EOFException` (se atrapan antes). `NotAvailableOffline` en el ViewModel y en 03, 04 y 06, dibujado como el `Error` de cada pantalla. El `@Binds` pasa a `WorkoutDetailRepositoryImpl` y se borra la demo con su test. `VoraDatabase` no se tocó (ya estaba en versión 3 desde el rojo).
+- Qué propuso la IA y qué cambiamos:
+  - Hector pidió sumar las capturas de C29 y C31 en esta etapa, con el emulador y el mock prendidos. Para "apagar el servidor" la IA cortó `adb reverse` en lugar de matar el proceso del mock. A 06 sin conexión no se llega por el flujo normal: la IA restauró la pila después de matar el proceso y sacó w03 de la caché editando `vora.db` (documentado en la evidencia).
+  - En el emulador la IA vio que C31 pedía algo que 01 no hace: 01 destaca solo el primero del catálogo (`TodayPanel` con `firstOrNull()`). Hector eligió corregir el texto del criterio (01 muestra el primero desde Room y 02 los tres) en vez de cambiar la pantalla.
+  - Al probarlo, Hector preguntó por los "25 min" de 07: es la duración planificada del servidor, como decidió la spec de la sesión. La IA propuso una tarea aparte para el tiempo real; Hector la descartó.
+  - Ningún test se modificó. Se actualizaron las specs vecinas: D1 a D3 retirados y C8 y C25 reemplazados por C30.
+- Revisores: revisor-requisitos sin nada que bloquee (los 31 criterios cumplen; volvió a correr los 189 tests). revisor-arquitectura sin BLOQUEA ni ALTA: las dos MEDIA ya estaban previstas por la spec (errores propios para la tarea r, avisarle a Sofi). `/code-review`: 6 hallazgos, ninguno bloquea. Por los revisores se ordenó el Historial de `detalle-de-entrenamiento-demo.md`. Quedan como sugerencia:
+  - una `IOException` que no sea de conexión (por ejemplo `ProtocolException`) también cuenta como "sin conexión";
+  - `desdeRoom` lee la fila y los ejercicios en dos consultas sin transacción;
+  - se guarda con el id que manda el servidor y se lee con el de la ruta;
+  - el `try`/`catch` con `CancellationException` se repite cuatro veces (un helper le serviría a la tarea r);
+  - `HTTP_NOT_FOUND` propio en vez de `HttpURLConnection.HTTP_NOT_FOUND`;
+  - comentarios que repiten o quedaron viejos (`// se sigue con lo de la red`, "hace fallar toda la consulta" en `WorkoutMappers.kt` y `WorkoutRepositoryImpl.kt`);
+  - `ErrorMessage(text: Int)` se leería mejor como `textRes`;
+  - 05 con `WorkoutNotCachedException` va al `Error` común (sin cambios, como dice la spec);
+  - el timeout como "sin conexión" no tiene test propio.
+- Evidencia: `docs/evidencia/tests/2026-10-25-detalle-y-cache-verde.md` (189 unitarios, `WorkoutDaoTest` 6/6 en el emulador, `assembleDebug`, `reglas.sh` y once controles negativos) y `docs/evidencia/estados/workout-*.png` (C29 y C31). Tests en rojo en el commit `a77dc2b`.
+- Commit / PR:
