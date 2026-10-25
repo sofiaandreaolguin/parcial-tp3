@@ -317,3 +317,9 @@ Casos de la plantilla que no aplican: sin conexión, 404, 503 y JSON inválido (
 - 2026-10-24. Corregida según la auditoría: de 42 a 52 criterios.
 - 2026-10-24. Tests en rojo (paso 2 de VC-l): fallan los 46 de `test/`, cada uno por el resultado; los 4 de `androidTest/` compilan y quedan para correr con el emulador.
 - 2026-10-24. Implementación (paso 3 de VC-l): 169 tests unitarios y 12 instrumentados en verde, sin modificar tests. C10 a C12 no pudieron verse en rojo (Room genera el DAO) y llevan control negativo.
+- 2026-10-25. Pantalla 07 maquetada (PR 7 de VC-m), conectada a esta lógica sin cambiarla. Decisiones con Sofi:
+  - con borrador se ven los ingredientes y los totales del formulario; sin borrador (carga manual) o al editar, los campos de `MealForm`;
+  - el tipo de la carga manual se elige con chips; "tipo = comida pendiente del día" queda para un PR aparte, con su criterio y su test;
+  - el botón dice "Add to [tipo]", o "Save Meal" sin tipo o al editar;
+  - −/+, "Remove" y "+ Add Ingredient" muestran el aviso de demostración: los ingredientes no se guardan;
+  - `onOpenConfirmation` la llama el grafo antes de navegar, no la Route (CONTEXTO §2). Para editar desde 08 hay que llamarla con el id antes de navegar.

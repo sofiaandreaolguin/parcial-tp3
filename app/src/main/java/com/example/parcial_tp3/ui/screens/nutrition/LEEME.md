@@ -25,7 +25,7 @@ Por cada pantalla, cuatro archivos (`specs/CONTEXTO.md`, secciones 3 y 5):
 | Nutrition / 04 — Voice Food Logging | `voice_food_logging` | Encima | Demostración |
 | Nutrition / 05 — Food Analysis | `food_analysis` | Encima | Demostración: tres pasos con `delay` (~2 s) y pasa sola a `07`; "Cancel analysis", la X y atrás cortan el análisis |
 | Nutrition / 06 — Photo Analysis | `photo_analysis` | Con barra | Demostración: foto de ejemplo y estimación fija (`PhotoMealDraft`), sin cámara; "Review & Add" abre `07` y "Retake Photo" muestra el aviso |
-| Nutrition / 07 — Food Confirmation | `food_confirmation?mealId={mealId}` | Con barra | **Funcional** |
+| Nutrition / 07 — Food Confirmation | `food_confirmation?mealId={mealId}` | Con barra | **Funcional**: con borrador (05 o 06) se ve como el Figma y guarda en Room; sin borrador muestra los campos de RF03 con su validación. El grafo abre la confirmación antes de navegar. −/+, "Remove", "+ Add Ingredient" y "Save without logging" muestran el aviso (los ingredientes no se guardan). La edición por id llega desde 08 (PR 8) |
 | Nutrition / 08 — Meal Details | `meal_details/{mealId}` | Con barra | **Funcional** |
 
 ## Antes de empezar
