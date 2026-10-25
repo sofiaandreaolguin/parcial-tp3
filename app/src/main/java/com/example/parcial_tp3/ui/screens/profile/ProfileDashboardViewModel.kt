@@ -24,6 +24,8 @@ class ProfileDashboardViewModel @Inject constructor(
             initialValue = repository.profile.value.toUiState(),
         )
 
+    fun onRetry() {}
+
     private fun Profile.toUiState() = ProfileDashboardUiState(
         fullName = "$firstName $lastName",
         // ordenados como en Goals & Preferences, no como se fueron eligiendo

@@ -2,6 +2,8 @@ package com.example.parcial_tp3.ui.screens.access
 
 import androidx.lifecycle.ViewModel
 import com.example.parcial_tp3.R
+import com.example.parcial_tp3.data.repository.AuthRepository
+import com.example.parcial_tp3.data.repository.ProfileRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -18,6 +20,8 @@ import kotlinx.coroutines.flow.update
  */
 @HiltViewModel
 class AuthViewModel @Inject constructor() : ViewModel() {
+
+    constructor(auth: AuthRepository, profiles: ProfileRepository) : this()
 
     private val _uiState = MutableStateFlow(AuthUiState())
     val uiState: StateFlow<AuthUiState> = _uiState.asStateFlow()

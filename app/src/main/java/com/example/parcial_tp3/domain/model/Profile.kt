@@ -26,7 +26,35 @@ data class Profile(
     val allowInterruptions: Boolean,
     val voiceFeedback: Boolean,
     val hapticFeedback: Boolean,
-)
+) {
+    companion object {
+        /** Perfil de una cuenta nueva (tabla de specs/funcionales/firebase-auth-perfil.md). */
+        fun default(firstName: String, lastName: String, email: String): Profile = Profile(
+            firstName = "",
+            lastName = "",
+            email = "",
+            birthDate = LocalDate.of(1970, 1, 1),
+            heightCm = 0,
+            weightKg = 0,
+            gender = Gender.FEMALE,
+            experience = Experience.ADVANCED,
+            goals = emptySet(),
+            trainingDays = TrainingDays.SIX_PLUS,
+            workoutType = WorkoutType.STRENGTH,
+            coachingStyle = CoachingStyle.SUPPORTIVE,
+            diet = Diet.OTHER,
+            foodsEnjoyed = emptySet(),
+            foodsToAvoid = emptyList(),
+            priorities = emptySet(),
+            responseStyle = ResponseStyle.CONCISE,
+            speakAloud = false,
+            autoPlay = false,
+            allowInterruptions = false,
+            voiceFeedback = false,
+            hapticFeedback = false,
+        )
+    }
+}
 
 enum class Gender { FEMALE, MALE, NON_BINARY, PREFER_NOT_TO_SAY }
 

@@ -20,6 +20,10 @@ data class AuthUiState(
     @StringRes val passwordError: Int? = null,
     /** El formulario paso la validacion: la Route navega a Home y avisa con onNavigated(). */
     val signedIn: Boolean = false,
+    /** Pedido a Firebase en curso: el boton muestra la carga y no acepta otro toque (C11). */
+    val isLoading: Boolean = false,
+    /** Error del pedido (credenciales, email repetido, sin conexion...), id de strings.xml (C5 a C12, C34). */
+    @StringRes val formError: Int? = null,
 ) {
     /** "8+ secure characters" de SignUp: se prende cuando la contrasena ya alcanza. */
     val passwordLongEnough: Boolean get() = password.length >= AuthRules.MIN_PASSWORD
