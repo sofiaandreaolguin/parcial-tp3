@@ -15,6 +15,7 @@ Tarea: cuenta, perfil en Firestore y reglas (extra aa). Rama `feat/firebase-extr
 - Con las reglas publicadas, el inicio de sesión de esa cuenta entró a Home y creó `users/{uid}` con el perfil por defecto (C23, C18). Una segunda cuenta se registró y tiene su documento.
 - Reglas (C26 a C29): ver `docs/evidencia/firebase/README.md`.
 
+- Pruebas a mano de Martu en el emulador (25/10, resultado informado por ella, sin captura): editar el perfil y que se guarde en Firestore (C19, C20), cerrar sesión y volver a entrar (C15, C17) y rotar la pantalla en SignIn, SignUp y Edit Profile (C25). Todas salieron bien.
+
 ## Sin verificar
-- Editar el perfil y que se guarde en Firestore (C19, C20), cerrar sesión y volver a entrar (C15, C17), y la rotación real en SignIn, SignUp y Edit Profile (C25).
-- La CI sin `google-services.json` real.
+- La CI sin `google-services.json` real (corre al abrir el pull request).
