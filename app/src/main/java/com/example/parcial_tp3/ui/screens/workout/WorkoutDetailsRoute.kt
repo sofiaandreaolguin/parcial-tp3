@@ -20,5 +20,6 @@ fun WorkoutDetailsRoute(
         onExercise = onExercise,
         onStartWorkout = onStartWorkout,
         onEdit = rememberDemoToast(),
+        onRetry = viewModel::onRetry,
     )
 }

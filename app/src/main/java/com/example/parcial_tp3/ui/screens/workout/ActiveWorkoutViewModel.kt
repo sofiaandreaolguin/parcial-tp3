@@ -3,6 +3,7 @@ package com.example.parcial_tp3.ui.screens.workout
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.parcial_tp3.R
 import com.example.parcial_tp3.data.repository.WorkoutDetailRepository
 import com.example.parcial_tp3.ui.navigation.Rutas
 import com.example.parcial_tp3.ui.screens.workout.ActiveWorkoutUiState.Content
@@ -31,21 +32,33 @@ class ActiveWorkoutViewModel @Inject constructor(
     // Un solo descanso a la vez: arrancar otro, Skip y Finish cancelan el anterior
     private var descanso: Job? = null
 
+    private val workoutId = savedStateHandle.get<String>(Rutas.ARG_WORKOUT_ID)
+
     // Como en el detalle, la carga arranca una sola vez en init: rotar no repite la consulta.
     init {
-        val workoutId = savedStateHandle.get<String>(Rutas.ARG_WORKOUT_ID)
         if (workoutId.isNullOrBlank()) {
-            _uiState.value = ActiveWorkoutUiState.Error
+            _uiState.value = ActiveWorkoutUiState.Error(R.string.details_error)
         } else {
-            viewModelScope.launch {
-                _uiState.value = repository.getWorkoutDetail(workoutId).fold(
-                    onSuccess = { detail ->
-                        // Sin ejercicios, 05 no tendria nada para mostrar (C5)
-                        if (detail.exercises.isEmpty()) ActiveWorkoutUiState.Error else Content(detail)
-                    },
-                    onFailure = { ActiveWorkoutUiState.Error },
-                )
-            }
+            cargar(workoutId)
+        }
+    }
+
+    // Solo en Error, con Loading antes del launch: un reintento nunca reinicia una sesion empezada (C29).
+    fun onRetry() {
+        if (_uiState.value !is ActiveWorkoutUiState.Error || workoutId.isNullOrBlank()) return
+        _uiState.value = ActiveWorkoutUiState.Loading
+        cargar(workoutId)
+    }
+
+    private fun cargar(workoutId: String) {
+        viewModelScope.launch {
+            _uiState.value = repository.getWorkoutDetail(workoutId).fold(
+                onSuccess = { detail ->
+                    // Sin ejercicios, 05 no tendria nada para mostrar (C5)
+                    if (detail.exercises.isEmpty()) ActiveWorkoutUiState.Error(R.string.details_error) else Content(detail)
+                },
+                onFailure = { ActiveWorkoutUiState.Error(detailErrorMessage(it)) },
+            )
         }
     }
 

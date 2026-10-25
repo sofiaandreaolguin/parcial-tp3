@@ -1,5 +1,6 @@
 package com.example.parcial_tp3.ui.screens.workout
 
+import androidx.annotation.StringRes
 import com.example.parcial_tp3.domain.model.Exercise
 import com.example.parcial_tp3.domain.model.WorkoutDetail
 
@@ -27,7 +28,7 @@ sealed interface ActiveWorkoutUiState {
         val exercisesCompleted: Int get() = if (allSetsDone) detail.exercises.size else exerciseIndex
         val volumeKg: Double get() = completedSets.sumOf { it.reps * it.weightKg }
     }
-    data object Error : ActiveWorkoutUiState
+    data class Error(@StringRes val message: Int) : ActiveWorkoutUiState
 }
 
 data class CompletedSet(val exerciseId: String, val reps: Int, val weightKg: Double)

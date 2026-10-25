@@ -84,7 +84,7 @@ fun WorkoutCompleteScreen(
                 color = MaterialTheme.colorScheme.secondary,
                 strokeWidth = VoraTheme.sizes.borderSelected,
             )
-            ActiveWorkoutUiState.Error -> Text(
+            is ActiveWorkoutUiState.Error -> Text(
                 text = stringResource(R.string.details_error),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,

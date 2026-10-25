@@ -1,0 +1,29 @@
+# Log del mock (copia en el puerto 8001) de la prueba del 25/10. Las lineas de 19:29:43 y 19:40:57 son consultas a mano con curl, no de la app.
+# 19:35:12 abre 01 con error; 19:35:36 Retry en 01; 19:35:45 abre 02 (C33a, C33d). Rotar 02 en Error no sumo GET (C35).
+# 19:38:00 01 y 19:38:10 02 con malformed. 19:39:40 Retry en 01 con el servidor recien prendido (C33c). 19:40:07 abre 02; 19:40:28 abre 03 de w01; 19:41:11 abre 03 de w02.
+127.0.0.1 - - [25/Oct/2026 19:29:43] "GET /v1/workouts HTTP/1.1" 200 -
+127.0.0.1 - - [25/Oct/2026 19:35:12] "GET /v1/workouts HTTP/1.1" 503 -
+127.0.0.1 - - [25/Oct/2026 19:35:36] "GET /v1/workouts HTTP/1.1" 503 -
+127.0.0.1 - - [25/Oct/2026 19:35:45] "GET /v1/workouts HTTP/1.1" 503 -
+127.0.0.1 - - [25/Oct/2026 19:38:00] "GET /v1/workouts HTTP/1.1" 200 -
+127.0.0.1 - - [25/Oct/2026 19:38:10] "GET /v1/workouts HTTP/1.1" 200 -
+127.0.0.1 - - [25/Oct/2026 19:39:40] "GET /v1/workouts HTTP/1.1" 200 -
+127.0.0.1 - - [25/Oct/2026 19:40:07] "GET /v1/workouts HTTP/1.1" 200 -
+127.0.0.1 - - [25/Oct/2026 19:40:28] "GET /v1/workouts/w01 HTTP/1.1" 200 -
+127.0.0.1 - - [25/Oct/2026 19:40:57] "GET /v1/workouts HTTP/1.1" 200 -
+127.0.0.1 - - [25/Oct/2026 19:41:11] "GET /v1/workouts/w02 HTTP/1.1" 200 -
+
+# Segunda corrida (despues de reiniciar el emulador). 19:56 empty y error con cache: 01, 02 y 03 de w01 desde Room (C32, C34); 19:57:19 03 de w03 con error y 19:57:29 su Retry (C33b, C33d).
+# 19:58:39 03 de w03 con malformed (C33b). Con 3 s de demora: 01 rotando en la carga, un solo GET (C35); 03 de w03 sin servidor (no hay GET) y el Retry con el servidor prendido (C33c).
+127.0.0.1 - - [25/Oct/2026 19:55:01] "GET /v1/workouts HTTP/1.1" 200 -
+127.0.0.1 - - [25/Oct/2026 19:55:11] "GET /v1/workouts HTTP/1.1" 200 -
+127.0.0.1 - - [25/Oct/2026 19:56:35] "GET /v1/workouts HTTP/1.1" 503 -
+127.0.0.1 - - [25/Oct/2026 19:56:45] "GET /v1/workouts HTTP/1.1" 503 -
+127.0.0.1 - - [25/Oct/2026 19:57:05] "GET /v1/workouts/w01 HTTP/1.1" 503 -
+127.0.0.1 - - [25/Oct/2026 19:57:19] "GET /v1/workouts/w03 HTTP/1.1" 503 -
+127.0.0.1 - - [25/Oct/2026 19:57:29] "GET /v1/workouts/w03 HTTP/1.1" 503 -
+127.0.0.1 - - [25/Oct/2026 19:58:26] "GET /v1/workouts HTTP/1.1" 200 -
+127.0.0.1 - - [25/Oct/2026 19:58:32] "GET /v1/workouts HTTP/1.1" 200 -
+127.0.0.1 - - [25/Oct/2026 19:58:39] "GET /v1/workouts/w03 HTTP/1.1" 200 -
+127.0.0.1 - - [25/Oct/2026 19:59:54] "GET /v1/workouts HTTP/1.1" 200 -
+127.0.0.1 - - [25/Oct/2026 20:00:42] "GET /v1/workouts/w03 HTTP/1.1" 200 -

@@ -1,6 +1,5 @@
 package com.example.parcial_tp3.ui.screens.workout
 
-import androidx.annotation.StringRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -68,6 +67,7 @@ fun ExerciseDetailsScreen(
     onBack: () -> Unit,
     onHelp: () -> Unit,
     onAskVora: () -> Unit,
+    onRetry: () -> Unit,
 ) {
     Column(
         modifier = Modifier
@@ -100,19 +100,18 @@ fun ExerciseDetailsScreen(
         ) {
             when (state) {
                 WorkoutDetailUiState.Loading -> LoadingCard(stringResource(R.string.details_loading))
-                WorkoutDetailUiState.Error -> ErrorMessage()
-                WorkoutDetailUiState.NotAvailableOffline -> ErrorMessage(R.string.workout_not_available_offline)
+                is WorkoutDetailUiState.Error -> WorkoutStatusMessage(text = stringResource(state.message), onRetry = onRetry)
+                WorkoutDetailUiState.NotAvailableOffline -> WorkoutStatusMessage(
+                    text = stringResource(R.string.workout_not_available_offline),
+                    onRetry = onRetry,
+                )
+                // Sin exerciseId en la ruta: es Content, asi que reintentar no haria nada y va sin Retry
                 is WorkoutDetailUiState.Content -> state.selectedExercise
                     ?.let { ExerciseContent(exercise = it, onAskVora = onAskVora, onBack = onBack) }
-                    ?: ErrorMessage()
+                    ?: VoraInfoMessage(text = stringResource(R.string.details_error), icon = painterResource(R.drawable.ic_info))
             }
         }
     }
-}
-
-@Composable
-private fun ErrorMessage(@StringRes text: Int = R.string.details_error) {
-    VoraInfoMessage(text = stringResource(text), icon = painterResource(R.drawable.ic_info))
 }
 
 @Composable
@@ -227,6 +226,7 @@ private fun ExerciseDetailsScreenPreview() {
     )
     Parcialtp3Theme {
         ExerciseDetailsScreen(
+            onRetry = {},
             state = WorkoutDetailUiState.Content(
                 detail = WorkoutDetail(
                     id = "w01",
@@ -242,6 +242,35 @@ private fun ExerciseDetailsScreenPreview() {
             onBack = {},
             onHelp = {},
             onAskVora = {},
+        )
+    }
+}
+
+// C33e de estados-de-carga-y-error.md: desde la app 06 no llega a Error (03 ya deja el detalle en Room)
+@Preview(showBackground = true, heightDp = 844)
+@Composable
+private fun ExerciseDetailsScreenErrorPreview() {
+    Parcialtp3Theme {
+        ExerciseDetailsScreen(
+            state = WorkoutDetailUiState.Error(R.string.workout_error_server),
+            onBack = {},
+            onHelp = {},
+            onAskVora = {},
+            onRetry = {},
+        )
+    }
+}
+
+@Preview(showBackground = true, heightDp = 844)
+@Composable
+private fun ExerciseDetailsScreenOfflinePreview() {
+    Parcialtp3Theme {
+        ExerciseDetailsScreen(
+            state = WorkoutDetailUiState.NotAvailableOffline,
+            onBack = {},
+            onHelp = {},
+            onAskVora = {},
+            onRetry = {},
         )
     }
 }

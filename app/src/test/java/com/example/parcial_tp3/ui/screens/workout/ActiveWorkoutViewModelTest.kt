@@ -1,12 +1,17 @@
 package com.example.parcial_tp3.ui.screens.workout
 
 import androidx.lifecycle.SavedStateHandle
+import com.example.parcial_tp3.R
+import com.example.parcial_tp3.data.repository.AppError
+import com.example.parcial_tp3.data.repository.AppException
+import com.example.parcial_tp3.data.repository.WorkoutNotCachedException
 import com.example.parcial_tp3.domain.model.Exercise
 import com.example.parcial_tp3.domain.model.WorkoutDetail
 import com.example.parcial_tp3.domain.model.WorkoutLevel
 import com.example.parcial_tp3.ui.navigation.Rutas
 import com.example.parcial_tp3.ui.screens.workout.ActiveWorkoutUiState.Content
 import com.example.parcial_tp3.util.MainDispatcherRule
+import com.example.parcial_tp3.util.esTextoDeStrings
 import java.io.IOException
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.launch
@@ -492,5 +497,143 @@ class ActiveWorkoutViewModelTest {
 
         assertEquals(54, viewModel.contenido().restRemainingSeconds)
         assertEquals("el repositorio tiene que llamarse una sola vez", listOf("w02"), repository.idsPedidos)
+    }
+
+    // Estados: specs/funcionales/estados-de-carga-y-error.md
+
+    /** La sesion de w02 que ya llego a Error por la falla dada. */
+    private fun TestScope.conFalla(
+        falla: Throwable = AppException(AppError.SERVER),
+        repo: FakeWorkoutDetailRepository = repository,
+    ): ActiveWorkoutViewModel {
+        repo.respuesta.complete(Result.failure(falla))
+        val viewModel = viewModel(Rutas.ARG_WORKOUT_ID to "w02", repo = repo)
+        runCurrent()
+        val estado = viewModel.uiState.value
+        assertTrue("tiene que arrancar en Error, fue $estado", estado is ActiveWorkoutUiState.Error)
+        return viewModel
+    }
+
+    @Test
+    fun `C27 estados sesion cada tipo de error tiene su mensaje`() = runTest {
+        val casos = listOf(
+            AppException(AppError.NO_CONNECTION) to R.string.workout_error_no_connection,
+            AppException(AppError.SERVER) to R.string.workout_error_server,
+            AppException(AppError.INVALID_DATA) to R.string.workout_error_invalid_data,
+            AppException(AppError.NOT_FOUND) to R.string.details_not_found,
+            AppException(AppError.UNKNOWN) to R.string.details_error,
+            IOException("no es AppException") to R.string.details_error,
+            // 05 no tiene un estado propio para "no disponible sin conexion"
+            WorkoutNotCachedException("w02") to R.string.workout_not_available_offline,
+        )
+
+        val obtenidos = casos.map { (excepcion, _) -> conFalla(excepcion, FakeWorkoutDetailRepository()).uiState.value }
+
+        // Un detalle sin ejercicios y una ruta sin workoutId
+        val repoSinEjercicios = FakeWorkoutDetailRepository().apply {
+            respuesta.complete(Result.success(detalle.copy(exerciseCount = 0, exercises = emptyList())))
+        }
+        val sinEjercicios = viewModel(Rutas.ARG_WORKOUT_ID to "w02", repo = repoSinEjercicios)
+        val sinWorkoutId = viewModel(repo = FakeWorkoutDetailRepository())
+        runCurrent()
+
+        // Todos juntos, asi el fallo muestra cada mensaje equivocado
+        assertEquals(
+            (casos.map { it.second } + List(2) { R.string.details_error }).map { ActiveWorkoutUiState.Error(it) },
+            obtenidos + listOf(sinEjercicios.uiState.value, sinWorkoutId.uiState.value),
+        )
+        for (estado in obtenidos) {
+            assertTrue("$estado tiene que tener un texto de strings.xml", esTextoDeStrings((estado as ActiveWorkoutUiState.Error).message))
+        }
+    }
+
+    @Test
+    fun `C28 estados sesion onRetry en Error vuelve a consultar y arranca de cero`() = runTest {
+        val viewModel = conFalla()
+        val reintento = repository.encolarRespuesta()
+
+        viewModel.onRetry()
+
+        assertEquals("justo despues de onRetry", ActiveWorkoutUiState.Loading, viewModel.uiState.value)
+        runCurrent()
+        assertEquals("el mismo workoutId otra vez", listOf("w02", "w02"), repository.idsPedidos)
+
+        reintento.complete(Result.success(detalle))
+        runCurrent()
+
+        assertEquals(inicial, viewModel.uiState.value)
+    }
+
+    @Test
+    fun `C29 estados sesion onRetry en Content no reinicia la sesion`() = runTest {
+        val viewModel = conFalla()
+        val reintento = repository.encolarRespuesta()
+
+        // Doble toque: sin runCurrent() entre los dos
+        viewModel.onRetry()
+        viewModel.onRetry()
+        runCurrent()
+        assertEquals("dos onRetry seguidos consultan una sola vez mas", listOf("w02", "w02"), repository.idsPedidos)
+
+        // En Loading
+        viewModel.onRetry()
+        runCurrent()
+        assertEquals("en Loading no consulta", listOf("w02", "w02"), repository.idsPedidos)
+
+        // En Content, con una serie completada
+        reintento.complete(Result.success(detalle))
+        runCurrent()
+        viewModel.onCompleteSet()
+        viewModel.onSkipRest()
+        val avance = viewModel.contenido()
+        assertEquals(Content(detalle, setIndex = 1, completedSets = listOf(serie(puente))), avance)
+
+        viewModel.onRetry()
+        runCurrent()
+
+        assertEquals("en Content no consulta", listOf("w02", "w02"), repository.idsPedidos)
+        assertEquals("el Content no cambia", avance, viewModel.uiState.value)
+
+        // En el Loading de la primera carga
+        val repoCargando = FakeWorkoutDetailRepository()
+        val cargando = ActiveWorkoutViewModel(SavedStateHandle(mapOf(Rutas.ARG_WORKOUT_ID to "w02")), repoCargando)
+        runCurrent()
+        cargando.onRetry()
+        runCurrent()
+        assertEquals("en el Loading inicial no consulta", listOf("w02"), repoCargando.idsPedidos)
+    }
+
+    @Test
+    fun `C30 estados sesion volver a observar despues del reintento no repite la consulta`() = runTest {
+        // Despues de un reintento que termino en Content
+        val reintentado = conFalla()
+        repository.encolarRespuesta().complete(Result.success(detalle))
+        val primeraObservacion = backgroundScope.launch { reintentado.uiState.collect {} }
+        reintentado.onRetry()
+        runCurrent()
+        assertEquals(inicial, reintentado.uiState.value)
+
+        primeraObservacion.cancel()
+        avanzar(6_000)
+        backgroundScope.launch { reintentado.uiState.collect {} }
+        runCurrent()
+
+        assertEquals("la carga y el reintento, nada mas", listOf("w02", "w02"), repository.idsPedidos)
+        assertEquals(inicial, reintentado.uiState.value)
+
+        // En Error: rotar no reintenta solo
+        val repoConFalla = FakeWorkoutDetailRepository()
+        val enError = conFalla(repo = repoConFalla)
+        val observacionEnError = backgroundScope.launch { enError.uiState.collect {} }
+        runCurrent()
+        val error = enError.uiState.value
+
+        observacionEnError.cancel()
+        avanzar(6_000)
+        backgroundScope.launch { enError.uiState.collect {} }
+        runCurrent()
+
+        assertEquals("en Error el repositorio tiene que llamarse una sola vez", listOf("w02"), repoConFalla.idsPedidos)
+        assertEquals(error, enError.uiState.value)
     }
 }
