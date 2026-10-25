@@ -15,6 +15,8 @@ jobs:
           distribution: temurin
           java-version: '17'
       - uses: gradle/actions/setup-gradle@v4
+      - name: Config de Firebase (plantilla, sin claves reales)
+        run: cp app/google-services.json.example app/google-services.json
       - run: chmod +x gradlew
       - run: ./gradlew assembleDebug testDebugUnitTest lintDebug
       - name: Reglas del grupo
