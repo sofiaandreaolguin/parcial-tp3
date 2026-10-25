@@ -105,7 +105,7 @@ fun ActiveWorkoutScreen(
                     Text(text = stringResource(R.string.details_loading), style = MaterialTheme.typography.bodyMedium)
                 }
             }
-            ActiveWorkoutUiState.Error -> VoraCardOnDark(Modifier.fillMaxWidth()) {
+            is ActiveWorkoutUiState.Error -> VoraCardOnDark(Modifier.fillMaxWidth()) {
                 Text(text = stringResource(R.string.details_error), style = MaterialTheme.typography.bodyMedium)
             }
             is ActiveWorkoutUiState.Content -> ActiveWorkoutContent(

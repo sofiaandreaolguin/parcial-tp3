@@ -3,6 +3,7 @@ package com.example.parcial_tp3.ui.screens.workout
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.parcial_tp3.R
 import com.example.parcial_tp3.data.repository.WorkoutDetailRepository
 import com.example.parcial_tp3.data.repository.WorkoutNotCachedException
 import com.example.parcial_tp3.domain.model.WorkoutDetail
@@ -32,7 +33,7 @@ class WorkoutDetailViewModel @Inject constructor(
         val workoutId = savedStateHandle.get<String>(Rutas.ARG_WORKOUT_ID)
         val exerciseId = savedStateHandle.get<String>(Rutas.ARG_EXERCISE_ID)
         if (workoutId.isNullOrBlank()) {
-            _uiState.value = WorkoutDetailUiState.Error
+            _uiState.value = WorkoutDetailUiState.Error(R.string.details_error)
         } else {
             viewModelScope.launch {
                 _uiState.value = repository.getWorkoutDetail(workoutId).fold(
@@ -41,7 +42,7 @@ class WorkoutDetailViewModel @Inject constructor(
                         if (error is WorkoutNotCachedException) {
                             WorkoutDetailUiState.NotAvailableOffline
                         } else {
-                            WorkoutDetailUiState.Error
+                            WorkoutDetailUiState.Error(R.string.details_error)
                         }
                     },
                 )
@@ -49,9 +50,12 @@ class WorkoutDetailViewModel @Inject constructor(
         }
     }
 
+    fun onRetry() {}
+
     private fun contenido(detail: WorkoutDetail, exerciseId: String?): WorkoutDetailUiState {
         if (exerciseId == null) return WorkoutDetailUiState.Content(detail)
-        val exercise = detail.exercises.find { it.id == exerciseId } ?: return WorkoutDetailUiState.Error
+        val exercise = detail.exercises.find { it.id == exerciseId }
+            ?: return WorkoutDetailUiState.Error(R.string.details_error)
         return WorkoutDetailUiState.Content(detail, exercise)
     }
 }

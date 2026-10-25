@@ -168,34 +168,34 @@ Casos de la plantilla y cómo se cubren acá:
 ## Tests
 | Criterio | Test | Dónde | Vi el rojo |
 |---|---|---|---|
-| C1 | `` `C1 estados toAppError clasifica cada excepcion` `` | `test/` · `AppErrorTest` | |
-| C2 | `` `C2 estados catalogo con 503 u otro codigo es SERVER` `` | `test/` · `WorkoutRepositoryImplTest` (MockWebServer, `FakeWorkoutDao` vacío) | |
-| C3 | `` `C3 estados catalogo con JSON roto o cortado es INVALID_DATA` `` | `test/` · `WorkoutRepositoryImplTest` | |
-| C4 | `` `C4 estados catalogo sin data o con datos invalidos es INVALID_DATA` `` | `test/` · `WorkoutRepositoryImplTest` | |
-| C5 | `` `C5 estados catalogo sin servidor o con timeout es NO_CONNECTION` `` | `test/` · `WorkoutRepositoryImplTest` | |
-| C6 | `` `C6 estados catalogo con demora menor al timeout devuelve los tres` `` | `test/` · `WorkoutRepositoryImplTest` | |
-| C7 | `` `C7 estados catalogo si leer Room falla es UNKNOWN` `` | `test/` · `WorkoutRepositoryImplTest` (`FakeWorkoutDao` que lanza al leer) | |
-| C8 | `` `C8 estados detalle con 503 es SERVER` `` | `test/` · `WorkoutDetailRepositoryImplTest` | |
-| C9 | `` `C9 estados detalle con JSON roto o datos invalidos es INVALID_DATA` `` | `test/` · `WorkoutDetailRepositoryImplTest` | |
-| C10 | `` `C10 estados detalle con 404 es NOT_FOUND` `` | `test/` · `WorkoutDetailRepositoryImplTest` | |
-| C11 | `` `C11 estados detalle con timeout y sin cache es WorkoutNotCachedException` `` | `test/` · `WorkoutDetailRepositoryImplTest` | |
-| C12 | `` `C12 estados detalle si leer Room falla es UNKNOWN` `` | `test/` · `WorkoutDetailRepositoryImplTest` (`FakeWorkoutDao` que lanza al leer) | |
-| C13 | `` `C13 estados catalogo con lista vacia pasa a Empty` `` | `test/` · `WorkoutsViewModelTest` | |
-| C14 | Lo cubren `C13 catalogo arranca en Loading…` y C17 | `test/` · `WorkoutsViewModelTest` | |
-| C15, C16 | `` `C16 estados catalogo cada tipo de error tiene su mensaje` `` (incluye que sea de `strings.xml`, con `esTextoDeStrings`) | `test/` · `WorkoutsViewModelTest` | |
-| C17 | `` `C17 estados catalogo onRetry en Error pasa por Loading y vuelve a consultar` `` | `test/` · `WorkoutsViewModelTest` | |
-| C18 | `` `C18 estados catalogo onRetry fuera de Error no consulta` `` | `test/` · `WorkoutsViewModelTest` | |
-| C19 | `` `C19 estados catalogo volver a observar despues del reintento no repite la consulta` `` | `test/` · `WorkoutsViewModelTest` | |
-| C20 | `` `C20 estados catalogo volver a observar en Error no reintenta solo` `` | `test/` · `WorkoutsViewModelTest` | |
-| C21, C22 | `` `C22 estados detalle cada tipo de error tiene su mensaje` `` | `test/` · `WorkoutDetailViewModelTest` | |
-| C23 | `` `C23 estados detalle onRetry en Error o NotAvailableOffline vuelve a consultar` `` | `test/` · `WorkoutDetailViewModelTest` | |
-| C24 | `` `C24 estados detalle onRetry fuera de Error no consulta` `` | `test/` · `WorkoutDetailViewModelTest` | |
-| C25 | `` `C25 estados detalle sin workoutId onRetry no consulta` `` | `test/` · `WorkoutDetailViewModelTest` | |
-| C26 | `` `C26 estados detalle volver a observar despues del reintento no repite la consulta` `` | `test/` · `WorkoutDetailViewModelTest` | |
-| C27 | `` `C27 estados sesion cada tipo de error tiene su mensaje` `` | `test/` · `ActiveWorkoutViewModelTest` | |
-| C28 | `` `C28 estados sesion onRetry en Error vuelve a consultar y arranca de cero` `` | `test/` · `ActiveWorkoutViewModelTest` | |
-| C29 | `` `C29 estados sesion onRetry en Content no reinicia la sesion` `` | `test/` · `ActiveWorkoutViewModelTest` | |
-| C30 | `` `C30 estados sesion volver a observar despues del reintento no repite la consulta` `` | `test/` · `ActiveWorkoutViewModelTest` | |
+| C1 | `` `C1 estados toAppError clasifica cada excepcion` `` | `test/` · `AppErrorTest` | Sí: la lista esperada no coincide (`toAppError()` da `UNKNOWN` fijo) |
+| C2 | `` `C2 estados catalogo con 503 u otro codigo es SERVER` `` | `test/` · `WorkoutRepositoryImplTest` (MockWebServer, `FakeWorkoutDao` vacío) | Sí: `expected:<SERVER> but was:<null>` (503) |
+| C3 | `` `C3 estados catalogo con JSON roto o cortado es INVALID_DATA` `` | `test/` · `WorkoutRepositoryImplTest` | Sí: `expected:<INVALID_DATA> but was:<null>` (JSON roto) |
+| C4 | `` `C4 estados catalogo sin data o con datos invalidos es INVALID_DATA` `` | `test/` · `WorkoutRepositoryImplTest` | Sí: `expected:<INVALID_DATA> but was:<null>` (204) |
+| C5 | `` `C5 estados catalogo sin servidor o con timeout es NO_CONNECTION` `` | `test/` · `WorkoutRepositoryImplTest` | Sí: `expected:<NO_CONNECTION> but was:<null>` (timeout) |
+| C6 | `` `C6 estados catalogo con demora menor al timeout devuelve los tres` `` | `test/` · `WorkoutRepositoryImplTest` | **Pasa en rojo** (el repositorio ya devuelve los tres): control negativo en implementar |
+| C7 | `` `C7 estados catalogo si leer Room falla es UNKNOWN` `` | `test/` · `WorkoutRepositoryImplTest` (`FakeWorkoutDao` que lanza al leer) | Sí: `expected:<UNKNOWN> but was:<null>` (leer Room con 503) |
+| C8 | `` `C8 estados detalle con 503 es SERVER` `` | `test/` · `WorkoutDetailRepositoryImplTest` | Sí: `expected:<SERVER> but was:<null>` (503) |
+| C9 | `` `C9 estados detalle con JSON roto o datos invalidos es INVALID_DATA` `` | `test/` · `WorkoutDetailRepositoryImplTest` | Sí: `expected:<INVALID_DATA> but was:<null>` (JSON roto) |
+| C10 | `` `C10 estados detalle con 404 es NOT_FOUND` `` | `test/` · `WorkoutDetailRepositoryImplTest` | Sí: `expected:<NOT_FOUND> but was:<null>` |
+| C11 | `` `C11 estados detalle con timeout y sin cache es WorkoutNotCachedException` `` | `test/` · `WorkoutDetailRepositoryImplTest` | **Pasa en rojo** (`SocketTimeoutException` ya es `IOException`): control negativo en implementar |
+| C12 | `` `C12 estados detalle si leer Room falla es UNKNOWN` `` | `test/` · `WorkoutDetailRepositoryImplTest` (`FakeWorkoutDao` que lanza al leer) | Sí: `expected:<UNKNOWN> but was:<null>` (leer Room con 503) |
+| C13 | `` `C13 estados catalogo con lista vacia pasa a Empty` `` | `test/` · `WorkoutsViewModelTest` | Sí: `expected:<Empty> but was:<Content(workouts=[])>` |
+| C14 | Lo cubren `C13 catalogo arranca en Loading…` y C17 | `test/` · `WorkoutsViewModelTest` | C13 del catálogo sigue en verde; C17 en rojo |
+| C15, C16 | `` `C16 estados catalogo cada tipo de error tiene su mensaje` `` (incluye que sea de `strings.xml`, con `esTextoDeStrings`) | `test/` · `WorkoutsViewModelTest` | Sí: los tres primeros mensajes son `workout_error` |
+| C17 | `` `C17 estados catalogo onRetry en Error pasa por Loading y vuelve a consultar` `` | `test/` · `WorkoutsViewModelTest` | Sí: `expected:<Loading> but was:<Error(...)>` |
+| C18 | `` `C18 estados catalogo onRetry fuera de Error no consulta` `` | `test/` · `WorkoutsViewModelTest` | Sí: dos `onRetry()` seguidos, `expected:<2> but was:<1>` |
+| C19 | `` `C19 estados catalogo volver a observar despues del reintento no repite la consulta` `` | `test/` · `WorkoutsViewModelTest` | Sí: `expected:<Content(...)>`, sigue en `Error` |
+| C20 | `` `C20 estados catalogo volver a observar en Error no reintenta solo` `` | `test/` · `WorkoutsViewModelTest` | **Pasa en rojo** (`onRetry()` vacío no reintenta): control negativo en implementar |
+| C21, C22 | `` `C22 estados detalle cada tipo de error tiene su mensaje` `` | `test/` · `WorkoutDetailViewModelTest` | Sí: los mensajes por tipo son `details_error` |
+| C23 | `` `C23 estados detalle onRetry en Error o NotAvailableOffline vuelve a consultar` `` | `test/` · `WorkoutDetailViewModelTest` | Sí: `expected:<Loading> but was:<Error(...)>` |
+| C24 | `` `C24 estados detalle onRetry fuera de Error no consulta` `` | `test/` · `WorkoutDetailViewModelTest` | Sí: `expected:<[w02, w02]> but was:<[w02]>` |
+| C25 | `` `C25 estados detalle sin workoutId onRetry no consulta` `` | `test/` · `WorkoutDetailViewModelTest` | **Pasa en rojo** (`onRetry()` vacío no consulta): control negativo en implementar |
+| C26 | `` `C26 estados detalle volver a observar despues del reintento no repite la consulta` `` | `test/` · `WorkoutDetailViewModelTest` | Sí: `expected:<Content(...)>`, sigue en `Error` |
+| C27 | `` `C27 estados sesion cada tipo de error tiene su mensaje` `` | `test/` · `ActiveWorkoutViewModelTest` | Sí: los mensajes por tipo son `details_error` |
+| C28 | `` `C28 estados sesion onRetry en Error vuelve a consultar y arranca de cero` `` | `test/` · `ActiveWorkoutViewModelTest` | Sí: `expected:<Loading> but was:<Error(...)>` |
+| C29 | `` `C29 estados sesion onRetry en Content no reinicia la sesion` `` | `test/` · `ActiveWorkoutViewModelTest` | Sí: `expected:<[w02, w02]> but was:<[w02]>` |
+| C30 | `` `C30 estados sesion volver a observar despues del reintento no repite la consulta` `` | `test/` · `ActiveWorkoutViewModelTest` | Sí: `expected:<Content(...)>`, sigue en `Error` |
 | C31 a C35 (con C33a a C33e) | Capturas del emulador y de los `@Preview` (C33e), y log del mock | `docs/evidencia/estados/` | No es test unitario |
 | C36 | `./gradlew assembleDebug` y `scripts/reglas.sh` | build | Control negativo: un texto escrito a mano en `WorkoutStatusMessage` hace fallar `reglas.sh` |
 
@@ -236,3 +236,5 @@ Casos de la plantilla y cómo se cubren acá:
   - con `empty` y la caché llena se muestra `Empty` (el servidor manda);
   - el vacío no lleva reintento.
 - 2026-10-25. Correcciones de la auditoría (ver "Auditoría"): C33 pasa a C33a a C33e. Los demás números no cambian.
+- 2026-10-25. Hector aprueba la spec para los tests en rojo.
+- 2026-10-25. Tests en rojo (Hector, con la skill tests-rojo): `AppErrorTest` nuevo y C2 a C30 sumados a los cinco archivos de la tabla, sin tocar los existentes. `FakeWorkoutRepository` y `FakeWorkoutDetailRepository` suman `encolarRespuesta()`. En `main/` solo firmas: `AppError.kt` con `toAppError()` fijo en `UNKNOWN`, `Error(@StringRes)` y `Empty`, `onRetry()` vacío, los textos nuevos y los `when` de 01 a 07 con `is Error`. `./gradlew testDebugUnitTest`: 216 tests, 23 fallan, todos con `AssertionError` y todos "estados". Pasan en rojo C6, C11, C20 y C25 (control negativo en implementar).

@@ -307,4 +307,124 @@ class WorkoutRepositoryImplTest {
         assertTrue("si leer Room lanza tiene que ser failure, fue $alLeer", alLeer.isFailure)
         assertTrue("si convertir lo de Room lanza tiene que ser failure, fue $alConvertir", alConvertir.isFailure)
     }
+
+    // Estados: specs/funcionales/estados-de-carga-y-error.md. Todos con la cache vacia de setUp.
+
+    private fun errorDe(resultado: Result<*>): AppError? = (resultado.exceptionOrNull() as? AppException)?.error
+
+    private fun falla503() = MockResponse()
+        .setResponseCode(503)
+        .setBody("""{"error": {"code": "SERVICE_UNAVAILABLE", "message": "Servicio simulado no disponible."}}""")
+
+    /** Un repositorio con un readTimeout de 1 s, para C5 y C6. NetworkModule no se toca. */
+    private fun repositorioConTimeoutCorto(dao: FakeWorkoutDao = FakeWorkoutDao()): WorkoutRepositoryImpl {
+        val cliente = OkHttpClient.Builder().readTimeout(1, TimeUnit.SECONDS).build()
+        val retrofit = NetworkModule.provideRetrofit(cliente, server.url("/").toString())
+        return WorkoutRepositoryImpl(NetworkModule.provideVoraApi(retrofit), dao)
+    }
+
+    @Test
+    fun `C2 estados catalogo con 503 u otro codigo es SERVER`() = runTest {
+        val casos = listOf(
+            "503" to falla503(),
+            "404" to MockResponse().setResponseCode(404).setBody("""{"error": {"code": "NOT_FOUND", "message": "No encontrado."}}"""),
+            "400" to MockResponse().setResponseCode(400).setBody("{}"),
+        )
+
+        for ((caso, respuesta) in casos) {
+            server.enqueue(respuesta)
+            val resultado = repository.getWorkouts()
+            assertEquals("con $caso, fue ${resultado.exceptionOrNull()}", AppError.SERVER, errorDe(resultado))
+        }
+    }
+
+    @Test
+    fun `C3 estados catalogo con JSON roto o cortado es INVALID_DATA`() = runTest {
+        val casos = listOf(
+            // El escenario malformed del mock: MalformedJsonException
+            "JSON roto" to MockResponse().setBody("""{"data": INVALID_JSON"""),
+            // Cortado dentro de la lista: EOFException
+            "cuerpo cortado" to MockResponse().setBody("""{"data": [{"id": "w01""""),
+        )
+
+        for ((caso, respuesta) in casos) {
+            server.enqueue(respuesta)
+            val resultado = repository.getWorkouts()
+            assertEquals("con $caso, fue ${resultado.exceptionOrNull()}", AppError.INVALID_DATA, errorDe(resultado))
+        }
+    }
+
+    @Test
+    fun `C4 estados catalogo sin data o con datos invalidos es INVALID_DATA`() = runTest {
+        val casos = listOf(
+            "204 sin cuerpo" to MockResponse().setResponseCode(204),
+            "sin data" to MockResponse().setBody("{}"),
+            "data null" to MockResponse().setBody("""{"data": null}"""),
+            "JSON de otro tipo" to MockResponse().setBody("""{"data": {"id": "w01"}}"""),
+            "item invalido" to MockResponse().setBody(
+                """{"data": [{"id": "w01", "name": "Fuerza inicial", "level": "pro", "durationMinutes": 25, "exerciseCount": 3}]}""",
+            ),
+        )
+
+        for ((caso, respuesta) in casos) {
+            server.enqueue(respuesta)
+            val resultado = repository.getWorkouts()
+            assertEquals("con $caso, fue ${resultado.exceptionOrNull()}", AppError.INVALID_DATA, errorDe(resultado))
+        }
+    }
+
+    @Test
+    fun `C5 estados catalogo sin servidor o con timeout es NO_CONNECTION`() = runTest {
+        server.enqueue(MockResponse().setBody(cuerpoDelMock).setHeadersDelay(2, TimeUnit.SECONDS))
+
+        val conTimeout = repositorioConTimeoutCorto().getWorkouts()
+
+        assertEquals("con timeout, fue ${conTimeout.exceptionOrNull()}", AppError.NO_CONNECTION, errorDe(conTimeout))
+        assertEquals("con timeout tiene que haber un solo pedido", 1, server.requestCount)
+
+        server.shutdown()
+        val sinServidor = repository.getWorkouts()
+
+        assertEquals("sin servidor, fue ${sinServidor.exceptionOrNull()}", AppError.NO_CONNECTION, errorDe(sinServidor))
+    }
+
+    @Test
+    fun `C6 estados catalogo con demora menor al timeout devuelve los tres`() = runTest {
+        server.enqueue(MockResponse().setBody(cuerpoDelMock).setHeadersDelay(500, TimeUnit.MILLISECONDS))
+
+        val resultado = repositorioConTimeoutCorto().getWorkouts()
+
+        assertEquals(Result.success(tresWorkouts), resultado)
+    }
+
+    @Test
+    fun `C7 estados catalogo si leer Room falla es UNKNOWN`() = runTest {
+        val alLeer = repositorioCon(
+            FakeWorkoutDao().apply {
+                precargar(listOf(guardadoW01))
+                lanzarAlLeer = true
+            },
+        )
+        // Convertir lanza IllegalArgumentException: no es un dato invalido del servidor
+        val alConvertir = repositorioCon(
+            FakeWorkoutDao().apply { precargar(listOf(WorkoutEntity("w01", "Fuerza inicial", "pro", 25, 3))) },
+        )
+
+        server.enqueue(falla503())
+        val alLeerCon503 = alLeer.getWorkouts()
+        server.enqueue(falla503())
+        val alConvertirCon503 = alConvertir.getWorkouts()
+        server.shutdown()
+        val alLeerSinServidor = alLeer.getWorkouts()
+        val alConvertirSinServidor = alConvertir.getWorkouts()
+
+        for ((caso, resultado) in listOf(
+            "leer Room con 503" to alLeerCon503,
+            "convertir lo de Room con 503" to alConvertirCon503,
+            "leer Room con el servidor apagado" to alLeerSinServidor,
+            "convertir lo de Room con el servidor apagado" to alConvertirSinServidor,
+        )) {
+            assertEquals("si falla $caso, fue ${resultado.exceptionOrNull()}", AppError.UNKNOWN, errorDe(resultado))
+        }
+    }
 }

@@ -328,6 +328,10 @@
     <string name="workout_details">Detalle</string>
     <string name="workout_loading">Cargando entrenamientos</string>
     <string name="workout_error">No pudimos cargar tus entrenamientos.</string>
+    <string name="workout_error_no_connection">Sin conexión. Revisá tu internet y probá de nuevo.</string>
+    <string name="workout_error_server">El servicio no está disponible en este momento.</string>
+    <string name="workout_error_invalid_data">Llegaron datos que no se pudieron leer.</string>
+    <string name="workout_retry">Reintentar</string>
     <string name="workout_empty">Todavía no hay entrenamientos.</string>
     <string name="workout_recommends">VORA RECOMIENDA</string>
     <string name="workout_recommends_demo">Tu última sesión de tren superior fue hace 4 días. Hoy es una gran oportunidad para alcanzar tus objetivos de volumen de fuerza.</string>
@@ -382,6 +386,7 @@
     <string name="details_edit">Editar entrenamiento</string>
     <string name="details_loading">Cargando entrenamiento</string>
     <string name="details_error">No pudimos cargar este entrenamiento.</string>
+    <string name="details_not_found">Este entrenamiento no existe.</string>
     <string name="workout_not_available_offline">Este entrenamiento todavía no está disponible sin conexión.</string>
     <string name="pre_workout_get_ready">PREPARATE</string>
     <string name="pre_workout_focus_label">FOCO DE HOY</string>

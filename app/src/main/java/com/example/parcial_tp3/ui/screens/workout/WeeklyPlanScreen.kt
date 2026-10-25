@@ -101,8 +101,12 @@ fun WeeklyPlanScreen(
         Calendar(plan, diasLargos, onWorkout)
         when (state) {
             WorkoutsUiState.Loading -> LoadingCard()
-            WorkoutsUiState.Error -> VoraInfoMessage(
+            is WorkoutsUiState.Error -> VoraInfoMessage(
                 text = stringResource(R.string.workout_error),
+                icon = painterResource(R.drawable.ic_info),
+            )
+            WorkoutsUiState.Empty -> VoraInfoMessage(
+                text = stringResource(R.string.workout_empty),
                 icon = painterResource(R.drawable.ic_info),
             )
             is WorkoutsUiState.Content -> if (plan.isEmpty()) {

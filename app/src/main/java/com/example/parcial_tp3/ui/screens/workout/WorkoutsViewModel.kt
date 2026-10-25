@@ -2,6 +2,7 @@ package com.example.parcial_tp3.ui.screens.workout
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.parcial_tp3.R
 import com.example.parcial_tp3.data.repository.WorkoutRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -24,8 +25,10 @@ class WorkoutsViewModel @Inject constructor(
         viewModelScope.launch {
             _uiState.value = repository.getWorkouts().fold(
                 onSuccess = { WorkoutsUiState.Content(it) },
-                onFailure = { WorkoutsUiState.Error },
+                onFailure = { WorkoutsUiState.Error(R.string.workout_error) },
             )
         }
     }
+
+    fun onRetry() {}
 }

@@ -77,7 +77,7 @@ fun WorkoutDetailsScreen(
         ) {
             when (state) {
                 WorkoutDetailUiState.Loading -> LoadingCard(stringResource(R.string.details_loading))
-                WorkoutDetailUiState.Error -> VoraInfoMessage(
+                is WorkoutDetailUiState.Error -> VoraInfoMessage(
                     text = stringResource(R.string.details_error),
                     icon = painterResource(R.drawable.ic_info),
                 )

@@ -3,6 +3,7 @@ package com.example.parcial_tp3.ui.screens.workout
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.parcial_tp3.R
 import com.example.parcial_tp3.data.repository.WorkoutDetailRepository
 import com.example.parcial_tp3.ui.navigation.Rutas
 import com.example.parcial_tp3.ui.screens.workout.ActiveWorkoutUiState.Content
@@ -35,19 +36,21 @@ class ActiveWorkoutViewModel @Inject constructor(
     init {
         val workoutId = savedStateHandle.get<String>(Rutas.ARG_WORKOUT_ID)
         if (workoutId.isNullOrBlank()) {
-            _uiState.value = ActiveWorkoutUiState.Error
+            _uiState.value = ActiveWorkoutUiState.Error(R.string.details_error)
         } else {
             viewModelScope.launch {
                 _uiState.value = repository.getWorkoutDetail(workoutId).fold(
                     onSuccess = { detail ->
                         // Sin ejercicios, 05 no tendria nada para mostrar (C5)
-                        if (detail.exercises.isEmpty()) ActiveWorkoutUiState.Error else Content(detail)
+                        if (detail.exercises.isEmpty()) ActiveWorkoutUiState.Error(R.string.details_error) else Content(detail)
                     },
-                    onFailure = { ActiveWorkoutUiState.Error },
+                    onFailure = { ActiveWorkoutUiState.Error(R.string.details_error) },
                 )
             }
         }
     }
+
+    fun onRetry() {}
 
     fun onCompleteSet() {
         val actual = _uiState.value as? Content ?: return
