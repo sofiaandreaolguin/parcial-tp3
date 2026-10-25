@@ -196,7 +196,7 @@ Casos de la plantilla y cómo se cubren acá:
 | C28 | `` `C28 estados sesion onRetry en Error vuelve a consultar y arranca de cero` `` | `test/` · `ActiveWorkoutViewModelTest` | Sí: `expected:<Loading> but was:<Error(...)>` |
 | C29 | `` `C29 estados sesion onRetry en Content no reinicia la sesion` `` | `test/` · `ActiveWorkoutViewModelTest` | Sí: `expected:<[w02, w02]> but was:<[w02]>` |
 | C30 | `` `C30 estados sesion volver a observar despues del reintento no repite la consulta` `` | `test/` · `ActiveWorkoutViewModelTest` | Sí: `expected:<Content(...)>`, sigue en `Error` |
-| C31 a C35 (con C33a a C33e) | Capturas del emulador y de los `@Preview` (C33e), y log del mock | `docs/evidencia/estados/` | No es test unitario. C34 parcial: falta la comida en Nutrition / 01 hasta que Nutrition / 07 esté en la navegación |
+| C31 a C35 (con C33a a C33e) | Capturas del emulador y de los `@Preview` (C33e), y log del mock | `docs/evidencia/estados/` | No es test unitario. La parte de Nutrition de C34 se probó después, cuando entró Nutrition / 07 (ver Historial) |
 | C36 | `./gradlew assembleDebug` y `scripts/reglas.sh` | build | Control negativo: un texto escrito a mano en `WorkoutStatusMessage` hace fallar `reglas.sh` |
 
 - Los nombres empiezan con "estados" para no confundirse con los `C1`… del catálogo, del detalle demo, de la sesión y de la caché.
@@ -259,3 +259,4 @@ Casos de la plantilla y cómo se cubren acá:
   - En la primera corrida el emulador dio ANR por "no focused window" en el launcher, en la app, en `system` y en System UI. El hilo principal de la app respondía, así que no venía del código. Después de `adb reboot` no se repitió.
   - Después de sumar las `@Preview`: 216 tests en verde, `reglas.sh` sin hallazgos y `assembleDebug` compila.
 - 2026-10-25. Cierre (skill cerrar-tarea): revisor-requisitos, revisor-arquitectura, revisor-visual y `/code-review` sin nada BLOQUEA, CRÍTICA ni ALTA. Las sugerencias quedaron en `docs/BITACORA.md`.
+- 2026-10-25. C34 completo, después de unir `main` con Nutrition / 07 (PR #52) y de que el PR #53 entrara a `main`. Se guardó una comida desde 07 ("Prueba C34", Lunch, 500 kcal). Con `malformed` y con `error`, sin `pm clear`, 01, 02 y 03 de w01 muestran lo de Room, y Nutrition / 01 sigue mostrando la comida. Capturas `estados-c34-nutrition-01-antes.png`, `-con-error.png` y `-con-malformed.png`.

@@ -763,3 +763,13 @@ Formato:
     - A mano, Sofi probó en el emulador abrir una comida desde 01 y 02, editar, duplicar, eliminar con confirmación y rotar, y anduvo todo. Después de mover el anillo al estado no se volvió a probar.
     - Sin verificar: capturas del diálogo y de los estados de error, y que el total de Home baje al eliminar (es la misma consulta a Room que ya estaba).
 - Commit / PR:
+
+### 2026-10-25 · Hector · docs(workout): completar la evidencia de C34 con una comida de Nutrition / 07
+- Carril y requisitos: C, cierre de la tarea r · RF05 ("un fallo no borra caché ni registros locales"). Spec: `specs/funcionales/estados-de-carga-y-error.md`, C34.
+- Qué faltaba: en el PR #53 la parte de Nutrition de C34 quedó sin probar, porque Nutrition / 07 todavía era `PantallaVacia`. Con el PR #52 de Sofi en `main` ya se puede guardar una comida.
+- Qué propuso la IA y qué cambiamos:
+  - La IA guardó "Prueba C34" (Lunch, 500 kcal) desde 07 y reinstaló con `malformed` y con `error`, sin `pm clear`. Usó la misma copia del mock en el puerto 8001 con `adb reverse`.
+  - La primera captura con `malformed` salió en 03, que no tiene barra inferior, y la de `error` se quedó en el login. Las dos se borraron y se repitieron.
+  - Como el PR #53 ya estaba unido, Hector lo sube en un PR nuevo y chico, solo de documentos. No hay cambios de código.
+- Evidencia: `docs/evidencia/estados/estados-c34-nutrition-01-antes.png`, `-con-error.png` y `-con-malformed.png`, y la tercera corrida en `estados-log-del-mock.txt`. Actualizados `docs/evidencia/tests/2026-10-25-estados-verde.md` y el Historial de la spec.
+- Commit / PR:

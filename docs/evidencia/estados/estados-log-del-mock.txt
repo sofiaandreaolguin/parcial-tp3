@@ -27,3 +27,9 @@
 127.0.0.1 - - [25/Oct/2026 19:58:39] "GET /v1/workouts/w03 HTTP/1.1" 200 -
 127.0.0.1 - - [25/Oct/2026 19:59:54] "GET /v1/workouts HTTP/1.1" 200 -
 127.0.0.1 - - [25/Oct/2026 20:00:42] "GET /v1/workouts/w03 HTTP/1.1" 200 -
+
+# Tercera corrida (C34 con Nutrition / 07 ya en main). 20:23 malformed: 01, 02 y 03 de w01 desde Room; 20:25:58 error: 01 desde Room. La comida sigue en Nutrition / 01 en los dos casos.
+127.0.0.1 - - [25/Oct/2026 20:23:50] "GET /v1/workouts HTTP/1.1" 200 -
+127.0.0.1 - - [25/Oct/2026 20:23:58] "GET /v1/workouts HTTP/1.1" 200 -
+127.0.0.1 - - [25/Oct/2026 20:24:07] "GET /v1/workouts/w01 HTTP/1.1" 200 -
+127.0.0.1 - - [25/Oct/2026 20:25:58] "GET /v1/workouts HTTP/1.1" 503 -
