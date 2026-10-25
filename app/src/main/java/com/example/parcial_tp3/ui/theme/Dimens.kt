@@ -89,6 +89,8 @@ object VoraSizes {
     val statDivider = 38.dp
     /** Botones redondos de - y + del selector (Active Workout). */
     val stepperButton = 36.dp
+    /** Botones cuadrados de - y + del selector de gramos (Nutrition / 07, nodo 1:1208). */
+    val stepperButtonSquare = 32.dp
     /*
      * Orbe de VORA. Cada frame de Voice lo dibuja de un tamano distinto, pero siempre con
      * las mismas proporciones (aro al 90 % del diametro y esfera al 75 %), asi que alcanza

@@ -20,8 +20,11 @@ data class FoodCaptureUiState(
     val confirmation: ConfirmationState? = null,
 )
 
+/** mealId de 07 para una comida nueva (el valor por defecto del argumento de la ruta). */
+const val NEW_MEAL_ID = -1L
+
 data class ConfirmationState(
-    /** -1 = nueva. */
+    /** [NEW_MEAL_ID] = nueva. */
     val mealId: Long,
     val form: MealForm,
     val errors: Map<MealField, FieldError> = emptyMap(),
