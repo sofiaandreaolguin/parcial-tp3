@@ -714,6 +714,35 @@
     <string name="nutrition_photo_hint">\"Portions and quantities can be refined in the next step before saving.\"</string>
     <string name="nutrition_photo_review">Review &amp; Add</string>
     <string name="nutrition_photo_retake">Retake Photo</string>
+    <!-- Nutrition / 07 — Food Confirmation (nodo 1:1185) -->
+    <string name="nutrition_confirm_title">Review Meal</string>
+    <string name="nutrition_confirm_grams">%1$dg</string>
+    <string name="nutrition_confirm_remove">Remove</string>
+    <string name="nutrition_confirm_add_ingredient">+ Add Ingredient</string>
+    <string name="nutrition_confirm_totals">MEAL TOTALS</string>
+    <string name="nutrition_confirm_total_kcal">%1$s kcal</string>
+    <string name="nutrition_confirm_protein">PROTEIN</string>
+    <string name="nutrition_confirm_carbs">CARBS</string>
+    <string name="nutrition_confirm_fat">FAT</string>
+    <string name="nutrition_confirm_macro_value">%1$sg</string>
+    <string name="nutrition_confirm_add_breakfast">Add to Breakfast</string>
+    <string name="nutrition_confirm_add_lunch">Add to Lunch</string>
+    <string name="nutrition_confirm_add_snack">Add to Snack</string>
+    <string name="nutrition_confirm_add_dinner">Add to Dinner</string>
+    <string name="nutrition_confirm_save_meal">Save Meal</string>
+    <string name="nutrition_confirm_save_without">Save without logging</string>
+    <string name="nutrition_confirm_field_name">MEAL NAME</string>
+    <string name="nutrition_confirm_field_type">MEAL TYPE</string>
+    <string name="nutrition_confirm_field_kcal">CALORIES (KCAL)</string>
+    <string name="nutrition_confirm_field_protein">PROTEIN (G)</string>
+    <string name="nutrition_confirm_field_carbs">CARBS (G)</string>
+    <string name="nutrition_confirm_field_fat">FAT (G)</string>
+    <string name="nutrition_confirm_error_required">Required</string>
+    <string name="nutrition_confirm_error_type">Choose a meal type</string>
+    <string name="nutrition_confirm_error_whole">Enter a whole number</string>
+    <string name="nutrition_confirm_error_number">Enter a number</string>
+    <string name="nutrition_confirm_error_negative">Can\'t be negative</string>
+    <string name="nutrition_confirm_not_found">This meal no longer exists.</string>
     <!-- Progress / 04 — Nutrition Progress (nodo 1:2032) -->
     <string name="progress_nutrition_title">Nutrition progress</string>
     <string name="progress_nutrition_calories">AVG CALORIES</string>

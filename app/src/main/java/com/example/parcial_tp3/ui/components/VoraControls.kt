@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -26,6 +27,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.parcial_tp3.R
@@ -88,6 +90,9 @@ fun VoraToggle(
  *
  * @param onDark true sobre paneles verdes (botones blancos translucidos y texto blanco);
  *   false sobre fondo claro.
+ * @param valueStyle 18 Bold en Active Workout; los gramos de Nutrition / 07 van en 14 (nodo 1:1210).
+ * @param square botones cuadrados de 32 con radio 8 en vez de circulos de 36 (Nutrition / 07,
+ *   nodo 1:1208: el nodo mide unos 6 de radio y el tema no tiene ese valor). El area tactil sigue en 48.
  */
 @Composable
 fun VoraStepper(
@@ -96,6 +101,8 @@ fun VoraStepper(
     onIncrease: () -> Unit,
     modifier: Modifier = Modifier,
     onDark: Boolean = true,
+    valueStyle: TextStyle = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Bold),
+    square: Boolean = false,
 ) {
     val colors = MaterialTheme.colorScheme
     val texto = if (onDark) colors.onPrimary else colors.onSurface
@@ -103,16 +110,17 @@ fun VoraStepper(
     Row(
         modifier = modifier,
         verticalAlignment = Alignment.CenterVertically,
-        // 2 + los 6 que cada area tactil de 48 suma alrededor del circulo de 36 = los 8 del Figma
-        horizontalArrangement = Arrangement.spacedBy(VoraTheme.spacing.s2),
+        // Al texto le quedan los 8 del Figma: 2 + los 6 que el area tactil de 48 suma alrededor del
+        // circulo de 36, o 0 + los 8 que suma alrededor del cuadrado de 32.
+        horizontalArrangement = Arrangement.spacedBy(if (square) 0.dp else VoraTheme.spacing.s2),
     ) {
-        StepperButton(R.drawable.ic_minus, stringResource(R.string.disminuir), onDecrease, fondoBoton, texto)
-        Text(text = value, style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Bold, color = texto)
-        StepperButton(R.drawable.ic_plus, stringResource(R.string.aumentar), onIncrease, fondoBoton, texto)
+        StepperButton(R.drawable.ic_minus, stringResource(R.string.disminuir), onDecrease, fondoBoton, texto, square)
+        Text(text = value, style = valueStyle, color = texto)
+        StepperButton(R.drawable.ic_plus, stringResource(R.string.aumentar), onIncrease, fondoBoton, texto, square)
     }
 }
 
-/** Un boton redondo del selector: circulo de 36 dibujado, area tactil de 48. */
+/** Un boton del selector: circulo de 36 (o cuadrado de 32) dibujado, area tactil de 48. */
 @Composable
 private fun StepperButton(
     @DrawableRes icon: Int,
@@ -120,7 +128,9 @@ private fun StepperButton(
     onClick: () -> Unit,
     fondo: Color,
     tinte: Color,
+    square: Boolean,
 ) {
+    val forma = if (square) RoundedCornerShape(VoraTheme.radius.r8) else CircleShape
     Box(
         modifier = Modifier
             .size(VoraTheme.sizes.touchTarget)
@@ -130,8 +140,8 @@ private fun StepperButton(
     ) {
         Box(
             Modifier
-                .size(VoraTheme.sizes.stepperButton)
-                .background(fondo, CircleShape),
+                .size(if (square) VoraTheme.sizes.stepperButtonSquare else VoraTheme.sizes.stepperButton)
+                .background(fondo, forma),
             contentAlignment = Alignment.Center,
         ) {
             Icon(painter = painterResource(icon), contentDescription = description, tint = tinte)
@@ -157,6 +167,7 @@ private fun VoraControlsPreview() {
                 VoraStepper(stringResource(R.string.tab_progress), {}, {})
             }
             VoraStepper(stringResource(R.string.tab_progress), {}, {}, onDark = false)
+            VoraStepper(stringResource(R.string.tab_progress), {}, {}, onDark = false, square = true)
         }
     }
 }

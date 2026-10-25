@@ -657,6 +657,45 @@ Formato:
 - Evidencia: `docs/evidencia/tests/2026-10-25-detalle-y-cache-verde.md` (189 unitarios, `WorkoutDaoTest` 6/6 en el emulador, `assembleDebug`, `reglas.sh` y once controles negativos) y `docs/evidencia/estados/workout-*.png` (C29 y C31). Tests en rojo en el commit `a77dc2b`.
 - Commit / PR:
 
+### 2026-10-25 · Sofi · feat(nutrition): maquetar Nutrition / 07 Food Confirmation según Figma
+- Carril y requisitos: B · UI01, UI03, NAV02, NAV03, NAV04, RF03, RF04 · tarea m, PR 7 de 8. Frame: `Nutrition / 07 — Food Confirmation` (nodo 1:1185 de la copia `GRk3uXr8…`). Rama `feat/nutrition-food-confirmation`, sacada de `main` con el PR 6 y VC-l (comidas en Room) ya unidos.
+- Plan aprobado: `FoodConfirmationRoute` y `FoodConfirmationScreen` sobre `FoodCaptureViewModel`, que ya tenía la lógica de 07 desde VC-l (formulario, validación, guardado en Room y evento `Saved`). Con borrador: tarjetas `VoraCard` con `VoraStepper(onDark = false)` y "Remove", "+ Add Ingredient", panel MEAL TOTALS y botones Primary y Outlined. Sin borrador: los campos de RF03. "Add to …" guarda y vuelve al Dashboard; ‹ y atrás descartan; −/+, "Remove", "+ Add Ingredient" y "Save without logging" muestran el aviso. La barra la pone el Scaffold; con scroll (UI03).
+- Qué propuso la IA y qué cambiamos:
+    - El pedido de Sofi era hacer solo la maqueta (sin guardar), pensando que VC-l venía después. VC-l ya estaba en `main`, así que la IA propuso conectar el guardado real y Sofi aceptó. La carga manual y la edición muestran campos (`VoraTextField` y chips de tipo) en lugar de las tarjetas, porque el frame no los dibuja. La edición no lleva lógica nueva: es la misma del ViewModel y llega desde 08 en el PR 8.
+    - El tipo de la carga manual se elige con chips. La regla "tipo = comida pendiente del día" quedó para un PR aparte, con su criterio y su test. El botón dice "Add to [tipo]", o "Save Meal" sin tipo o al editar. En español van cuatro textos ("Agregar al almuerzo") en lugar de un `%1$s`, para que el artículo concuerde.
+    - Los totales muestran el formulario que se va a guardar, precargado del mismo `PhotoMealDraft` que 06. No hay una suma aparte: sumar macros por ingrediente obligaba a inventar valores que el Figma no tiene.
+    - Componentes (zona de Martu), los tres con valor por defecto y sin cambiar otras pantallas:
+        - `VoraButtonStyle.TextDestructive`, para "Remove" (rojo sin borde);
+        - `valueStyle` en `VoraStepper`, porque los gramos son de 14 en el frame (medidos: "180g" ocupa 32 dp) y el selector los dibujaba en 18 Bold;
+        - `square` en `VoraStepper` con el token `stepperButtonSquare` (32), para los botones cuadrados. El radio es 8: en el nodo mide unos 6 y el tema no tiene ese valor. El área táctil sigue en 48, así que la tarjeta mide 101 y no 85.
+    - Por revisor-arquitectura (BLOQUEA): la Route abría la confirmación en un `LaunchedEffect`, es decir, desde la composición (CONTEXTO §2). Sofi eligió que la abra el grafo antes de navegar, como `abrirFoto`. Costo aceptado: si muere el proceso con 07 abierta, solo se ve el encabezado con ‹. Por la MEDIA, ‹ y atrás no hacen nada mientras se guarda.
+    - Al guardar se navega con `popUpTo(NUTRITION_GRAPH)` y no hasta el Dashboard. Desde "Log breakfast" de Home el Dashboard no está en la pila. Atrás no vuelve a 07.
+    - El nombre y las kcal de las tarjetas son de 14 (`labelLarge`): "Grilled Chicken Breast" mide 145 dp en el frame. El revisor estimó 16 y medido daba 15.
+- Revisores:
+    - revisor-visual: CON CAMBIOS en la vuelta 1 ("+ Add Ingredient" con ~13 dp de más arriba y abajo, y el tamaño del texto de las tarjetas) y APROBADA en la vuelta 2, con las medidas a 2 dp o menos.
+    - revisor-arquitectura: 1 BLOQUEA y 1 MEDIA en la vuelta 1, corregidas; en la vuelta 2, nada bloquea.
+    - revisor-requisitos: nada bloquea; C28, C29, C31, C32, C34 a C36, C38 y C39 tienen camino desde la UI. C30, C33 y C37 (edición) esperan al PR 8.
+    - `/code-review`: 7 hallazgos. Se corrigieron solo los comentarios desactualizados (KDoc de `onOpenConfirmation` y de la Route).
+- Sugerencias sin aplicar:
+    - Para Fiore, como sugerencia y no como arreglo necesario: tocar Home después de entrar a Nutrition desde Home ("Log breakfast", "Start workout" o la notificación de Nutrition) vuelve a mostrar Nutrition. `irAPestana` hace `popUpTo(HOME_DASHBOARD) { saveState = true }` con `restoreState = true`, y Navigation guarda lo que se apiló arriba de Home como si fuera de Home y lo restaura. Opciones: que tocar Home vuelva siempre limpio (sin guardar ni restaurar), o que "Log breakfast" cambie primero a la pestaña Nutrition. Ya pasaba antes de 07.
+    - Para Fiore: `PANTALLAS.md` §7 dice que −/+ y "Remove" cambian el borrador, y la §17 (punto 4) que "Remove" saca un ingrediente. Acá muestran el aviso de demostración (decisión 4 del plan de VC-m: los ingredientes no se guardan). `Rutas.foodConfirmation` repite el `-1` en vez de usar `NEW_MEAL_ID`.
+    - Para Martu: revisar `TextDestructive`, `valueStyle`, `square` y `stepperButtonSquare`, y sumar la firma nueva de `VoraStepper` a CONTEXTO §9. "Remove" sale en 13 SemiBold y en el frame parece Regular.
+    - Para el PR 8: "Edit Meal" tiene que llamar a `onOpenConfirmation(id, …)` antes de navegar a 07; si no, 07 abre vacía. Si falla la carga al editar, el formulario queda vacío y se puede guardar.
+    - Bajas:
+        - doble toque en "Log Manually" o "Type instead" sin `launchSingleTop`: Sofi lo probó y no se reproduce;
+        - tocar una pestaña mientras se guarda deja `Saved` en el canal y la próxima 07 navega al Dashboard;
+        - con borrador, los errores de validación no tienen dónde verse (hoy el borrador siempre es válido);
+        - una confirmación sin descartar se reusaría en la próxima captura (no se encontró un camino);
+        - los tres "Remove" se leen igual con TalkBack;
+        - los cinco campos repetidos de `MealFields`;
+        - el objeto `Shown` que la Route escribe al componer.
+- Tests: no se sumaron ni se cambiaron tests: la lógica es la de VC-l (C28 a C39). 189 unitarios en verde.
+- Evidencia: `docs/evidencia/visual/nutrition-07-{411dp,360dp,360dp-abajo}.png`, de un emulador de 1080x2424 a 420 y 480 dpi (la densidad se devolvió). A 411 dp entra sin scroll; a 360 dp "Save without logging" se alcanza con scroll. `assembleDebug`, `testDebugUnitTest` y `lintDebug` en verde, y `reglas.sh` exit 0.
+    - A mano, Sofi probó el recorrido después de la maqueta y anduvo: 06 y la voz abren 07 con el borrador, los controles sin destino muestran el aviso, rotar no pierde nada, guardar vuelve al Dashboard y atrás no vuelve a 07, la carga manual valida y "Type instead" abre los campos.
+    - Después de las correcciones de los revisores se probó solo el doble toque.
+    - Sin verificar: C51 (la comida sigue al cerrar la app) sin evidencia guardada, y `connectedDebugAndroidTest` (la rama no toca Room).
+- Commit / PR:
+
 ### 2026-10-25 · Hector · feat(workout): mostrar carga, vacío y error por tipo con reintento
 - Carril y requisitos: C, paso 3 (implementar) · RF05, RF07 (y RF06: errores traducidos en el repositorio) · tarea r. Spec: `specs/funcionales/estados-de-carga-y-error.md` (C1 a C36). Rama `feat/workout-estados-carga-error`.
 - Plan aprobado:

@@ -61,6 +61,8 @@ enum class VoraButtonStyle {
     TextMuted,
     /** Texto subrayado sobre fondo verde: "Type instead" de Nutrition / 04. */
     TextOnDark,
+    /** Solo texto rojo, sin borde: "Remove" de Nutrition / 07. */
+    TextDestructive,
 }
 
 /**
@@ -111,9 +113,10 @@ fun VoraButton(
         VoraButtonStyle.Text -> Triple(Color.Transparent, colors.primary, null)
         VoraButtonStyle.TextMuted -> Triple(Color.Transparent, colors.onSurfaceVariant, null)
         VoraButtonStyle.TextOnDark -> Triple(Color.Transparent, extra.onDarkMuted, null)
+        VoraButtonStyle.TextDestructive -> Triple(Color.Transparent, colors.error, null)
     }
     val subrayado = style == VoraButtonStyle.TextMuted || style == VoraButtonStyle.TextOnDark
-    val esTexto = style == VoraButtonStyle.Text || subrayado
+    val esTexto = style == VoraButtonStyle.Text || style == VoraButtonStyle.TextDestructive || subrayado
 
     val textStyle: TextStyle = when (size) {
         VoraButtonSize.Small -> MaterialTheme.typography.labelMedium
@@ -189,6 +192,7 @@ private fun VoraButtonPreview() {
             Row(horizontalArrangement = Arrangement.spacedBy(VoraTheme.spacing.s24)) {
                 VoraButton(texto, {}, style = VoraButtonStyle.Text, size = VoraButtonSize.Small)
                 VoraButton(texto, {}, style = VoraButtonStyle.TextMuted, size = VoraButtonSize.Small)
+                VoraButton(texto, {}, style = VoraButtonStyle.TextDestructive, size = VoraButtonSize.Small)
             }
             VoraButton(texto, {}, Modifier.fillMaxWidth(), style = VoraButtonStyle.Mint)
             VoraButton(texto, {}, Modifier.fillMaxWidth(), style = VoraButtonStyle.Destructive)
