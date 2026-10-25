@@ -733,3 +733,13 @@ Formato:
   - faltan capturas en español, de 02 con `malformed` y sin servidor, y de un Retry con `malformed`.
 - Evidencia: `docs/evidencia/tests/2026-10-25-estados-verde.md` (216 unitarios en verde, `reglas.sh`, `assembleDebug` y los controles negativos de C3, C6, C9, C11, C13, C18, C20, C24, C25, C29 y C36) y `docs/evidencia/estados/estados-*.png` con `estados-log-del-mock.txt`. Tests en rojo en el commit `5877b2e`.
 - Commit / PR:
+
+### 2026-10-25 · Hector · docs(workout): completar la evidencia de C34 con una comida de Nutrition / 07
+- Carril y requisitos: C, cierre de la tarea r · RF05 ("un fallo no borra caché ni registros locales"). Spec: `specs/funcionales/estados-de-carga-y-error.md`, C34.
+- Qué faltaba: en el PR #53 la parte de Nutrition de C34 quedó sin probar, porque Nutrition / 07 todavía era `PantallaVacia`. Con el PR #52 de Sofi en `main` ya se puede guardar una comida.
+- Qué propuso la IA y qué cambiamos:
+  - La IA guardó "Prueba C34" (Lunch, 500 kcal) desde 07 y reinstaló con `malformed` y con `error`, sin `pm clear`. Usó la misma copia del mock en el puerto 8001 con `adb reverse`.
+  - La primera captura con `malformed` salió en 03, que no tiene barra inferior, y la de `error` se quedó en el login. Las dos se borraron y se repitieron.
+  - Como el PR #53 ya estaba unido, Hector lo sube en un PR nuevo y chico, solo de documentos. No hay cambios de código.
+- Evidencia: `docs/evidencia/estados/estados-c34-nutrition-01-antes.png`, `-con-error.png` y `-con-malformed.png`, y la tercera corrida en `estados-log-del-mock.txt`. Actualizados `docs/evidencia/tests/2026-10-25-estados-verde.md` y el Historial de la spec.
+- Commit / PR:

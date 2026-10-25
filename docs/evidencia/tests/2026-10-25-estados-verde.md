@@ -52,7 +52,7 @@ Capturas `docs/evidencia/estados/estados-*.png` y log del mock en `docs/evidenci
 | C33c | 01 y 03 sin servidor; se prende, Retry pasa por la carga y llega al contenido, con un `GET` |
 | C33d | Retry con `error` suma un `GET` y vuelve al mismo mensaje (01 y 03) |
 | C33e | `@Preview` de 04 (error y sin conexión), 05 (error) y 06 (error y sin conexión), abiertas con `PreviewActivity`. En las de 06 la barra superior queda encima de la barra de estado porque ese espacio lo pone el `Scaffold` de la app, que la preview no tiene; con la app real se ve bien (`workout-06-no-disponible-sin-conexion.png`) |
-| C34 | Con `error`: 01, 02 y 03 de w01 muestran lo de Room. **Nutrition sin probar**: Nutrition / 07 todavía es `PantallaVacia` y no hay cómo guardar una comida desde la app |
+| C34 | Con `error`: 01, 02 y 03 de w01 muestran lo de Room. Nutrition se probó después de unir `main` con Nutrition / 07: se guardó "Prueba C34" (Lunch, 500 kcal) y con `malformed` y con `error` sigue en Nutrition / 01 (`estados-c34-nutrition-01-*.png`) |
 | C35 | Rotar en `Error` (02) y durante la carga (01): sigue el mismo estado y no se suma ningún `GET` |
 
 En la primera corrida el emulador dio ANR por "no focused window" en el launcher, en la app, en `system` y en System UI. El hilo principal de la app respondía (`dumpsys activity top` en 0,35 s). Después de `adb reboot` no se repitió.
