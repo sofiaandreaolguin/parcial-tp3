@@ -49,8 +49,8 @@ Por estado (NAV01):
 
 | Estado | Cuántas | Cuáles |
 |---|---|---|
-| Funcional | 8 | Workout 01, 02, 03 y 06; Nutrition 01, 02, 07 y 08 |
-| Demostración | 29 | Las demás |
+| Funcional | 11 | Workout 01, 02, 03 y 06; Nutrition 01, 02, 07 y 08; **con Firebase (extra aa):** Login 01 y 02 y Profile 02 |
+| Demostración | 26 | Las demás |
 
 Son los dos estados que nombra NAV01, y coinciden con la tabla de **cobertura mínima por área** de la consigna, donde el profe ya clasifica Acceso, Home y Profile como demostración, Workout como Retrofit + Room, Nutrition como Room, y Coach y Progress como simulado.
 
@@ -95,12 +95,12 @@ El estado previsto lo confirma el rol dueño del flujo al implementar la pantall
 
 | # | Frame de Figma | Ruta | Tipo | Controlador | Estado | Área |
 |---|---|---|---|---|---|---|
-| 1 | Login - 01 — SignIn | `sign_in` | Acceso | `AuthViewModel` | Demostración | Acceso |
-| 2 | Login - 02 — SignUp | `sign_up` | Acceso | `AuthViewModel` | Demostración | Acceso |
+| 1 | Login - 01 — SignIn | `sign_in` | Acceso | `AuthViewModel` | Funcional (Firebase, extra aa) | Acceso |
+| 2 | Login - 02 — SignUp | `sign_up` | Acceso | `AuthViewModel` | Funcional (Firebase, extra aa) | Acceso |
 
-- **Entrada:** el `NavHost` arranca en `access_graph`, que a su vez arranca en `sign_in`. El `startDestination` del `NavHost` tiene que ser un **hijo directo** del grafo raíz: poner `sign_in` directo revienta en cuanto abrís la app.
+- **Entrada:** el `NavHost` arranca en `access_graph`, que a su vez arranca en `sign_in`. El `startDestination` del `NavHost` tiene que ser un **hijo directo** del grafo raíz: poner `sign_in` directo revienta en cuanto abrís la app. **Con Firebase (extra aa, spec `firebase-auth-perfil`, C13 y C14):** se lee la sesión de forma síncrona antes de componer el `NavHost`; con sesión activa el destino inicial es `home_graph`, y sin sesión, `access_graph`.
 - **Salida:** al entrar se navega a `home_dashboard` con `popUpTo(access_graph) { inclusive = true }`, así el botón atrás del sistema no vuelve al login (NAV02). Se saca **todo el grafo** y no solo `sign_in`: desde SignUp el login queda debajo, y además se libera el `AuthViewModel`, que es del grafo (acordado el 22/10).
-- Sin Firebase es un acceso de demostración: valida el formulario y entra. Firebase es extra; si se hace, esta fila pasa a **Funcional**.
+- **Con Firebase (extra aa)** estas dos filas son **Funcionales**: SignUp crea la cuenta y SignIn inicia sesión, ambos contra Firebase Authentication, y el formulario se valida antes (C1 a C12 y C33 de la spec). Si el grupo descarta el extra, vuelven a ser un acceso de demostración que valida el formulario y entra.
 - Ojo visual: acá el botón es **lima sobre tarjeta clara**, distinto de la lámina de componentes.
 
 ### A dónde lleva cada control (NAV03)
@@ -112,14 +112,14 @@ Leído de los frames el 18/10. Lo que dice *a confirmar* es lectura mía del dib
 | Login - 01 — SignIn | "Sign In →" | `home_dashboard`, **sacando el login de la pila** |
 | | "Sign up here" | `sign_up` |
 | | Flecha ‹ (arriba izq.) | **A ningún lado**: es la primera pantalla. Se dibuja sin acción |
-| | Apple / Google / biometría | Aviso de modo demostración (salvo que se haga Firebase) |
+| | Apple / Google / biometría | Aviso de modo demostración (también con Firebase: solo se usa email y contraseña) |
 | | "Forgot your password?" | Aviso de modo demostración |
 | | Selector "EN ⌄" (las dos pantallas) | Aviso de modo demostración. **El idioma lo elige Android solo** según el teléfono (`values/` y `values-es/`), no este control |
 | Login - 02 — SignUp | "Sign Up →" | `home_dashboard`, sacando el login de la pila |
 | | "Sign In" (abajo) | `sign_in` |
 | | "Recover" / "Password help?" | Aviso de modo demostración |
 | | Flecha ‹ (arriba izq.) y atrás del sistema | `sign_in` (igual que "Sign In") |
-| | Apple / Google / biometría | Aviso de modo demostración (salvo que se haga Firebase) |
+| | Apple / Google / biometría | Aviso de modo demostración (también con Firebase: solo se usa email y contraseña) |
 
 ## 4. Inicio (2 pantallas)
 
@@ -343,7 +343,7 @@ Leído de los frames el 18/10. Lo que dice *a confirmar* es lectura mía del dib
 | # | Frame de Figma | Ruta | Tipo | Controlador | Estado | Área |
 |---|---|---|---|---|---|---|
 | 32 | Profile / 01 — Dashboard | `profile_dashboard` | Con barra | `ProfileDashboardViewModel` | Demostración | Home y Profile |
-| 33 | Profile / 02 — Edit Profile | `edit_profile` | Encima | `EditProfileViewModel` | Demostración | Home y Profile |
+| 33 | Profile / 02 — Edit Profile | `edit_profile` | Encima | `EditProfileViewModel` | Funcional (Firebase, extra aa) | Home y Profile |
 | 34 | Profile / 03 — Goals & Preferences | `goals_preferences` | Encima | `GoalsPreferencesViewModel` | Demostración | Home y Profile |
 | 35 | Profile / 04 — Nutrition Preferences | `nutrition_preferences` | Encima | `NutritionPreferencesViewModel` | Demostración | Home y Profile |
 | 36 | Profile / 05 — Voice & AI Settings | `voice_ai_settings` | Encima | `VoiceAiSettingsViewModel` | Demostración | Home y Profile |
@@ -370,7 +370,7 @@ Leído de los frames el 18/10. Lo que dice *a confirmar* es lectura mía del dib
 | | "Your Preferences" | `nutrition_preferences` |
 | | "Connected Data · Synced" | **Sin frame** → aviso de modo demostración |
 | | "Account" | **Sin frame** → aviso de modo demostración |
-| 02 Edit Profile | "Save changes" | `popBackStack()` → 01 |
+| 02 Edit Profile | "Save changes" | `popBackStack()` → 01. **Con Firebase (extra aa):** guarda nombre, apellido, fecha de nacimiento, altura, peso y género en Firestore antes de volver (C19 de la spec) |
 | | **"Change photo"** | Aviso de modo demostración. **No abre la cámara ni la galería** (NAV05) |
 | 03 Goals & Preferences | "Save preferences" | `popBackStack()` |
 | 04 Nutrition Preferences | "Save preferences" | `popBackStack()` |
@@ -382,7 +382,7 @@ Leído de los frames el 18/10. Lo que dice *a confirmar* es lectura mía del dib
 | | "Health & Activity" | **Sin frame** → aviso de modo demostración |
 | | **"Permissions & Data Controls"** | Aviso de modo demostración. **No abre los ajustes del sistema ni pide permisos** (NAV05) |
 | | Help Centre, Contact Support, Privacy Policy | **Sin frame** → aviso de modo demostración |
-| | **"Log out"** | `sign_in`, **vaciando toda la pila** |
+| | **"Log out"** | `sign_in`, **vaciando toda la pila**. **Con Firebase (extra aa):** antes cierra la sesión y vacía el perfil (C15 y C16 de la spec) |
 
 **`05 Voice & AI Settings` ya tiene entrada confirmada.** Era la única pantalla a la que no le encontré una entrada clara en el Figma, y quedó colgada de "Review preferences" (panel VORA de `01 Dashboard`). Zaki la confirmó el 21/10 al maquetar `01 Dashboard` (tarea VC-q). **Una pantalla sin entrada rompe NAV01**, así que esta fila no se cambia sin darle antes otra entrada.
 
@@ -431,7 +431,7 @@ Son 6 + 5 + 2 + 1 + 5 = **19**.
 
 ## 12. Las 2 de acceso
 
-`sign_in` y `sign_up`. Antes de entrar a la app, sin barra. El `NavHost` arranca en `access_graph` (que arranca en `sign_in`), y el login se saca de la pila al entrar.
+`sign_in` y `sign_up`. Antes de entrar a la app, sin barra. El `NavHost` arranca en `access_graph` (que arranca en `sign_in`), y el login se saca de la pila al entrar. **Con Firebase (extra aa)** el destino inicial depende de la sesión (ver sección 3).
 
 ---
 
@@ -468,7 +468,7 @@ Cada flujo en su archivo, así cada rol trabaja en el suyo y casi no hay conflic
 
 Reglas de la zona (son de Navegación e inventario; se tocan solo por pull request de Fiore):
 - `MainActivity.kt`, `VoraBottomBar` enchufado en el `Scaffold`, `Rutas.kt` y `RUTAS_CON_BARRA`.
-- **Cambio de pestaña:** `popUpTo("home_dashboard") { saveState = true }`, `launchSingleTop = true`, `restoreState = true`. **No** `popUpTo(startDestination)` ni `findStartDestination()`: el inicio del `NavHost` es el login y se saca de la pila al entrar, así que ese `popUpTo` no encontraría nada y cada toque de pestaña apilaría pantallas.
+- **Cambio de pestaña:** `popUpTo("home_dashboard") { saveState = true }`, `launchSingleTop = true`, `restoreState = true`. **No** `popUpTo(startDestination)` ni `findStartDestination()`: el inicio del `NavHost` es el login (o Home, con una sesión de Firebase activa) y el login se saca de la pila al entrar, así que ese `popUpTo` no encontraría nada y cada toque de pestaña apilaría pantallas.
 - **Pestaña activa:** se calcula con la jerarquía del destino, no comparando la ruta: `VoraTab.entries.firstOrNull { tab -> destino?.hierarchy?.any { it.route == tab.graph } == true }`. Comparando solo la ruta, la pestaña se apagaría en Weekly Plan o en cualquier pantalla que no sea la primera del flujo.
 
 ---
