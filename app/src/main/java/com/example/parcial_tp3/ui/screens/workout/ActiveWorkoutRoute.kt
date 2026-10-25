@@ -21,6 +21,7 @@ fun ActiveWorkoutRoute(
         onDecreaseWeight = viewModel::onDecreaseWeight,
         onAddRest = viewModel::onAddRest,
         onSkipRest = viewModel::onSkipRest,
+        onRetry = viewModel::onRetry,
         // El ViewModel no navega: primero corta el descanso y despues se abre 07 (spec, Contrato)
         onFinish = { workoutId ->
             viewModel.onFinish()

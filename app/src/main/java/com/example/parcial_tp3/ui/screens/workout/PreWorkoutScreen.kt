@@ -58,6 +58,7 @@ fun PreWorkoutScreen(
     onClose: () -> Unit,
     onAskVora: () -> Unit,
     onStartWorkout: (workoutId: String) -> Unit,
+    onRetry: () -> Unit,
 ) {
     Column(
         modifier = Modifier
@@ -100,12 +101,16 @@ fun PreWorkoutScreen(
                         Text(text = stringResource(R.string.details_loading), style = MaterialTheme.typography.bodyMedium)
                     }
                 }
-                is WorkoutDetailUiState.Error -> VoraCardOnDark(Modifier.fillMaxWidth()) {
-                    Text(text = stringResource(R.string.details_error), style = MaterialTheme.typography.bodyMedium)
-                }
-                WorkoutDetailUiState.NotAvailableOffline -> VoraCardOnDark(Modifier.fillMaxWidth()) {
-                    Text(text = stringResource(R.string.workout_not_available_offline), style = MaterialTheme.typography.bodyMedium)
-                }
+                is WorkoutDetailUiState.Error -> WorkoutStatusMessage(
+                    text = stringResource(state.message),
+                    onRetry = onRetry,
+                    onDark = true,
+                )
+                WorkoutDetailUiState.NotAvailableOffline -> WorkoutStatusMessage(
+                    text = stringResource(R.string.workout_not_available_offline),
+                    onRetry = onRetry,
+                    onDark = true,
+                )
                 is WorkoutDetailUiState.Content -> PreWorkoutContent(
                     detail = state.detail,
                     onAskVora = onAskVora,
@@ -231,6 +236,7 @@ private fun PreWorkoutScreenPreview() {
         Exercise(id, name, muscleGroup, sets = 3, reps = 10, restSeconds = 90, instructions = "", tip = "")
     Parcialtp3Theme {
         PreWorkoutScreen(
+            onRetry = {},
             state = WorkoutDetailUiState.Content(
                 WorkoutDetail(
                     id = "w01",
@@ -248,6 +254,35 @@ private fun PreWorkoutScreenPreview() {
             onClose = {},
             onAskVora = {},
             onStartWorkout = {},
+        )
+    }
+}
+
+// C33e de estados-de-carga-y-error.md: desde la app 04 no llega a Error (03 ya deja el detalle en Room)
+@Preview(showBackground = true, heightDp = 844)
+@Composable
+private fun PreWorkoutScreenErrorPreview() {
+    Parcialtp3Theme {
+        PreWorkoutScreen(
+            state = WorkoutDetailUiState.Error(R.string.workout_error_server),
+            onClose = {},
+            onAskVora = {},
+            onStartWorkout = {},
+            onRetry = {},
+        )
+    }
+}
+
+@Preview(showBackground = true, heightDp = 844)
+@Composable
+private fun PreWorkoutScreenOfflinePreview() {
+    Parcialtp3Theme {
+        PreWorkoutScreen(
+            state = WorkoutDetailUiState.NotAvailableOffline,
+            onClose = {},
+            onAskVora = {},
+            onStartWorkout = {},
+            onRetry = {},
         )
     }
 }

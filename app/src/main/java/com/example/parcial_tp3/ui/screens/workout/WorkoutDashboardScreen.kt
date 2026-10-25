@@ -78,6 +78,7 @@ fun WorkoutDashboardScreen(
     onStartWorkout: (workoutId: String) -> Unit,
     onWorkoutDetails: (workoutId: String) -> Unit,
     onViewProgress: () -> Unit,
+    onRetry: () -> Unit,
 ) {
     Column(
         modifier = Modifier
@@ -95,10 +96,7 @@ fun WorkoutDashboardScreen(
         Header(onWeeklyPlan)
         when (state) {
             WorkoutsUiState.Loading -> LoadingCard()
-            is WorkoutsUiState.Error -> VoraInfoMessage(
-                text = stringResource(R.string.workout_error),
-                icon = painterResource(R.drawable.ic_info),
-            )
+            is WorkoutsUiState.Error -> WorkoutStatusMessage(text = stringResource(state.message), onRetry = onRetry)
             WorkoutsUiState.Empty -> VoraInfoMessage(
                 text = stringResource(R.string.workout_empty),
                 icon = painterResource(R.drawable.ic_info),
@@ -371,6 +369,7 @@ private fun RowScope.ProgressStat(label: String, value: String) {
 private fun WorkoutDashboardScreenPreview() {
     Parcialtp3Theme {
         WorkoutDashboardScreen(
+            onRetry = {},
             state = WorkoutsUiState.Content(
                 listOf(Workout("w01", "Upper Body Strength", WorkoutLevel.INTERMEDIATE, 42, 5)),
             ),

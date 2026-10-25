@@ -32,25 +32,35 @@ class ActiveWorkoutViewModel @Inject constructor(
     // Un solo descanso a la vez: arrancar otro, Skip y Finish cancelan el anterior
     private var descanso: Job? = null
 
+    private val workoutId = savedStateHandle.get<String>(Rutas.ARG_WORKOUT_ID)
+
     // Como en el detalle, la carga arranca una sola vez en init: rotar no repite la consulta.
     init {
-        val workoutId = savedStateHandle.get<String>(Rutas.ARG_WORKOUT_ID)
         if (workoutId.isNullOrBlank()) {
             _uiState.value = ActiveWorkoutUiState.Error(R.string.details_error)
         } else {
-            viewModelScope.launch {
-                _uiState.value = repository.getWorkoutDetail(workoutId).fold(
-                    onSuccess = { detail ->
-                        // Sin ejercicios, 05 no tendria nada para mostrar (C5)
-                        if (detail.exercises.isEmpty()) ActiveWorkoutUiState.Error(R.string.details_error) else Content(detail)
-                    },
-                    onFailure = { ActiveWorkoutUiState.Error(R.string.details_error) },
-                )
-            }
+            cargar(workoutId)
         }
     }
 
-    fun onRetry() {}
+    // Solo en Error, con Loading antes del launch: un reintento nunca reinicia una sesion empezada (C29).
+    fun onRetry() {
+        if (_uiState.value !is ActiveWorkoutUiState.Error || workoutId.isNullOrBlank()) return
+        _uiState.value = ActiveWorkoutUiState.Loading
+        cargar(workoutId)
+    }
+
+    private fun cargar(workoutId: String) {
+        viewModelScope.launch {
+            _uiState.value = repository.getWorkoutDetail(workoutId).fold(
+                onSuccess = { detail ->
+                    // Sin ejercicios, 05 no tendria nada para mostrar (C5)
+                    if (detail.exercises.isEmpty()) ActiveWorkoutUiState.Error(R.string.details_error) else Content(detail)
+                },
+                onFailure = { ActiveWorkoutUiState.Error(detailErrorMessage(it)) },
+            )
+        }
+    }
 
     fun onCompleteSet() {
         val actual = _uiState.value as? Content ?: return

@@ -2,7 +2,6 @@ package com.example.parcial_tp3.ui.screens.workout
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.parcial_tp3.R
 import com.example.parcial_tp3.data.repository.WorkoutRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -22,13 +21,22 @@ class WorkoutsViewModel @Inject constructor(
     // La carga arranca una sola vez, al crear el ViewModel: rotar o volver a observar no repite la
     // consulta (por eso no se usa stateIn con WhileSubscribed).
     init {
+        cargar()
+    }
+
+    // Loading se pone antes del launch: un doble toque ve Loading en el segundo y no consulta dos veces.
+    fun onRetry() {
+        if (_uiState.value !is WorkoutsUiState.Error) return
+        _uiState.value = WorkoutsUiState.Loading
+        cargar()
+    }
+
+    private fun cargar() {
         viewModelScope.launch {
             _uiState.value = repository.getWorkouts().fold(
-                onSuccess = { WorkoutsUiState.Content(it) },
-                onFailure = { WorkoutsUiState.Error(R.string.workout_error) },
+                onSuccess = { if (it.isEmpty()) WorkoutsUiState.Empty else WorkoutsUiState.Content(it) },
+                onFailure = { WorkoutsUiState.Error(catalogErrorMessage(it)) },
             )
         }
     }
-
-    fun onRetry() {}
 }

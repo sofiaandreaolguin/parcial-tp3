@@ -20,8 +20,8 @@ class WorkoutRepositoryImpl @Inject constructor(
             val response = api.getWorkouts()
             val workouts = response.body()?.data
             when {
-                !response.isSuccessful -> desdeRoom(IllegalStateException("HTTP ${response.code()}"))
-                workouts == null -> desdeRoom(IllegalStateException("Respuesta sin data"))
+                !response.isSuccessful -> desdeRoom(AppException(AppError.SERVER))
+                workouts == null -> desdeRoom(AppException(AppError.INVALID_DATA))
                 else -> {
                     // un item invalido lanza en toDomain() y hace fallar toda la consulta
                     val catalogo = workouts.map { it.toDomain() }
@@ -33,9 +33,8 @@ class WorkoutRepositoryImpl @Inject constructor(
             // Se relanza antes del catch generico: un ViewModel destruido no tiene que recibir un error
             throw e
         } catch (e: Exception) {
-            // Red, JSON roto o de otro tipo, datos invalidos. La tarea de estados (RF05) suma aca los
-            // catch especificos para traducirlos a errores propios.
-            desdeRoom(e)
+            // Red, JSON roto o de otro tipo, datos invalidos
+            desdeRoom(AppException(e.toAppError(), e))
         }
 
     // Un problema de la cache no tapa un dato bueno de la red: el error de Room se descarta.
@@ -49,14 +48,15 @@ class WorkoutRepositoryImpl @Inject constructor(
         }
     }
 
-    // Con la cache vacia se devuelve el error de la red, no una lista vacia.
-    private suspend fun desdeRoom(error: Exception): Result<List<Workout>> =
+    // Con la cache vacia se devuelve el error de la red, no una lista vacia. Si falla Room es UNKNOWN
+    // sin pasar por toAppError(): una fila invalida no es un dato malo del servidor.
+    private suspend fun desdeRoom(error: AppException): Result<List<Workout>> =
         try {
             val guardados = dao.getAll()
             if (guardados.isEmpty()) Result.failure(error) else Result.success(guardados.map { it.toDomain() })
         } catch (e: CancellationException) {
             throw e
         } catch (e: Exception) {
-            Result.failure(e)
+            Result.failure(AppException(AppError.UNKNOWN, e))
         }
 }

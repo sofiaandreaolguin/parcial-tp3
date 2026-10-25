@@ -75,6 +75,7 @@ fun ActiveWorkoutScreen(
     onAddRest: () -> Unit,
     onSkipRest: () -> Unit,
     onFinish: (workoutId: String) -> Unit,
+    onRetry: () -> Unit,
 ) {
     Column(
         modifier = Modifier
@@ -105,9 +106,11 @@ fun ActiveWorkoutScreen(
                     Text(text = stringResource(R.string.details_loading), style = MaterialTheme.typography.bodyMedium)
                 }
             }
-            is ActiveWorkoutUiState.Error -> VoraCardOnDark(Modifier.fillMaxWidth()) {
-                Text(text = stringResource(R.string.details_error), style = MaterialTheme.typography.bodyMedium)
-            }
+            is ActiveWorkoutUiState.Error -> WorkoutStatusMessage(
+                text = stringResource(state.message),
+                onRetry = onRetry,
+                onDark = true,
+            )
             is ActiveWorkoutUiState.Content -> ActiveWorkoutContent(
                 state = state,
                 onCompleteSet = onCompleteSet,
@@ -382,6 +385,7 @@ private fun ActiveWorkoutScreenPreview() {
         Exercise(id, name, "Back", sets = 3, reps = 10, restSeconds = 90, instructions = "", tip = "")
     Parcialtp3Theme {
         ActiveWorkoutScreen(
+            onRetry = {},
             state = ActiveWorkoutUiState.Content(
                 detail = WorkoutDetail(
                     id = "w01",
@@ -408,6 +412,24 @@ private fun ActiveWorkoutScreenPreview() {
             onAddRest = {},
             onSkipRest = {},
             onFinish = {},
+        )
+    }
+}
+
+// C33e de estados-de-carga-y-error.md: desde la app 05 no llega a Error (03 ya deja el detalle en Room)
+@Preview(showBackground = true, heightDp = 844)
+@Composable
+private fun ActiveWorkoutScreenErrorPreview() {
+    Parcialtp3Theme {
+        ActiveWorkoutScreen(
+            state = ActiveWorkoutUiState.Error(R.string.workout_error_server),
+            onCompleteSet = {},
+            onIncreaseWeight = {},
+            onDecreaseWeight = {},
+            onAddRest = {},
+            onSkipRest = {},
+            onFinish = {},
+            onRetry = {},
         )
     }
 }

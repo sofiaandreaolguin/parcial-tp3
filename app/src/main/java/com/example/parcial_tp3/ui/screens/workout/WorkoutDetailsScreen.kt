@@ -18,7 +18,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.clearAndSetSemantics
@@ -33,7 +32,6 @@ import com.example.parcial_tp3.ui.components.VoraButton
 import com.example.parcial_tp3.ui.components.VoraButtonStyle
 import com.example.parcial_tp3.ui.components.VoraCard
 import com.example.parcial_tp3.ui.components.VoraCoachNote
-import com.example.parcial_tp3.ui.components.VoraInfoMessage
 import com.example.parcial_tp3.ui.components.VoraTopBar
 import com.example.parcial_tp3.ui.theme.Parcialtp3Theme
 import com.example.parcial_tp3.ui.theme.VoraTheme
@@ -57,6 +55,7 @@ fun WorkoutDetailsScreen(
     onExercise: (workoutId: String, exerciseId: String) -> Unit,
     onStartWorkout: (workoutId: String) -> Unit,
     onEdit: () -> Unit,
+    onRetry: () -> Unit,
 ) {
     Column(
         modifier = Modifier
@@ -77,13 +76,10 @@ fun WorkoutDetailsScreen(
         ) {
             when (state) {
                 WorkoutDetailUiState.Loading -> LoadingCard(stringResource(R.string.details_loading))
-                is WorkoutDetailUiState.Error -> VoraInfoMessage(
-                    text = stringResource(R.string.details_error),
-                    icon = painterResource(R.drawable.ic_info),
-                )
-                WorkoutDetailUiState.NotAvailableOffline -> VoraInfoMessage(
+                is WorkoutDetailUiState.Error -> WorkoutStatusMessage(text = stringResource(state.message), onRetry = onRetry)
+                WorkoutDetailUiState.NotAvailableOffline -> WorkoutStatusMessage(
                     text = stringResource(R.string.workout_not_available_offline),
-                    icon = painterResource(R.drawable.ic_info),
+                    onRetry = onRetry,
                 )
                 is WorkoutDetailUiState.Content -> DetailContent(
                     detail = state.detail,
@@ -223,6 +219,7 @@ private fun WorkoutDetailsScreenPreview() {
         Exercise(id, name, muscleGroup, sets = 3, reps = reps, restSeconds = rest, instructions = "", tip = "")
     Parcialtp3Theme {
         WorkoutDetailsScreen(
+            onRetry = {},
             state = WorkoutDetailUiState.Content(
                 WorkoutDetail(
                     id = "w01",

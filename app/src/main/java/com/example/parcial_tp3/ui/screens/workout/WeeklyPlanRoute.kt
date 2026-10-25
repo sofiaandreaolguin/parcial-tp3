@@ -16,5 +16,6 @@ fun WeeklyPlanRoute(
         state = state,
         onWorkout = onWorkout,
         onAdjust = rememberDemoToast(),
+        onRetry = viewModel::onRetry,
     )
 }

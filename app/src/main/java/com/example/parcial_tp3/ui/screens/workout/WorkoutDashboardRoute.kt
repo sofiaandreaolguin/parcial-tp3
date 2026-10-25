@@ -20,5 +20,6 @@ fun WorkoutDashboardRoute(
         onStartWorkout = onStartWorkout,
         onWorkoutDetails = onWorkoutDetails,
         onViewProgress = onViewProgress,
+        onRetry = viewModel::onRetry,
     )
 }
