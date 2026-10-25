@@ -233,12 +233,12 @@ Casos de la plantilla que no aplican: sin conexión, 404, 503 y JSON inválido (
 | C7 | `` `C7 el cero es valido en kcal y macros` `` | `test/` · `MealValidationTest` | sí, 2026-10-24 |
 | C8 | `` `C8 trae el error de cada campo invalido` `` | `test/` · `MealValidationTest` | sí, 2026-10-24 |
 | C9 | `` `C9 un formulario valido da la Meal con el id pedido` `` | `test/` · `MealValidationTest` | sí, 2026-10-24 |
-| C10 | `C10_update_cambia_los_valores_y_conserva_el_id` | `androidTest/` · `MealDaoTest` | pendiente: compila, falta correrlo con el emulador |
-| C11 | `C11_deleteById_saca_la_comida_y_devuelve_las_filas_borradas` | `androidTest/` · `MealDaoTest` | pendiente: compila, falta correrlo con el emulador |
-| C12 | `C12_observeById_emite_la_comida_y_null_al_borrarla` | `androidTest/` · `MealDaoTest` | pendiente: compila, falta correrlo con el emulador |
+| C10 | `C10_update_cambia_los_valores_y_conserva_el_id` | `androidTest/` · `MealDaoTest` | no: pasa desde el principio porque Room genera el DAO con las anotaciones; control negativo el 2026-10-24 (docs/evidencia/tests/2026-10-24-vc-l-verde.md) |
+| C11 | `C11_deleteById_saca_la_comida_y_devuelve_las_filas_borradas` | `androidTest/` · `MealDaoTest` | no: pasa desde el principio porque Room genera el DAO con las anotaciones; control negativo el 2026-10-24 (docs/evidencia/tests/2026-10-24-vc-l-verde.md) |
+| C12 | `C12_observeById_emite_la_comida_y_null_al_borrarla` | `androidTest/` · `MealDaoTest` | no: pasa desde el principio porque Room genera el DAO con las anotaciones; control negativo el 2026-10-24 (docs/evidencia/tests/2026-10-24-vc-l-verde.md) |
 | C13 | `` `C13 observeMeal devuelve Meal y null cuando no existe` `` | `test/` · `MealRepositoryImplTest` | sí, 2026-10-24 |
 | C14 | `` `C14 updateMeal y deleteMeal llegan al DAO con el mismo id` `` | `test/` · `MealRepositoryImplTest` | sí, 2026-10-24 |
-| C15 | `C15_un_id_repetido_es_MealDataException_STORAGE` | `androidTest/` · `MealRepositoryRoomTest` | pendiente: compila, falta correrlo con el emulador |
+| C15 | `C15_un_id_repetido_es_MealDataException_STORAGE` | `androidTest/` · `MealRepositoryRoomTest` | sí, 2026-10-24 (tiró `SQLiteConstraintException` sin traducir) |
 | C16 | `` `C16 una Entity invalida es MealDataException INVALID_DATA` `` | `test/` · `MealRepositoryImplTest` | sí, 2026-10-24 |
 | C17 | `` `C17 update de una comida borrada es NOT_FOUND` `` | `test/` · `MealRepositoryImplTest` | sí, 2026-10-24 |
 | C18 | `` `C18 arranca pidiendo la fecha de hoy del Clock` `` | `test/` · `NutritionViewModelTest` | sí, 2026-10-24 |
@@ -316,3 +316,4 @@ Casos de la plantilla que no aplican: sin conexión, 404, 503 y JSON inválido (
   - `NutritionViewModel` se ata al grafo de Nutrition.
 - 2026-10-24. Corregida según la auditoría: de 42 a 52 criterios.
 - 2026-10-24. Tests en rojo (paso 2 de VC-l): fallan los 46 de `test/`, cada uno por el resultado; los 4 de `androidTest/` compilan y quedan para correr con el emulador.
+- 2026-10-24. Implementación (paso 3 de VC-l): 169 tests unitarios y 12 instrumentados en verde, sin modificar tests. C10 a C12 no pudieron verse en rojo (Room genera el DAO) y llevan control negativo.

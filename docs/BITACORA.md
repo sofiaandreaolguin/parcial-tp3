@@ -615,3 +615,23 @@ Formato:
 - Revisores: revisor-visual CON CAMBIOS por "7,842 steps" a 360 dp (aceptado por Zaki); el resto coincide con el frame dentro de unos 2 dp. revisor-arquitectura sin nada que bloquee: avisa las zonas de Martu (`VoraTopBarLarge`, `VoraTopBarAction`, `IconosDelSistema`, `winCheck`), de Fiore (`Rutas.kt`, `ProgressNavGraph`), de Hector y de Sofi (imports); por él se actualizó `CONTEXTO.md` §9 y se acomodó el KDoc de `IconosDelSistema`. `/code-review`: 10 hallazgos, ninguno bloquea; se aplicaron la etiqueta en español y las viñetas. Quedan como sugerencia: el área táctil chica de los links con flecha, el link con flecha repetido entre 02 y 06, un segundo estilo de título de sección, el aire bajo el subtítulo puesto a mano, los textos `pant_progress_0x` sin uso, `recommendations` sin `@StringRes`, la letra de `VoraButton` 1 a 2 sp más grande que el frame y que "View next week's plan" deja una pantalla de Workout en la pila de Progress (lo pide `PANTALLAS.md`; conviene hablarlo con Fiore).
 - Evidencia: `docs/evidencia/visual/progress-06-{411dp,360dp}{,-scrolled}.png` (teléfono, 411 dp y 360 dp con `wm density 480`). `assembleDebug`, `testDebugUnitTest` y `lintDebug` en verde, `reglas.sh` sin fallas. Sin verificar en pantalla: la 06 en español a 360 dp ("ENTRENOS" entra en la cuenta, unos 50 dp en una columna de 90).
 - Commit / PR:
+
+### 2026-10-24 · Sofi · feat(nutrition): guardar, editar, eliminar y listar por fecha las comidas de Room
+- Carril y requisitos: C, paso 3 (implementar) · RF03, RF04, RF06, RF07, RF08 · tarea VC-l. Spec: `specs/funcionales/carga-y-eliminacion-de-comidas.md`.
+- Plan aprobado: repositorio con `observeMeal`, `updateMeal` y `deleteMeal` y la traducción de errores a `MealDataException`; `validateMeal` en `domain/`; 07 en `FoodCaptureViewModel`, 08 en `MealDetailViewModel` nuevo y 01/02 en `NutritionViewModel` atado al grafo, leyendo Room por fecha con un `DatePickerDialog` de Material 3. `catch` en `HomeViewModel` (C44). 07 y 08 siguen como `PantallaVacia` hasta los PR 7 y 8 de VC-m. Sin subir la versión de la base.
+- Qué propuso la IA y qué cambiamos:
+  - Antes de implementar, la IA avisó que C10 a C12 no se iban a poder ver en rojo: el DAO ya tenía las anotaciones de Room desde la sesión de tests, y Room genera esa implementación. Se corrieron igual con el emulador (pasaron, y C15 falló por la razón correcta) y se les hizo control negativo rompiendo las queries. En la spec quedó "no" en "Vi el rojo", con el motivo.
+  - Para el caso que la spec no cubre (falla la lectura de la comida al abrir 07 para editar), la IA propuso mostrar `saveError` con el texto de carga, y Sofi lo aprobó con el plan.
+  - 02 sin ingredientes guardados: la tarjeta del Figma pasa a ser un grupo por tipo, con la suma de kcal en el encabezado y una línea por comida. La tarjeta punteada "not logged yet" se reusa con el primer tipo pendiente ("Breakfast is not logged yet" en un día vacío), sin estados nuevos.
+  - Se borraron `NutritionDemoUiState` y sus clases, y los textos de demostración que quedaron sin uso, en los dos idiomas. Los números de 01 pasaron a textos con formato (`%1$,d`), así el separador de miles cambia con el idioma.
+  - Por revisor-arquitectura (BLOQUEA): la IA había hecho que el grafo pidiera `NutritionViewModel` y se lo pasara a las Routes. Se corrigió para que cada Route lo pida con `hiltViewModel(grafo)`, como 04 a 06 (CONTEXTO §3, decisión 004). Por la ALTA, el repositorio traduce también un `SQLiteException` al leer.
+- Revisores: revisor-requisitos sin nada que bloquee (C1 a C50 cumplen con su test, C52 a mano, C51 parcial como se acordó). revisor-arquitectura: 1 BLOQUEA y 1 ALTA, corregidas en la segunda vuelta. `/code-review`: 10 hallazgos, ninguno rompe la spec. Sofi pidió aplicar uno: después de borrar, "Duplicate" ya no vuelve a crear la comida (guarda en `MealDetailViewModel`). Quedan como sugerencia:
+  - la carga de la comida al editar pisa lo que se tipee antes de que llegue;
+  - si 07 se deja sin `onDiscard`, reabrirla con -1 devuelve el formulario viejo (el PR 7 tiene que llamar a `onDiscard` desde ‹ y atrás);
+  - el porcentaje del anillo se topa en 100 %;
+  - `toFormText` puede dar notación científica;
+  - "hoy" se fija al crear el ViewModel;
+  - `LoadingCard` se importa de Workout (moverlo a `ui/components` es zona de Martu);
+  - 02 dice "Today's Meals" aunque se elija otra fecha.
+- Evidencia: `docs/evidencia/tests/2026-10-24-vc-l-verde.md` (169 unitarios y 12 instrumentados en verde, controles negativos de la validación, de C44 y de C10 a C12) y `docs/evidencia/estados/nutrition-0{1,2}-*.png`. Tests en rojo en el commit `910f83e`.
+- Commit / PR:
