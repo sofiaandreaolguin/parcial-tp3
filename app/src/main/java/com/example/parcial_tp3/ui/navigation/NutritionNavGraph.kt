@@ -14,6 +14,8 @@ import com.example.parcial_tp3.ui.components.PantallaVacia
 import com.example.parcial_tp3.ui.screens.nutrition.AddFoodRoute
 import com.example.parcial_tp3.ui.screens.nutrition.FoodAnalysisRoute
 import com.example.parcial_tp3.ui.screens.nutrition.FoodCaptureViewModel
+import com.example.parcial_tp3.ui.screens.nutrition.FoodConfirmationRoute
+import com.example.parcial_tp3.ui.screens.nutrition.NEW_MEAL_ID
 import com.example.parcial_tp3.ui.screens.nutrition.NutritionDashboardRoute
 import com.example.parcial_tp3.ui.screens.nutrition.PhotoAnalysisRoute
 import com.example.parcial_tp3.ui.screens.nutrition.TodaysMealsRoute
@@ -109,8 +111,22 @@ fun NavGraphBuilder.nutritionGraph(nav: NavController) {
                     defaultValue = -1L
                 },
             ),
-        ) {
-            PantallaVacia(nombre = stringResource(R.string.pant_nutrition_07))
+        ) { entrada ->
+            val grafo = remember(entrada) { nav.getBackStackEntry(Rutas.NUTRITION_GRAPH) }
+            FoodConfirmationRoute(
+                grafo = grafo,
+                mealId = entrada.arguments?.getLong(Rutas.ARG_MEAL_ID) ?: NEW_MEAL_ID,
+                // por ruta e inclusive: un segundo toque no saca también la pantalla de abajo
+                onBack = { nav.popBackStack(Rutas.FOOD_CONFIRMATION, inclusive = true) },
+                // Hasta el grafo y no hasta el Dashboard: desde Home ("Log breakfast") el Dashboard no
+                // está en la pila. Así atrás no vuelve a 07 ni a los pasos de la captura.
+                onSaved = {
+                    nav.navigate(Rutas.NUTRITION_DASHBOARD) {
+                        popUpTo(Rutas.NUTRITION_GRAPH)
+                        launchSingleTop = true
+                    }
+                },
+            )
         }
 
         composable(
