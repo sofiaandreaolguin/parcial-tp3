@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.parcial_tp3.data.repository.AuthRepository
 import com.example.parcial_tp3.data.repository.ProfileRepository
+import com.example.parcial_tp3.domain.displayName
 import com.example.parcial_tp3.domain.model.Profile
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -37,7 +38,7 @@ class SettingsViewModel @Inject constructor(
     )
 
     private fun Profile.toUiState(loggedOut: Boolean) = SettingsUiState(
-        fullName = "$firstName $lastName",
+        fullName = displayName(firstName, lastName, email),
         email = email,
         loggedOut = loggedOut,
     )

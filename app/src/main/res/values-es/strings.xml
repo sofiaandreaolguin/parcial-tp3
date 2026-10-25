@@ -301,6 +301,9 @@
     <string name="access_error_too_many_requests">Demasiados intentos. Probá de nuevo más tarde</string>
     <string name="access_error_no_connection">Sin conexión. Revisá tu red y probá de nuevo</string>
     <string name="access_error_no_permission">Tu sesión ya no es válida. Iniciá sesión de nuevo</string>
+    <string name="access_error_invalid_email">El formato del email no es válido</string>
+    <string name="access_error_user_disabled">Esta cuenta está deshabilitada</string>
+    <string name="access_error_email_auth_disabled">El acceso con email no está habilitado en esta app</string>
     <string name="access_error_unknown">Algo salió mal. Probá de nuevo</string>
     <string name="profile_error_load">No pudimos cargar tu perfil</string>
     <string name="profile_retry">Reintentar</string>

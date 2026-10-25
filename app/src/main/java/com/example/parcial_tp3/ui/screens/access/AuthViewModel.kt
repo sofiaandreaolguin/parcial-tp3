@@ -150,6 +150,9 @@ class AuthViewModel @Inject constructor(
         AuthError.WEAK_PASSWORD -> R.string.access_error_weak_password
         AuthError.TOO_MANY_REQUESTS -> R.string.access_error_too_many_requests
         AuthError.NO_CONNECTION -> R.string.access_error_no_connection
+        AuthError.INVALID_EMAIL -> R.string.access_error_invalid_email
+        AuthError.USER_DISABLED -> R.string.access_error_user_disabled
+        AuthError.EMAIL_AUTH_DISABLED -> R.string.access_error_email_auth_disabled
         AuthError.UNKNOWN -> R.string.access_error_unknown
     }
 

@@ -7,6 +7,9 @@ fun authErrorFromCode(code: String?): AuthError = when (code) {
     "ERROR_WEAK_PASSWORD" -> AuthError.WEAK_PASSWORD
     "ERROR_TOO_MANY_REQUESTS" -> AuthError.TOO_MANY_REQUESTS
     "ERROR_NETWORK_REQUEST_FAILED" -> AuthError.NO_CONNECTION
+    "ERROR_INVALID_EMAIL" -> AuthError.INVALID_EMAIL
+    "ERROR_USER_DISABLED" -> AuthError.USER_DISABLED
+    "ERROR_OPERATION_NOT_ALLOWED" -> AuthError.EMAIL_AUTH_DISABLED
     else -> AuthError.UNKNOWN
 }
 

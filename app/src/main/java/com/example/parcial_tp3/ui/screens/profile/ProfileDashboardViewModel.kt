@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.parcial_tp3.R
 import com.example.parcial_tp3.data.repository.ProfileError
 import com.example.parcial_tp3.data.repository.ProfileRepository
+import com.example.parcial_tp3.domain.displayName
 import com.example.parcial_tp3.domain.model.Profile
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -32,7 +33,7 @@ class ProfileDashboardViewModel @Inject constructor(
     }
 
     private fun Profile.toUiState(error: ProfileError?) = ProfileDashboardUiState(
-        fullName = "$firstName $lastName",
+        fullName = displayName(firstName, lastName, email),
         // ordenados como en Goals & Preferences, no como se fueron eligiendo
         goals = goals.sorted(),
         experience = experience,

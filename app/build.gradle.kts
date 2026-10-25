@@ -93,7 +93,6 @@ dependencies {
     testImplementation(libs.androidx.navigation.testing)
     testImplementation(libs.robolectric)
     androidTestImplementation(libs.kotlinx.coroutines.test)
-    androidTestImplementation("androidx.navigation:navigation-testing:2.10.2")
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)
     androidTestImplementation(libs.androidx.espresso.core)
