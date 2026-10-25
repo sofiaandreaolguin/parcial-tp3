@@ -91,7 +91,7 @@ Arquitectura y entrega
 ## Fuera de alcance
 - Botones de Apple, Google y biometría: siguen como aviso de modo demostración.
 - Recuperar contraseña, verificar el email, cambiar email o contraseña, borrar la cuenta.
-- Guardar en Firestore los cambios de Goals, Nutrition Preferences y Voice & AI Settings: se leen del perfil, pero sus cambios siguen en memoria.
+- Guardar en Firestore los cambios de Goals, Nutrition Preferences y Voice & AI Settings: se leen del perfil, pero sus cambios siguen en memoria. Se pierden al reiniciar la app y un snapshot de Firestore no los pisa: del documento solo se toman los campos de Edit Profile (y el email) mientras la app está abierta.
 - Sincronizar comidas o entrenamientos con Firestore. Siguen en Room y en el mock, y no se separan por cuenta ni se borran al cerrar sesión.
 - Modo demostración sin cuenta o sin `google-services.json` (decisión del grupo: Firebase siempre; riesgo anotado en el Historial).
 - Emulator Suite y tests de reglas automatizados en CI: las reglas se prueban a mano con dos cuentas.
