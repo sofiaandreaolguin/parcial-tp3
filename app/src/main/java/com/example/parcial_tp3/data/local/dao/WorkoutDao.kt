@@ -49,10 +49,19 @@ interface WorkoutDao {
     @Insert
     suspend fun insertExercises(exercises: List<WorkoutExerciseEntity>)
 
-    // Firmas vacias de la tarea del detalle y la cache: las completa la sesion de implementar.
+    /** Guarda el catalogo sin pisar el description de un detalle ya descargado (upsertAll lo borraria). */
     @Transaction
-    suspend fun saveSummaries(workouts: List<WorkoutEntity>) = Unit
+    suspend fun saveSummaries(workouts: List<WorkoutEntity>) {
+        upsertSummaries(
+            workouts.map { WorkoutSummaryRow(it.id, it.name, it.level, it.durationMinutes, it.exerciseCount) },
+        )
+    }
 
+    /** Guarda el detalle y reemplaza todos sus ejercicios: no quedan restos de una descarga anterior. */
     @Transaction
-    suspend fun saveDetail(workout: WorkoutEntity, exercises: List<WorkoutExerciseEntity>) = Unit
+    suspend fun saveDetail(workout: WorkoutEntity, exercises: List<WorkoutExerciseEntity>) {
+        upsertDetail(workout)
+        deleteExercises(workout.id)
+        insertExercises(exercises)
+    }
 }

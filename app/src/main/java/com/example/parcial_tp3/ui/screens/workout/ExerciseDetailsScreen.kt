@@ -1,5 +1,6 @@
 package com.example.parcial_tp3.ui.screens.workout
 
+import androidx.annotation.StringRes
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -99,7 +100,8 @@ fun ExerciseDetailsScreen(
         ) {
             when (state) {
                 WorkoutDetailUiState.Loading -> LoadingCard(stringResource(R.string.details_loading))
-                WorkoutDetailUiState.Error, WorkoutDetailUiState.NotAvailableOffline -> ErrorMessage()
+                WorkoutDetailUiState.Error -> ErrorMessage()
+                WorkoutDetailUiState.NotAvailableOffline -> ErrorMessage(R.string.workout_not_available_offline)
                 is WorkoutDetailUiState.Content -> state.selectedExercise
                     ?.let { ExerciseContent(exercise = it, onAskVora = onAskVora, onBack = onBack) }
                     ?: ErrorMessage()
@@ -109,8 +111,8 @@ fun ExerciseDetailsScreen(
 }
 
 @Composable
-private fun ErrorMessage() {
-    VoraInfoMessage(text = stringResource(R.string.details_error), icon = painterResource(R.drawable.ic_info))
+private fun ErrorMessage(@StringRes text: Int = R.string.details_error) {
+    VoraInfoMessage(text = stringResource(text), icon = painterResource(R.drawable.ic_info))
 }
 
 @Composable

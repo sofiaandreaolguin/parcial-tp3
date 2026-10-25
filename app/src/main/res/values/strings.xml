@@ -384,6 +384,7 @@
     <string name="details_edit">Edit workout</string>
     <string name="details_loading">Loading workout</string>
     <string name="details_error">We couldn\'t load this workout.</string>
+    <string name="workout_not_available_offline">This workout isn\'t available offline yet.</string>
     <string name="pre_workout_get_ready">GET READY</string>
     <string name="pre_workout_focus_label">TODAY\'S FOCUS</string>
     <string name="pre_workout_focus_title_demo">Controlled Repetitions</string>

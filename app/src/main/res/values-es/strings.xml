@@ -382,6 +382,7 @@
     <string name="details_edit">Editar entrenamiento</string>
     <string name="details_loading">Cargando entrenamiento</string>
     <string name="details_error">No pudimos cargar este entrenamiento.</string>
+    <string name="workout_not_available_offline">Este entrenamiento todavía no está disponible sin conexión.</string>
     <string name="pre_workout_get_ready">PREPARATE</string>
     <string name="pre_workout_focus_label">FOCO DE HOY</string>
     <string name="pre_workout_focus_title_demo">Repeticiones controladas</string>
