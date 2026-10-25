@@ -508,35 +508,24 @@
     <string name="home_start_workout">Start workout</string>
 
     <!-- Nutrition / 01 — Dashboard (datos de demostración: Room llega con la tarea l) -->
-    <string name="nutrition_dash_date">TUESDAY, 8 SEPTEMBER</string>
     <string name="nutrition_dash_open_calendar">Open calendar</string>
     <string name="nutrition_dash_calories_label">CALORIES CONSUMED</string>
-    <string name="nutrition_dash_calories_value">1,420</string>
-    <string name="nutrition_dash_calories_goal">Goal: 2,100 kcal</string>
-    <string name="nutrition_dash_calories_percent">67%</string>
+    <string name="nutrition_dash_calories_value">%1$,d</string>
+    <string name="nutrition_dash_calories_goal">Goal: %1$,d kcal</string>
+    <string name="nutrition_dash_calories_percent">%1$d%%</string>
     <string name="nutrition_dash_protein">Protein</string>
-    <string name="nutrition_dash_protein_now">104g</string>
-    <string name="nutrition_dash_protein_goal">/140g</string>
     <string name="nutrition_dash_carbs">Carbs</string>
-    <string name="nutrition_dash_carbs_now">152g</string>
-    <string name="nutrition_dash_carbs_goal">/220g</string>
     <string name="nutrition_dash_fat">Fat</string>
-    <string name="nutrition_dash_fat_now">48g</string>
-    <string name="nutrition_dash_fat_goal">/65g</string>
     <string name="nutrition_dash_advice">You\'re on track today. A protein-rich dinner would help you reach your target.</string>
     <string name="nutrition_dash_meals">Today\'s Meals</string>
     <string name="nutrition_dash_history">View History</string>
     <string name="nutrition_dash_breakfast">Breakfast</string>
     <string name="nutrition_dash_breakfast_items">Greek yoghurt · berries · granola</string>
-    <string name="nutrition_dash_breakfast_kcal">420 kcal</string>
     <string name="nutrition_dash_lunch">Lunch</string>
     <string name="nutrition_dash_lunch_items">Chicken · rice · vegetables</string>
-    <string name="nutrition_dash_lunch_kcal">520 kcal</string>
     <string name="nutrition_dash_snack">Snack</string>
     <string name="nutrition_dash_snack_items">Protein shake</string>
-    <string name="nutrition_dash_snack_kcal">240 kcal</string>
     <string name="nutrition_dash_dinner">Dinner</string>
-    <string name="nutrition_dash_dinner_empty">Not logged yet</string>
     <string name="nutrition_dash_add">+ Add</string>
     <string name="nutrition_dash_vora_title">Tell Vora what you ate</string>
     <string name="nutrition_dash_vora_body">Vora will automatically estimate the portions, ingredients, and log the nutrition details.</string>
@@ -544,32 +533,27 @@
     <string name="nutrition_dash_photo">Photo</string>
     <string name="nutrition_dash_search">Search</string>
 
-    <!-- Nutrition / 02 — Today's Meals (datos de demostración) -->
+    <!-- Nutrition / 02 — Today's Meals, y los ingredientes del borrador de la foto (06) -->
     <string name="nutrition_meals_label">TIMELINE</string>
-    <string name="nutrition_meals_total">%1$s kcal</string>
-    <string name="nutrition_meals_yoghurt">Greek Yoghurt (0% Fat)</string>
-    <string name="nutrition_meals_yoghurt_qty">200g</string>
-    <string name="nutrition_meals_yoghurt_kcal">150 kcal</string>
-    <string name="nutrition_meals_blueberries">Fresh Blueberries</string>
-    <string name="nutrition_meals_blueberries_qty">75g</string>
-    <string name="nutrition_meals_blueberries_kcal">60 kcal</string>
-    <string name="nutrition_meals_granola">Organic Honey Granola</string>
-    <string name="nutrition_meals_granola_qty">50g</string>
-    <string name="nutrition_meals_granola_kcal">210 kcal</string>
     <string name="nutrition_meals_chicken">Grilled Chicken Breast</string>
-    <string name="nutrition_meals_chicken_qty">180g</string>
-    <string name="nutrition_meals_chicken_kcal">280 kcal</string>
     <string name="nutrition_meals_rice">Basmati Rice</string>
-    <string name="nutrition_meals_rice_qty">150g</string>
-    <string name="nutrition_meals_rice_kcal">190 kcal</string>
     <string name="nutrition_meals_vegetables">Mixed Steamed Vegetables</string>
-    <string name="nutrition_meals_vegetables_qty">100g</string>
-    <string name="nutrition_meals_vegetables_kcal">50 kcal</string>
-    <string name="nutrition_meals_shake">Whey Protein Shake</string>
-    <string name="nutrition_meals_shake_qty">350ml (water)</string>
-    <string name="nutrition_meals_shake_kcal">240 kcal</string>
-    <string name="nutrition_meals_dinner_empty">Dinner is not logged yet</string>
-    <string name="nutrition_meals_add_dinner">+ Add Dinner</string>
+
+    <!-- Nutrition · comidas de Room (VC-l): errores, carga y formatos -->
+    <string name="nutrition_dash_date_pattern">EEEE, d MMMM</string>
+    <string name="nutrition_dash_macro_now">%1$dg</string>
+    <string name="nutrition_dash_macro_goal">/%1$dg</string>
+    <string name="nutrition_date_confirm">OK</string>
+    <string name="nutrition_date_cancel">Cancel</string>
+    <string name="nutrition_dash_pending_empty">Not logged yet</string>
+    <string name="nutrition_kcal">%1$,d kcal</string>
+    <string name="nutrition_meals_type_empty">%1$s is not logged yet</string>
+    <string name="nutrition_meals_add_type">+ Add %1$s</string>
+    <string name="nutrition_loading">Loading your meals…</string>
+    <string name="nutrition_error_load">We couldn\'t load your meals.</string>
+    <string name="nutrition_error_save">We couldn\'t save this meal. Try again.</string>
+    <string name="nutrition_error_action">Something went wrong. Try again.</string>
+    <string name="nutrition_retry">Retry</string>
 
     <!-- Nutrition / 03 — Add Food -->
     <string name="nutrition_add_title">Add Food</string>

@@ -1,127 +1,34 @@
 package com.example.parcial_tp3.ui.screens.nutrition
 
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.res.stringResource
 import com.example.parcial_tp3.R
+import com.example.parcial_tp3.domain.model.MealType
+import java.time.LocalDate
 
-/** Datos de demostración de Nutrition / 01 y 02. La tarea l los reemplaza por lo que sale de Room. */
-fun nutritionDemoState() = NutritionDemoUiState(
-    date = R.string.nutrition_dash_date,
-    caloriesConsumed = R.string.nutrition_dash_calories_value,
-    caloriesGoal = R.string.nutrition_dash_calories_goal,
-    caloriesPercent = R.string.nutrition_dash_calories_percent,
-    caloriesProgress = CALORIES_PROGRESS,
-    macros = listOf(
-        MacroSummary(
-            MacroKind.PROTEIN,
-            R.string.nutrition_dash_protein,
-            R.string.nutrition_dash_protein_now,
-            R.string.nutrition_dash_protein_goal,
-            PROTEIN_PROGRESS,
-        ),
-        MacroSummary(
-            MacroKind.CARBS,
-            R.string.nutrition_dash_carbs,
-            R.string.nutrition_dash_carbs_now,
-            R.string.nutrition_dash_carbs_goal,
-            CARBS_PROGRESS,
-        ),
-        MacroSummary(
-            MacroKind.FAT,
-            R.string.nutrition_dash_fat,
-            R.string.nutrition_dash_fat_now,
-            R.string.nutrition_dash_fat_goal,
-            FAT_PROGRESS,
-        ),
-    ),
-    advice = R.string.nutrition_dash_advice,
-    meals = listOf(
-        MealSummary(
-            1,
-            R.string.nutrition_dash_breakfast,
-            R.string.nutrition_dash_breakfast_items,
-            R.string.nutrition_dash_breakfast_kcal,
-        ),
-        MealSummary(
-            2,
-            R.string.nutrition_dash_lunch,
-            R.string.nutrition_dash_lunch_items,
-            R.string.nutrition_dash_lunch_kcal,
-        ),
-        MealSummary(
-            3,
-            R.string.nutrition_dash_snack,
-            R.string.nutrition_dash_snack_items,
-            R.string.nutrition_dash_snack_kcal,
-        ),
-    ),
-    pendingMeal = PendingMealSummary(
-        name = R.string.nutrition_dash_dinner,
-        hint = R.string.nutrition_dash_dinner_empty,
-    ),
-    loggedMeals = listOf(
-        LoggedMeal(
-            1,
-            R.string.nutrition_dash_breakfast,
-            R.string.nutrition_dash_breakfast_kcal,
-            listOf(
-                IngredientSummary(
-                    R.string.nutrition_meals_yoghurt,
-                    R.string.nutrition_meals_yoghurt_qty,
-                    R.string.nutrition_meals_yoghurt_kcal,
-                ),
-                IngredientSummary(
-                    R.string.nutrition_meals_blueberries,
-                    R.string.nutrition_meals_blueberries_qty,
-                    R.string.nutrition_meals_blueberries_kcal,
-                ),
-                IngredientSummary(
-                    R.string.nutrition_meals_granola,
-                    R.string.nutrition_meals_granola_qty,
-                    R.string.nutrition_meals_granola_kcal,
-                ),
-            ),
-        ),
-        LoggedMeal(
-            2,
-            R.string.nutrition_dash_lunch,
-            R.string.nutrition_dash_lunch_kcal,
-            listOf(
-                IngredientSummary(
-                    R.string.nutrition_meals_chicken,
-                    R.string.nutrition_meals_chicken_qty,
-                    R.string.nutrition_meals_chicken_kcal,
-                ),
-                IngredientSummary(
-                    R.string.nutrition_meals_rice,
-                    R.string.nutrition_meals_rice_qty,
-                    R.string.nutrition_meals_rice_kcal,
-                ),
-                IngredientSummary(
-                    R.string.nutrition_meals_vegetables,
-                    R.string.nutrition_meals_vegetables_qty,
-                    R.string.nutrition_meals_vegetables_kcal,
-                ),
-            ),
-        ),
-        LoggedMeal(
-            3,
-            R.string.nutrition_dash_snack,
-            R.string.nutrition_dash_snack_kcal,
-            listOf(
-                IngredientSummary(
-                    R.string.nutrition_meals_shake,
-                    R.string.nutrition_meals_shake_qty,
-                    R.string.nutrition_meals_shake_kcal,
-                ),
-            ),
-        ),
-    ),
-)
+/** Metas de demostración de Nutrition y el estado de las previews de 01 y 02. */
+object NutritionDemoData {
 
-// 1.420 de 2.100 kcal.
-private const val CALORIES_PROGRESS = 0.67f
+    /** Solo de Nutrition, como dice el Figma (nodo 1:777). kcal, proteína y carbos son las de Home. */
+    const val FAT_GOAL_G = 65
 
-// El Figma dibuja las barras con 77, 72 y 77 de 98 de ancho (nodos 1:765, 1:771 y 1:777),
-// que no coincide con el cociente de 104/140, 152/220 y 48/65: se copia lo dibujado.
-private const val PROTEIN_PROGRESS = 77f / 98f
-private const val CARBS_PROGRESS = 72f / 98f
-private const val FAT_PROGRESS = 77f / 98f
+    /** Los números del frame 1:730; el total no es la suma de las filas porque el Figma no lo es. */
+    @Composable
+    fun previewState() = NutritionUiState.Content(
+        date = LocalDate.of(2026, 9, 8),
+        kcal = 1_420,
+        kcalGoal = 2_100,
+        kcalProgress = 1_420f / 2_100f,
+        macros = listOf(
+            MacroTotal(MacroKind.PROTEIN, grams = 104, goal = 140, progress = 104f / 140f),
+            MacroTotal(MacroKind.CARBS, grams = 152, goal = 220, progress = 152f / 220f),
+            MacroTotal(MacroKind.FAT, grams = 48, goal = FAT_GOAL_G, progress = 48f / FAT_GOAL_G),
+        ),
+        meals = listOf(
+            MealRow(1, MealType.BREAKFAST, stringResource(R.string.nutrition_dash_breakfast_items), 420),
+            MealRow(2, MealType.LUNCH, stringResource(R.string.nutrition_dash_lunch_items), 520),
+            MealRow(3, MealType.SNACK, stringResource(R.string.nutrition_dash_snack_items), 240),
+        ),
+        pending = MealType.DINNER,
+    )
+}

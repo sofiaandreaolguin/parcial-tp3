@@ -1,5 +1,6 @@
 package com.example.parcial_tp3.ui.screens.nutrition
 
+import androidx.annotation.StringRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -23,6 +24,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
@@ -31,6 +33,7 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.parcial_tp3.R
+import com.example.parcial_tp3.domain.model.MealType
 import com.example.parcial_tp3.ui.components.VoraButton
 import com.example.parcial_tp3.ui.components.VoraButtonSize
 import com.example.parcial_tp3.ui.components.VoraButtonStyle
@@ -42,19 +45,27 @@ import com.example.parcial_tp3.ui.components.VoraProgressBar
 import com.example.parcial_tp3.ui.components.VoraProgressRing
 import com.example.parcial_tp3.ui.theme.Parcialtp3Theme
 import com.example.parcial_tp3.ui.theme.VoraTheme
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import kotlin.math.roundToInt
 
 /**
  * Nutrition / 01 — Dashboard (nodo 1:730 del Figma). Con barra inferior: la pone el Scaffold de
  * MainActivity. Más alta que 850 dp, así que va con scroll (UI03). Cada control va a donde dice
  * la tabla NAV03 de specs/PANTALLAS.md.
+ *
+ * Las comidas y el total son los de Room para [date] (RF04). Sin ingredientes guardados, cada fila
+ * lleva el tipo como título y el nombre como bajada.
  */
 @Composable
 fun NutritionDashboardScreen(
-    state: NutritionDemoUiState,
+    state: NutritionUiState,
+    date: LocalDate,
     onCalendar: () -> Unit,
+    onRetry: () -> Unit,
     onHistory: () -> Unit,
     onMeal: (mealId: Long) -> Unit,
-    onAddDinner: () -> Unit,
+    onAddMeal: () -> Unit,
     onVoice: () -> Unit,
     onPhoto: () -> Unit,
     onSearch: () -> Unit,
@@ -72,12 +83,24 @@ fun NutritionDashboardScreen(
             ),
         verticalArrangement = Arrangement.spacedBy(VoraTheme.spacing.s20),
     ) {
-        Header(stringResource(state.date), onCalendar)
-        CaloriesCard(state)
-        VoraInfoMessage(text = stringResource(state.advice))
-        MealsSection(state, onHistory, onMeal, onAddDinner)
+        Header(headerDate(date), onCalendar)
+        if (state is NutritionUiState.Content) {
+            CaloriesCard(state)
+            VoraInfoMessage(text = stringResource(R.string.nutrition_dash_advice))
+            MealsSection(state, onHistory, onMeal, onAddMeal)
+        } else {
+            NutritionStatus(state, onRetry)
+        }
         VoraPanelCard(onVoice, onPhoto, onSearch)
     }
+}
+
+// "TUESDAY, 8 SEPTEMBER", como el frame; el patrón cambia con el idioma.
+@Composable
+private fun headerDate(date: LocalDate): String {
+    val locale = LocalConfiguration.current.locales[0]
+    val pattern = stringResource(R.string.nutrition_dash_date_pattern)
+    return date.format(DateTimeFormatter.ofPattern(pattern, locale)).uppercase(locale)
 }
 
 @Composable
@@ -122,7 +145,7 @@ private fun CalendarButton(onClick: () -> Unit) {
 }
 
 @Composable
-private fun CaloriesCard(state: NutritionDemoUiState) {
+private fun CaloriesCard(state: NutritionUiState.Content) {
     VoraCard(modifier = Modifier.fillMaxWidth(), radius = VoraTheme.radius.r20) {
         Column(verticalArrangement = Arrangement.spacedBy(VoraTheme.spacing.s16)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
@@ -136,19 +159,19 @@ private fun CaloriesCard(state: NutritionDemoUiState) {
                         color = MaterialTheme.colorScheme.onSurfaceVariant,
                     )
                     Text(
-                        text = stringResource(state.caloriesConsumed),
+                        text = stringResource(R.string.nutrition_dash_calories_value, state.kcal),
                         style = MaterialTheme.typography.headlineLarge,
                         color = MaterialTheme.colorScheme.onBackground,
                     )
                     Text(
-                        text = stringResource(state.caloriesGoal),
+                        text = stringResource(R.string.nutrition_dash_calories_goal, state.kcalGoal),
                         style = VoraTheme.text.footnote,
                         color = VoraTheme.colors.textMuted,
                     )
                 }
-                VoraProgressRing(progress = state.caloriesProgress) {
+                VoraProgressRing(progress = state.kcalProgress) {
                     Text(
-                        text = stringResource(state.caloriesPercent),
+                        text = stringResource(R.string.nutrition_dash_calories_percent, (state.kcalProgress * 100).roundToInt()),
                         style = VoraTheme.text.homeValue,
                         color = MaterialTheme.colorScheme.onBackground,
                     )
@@ -163,22 +186,22 @@ private fun CaloriesCard(state: NutritionDemoUiState) {
 }
 
 @Composable
-private fun MacroColumn(macro: MacroSummary, modifier: Modifier) {
+private fun MacroColumn(macro: MacroTotal, modifier: Modifier) {
     Column(modifier = modifier, verticalArrangement = Arrangement.spacedBy(VoraTheme.spacing.s6)) {
         Column(verticalArrangement = Arrangement.spacedBy(VoraTheme.spacing.s2)) {
             Text(
-                text = stringResource(macro.label),
+                text = stringResource(macro.kind.labelRes()),
                 style = VoraTheme.text.fieldLabel,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
             Row(verticalAlignment = Alignment.Bottom) {
                 Text(
-                    text = stringResource(macro.consumed),
+                    text = stringResource(R.string.nutrition_dash_macro_now, macro.grams),
                     style = VoraTheme.text.panelLabel,
                     color = MaterialTheme.colorScheme.onBackground,
                 )
                 Text(
-                    text = stringResource(macro.goal),
+                    text = stringResource(R.string.nutrition_dash_macro_goal, macro.goal),
                     style = MaterialTheme.typography.labelSmall,
                     color = VoraTheme.colors.textMuted,
                 )
@@ -186,6 +209,13 @@ private fun MacroColumn(macro: MacroSummary, modifier: Modifier) {
         }
         VoraProgressBar(progress = macro.progress, color = macro.kind.color())
     }
+}
+
+@StringRes
+private fun MacroKind.labelRes(): Int = when (this) {
+    MacroKind.PROTEIN -> R.string.nutrition_dash_protein
+    MacroKind.CARBS -> R.string.nutrition_dash_carbs
+    MacroKind.FAT -> R.string.nutrition_dash_fat
 }
 
 @Composable
@@ -197,10 +227,10 @@ private fun MacroKind.color(): Color = when (this) {
 
 @Composable
 private fun MealsSection(
-    state: NutritionDemoUiState,
+    state: NutritionUiState.Content,
     onHistory: () -> Unit,
     onMeal: (Long) -> Unit,
-    onAddDinner: () -> Unit,
+    onAddMeal: () -> Unit,
 ) {
     Column(verticalArrangement = Arrangement.spacedBy(VoraTheme.spacing.s10)) {
         Row(
@@ -222,14 +252,14 @@ private fun MealsSection(
             )
         }
         Column(verticalArrangement = Arrangement.spacedBy(VoraTheme.spacing.s8)) {
-            state.meals.forEach { meal -> MealRow(meal, onClick = { onMeal(meal.id) }) }
-            PendingMealRow(state.pendingMeal, onAddDinner)
+            state.meals.forEach { meal -> MealCard(meal, onClick = { onMeal(meal.id) }) }
+            state.pending?.let { PendingMealRow(it, onAddMeal) }
         }
     }
 }
 
 @Composable
-private fun MealRow(meal: MealSummary, onClick: () -> Unit) {
+private fun MealCard(meal: MealRow, onClick: () -> Unit) {
     VoraCard(
         modifier = Modifier.fillMaxWidth(),
         padding = VoraTheme.spacing.s12,
@@ -239,18 +269,18 @@ private fun MealRow(meal: MealSummary, onClick: () -> Unit) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(VoraTheme.spacing.s2)) {
                 Text(
-                    text = stringResource(meal.name),
+                    text = meal.type.label(),
                     style = MaterialTheme.typography.labelLarge,
                     color = MaterialTheme.colorScheme.onBackground,
                 )
                 Text(
-                    text = stringResource(meal.items),
+                    text = meal.name,
                     style = VoraTheme.text.footnote,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
             }
             Text(
-                text = stringResource(meal.kcal),
+                text = stringResource(R.string.nutrition_kcal, meal.kcal),
                 style = MaterialTheme.typography.labelLarge,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.onBackground,
@@ -260,7 +290,7 @@ private fun MealRow(meal: MealSummary, onClick: () -> Unit) {
 }
 
 @Composable
-private fun PendingMealRow(meal: PendingMealSummary, onAdd: () -> Unit) {
+private fun PendingMealRow(type: MealType, onAdd: () -> Unit) {
     VoraCard(
         modifier = Modifier.fillMaxWidth(),
         padding = VoraTheme.spacing.s12,
@@ -269,12 +299,12 @@ private fun PendingMealRow(meal: PendingMealSummary, onAdd: () -> Unit) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(VoraTheme.spacing.s2)) {
                 Text(
-                    text = stringResource(meal.name),
+                    text = type.label(),
                     style = MaterialTheme.typography.labelLarge,
                     color = MaterialTheme.colorScheme.onBackground,
                 )
                 Text(
-                    text = stringResource(meal.hint),
+                    text = stringResource(R.string.nutrition_dash_pending_empty),
                     style = VoraTheme.text.footnote,
                     color = VoraTheme.colors.textMuted,
                 )
@@ -344,11 +374,13 @@ private fun VoraPanelCard(onVoice: () -> Unit, onPhoto: () -> Unit, onSearch: ()
 private fun NutritionDashboardScreenPreview() {
     Parcialtp3Theme {
         NutritionDashboardScreen(
-            state = nutritionDemoState(),
+            state = NutritionDemoData.previewState(),
+            date = LocalDate.of(2026, 9, 8),
             onCalendar = {},
+            onRetry = {},
             onHistory = {},
             onMeal = {},
-            onAddDinner = {},
+            onAddMeal = {},
             onVoice = {},
             onPhoto = {},
             onSearch = {},
