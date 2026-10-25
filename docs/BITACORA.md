@@ -695,3 +695,33 @@ Formato:
     - Después de las correcciones de los revisores se probó solo el doble toque.
     - Sin verificar: C51 (la comida sigue al cerrar la app) sin evidencia guardada, y `connectedDebugAndroidTest` (la rama no toca Room).
 - Commit / PR:
+
+### 2026-10-25 · Sofi · feat(nutrition): maquetar Nutrition / 08 Meal Details según Figma
+- Carril y requisitos: B · UI01, UI03, NAV02, NAV03, NAV04, RF04 · tarea m, PR 8 de 8. Frame: `Nutrition / 08 — Meal Details` (nodo 1:1284 de la copia `GRk3uXr8…`). Rama `feat/nutrition-meal-details`, sacada de `main` con el PR 7 ya unido.
+- Plan aprobado: `MealDetailRoute` y `MealDetailScreen` sobre `MealDetailViewModel`, que ya tenía la lógica desde VC-l (C41 a C50). Encabezado con el tipo de comida, tarjeta de totales con `VoraProgressRing` y P/C/F, consejo con `VoraInfoMessage`, la comida en "Ingredients" y tres botones. "Edit Meal" abre 07 con el id (el grafo arma la confirmación antes de navegar, como en el PR 7); "Duplicate Meal" guarda una copia y vuelve; "Delete Meal" pide confirmación y vuelve. La barra la pone el Scaffold; con scroll (UI03).
+- Qué propuso la IA y qué cambiamos:
+    - Room guarda la comida con sus totales, sin ingredientes, peso ni hora. Sofi eligió dejar el título "Ingredients" con una sola tarjeta: el nombre de la comida, la proteína en el lugar de los gramos ("38g protein") y las kcal. Cada 08 muestra una sola comida: la que se tocó en 01 o 02.
+    - La IA propuso mostrar la fecha de la comida en el lugar del "13:12"; Sofi prefirió el "13:12" del Figma fijo. El consejo ("36g away…") también es fijo, como el de 01. Los dos son datos de demostración.
+    - Eliminar (RF04) no tiene control en el Figma. Sofi preguntó si "Edit Meal" se podía reemplazar por "Delete Meal", pensando que editar era de demostración. La IA aclaró que la edición es real (C30, C37) y quedó un tercer botón "Delete Meal" con el estilo `Destructive` y un `AlertDialog` de Material 3.
+    - El anillo es kcal de la comida / 2100 (`HomeDemoData.KCAL_GOAL`, la meta de demostración de 01), topado en 1. Por revisor-arquitectura (MEDIA), la cuenta salió de la pantalla: es la propiedad `kcalProgress` de `MealDetailUiState.Content`, como `kcalProgress` en 01. No cambia el ViewModel ni los tests.
+    - La fila de P/C/F pasó a `NutritionCommon.kt` (`MacroTotalsRow`), compartida con 07 en un commit `refactor` aparte. Sofi confirmó en el emulador que 03, 06 y 07 se ven igual. `NutritionHeader` suma un texto opcional a la derecha y una versión con el título como texto.
+    - Las tipografías se midieron contra Manrope, porque el conector de Figma no tenía cupo: "520 kcal" 32 SemiBold, "TOTAL CALORIES" 12, macros e "Ingredients" 16 SemiBold, nombre 13 SemiBold y kcal de la fila 14 Regular.
+- Revisores:
+    - revisor-visual: APROBADA en la primera vuelta, con todo a menos de 3 dp del frame.
+    - revisor-arquitectura: nada bloquea. La MEDIA del anillo se corrigió, igual que el comentario viejo de la Route de 07.
+    - revisor-requisitos: nada bloquea. C41 a C50 y la edición (C30, C33 y C37) tienen camino desde la UI.
+    - `/code-review`: 5 hallazgos, ninguno aplicado.
+- Sugerencias sin aplicar:
+    - Guardar una edición lleva al Dashboard y no vuelve a 08: Sofi lo dejó así a propósito.
+    - Mientras se elimina, los botones siguen activos. El ViewModel corta el doble toque, pero "Edit Meal" abriría 07 con "esta comida ya no existe".
+    - "Duplicate Meal" vuelve sin avisar que se creó la copia.
+    - El error de carga no tiene "Reintentar" (es Room, no una consulta remota).
+    - El encabezado vacío mientras carga se anuncia como título en TalkBack.
+    - Al editar, el grafo pasa `meal.name` como nombre del borrador, y ese dato no se usa.
+    - Para Martu y Hector: `LoadingCard` vive en `WorkoutDashboardScreen.kt` y Nutrition lo importa de Workout. Moverlo a `ui/components/` toca 7 archivos de 3 zonas: queda para ellos.
+    - Para Fiore: `PANTALLAS.md` línea 256 (dice que 03 carga, que 02 elimina y que el total sale de un `SUM`) y el punto 4 de la §17: eliminar ya tiene control, en 08.
+- Tests: no se sumaron ni se cambiaron tests: la lógica es la de VC-l. 189 unitarios en verde.
+- Evidencia: `docs/evidencia/visual/nutrition-08-{411dp,360dp}.png`, de un emulador de 1080x2424 a 420 y 480 dpi (la densidad se devolvió). Entra sin scroll en los dos tamaños. `assembleDebug`, `testDebugUnitTest` y `lintDebug` en verde, y `reglas.sh` exit 0.
+    - A mano, Sofi probó en el emulador abrir una comida desde 01 y 02, editar, duplicar, eliminar con confirmación y rotar, y anduvo todo. Después de mover el anillo al estado no se volvió a probar.
+    - Sin verificar: capturas del diálogo y de los estados de error, y que el total de Home baje al eliminar (es la misma consulta a Room que ya estaba).
+- Commit / PR:
