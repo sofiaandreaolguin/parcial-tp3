@@ -84,14 +84,18 @@ fun FoodConfirmationScreen(
             )
             else -> {
                 if (ingredients.isNotEmpty()) {
-                    IngredientList(ingredients, onDemo)
-                    VoraButton(
-                        text = stringResource(R.string.nutrition_confirm_add_ingredient),
-                        onClick = onDemo,
-                        style = VoraButtonStyle.Text,
-                        size = VoraButtonSize.Medium,
-                    )
-                    TotalsPanel(confirmation.form)
+                    // El botón mide ~46 con su relleno y el texto 19: con 6 a cada lado, el texto queda a
+                    // los ~29,5 de las tarjetas y del panel que mide el frame.
+                    Column(verticalArrangement = Arrangement.spacedBy(VoraTheme.spacing.s6)) {
+                        IngredientList(ingredients, onDemo)
+                        VoraButton(
+                            text = stringResource(R.string.nutrition_confirm_add_ingredient),
+                            onClick = onDemo,
+                            style = VoraButtonStyle.Text,
+                            size = VoraButtonSize.Medium,
+                        )
+                        TotalsPanel(confirmation.form)
+                    }
                 } else {
                     MealFields(confirmation, onFormChange)
                 }
@@ -121,17 +125,17 @@ private fun IngredientCard(ingredient: DraftIngredient, onDemo: () -> Unit) {
                 horizontalArrangement = Arrangement.spacedBy(VoraTheme.spacing.s12),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
+                // 14 y no 15: "Grilled Chicken Breast" mide 145 en el frame (14 Medium) y "280 kcal" 55 (14 SemiBold).
                 Text(
                     text = stringResource(ingredient.name),
-                    style = MaterialTheme.typography.bodyLarge,
+                    style = MaterialTheme.typography.labelLarge,
                     fontWeight = FontWeight.Medium,
                     color = MaterialTheme.colorScheme.onSurface,
                     modifier = Modifier.weight(1f),
                 )
                 Text(
                     text = stringResource(R.string.nutrition_kcal, ingredient.kcal),
-                    style = MaterialTheme.typography.bodyLarge,
-                    fontWeight = FontWeight.SemiBold,
+                    style = MaterialTheme.typography.labelLarge,
                     color = MaterialTheme.colorScheme.onSurface,
                 )
             }
@@ -145,6 +149,8 @@ private fun IngredientCard(ingredient: DraftIngredient, onDemo: () -> Unit) {
                     onDecrease = onDemo,
                     onIncrease = onDemo,
                     onDark = false,
+                    valueStyle = MaterialTheme.typography.labelLarge,
+                    square = true,
                 )
                 VoraButton(
                     text = stringResource(R.string.nutrition_confirm_remove),
