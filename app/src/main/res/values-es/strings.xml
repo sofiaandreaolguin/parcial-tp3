@@ -741,6 +741,20 @@
     <string name="nutrition_confirm_error_number">Ingresá un número</string>
     <string name="nutrition_confirm_error_negative">No puede ser negativo</string>
     <string name="nutrition_confirm_not_found">Esta comida ya no existe.</string>
+    <!-- Nutrition / 08 — Meal Details (nodo 1:1284) -->
+    <string name="nutrition_detail_time_demo">13:12</string>
+    <string name="nutrition_detail_total_label">CALORÍAS TOTALES</string>
+    <string name="nutrition_detail_ring_desc">%1$d%% de tus calorías del día</string>
+    <string name="nutrition_detail_advice">Buena elección de proteína. Te faltan 36 g para tu meta diaria de proteína.</string>
+    <string name="nutrition_detail_ingredients">Ingredientes</string>
+    <string name="nutrition_detail_protein_line">%1$d g de proteína</string>
+    <string name="nutrition_detail_edit">Editar comida</string>
+    <string name="nutrition_detail_duplicate">Duplicar comida</string>
+    <string name="nutrition_detail_delete">Eliminar comida</string>
+    <string name="nutrition_detail_delete_title">¿Eliminar esta comida?</string>
+    <string name="nutrition_detail_delete_body">Se va a quitar de este día y de tus totales.</string>
+    <string name="nutrition_detail_delete_confirm">Eliminar</string>
+    <string name="nutrition_detail_delete_cancel">Cancelar</string>
     <!-- Progress / 04 — Nutrition Progress (nodo 1:2032) -->
     <string name="progress_nutrition_title">Progreso de nutrición</string>
     <string name="progress_nutrition_calories">CALORÍAS PROM.</string>

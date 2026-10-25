@@ -187,28 +187,13 @@ private fun TotalsPanel(form: MealForm) {
                 )
             }
             HorizontalDivider(thickness = VoraTheme.sizes.border, color = VoraTheme.colors.onDarkSubtle)
-            // En el frame las tres columnas quedan con el mismo espacio entre ellas (CARBS en x 151 de 318).
-            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                MacroTotal(R.string.nutrition_confirm_protein, form.protein)
-                MacroTotal(R.string.nutrition_confirm_carbs, form.carbs)
-                MacroTotal(R.string.nutrition_confirm_fat, form.fat)
-            }
+            MacroTotalsRow(
+                protein = form.protein,
+                carbs = form.carbs,
+                fat = form.fat,
+                labelColor = MaterialTheme.colorScheme.secondary,
+            )
         }
-    }
-}
-
-@Composable
-private fun MacroTotal(@StringRes label: Int, grams: String) {
-    Column(Modifier.semantics(mergeDescendants = true) {}) {
-        Text(
-            text = stringResource(label),
-            style = MaterialTheme.typography.bodySmall,
-            color = MaterialTheme.colorScheme.secondary,
-        )
-        Text(
-            text = stringResource(R.string.nutrition_confirm_macro_value, grams),
-            style = MaterialTheme.typography.titleSmall,
-        )
     }
 }
 

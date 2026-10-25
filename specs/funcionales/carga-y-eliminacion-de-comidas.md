@@ -323,3 +323,8 @@ Casos de la plantilla que no aplican: sin conexión, 404, 503 y JSON inválido (
   - el botón dice "Add to [tipo]", o "Save Meal" sin tipo o al editar;
   - −/+, "Remove" y "+ Add Ingredient" muestran el aviso de demostración: los ingredientes no se guardan;
   - `onOpenConfirmation` la llama el grafo antes de navegar, no la Route (CONTEXTO §2). Para editar desde 08 hay que llamarla con el id antes de navegar.
+- 2026-10-25. Pantalla 08 maquetada (PR 8 de VC-m), conectada a `MealDetailViewModel` sin cambiar su lógica. Decisiones con Sofi:
+  - "Ingredients" muestra una tarjeta con la comida, porque no hay ingredientes guardados;
+  - "13:12" y el consejo son fijos;
+  - eliminar es un botón "Delete Meal" con un `AlertDialog` (el Figma no lo tiene);
+  - "Edit Meal" abre la confirmación con el id antes de navegar.
