@@ -118,6 +118,8 @@
     <string name="edit_height">HEIGHT</string>
     <string name="edit_weight">WEIGHT</string>
     <string name="edit_gender">GENDER</string>
+    <string name="edit_date_confirm">OK</string>
+    <string name="edit_date_cancel">Cancel</string>
     <string name="edit_height_value">%1$d cm</string>
     <string name="edit_weight_value">%1$d kg</string>
     <string name="edit_info">Used to personalise your recommendations.</string>

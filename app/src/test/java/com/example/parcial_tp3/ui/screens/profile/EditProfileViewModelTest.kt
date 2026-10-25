@@ -197,4 +197,36 @@ class EditProfileViewModelTest {
         assertTrue(esTextoDeStrings(vm.estado.saveError))
         assertTrue(sinPerfil.ediciones.isEmpty())
     }
+
+    @Test
+    fun `C19 elegir solo fecha y genero los guarda y deja el resto del formulario`() = runTest {
+        val vm = vmListo()
+        vm.uiState.onEach { }.launchIn(backgroundScope)
+
+        vm.onBirthDateChange(LocalDate.of(1988, 2, 29))
+        vm.onGenderChange(Gender.NON_BINARY)
+        assertEquals(LocalDate.of(1988, 2, 29), vm.estado.birthDate)
+        assertEquals(Gender.NON_BINARY, vm.estado.gender)
+        vm.save(); advanceUntilIdle()
+
+        val guardado = perfiles.ediciones.single()
+        assertEquals(LocalDate.of(1988, 2, 29), guardado.birthDate)
+        assertEquals(Gender.NON_BINARY, guardado.gender)
+        assertEquals("Ana", guardado.firstName)
+        assertEquals(Gender.NON_BINARY, perfiles.profile.value.gender)
+    }
+
+    @Test
+    fun `C21 una fecha valida elegida despues de una futura limpia el error`() = runTest {
+        val vm = vmListo()
+        vm.uiState.onEach { }.launchIn(backgroundScope)
+
+        vm.onBirthDateChange(LocalDate.now().plusDays(1)); vm.save(); advanceUntilIdle()
+        assertTrue(esTextoDeStrings(vm.estado.birthDateError))
+
+        vm.onBirthDateChange(LocalDate.of(1995, 3, 14))
+        assertNull(vm.estado.birthDateError)
+        vm.save(); advanceUntilIdle()
+        assertEquals(LocalDate.of(1995, 3, 14), perfiles.ediciones.single().birthDate)
+    }
 }

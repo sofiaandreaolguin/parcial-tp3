@@ -1,6 +1,24 @@
 package com.example.parcial_tp3.ui.screens.profile
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.unit.dp
+import androidx.compose.foundation.layout.Box
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.SelectableDates
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.semantics.Role
+import com.example.parcial_tp3.ui.screens.nutrition.NutritionDatePickerDialog
+import com.example.parcial_tp3.ui.screens.nutrition.toPickerMillis
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -48,11 +66,28 @@ fun EditProfileScreen(
     onLastNameChange: (String) -> Unit = {},
     onHeightChange: (Int) -> Unit = {},
     onWeightChange: (Int) -> Unit = {},
+    onBirthDateChange: (LocalDate) -> Unit = {},
+    onGenderChange: (Gender) -> Unit = {},
 ) {
+    var showDatePicker by rememberSaveable { mutableStateOf(false) }
+    var showGenderMenu by rememberSaveable { mutableStateOf(false) }
     val locale = LocalConfiguration.current.locales[0]
     val pattern = stringResource(R.string.edit_birth_date_pattern)
     val formatter = remember(pattern, locale) { DateTimeFormatter.ofPattern(pattern, locale) }
     val birthDate = state.birthDate.format(formatter)
+    if (showDatePicker) {
+        NutritionDatePickerDialog(
+            selected = state.birthDate,
+            onConfirm = {
+                onBirthDateChange(it)
+                showDatePicker = false
+            },
+            onDismiss = { showDatePicker = false },
+            selectableDates = NoFutureDates,
+            confirmText = stringResource(R.string.edit_date_confirm),
+            cancelText = stringResource(R.string.edit_date_cancel),
+        )
+    }
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -94,11 +129,10 @@ fun EditProfileScreen(
                 onValueChange = onLastNameChange,
                 label = stringResource(R.string.edit_last_name),
             )
-            VoraTextField(
-                value = birthDate,
-                onValueChange = {},
+            PickerField(
                 label = stringResource(R.string.edit_birth_date),
-                readOnly = true,
+                value = birthDate,
+                onClick = { showDatePicker = true },
                 error = state.birthDateError?.let { stringResource(it) },
             )
             Row(horizontalArrangement = Arrangement.spacedBy(VoraTheme.spacing.s12)) {
@@ -117,7 +151,32 @@ fun EditProfileScreen(
                     modifier = Modifier.weight(1f),
                 )
             }
-            ReadOnlyField(stringResource(R.string.edit_gender), stringResource(state.gender.label()))
+            var fieldWidth by remember { mutableStateOf(0.dp) }
+            val density = LocalDensity.current
+            Box(Modifier.onSizeChanged { fieldWidth = with(density) { it.width.toDp() } }) {
+                PickerField(
+                    label = stringResource(R.string.edit_gender),
+                    value = stringResource(state.gender.label()),
+                    onClick = { showGenderMenu = true },
+                )
+                DropdownMenu(
+                    expanded = showGenderMenu,
+                    onDismissRequest = { showGenderMenu = false },
+                    modifier = Modifier.width(fieldWidth),
+                    shape = RoundedCornerShape(VoraTheme.radius.r12),
+                    containerColor = MaterialTheme.colorScheme.surface,
+                ) {
+                    Gender.entries.forEach { gender ->
+                        DropdownMenuItem(
+                            text = { Text(stringResource(gender.label())) },
+                            onClick = {
+                                onGenderChange(gender)
+                                showGenderMenu = false
+                            },
+                        )
+                    }
+                }
+            }
             VoraInfoMessage(
                 text = stringResource(R.string.edit_info),
                 icon = painterResource(R.drawable.ic_info),
@@ -142,6 +201,12 @@ fun EditProfileScreen(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
+private object NoFutureDates : SelectableDates {
+    override fun isSelectableDate(utcTimeMillis: Long) = utcTimeMillis <= LocalDate.now().toPickerMillis()
+    override fun isSelectableYear(year: Int) = year <= LocalDate.now().year
+}
+
 /** Entero de 0 en adelante: vacio es 0, que la validacion rechaza (C21). */
 @Composable
 private fun NumberField(
@@ -161,15 +226,25 @@ private fun NumberField(
     )
 }
 
+/** Se ve como [VoraTextField]; el toque abre un selector en vez del teclado. */
 @Composable
-private fun ReadOnlyField(label: String, value: String, modifier: Modifier = Modifier) {
-    VoraTextField(
-        value = value,
-        onValueChange = {},
-        modifier = modifier,
-        label = label,
-        readOnly = true,
-    )
+private fun PickerField(
+    label: String,
+    value: String,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    error: String? = null,
+) {
+    Box(modifier) {
+        VoraTextField(value = value, onValueChange = {}, label = label, readOnly = true, error = error)
+        // el campo de texto se come el toque: una capa encima lo recibe. Cubre solo el campo (la etiqueta mide 18)
+        Box(
+            Modifier
+                .matchParentSize()
+                .padding(top = VoraTheme.spacing.s20)
+                .clickable(role = Role.DropdownList, onClick = onClick),
+        )
+    }
 }
 
 @Preview(showBackground = true, heightDp = 900)

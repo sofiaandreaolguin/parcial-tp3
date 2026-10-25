@@ -25,6 +25,8 @@ fun EditProfileRoute(
         onLastNameChange = viewModel::onLastNameChange,
         onHeightChange = viewModel::onHeightChange,
         onWeightChange = viewModel::onWeightChange,
+        onBirthDateChange = viewModel::onBirthDateChange,
+        onGenderChange = viewModel::onGenderChange,
         onDemo = demo,
     )
 }
