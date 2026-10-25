@@ -115,7 +115,7 @@ Arquitectura y entrega
 | C13 | `C13 destino inicial con sesion es Home` (función pura del `startDestination`) | `test/` | Sí: `expected:<[home_graph]> but was:<[]>` |
 | C14 | `C14 destino inicial sin sesion es SignIn` | `test/` | Sí: `expected:<[access_graph]> but was:<[]>` |
 | C15 | `C15 log out cierra la sesion, vacia el perfil y navega a SignIn` | `test/` | Sí: `expected:<1> but was:<0>` (no cierra la sesión) |
-| C16 | `C16 despues del log out la pila no vuelve a Home` (`TestNavHostController`) | `test/` | **Pendiente**: no escrito. `TestNavHostController` no corre en `test/` sin `navigation-testing` y Robolectric (o va a `androidTest/`); falta decidir y coordinar `build.gradle.kts` |
+| C16 | `C16 despues del log out la pila no vuelve a Home` (`TestNavHostController` con Robolectric, `LogOutNavigationTest`) | `test/` | Sí: con `cerrarSesion()` sin `popUpTo`, falla. Antes de corregirlo, `clearBackStack` antes de navegar lanzaba `IllegalStateException` si había una pestaña con estado guardado |
 | C17 | `C17 otra cuenta no ve datos de perfil de la anterior` | `test/` | Sí: `expected:<[ana@mail.com]> but was:<[]>` (no lee el perfil de la cuenta) |
 | C18 | `C18 al iniciar sesion y en arranque en frio se lee el perfil de la cuenta` | `test/` | Sí: `expected:<[(uid-ana, ana@mail.com)]> but was:<[]>` |
 | C19 | `C19 guardar perfil escribe solo los 6 campos y vuelve` | `test/` | Sí: no hay escritura (`ediciones` vacío); y `toFields()` devuelve `{}` en vez de los 6 campos |
@@ -129,9 +129,9 @@ Arquitectura y entrega
 | C27 | Prueba manual: cuenta B lee y escribe `users/{uidA}` y se deniega; evidencia `C27.png` | simulador de reglas o app | n/a (manual) |
 | C28 | Prueba manual: sin sesión se deniega; evidencia `C28.png` | simulador de reglas | n/a (manual) |
 | C29 | Prueba manual: otra ruta se deniega; evidencia `C29.png` | simulador de reglas | n/a (manual) |
-| C30 | `scripts/reglas.sh` falla si `ui/` importa `com.google.firebase` | `scripts/` | Pendiente para la implementación (extender `scripts/reglas.sh`) |
+| C30 | `scripts/reglas.sh` falla si `ui/` importa `com.google.firebase` | `scripts/` | Sí: con un import de Firebase en `ui/` (C30) o un `FirebaseUser` en una firma de `AuthRepository` (C32), la regla devuelve 2 |
 | C31 | `C31 cada excepcion de Firebase se traduce a un error propio` | `test/` | Sí: `expected:<INVALID_CREDENTIALS> but was:<UNKNOWN>` y mensajes sin texto de `strings.xml` |
-| C32 | `scripts/reglas.sh` falla si `FirebaseUser` o `DocumentSnapshot` aparecen en una firma pública de `data/repository` | `scripts/` | Pendiente para la implementación (extender `scripts/reglas.sh`) |
+| C32 | `scripts/reglas.sh` falla si `FirebaseUser` o `DocumentSnapshot` aparecen en una firma pública de `data/repository` | `scripts/` | Sí: con un import de Firebase en `ui/` (C30) o un `FirebaseUser` en una firma de `AuthRepository` (C32), la regla devuelve 2 |
 | C33 | `C33 signin con email invalido o contrasena vacia no llama a Firebase; contrasena corta si` | `test/` | Sí: `expected:<1> but was:<0>` (la contraseña corta no llega a Firebase) |
 | C34 | `C34 demasiados intentos muestra su error propio` | `test/` | Sí: `formError` nulo |
 | C35 | `C35 sin permiso o sesion invalida cierra la sesion` | `test/` | Sí: `expected:<1> but was:<0>` (no cierra la sesión) |
