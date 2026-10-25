@@ -103,6 +103,9 @@ fun PreWorkoutScreen(
                 WorkoutDetailUiState.Error -> VoraCardOnDark(Modifier.fillMaxWidth()) {
                     Text(text = stringResource(R.string.details_error), style = MaterialTheme.typography.bodyMedium)
                 }
+                WorkoutDetailUiState.NotAvailableOffline -> VoraCardOnDark(Modifier.fillMaxWidth()) {
+                    Text(text = stringResource(R.string.workout_not_available_offline), style = MaterialTheme.typography.bodyMedium)
+                }
                 is WorkoutDetailUiState.Content -> PreWorkoutContent(
                     detail = state.detail,
                     onAskVora = onAskVora,

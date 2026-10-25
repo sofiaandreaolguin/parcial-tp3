@@ -81,6 +81,10 @@ fun WorkoutDetailsScreen(
                     text = stringResource(R.string.details_error),
                     icon = painterResource(R.drawable.ic_info),
                 )
+                WorkoutDetailUiState.NotAvailableOffline -> VoraInfoMessage(
+                    text = stringResource(R.string.workout_not_available_offline),
+                    icon = painterResource(R.drawable.ic_info),
+                )
                 is WorkoutDetailUiState.Content -> DetailContent(
                     detail = state.detail,
                     onExercise = { exerciseId -> onExercise(state.detail.id, exerciseId) },

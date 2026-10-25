@@ -58,7 +58,7 @@ Cuando se abre el detalle de un entrenamiento, el ViewModel lee el `workoutId` d
 
 Cada línea es un test. Si no se te ocurre el test, la línea está mal escrita.
 
-Repositorio de demostración (se borra junto con la demo):
+Repositorio de demostración (**retirados el 25/10**: la demo y su test se borraron con la spec `detalle-y-cache-de-entrenamientos.md`):
 
 - D1. CUANDO se pide `getWorkoutDetail` con `"w01"`, `"w02"` o `"w03"`, la demo DEBE devolver `Result.success` con el `WorkoutDetail` de ese id igual, campo por campo y con los ejercicios en orden, al de las tablas de "Datos" (NAV04, RF01: nombre, nivel, duración y ejercicios con series, repeticiones e instrucciones).
 - D2. En los tres detalles de la demo, `exerciseCount` DEBE ser igual a `exercises.size` (RF01: la demo no puede contradecir su propio resumen).
@@ -73,7 +73,7 @@ ViewModel (sobreviven al cambio por el detalle real):
 - C5. SI el repositorio devuelve `Result.failure`, ENTONCES el estado DEBE pasar a `Error` y no quedar en `Loading` (RF07).
 - C6. SI la ruta no trae `workoutId`, o lo trae vacío o con solo espacios, ENTONCES el estado DEBE pasar a `Error` sin llamar al repositorio.
 - C7. CUANDO el estado del mismo ViewModel se deja de observar y se vuelve a observar con más de 5 s de tiempo virtual entre una y otra (como al rotar), el repositorio DEBE haber sido llamado una sola vez y el estado DEBE seguir siendo el mismo `Content` (RF07).
-- C8. La app DEBE compilar con `./gradlew assembleDebug` con `WorkoutDetailViewModel` inyectable: Hilt valida al compilar el grafo `WorkoutDetailViewModel` → `WorkoutDetailRepository` → `DemoWorkoutDetailRepository` (RF08).
+- C8. La app DEBE compilar con `./gradlew assembleDebug` con `WorkoutDetailViewModel` inyectable: Hilt valida al compilar el grafo `WorkoutDetailViewModel` → `WorkoutDetailRepository` → `DemoWorkoutDetailRepository` (RF08). **Reemplazado el 25/10 por C30 de `detalle-y-cache-de-entrenamientos.md`**: el grafo termina en `WorkoutDetailRepositoryImpl`.
 
 Plantillas: **La app DEBE** (siempre) · **CUANDO** (ante un evento) · **MIENTRAS** (durante un estado) · **SI ... ENTONCES** (algo sale mal) · **DONDE** (opcional, para ampliaciones).
 
@@ -93,9 +93,9 @@ Casos de la plantilla y cómo se cubren acá:
 ## Tests
 | Criterio | Test | Dónde | Vi el rojo |
 |---|---|---|---|
-| D1 | `` `D1 detalle demo devuelve w01 w02 y w03 cada uno con lo suyo` `` (compara por igualdad con el `WorkoutDetail` esperado, armado en el test desde las tablas) | `test/` · `data/repository/DemoWorkoutDetailRepositoryTest` | Sí, 23/10: `w01 tiene que ser exito, fue Failure(NotImplementedError)` |
-| D2 | `` `D2 detalle demo exerciseCount coincide con la cantidad de ejercicios` `` | `test/` · `data/repository/DemoWorkoutDetailRepositoryTest` | Sí, 23/10: `w01 tiene que ser exito, fue Failure(NotImplementedError)` |
-| D3 | `` `D3 detalle demo con id desconocido devuelve failure sin lanzar` `` | `test/` · `data/repository/DemoWorkoutDetailRepositoryTest` | Sí, 23/10: `tiene que fallar con NoSuchElementException, fue Failure(NotImplementedError)` |
+| D1 | `` `D1 detalle demo devuelve w01 w02 y w03 cada uno con lo suyo` `` (compara por igualdad con el `WorkoutDetail` esperado, armado en el test desde las tablas) | `test/` · `data/repository/DemoWorkoutDetailRepositoryTest` | Sí, 23/10: `w01 tiene que ser exito, fue Failure(NotImplementedError)`. **Retirado el 25/10**: se borró con la demo |
+| D2 | `` `D2 detalle demo exerciseCount coincide con la cantidad de ejercicios` `` | `test/` · `data/repository/DemoWorkoutDetailRepositoryTest` | Sí, 23/10: `w01 tiene que ser exito, fue Failure(NotImplementedError)`. **Retirado el 25/10**: se borró con la demo |
+| D3 | `` `D3 detalle demo con id desconocido devuelve failure sin lanzar` `` | `test/` · `data/repository/DemoWorkoutDetailRepositoryTest` | Sí, 23/10: `tiene que fallar con NoSuchElementException, fue Failure(NotImplementedError)`. **Retirado el 25/10**: se borró con la demo |
 | C1 | `` `C1 detalle arranca en Loading y pasa a Content sin ejercicio elegido` `` | `test/` · `ui/screens/workout/WorkoutDetailViewModelTest` (`FakeWorkoutDetailRepository`) | Sí, 23/10: `expected Content(...) but was Loading` |
 | C2 | `` `C2 detalle pide al repositorio el workoutId de la ruta` `` | `test/` · `WorkoutDetailViewModelTest` | Sí, 23/10: `expected:<[w02]> but was:<[]>` |
 | C3 | `` `C3 detalle con exerciseId elige ese ejercicio` `` | `test/` · `WorkoutDetailViewModelTest` | Sí, 23/10: `expected Content(..., selectedExercise=e05) but was Loading` |
@@ -103,7 +103,7 @@ Casos de la plantilla y cómo se cubren acá:
 | C5 | `` `C5 detalle si el repositorio falla pasa a Error` `` | `test/` · `WorkoutDetailViewModelTest` | Sí, 23/10: `tiene que ser Error, fue Loading` |
 | C6 | `` `C6 detalle sin workoutId pasa a Error sin llamar al repositorio` `` (sin la clave, `""` y `"  "`) | `test/` · `WorkoutDetailViewModelTest` | Sí, 23/10, en el estado (`sin la clave tiene que ser Error, fue Loading`). Que no llame al repositorio pasa en rojo: lleva control negativo |
 | C7 | `` `C7 detalle volver a observar no repite la consulta ni pierde el estado` `` | `test/` · `WorkoutDetailViewModelTest` | Sí, 23/10, en la primera observación (`but was Loading`). La consulta única lleva control negativo con `WhileSubscribed` |
-| C8 | `./gradlew assembleDebug` (no es un test unitario: la salida va a la evidencia) | build | Pasa en rojo (el `@Binds` es contrato y la firma vacía ya lo trae): lleva control negativo |
+| C8 | `./gradlew assembleDebug` (no es un test unitario: la salida va a la evidencia) | build | Pasa en rojo (el `@Binds` es contrato y la firma vacía ya lo trae): lleva control negativo. **Reemplazado el 25/10 por C30** de `detalle-y-cache-de-entrenamientos.md` |
 
 - Todo va en `test/`: no hay Room. Los nombres empiezan con "detalle" para no confundirse con los `C1`… del catálogo.
 - El ViewModel se arma en el test con `SavedStateHandle(mapOf(Rutas.ARG_WORKOUT_ID to "w02"))`, sin Android.
@@ -125,3 +125,4 @@ Casos de la plantilla y cómo se cubren acá:
 - 2026-10-23. Spec creada para el PR 3 de la tarea k (base del detalle con datos de demostración), a partir del plan aprobado. Los datos de la demo salen de `fixtures.json` del mock, que trae los tres entrenamientos completos.
 - 2026-10-23. Hector aprueba la spec, con C4 y C6 como estaban. Tests en rojo (skill tests-rojo): los 10 fallan por el resultado, no por compilación.
 - 2026-10-23. Implementación (skill implementar), sin tocar los tests: 59 tests en verde y controles negativos de C6, C7 y C8. Tras `/code-review`, la demo copia `exerciseCount` 3 del mock en vez de calcularlo, así D2 controla algo. Evidencia en `docs/evidencia/tests/2026-10-23-detalle-demo.md`.
+- 2026-10-25. El detalle real (`WorkoutDetailRepositoryImpl`, spec `detalle-y-cache-de-entrenamientos.md`) reemplaza a la demo: se borran `DemoWorkoutDetailRepository` y su test, D1 a D3 pasan a retirados y C8 a reemplazado por C30. Los tests del ViewModel (C1 a C7) no se tocaron.

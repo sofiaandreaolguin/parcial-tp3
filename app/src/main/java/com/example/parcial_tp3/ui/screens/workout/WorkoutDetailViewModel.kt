@@ -4,6 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.parcial_tp3.data.repository.WorkoutDetailRepository
+import com.example.parcial_tp3.data.repository.WorkoutNotCachedException
 import com.example.parcial_tp3.domain.model.WorkoutDetail
 import com.example.parcial_tp3.ui.navigation.Rutas
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -36,7 +37,13 @@ class WorkoutDetailViewModel @Inject constructor(
             viewModelScope.launch {
                 _uiState.value = repository.getWorkoutDetail(workoutId).fold(
                     onSuccess = { contenido(it, exerciseId) },
-                    onFailure = { WorkoutDetailUiState.Error },
+                    onFailure = { error ->
+                        if (error is WorkoutNotCachedException) {
+                            WorkoutDetailUiState.NotAvailableOffline
+                        } else {
+                            WorkoutDetailUiState.Error
+                        }
+                    },
                 )
             }
         }

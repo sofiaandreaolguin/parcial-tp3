@@ -1,6 +1,7 @@
 package com.example.parcial_tp3.ui.screens.workout
 
 import androidx.lifecycle.SavedStateHandle
+import com.example.parcial_tp3.data.repository.WorkoutNotCachedException
 import com.example.parcial_tp3.domain.model.Exercise
 import com.example.parcial_tp3.domain.model.WorkoutDetail
 import com.example.parcial_tp3.domain.model.WorkoutLevel
@@ -21,7 +22,8 @@ import org.junit.Test
 /**
  * WorkoutDetailViewModel con un repositorio falso (NAV04, RF07): lee la ruta, carga, error y
  * rotacion. El detalle se arma aca y no se lee de la demo, que se borra con el detalle real.
- * Spec: specs/funcionales/detalle-de-entrenamiento-demo.md.
+ * Specs: specs/funcionales/detalle-de-entrenamiento-demo.md y, el C28 "cache",
+ * specs/funcionales/detalle-y-cache-de-entrenamientos.md.
  */
 @OptIn(ExperimentalCoroutinesApi::class)
 class WorkoutDetailViewModelTest {
@@ -138,5 +140,15 @@ class WorkoutDetailViewModelTest {
 
         assertEquals("el repositorio tiene que llamarse una sola vez", listOf("w02"), repository.idsPedidos)
         assertEquals(WorkoutDetailUiState.Content(detalle), viewModel.uiState.value)
+    }
+
+    @Test
+    fun `C28 cache detalle no descargado pasa a NotAvailableOffline`() = runTest {
+        val viewModel = viewModel(Rutas.ARG_WORKOUT_ID to "w02")
+
+        repository.respuesta.complete(Result.failure(WorkoutNotCachedException("w02")))
+        advanceUntilIdle()
+
+        assertEquals(WorkoutDetailUiState.NotAvailableOffline, viewModel.uiState.value)
     }
 }
