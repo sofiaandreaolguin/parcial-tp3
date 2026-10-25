@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -20,6 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.parcial_tp3.R
@@ -42,6 +44,10 @@ fun EditProfileScreen(
     onBack: () -> Unit,
     onSave: () -> Unit,
     onDemo: () -> Unit,
+    onFirstNameChange: (String) -> Unit = {},
+    onLastNameChange: (String) -> Unit = {},
+    onHeightChange: (Int) -> Unit = {},
+    onWeightChange: (Int) -> Unit = {},
 ) {
     val locale = LocalConfiguration.current.locales[0]
     val pattern = stringResource(R.string.edit_birth_date_pattern)
@@ -77,18 +83,37 @@ fun EditProfileScreen(
                     size = VoraButtonSize.Small,
                 )
             }
-            ReadOnlyField(stringResource(R.string.edit_first_name), state.firstName)
-            ReadOnlyField(stringResource(R.string.edit_last_name), state.lastName)
-            ReadOnlyField(stringResource(R.string.edit_birth_date), birthDate)
+            VoraTextField(
+                value = state.firstName,
+                onValueChange = onFirstNameChange,
+                label = stringResource(R.string.edit_first_name),
+                error = state.firstNameError?.let { stringResource(it) },
+            )
+            VoraTextField(
+                value = state.lastName,
+                onValueChange = onLastNameChange,
+                label = stringResource(R.string.edit_last_name),
+            )
+            VoraTextField(
+                value = birthDate,
+                onValueChange = {},
+                label = stringResource(R.string.edit_birth_date),
+                readOnly = true,
+                error = state.birthDateError?.let { stringResource(it) },
+            )
             Row(horizontalArrangement = Arrangement.spacedBy(VoraTheme.spacing.s12)) {
-                ReadOnlyField(
+                NumberField(
                     label = stringResource(R.string.edit_height),
-                    value = stringResource(R.string.edit_height_value, state.heightCm),
+                    value = state.heightCm,
+                    onValueChange = onHeightChange,
+                    error = state.heightError,
                     modifier = Modifier.weight(1f),
                 )
-                ReadOnlyField(
+                NumberField(
                     label = stringResource(R.string.edit_weight),
-                    value = stringResource(R.string.edit_weight_value, state.weightKg),
+                    value = state.weightKg,
+                    onValueChange = onWeightChange,
+                    error = state.weightError,
                     modifier = Modifier.weight(1f),
                 )
             }
@@ -112,6 +137,25 @@ fun EditProfileScreen(
             )
         }
     }
+}
+
+/** Entero de 0 en adelante: vacio es 0, que la validacion rechaza (C21). */
+@Composable
+private fun NumberField(
+    label: String,
+    value: Int,
+    onValueChange: (Int) -> Unit,
+    error: Int?,
+    modifier: Modifier = Modifier,
+) {
+    VoraTextField(
+        value = if (value > 0) value.toString() else "",
+        onValueChange = { text -> onValueChange(text.filter(Char::isDigit).take(3).toIntOrNull() ?: 0) },
+        modifier = modifier,
+        label = label,
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+        error = error?.let { stringResource(it) },
+    )
 }
 
 @Composable

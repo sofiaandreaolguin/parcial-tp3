@@ -7,5 +7,18 @@ class SessionStarter @Inject constructor(
     private val auth: AuthRepository,
     private val profiles: ProfileRepository,
 ) {
-    suspend fun restore() {}
+    /** false si la sesion ya no es valida y se cerro (C35): hay que llevar a SignIn. */
+    suspend fun restore(): Boolean {
+        val uid = auth.currentUid ?: return false
+        try {
+            profiles.load(uid, auth.currentEmail.orEmpty())
+        } catch (e: ProfileDataException) {
+            if (e.error == ProfileError.NO_PERMISSION) {
+                auth.signOut()
+                profiles.clear()
+                return false
+            }
+        }
+        return true
+    }
 }

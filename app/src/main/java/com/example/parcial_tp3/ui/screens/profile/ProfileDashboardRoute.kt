@@ -24,5 +24,6 @@ fun ProfileDashboardRoute(
         onGoals = onGoals,
         onPreferences = onPreferences,
         onDemo = rememberDemoToast(),
+        onRetry = viewModel::onRetry,
     )
 }

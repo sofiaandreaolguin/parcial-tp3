@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
@@ -18,6 +19,8 @@ import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.parcial_tp3.data.repository.AuthRepository
+import com.example.parcial_tp3.data.repository.SessionStarter
 import com.example.parcial_tp3.ui.components.VoraBottomBar
 import com.example.parcial_tp3.ui.navigation.RUTAS_A_SANGRE
 import com.example.parcial_tp3.ui.navigation.RUTAS_CON_BARRA
@@ -25,6 +28,7 @@ import com.example.parcial_tp3.ui.navigation.Rutas
 import com.example.parcial_tp3.ui.navigation.VoraTab
 import com.example.parcial_tp3.ui.navigation.accessGraph
 import com.example.parcial_tp3.ui.navigation.homeGraph
+import com.example.parcial_tp3.ui.navigation.startDestination
 import com.example.parcial_tp3.ui.navigation.nutritionGraph
 import com.example.parcial_tp3.ui.navigation.profileGraph
 import com.example.parcial_tp3.ui.navigation.progressGraph
@@ -32,9 +36,13 @@ import com.example.parcial_tp3.ui.navigation.voiceGraph
 import com.example.parcial_tp3.ui.navigation.workoutGraph
 import com.example.parcial_tp3.ui.theme.Parcialtp3Theme
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+    @Inject lateinit var auth: AuthRepository
+    @Inject lateinit var sessionStarter: SessionStarter
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         // El tema de VORA es solo modo claro (el Figma no tiene oscuro, UI01), asi que la barra
@@ -49,7 +57,11 @@ class MainActivity : ComponentActivity() {
         )
         setContent {
             Parcialtp3Theme {
-                VoraApp()
+                // la sesion se lee antes de componer el NavHost: no hay parpadeo de SignIn (C13, C14)
+                VoraApp(
+                    startDestination = startDestination(hasSession = auth.currentUid != null),
+                    restoreSession = sessionStarter::restore,
+                )
             }
         }
     }
@@ -65,8 +77,17 @@ class MainActivity : ComponentActivity() {
  * Cada flujo vive en su propio archivo de grafo, asi cada rol trabaja en el suyo.
  */
 @Composable
-fun VoraApp() {
+fun VoraApp(
+    startDestination: String,
+    restoreSession: suspend () -> Boolean,
+) {
     val nav = rememberNavController()
+    // arranque en frio con sesion: lee el perfil; si la sesion ya no vale, vuelve a SignIn (C18, C35)
+    LaunchedEffect(Unit) {
+        if (startDestination == Rutas.HOME_GRAPH && !restoreSession()) {
+            nav.navigate(Rutas.ACCESS_GRAPH) { popUpTo(nav.graph.id) { inclusive = true } }
+        }
+    }
     val backStackEntry by nav.currentBackStackEntryAsState()
     val destino = backStackEntry?.destination
     val rutaActual = destino?.route
@@ -89,10 +110,9 @@ fun VoraApp() {
     ) { padding ->
         NavHost(
             navController = nav,
-            // El inicio es el GRAFO de acceso, no la pantalla: startDestination tiene que
-            // ser hijo directo del grafo raiz, y sign_in vive adentro de access_graph.
-            // El access_graph arranca en sign_in, asi que la primera pantalla es la misma.
-            startDestination = Rutas.ACCESS_GRAPH,
+            // El inicio es un GRAFO, no una pantalla: startDestination tiene que ser hijo directo
+            // del grafo raiz. Sin sesion es access_graph (arranca en sign_in); con sesion, home_graph.
+            startDestination = startDestination,
             modifier = if (aSangre) Modifier else Modifier.padding(padding),
         ) {
             accessGraph(nav)

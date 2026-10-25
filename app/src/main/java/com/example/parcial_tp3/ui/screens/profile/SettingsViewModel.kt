@@ -7,31 +7,38 @@ import com.example.parcial_tp3.data.repository.ProfileRepository
 import com.example.parcial_tp3.domain.model.Profile
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 
 @HiltViewModel
 class SettingsViewModel @Inject constructor(
-    repository: ProfileRepository,
+    private val repository: ProfileRepository,
+    private val auth: AuthRepository,
 ) : ViewModel() {
 
-    constructor(repository: ProfileRepository, auth: AuthRepository) : this(repository)
+    private val loggedOut = MutableStateFlow(false)
 
     /** "Log out": cierra la sesion, vacia el perfil y pide navegar a SignIn (C15). */
-    fun logOut() {}
+    fun logOut() {
+        auth.signOut()
+        repository.clear()
+        loggedOut.value = true
+    }
 
-    val uiState: StateFlow<SettingsUiState> = repository.profile
-        .map { it.toUiState() }
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5_000),
-            initialValue = repository.profile.value.toUiState(),
-        )
+    val uiState: StateFlow<SettingsUiState> = combine(repository.profile, loggedOut) { profile, out ->
+        profile.toUiState(out)
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5_000),
+        initialValue = repository.profile.value.toUiState(loggedOut.value),
+    )
 
-    private fun Profile.toUiState() = SettingsUiState(
+    private fun Profile.toUiState(loggedOut: Boolean) = SettingsUiState(
         fullName = "$firstName $lastName",
         email = email,
+        loggedOut = loggedOut,
     )
 }

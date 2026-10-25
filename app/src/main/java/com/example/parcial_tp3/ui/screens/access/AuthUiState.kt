@@ -29,7 +29,7 @@ data class AuthUiState(
     val passwordLongEnough: Boolean get() = password.length >= AuthRules.MIN_PASSWORD
 }
 
-/** Las reglas del acceso de demostracion. Sin Firebase no hay cuentas: solo se valida la forma. */
+/** Reglas de forma del formulario: primer filtro antes de llamar a Firebase. */
 object AuthRules {
     const val MIN_PASSWORD = 8
     private val EMAIL = Regex("^[^@\\s]+@[^@\\s]+\\.[^@\\s]+$")

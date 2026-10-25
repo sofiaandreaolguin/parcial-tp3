@@ -1,6 +1,7 @@
 package com.example.parcial_tp3.ui.screens.profile
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -15,11 +16,14 @@ fun SettingsRoute(
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     val demo = rememberDemoToast()
+    LaunchedEffect(state.loggedOut) {
+        if (state.loggedOut) onLogOut()
+    }
     SettingsScreen(
         state = state,
         onBack = onBack,
         onEditProfile = onEditProfile,
-        onLogOut = onLogOut,
+        onLogOut = viewModel::logOut,
         onDemo = demo,
     )
 }
