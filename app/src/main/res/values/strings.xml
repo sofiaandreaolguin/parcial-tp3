@@ -743,6 +743,20 @@
     <string name="nutrition_confirm_error_number">Enter a number</string>
     <string name="nutrition_confirm_error_negative">Can\'t be negative</string>
     <string name="nutrition_confirm_not_found">This meal no longer exists.</string>
+    <!-- Nutrition / 08 — Meal Details (nodo 1:1284) -->
+    <string name="nutrition_detail_time_demo">13:12</string>
+    <string name="nutrition_detail_total_label">TOTAL CALORIES</string>
+    <string name="nutrition_detail_ring_desc">%1$d%% of your daily calories</string>
+    <string name="nutrition_detail_advice">Great protein choice. You\'re now 36g away from your daily protein target.</string>
+    <string name="nutrition_detail_ingredients">Ingredients</string>
+    <string name="nutrition_detail_protein_line">%1$dg protein</string>
+    <string name="nutrition_detail_edit">Edit Meal</string>
+    <string name="nutrition_detail_duplicate">Duplicate Meal</string>
+    <string name="nutrition_detail_delete">Delete Meal</string>
+    <string name="nutrition_detail_delete_title">Delete this meal?</string>
+    <string name="nutrition_detail_delete_body">It will be removed from this day and from your totals.</string>
+    <string name="nutrition_detail_delete_confirm">Delete</string>
+    <string name="nutrition_detail_delete_cancel">Cancel</string>
     <!-- Progress / 04 — Nutrition Progress (nodo 1:2032) -->
     <string name="progress_nutrition_title">Nutrition progress</string>
     <string name="progress_nutrition_calories">AVG CALORIES</string>

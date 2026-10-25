@@ -3,7 +3,6 @@ package com.example.parcial_tp3.ui.navigation
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalResources
-import androidx.compose.ui.res.stringResource
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavBackStackEntry
@@ -13,12 +12,11 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.navArgument
-import com.example.parcial_tp3.R
-import com.example.parcial_tp3.ui.components.PantallaVacia
 import com.example.parcial_tp3.ui.screens.nutrition.AddFoodRoute
 import com.example.parcial_tp3.ui.screens.nutrition.FoodAnalysisRoute
 import com.example.parcial_tp3.ui.screens.nutrition.FoodCaptureViewModel
 import com.example.parcial_tp3.ui.screens.nutrition.FoodConfirmationRoute
+import com.example.parcial_tp3.ui.screens.nutrition.MealDetailRoute
 import com.example.parcial_tp3.ui.screens.nutrition.MealDraft
 import com.example.parcial_tp3.ui.screens.nutrition.NEW_MEAL_ID
 import com.example.parcial_tp3.ui.screens.nutrition.NutritionDashboardRoute
@@ -138,8 +136,19 @@ fun NavGraphBuilder.nutritionGraph(nav: NavController) {
         composable(
             route = Rutas.MEAL_DETAILS,
             arguments = listOf(navArgument(Rutas.ARG_MEAL_ID) { type = NavType.LongType }),
-        ) {
-            PantallaVacia(nombre = stringResource(R.string.pant_nutrition_08))
+        ) { entrada ->
+            val grafo = remember(entrada) { nav.getBackStackEntry(Rutas.NUTRITION_GRAPH) }
+            val captura = hiltViewModel<FoodCaptureViewModel>(grafo)
+            MealDetailRoute(
+                // por ruta e inclusive: después de eliminar, un toque de más en ‹ no saca también 01
+                onBack = { nav.popBackStack(Rutas.MEAL_DETAILS, inclusive = true) },
+                // Como las capturas: la confirmación se abre antes de navegar, con la comida ya cargada
+                // de Room como fecha y nombre de arranque; 07 la vuelve a leer por id (C30).
+                onEdit = { meal ->
+                    captura.onOpenConfirmation(meal.id, meal.date, meal.name)
+                    nav.navigate(Rutas.foodConfirmation(meal.id)) { launchSingleTop = true }
+                },
+            )
         }
     }
 }
