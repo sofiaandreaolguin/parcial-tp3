@@ -22,3 +22,6 @@ local.properties
 
 # Caché de Python del mock
 __pycache__/
+
+# Firebase (tarea aa): config del cliente, no se sube; la plantilla es google-services.json.example
+app/google-services.json
