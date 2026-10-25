@@ -146,6 +146,7 @@ val RUTAS_A_SANGRE: Set<String> = setOf(
     Rutas.ACTIVE_WORKOUT,
     Rutas.VOICE_FOOD_LOGGING,
     Rutas.FOOD_ANALYSIS,
+    Rutas.WEEKLY_REVIEW,
 )
 
 /**
