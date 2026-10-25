@@ -52,7 +52,12 @@ class EditProfileViewModel @Inject constructor(
     fun save() {
         val form = _uiState.value
         if (form.saved || form.isSaving) return
+        if (repository.loadError.value != null) {
+            _uiState.value = form.copy(saveError = R.string.edit_error_not_loaded)
+            return
+        }
         val validated = form.copy(
+            saveError = null,
             firstNameError = if (form.firstName.isBlank()) R.string.edit_error_name else null,
             birthDateError = if (form.birthDate.isAfter(LocalDate.now())) R.string.edit_error_birth_date else null,
             heightError = if (form.heightCm < 1) R.string.edit_error_height else null,

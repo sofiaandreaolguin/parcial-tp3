@@ -122,6 +122,9 @@ fun EditProfileScreen(
                 text = stringResource(R.string.edit_info),
                 icon = painterResource(R.drawable.ic_info),
             )
+            state.saveError?.let {
+                Text(text = stringResource(it), style = VoraTheme.text.footnote, color = MaterialTheme.colorScheme.error)
+            }
             Spacer(Modifier.height(VoraTheme.spacing.s8))
             VoraButton(
                 text = stringResource(R.string.edit_save),

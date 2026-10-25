@@ -31,9 +31,16 @@ class FirestoreProfileRemote @Inject constructor(
         Unit
     }
 
-    override fun update(uid: String, fields: Map<String, Any>) {
-        doc(uid).update(fields)
+    override fun update(uid: String, fields: Map<String, Any>, onError: (ProfileError) -> Unit) {
+        try {
+            doc(uid).update(fields).addOnFailureListener { onError(errorOf(it)) }
+        } catch (e: RuntimeException) {
+            onError(errorOf(e))
+        }
     }
+
+    private fun errorOf(e: Exception): ProfileError =
+        if (e is FirebaseFirestoreException) profileErrorFromCode(e.code.name) else ProfileError.UNKNOWN
 
     override fun observe(uid: String): Flow<ProfileDto> = callbackFlow {
         val registration = doc(uid).addSnapshotListener { snapshot, error ->

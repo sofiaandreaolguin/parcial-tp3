@@ -307,6 +307,7 @@
     <string name="edit_error_height">Enter a height of 1 cm or more</string>
     <string name="edit_error_weight">Enter a weight of 1 kg or more</string>
     <string name="edit_error_birth_date">Date of birth can\'t be in the future</string>
+    <string name="edit_error_not_loaded">Your profile isn\'t loaded yet. Go back and retry</string>
     <string name="sign_in_subtitle">Your strength, nutrition, and progress plan in one place.</string>
     <string name="sign_in_forgot">Forgot your password?</string>
     <string name="sign_in_action">Sign In</string>

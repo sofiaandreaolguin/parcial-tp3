@@ -20,7 +20,10 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
@@ -35,14 +38,22 @@ import kotlinx.coroutines.launch
 open class ProfileRepository private constructor(
     private val remote: ProfileRemote,
     initial: Profile,
+    private val scope: CoroutineScope,
 ) {
     @Inject
-    constructor(remote: ProfileRemote) : this(remote, EMPTY)
+    constructor(remote: ProfileRemote) : this(remote, EMPTY, CoroutineScope(SupervisorJob() + Dispatchers.Default))
 
     /** Sin Firebase y con el perfil de demostracion: los tests de Home y los repositorios falsos. */
-    constructor() : this(ProfileRemote.Unavailable, DEMO)
+    constructor() : this(ProfileRemote.Unavailable, DEMO, CoroutineScope(SupervisorJob() + Dispatchers.Default))
 
-    private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
+    /** Para probar el repositorio real con un [ProfileRemote] falso y un scope de prueba. */
+    internal constructor(remote: ProfileRemote, scope: CoroutineScope) : this(remote, EMPTY, scope)
+
+    private val _sessionExpired = MutableSharedFlow<Unit>(extraBufferCapacity = 1)
+
+    /** El servidor dejo de aceptar la sesion (permiso denegado) despues de haber cargado el perfil (C35). */
+    open val sessionExpired: Flow<Unit> = _sessionExpired.asSharedFlow()
+
     private var observing: Job? = null
     private var uid: String? = null
     private var email: String = ""
@@ -59,7 +70,6 @@ open class ProfileRepository private constructor(
     open suspend fun load(uid: String, email: String) {
         this.uid = uid
         this.email = email
-        observing?.cancel()
         try {
             val dto = remote.get(uid)
             if (dto == null) remote.create(uid, profileOrDefault(null, email).toDto())
@@ -69,10 +79,37 @@ open class ProfileRepository private constructor(
             if (e.error != ProfileError.NO_PERMISSION) _loadError.value = e.error
             throw e
         }
+        // el observador anterior se cambia solo despues de una lectura exitosa: si falla, sigue vivo
+        startObserving(uid)
+    }
+
+    /**
+     * Un error del listener lo termina: un permiso denegado cierra la sesion (C35); otro se deja en
+     * `loadError` y el proximo `reload` vuelve a observar. Del snapshot se toman solo los campos que
+     * escribe Edit Profile: Goals, Nutrition y Voice cambian en memoria y no se persisten (spec, fuera de alcance).
+     */
+    private fun startObserving(uid: String) {
+        observing?.cancel()
         observing = scope.launch {
             remote.observe(uid)
-                .catch { }
-                .collect { _profile.value = it.toDomain() }
+                .catch {
+                    if (it.isPermissionDenied()) _sessionExpired.tryEmit(Unit)
+                    else _loadError.value = (it as? ProfileDataException)?.error ?: ProfileError.UNKNOWN
+                }
+                .collect { dto ->
+                    val remoto = dto.toDomain()
+                    _profile.update {
+                        it.copy(
+                            firstName = remoto.firstName,
+                            lastName = remoto.lastName,
+                            email = remoto.email,
+                            birthDate = remoto.birthDate,
+                            heightCm = remoto.heightCm,
+                            weightKg = remoto.weightKg,
+                            gender = remoto.gender,
+                        )
+                    }
+                }
         }
     }
 
@@ -82,6 +119,7 @@ open class ProfileRepository private constructor(
         this.uid = uid
         email = profile.email
         _profile.value = profile
+        startObserving(uid)
     }
 
     /** Actualizacion parcial de los 6 campos; no espera al servidor (C19, C36). */
@@ -95,7 +133,7 @@ open class ProfileRepository private constructor(
             weightKg = edit.weightKg,
             gender = edit.gender,
         )
-        remote.update(uid, edit.toFields())
+        remote.update(uid, edit.toFields()) { if (it == ProfileError.NO_PERMISSION) _sessionExpired.tryEmit(Unit) }
     }
 
     /** Reintento tras un error de lectura (C24). */
@@ -103,8 +141,9 @@ open class ProfileRepository private constructor(
         val uid = uid ?: return
         try {
             load(uid, email)
-        } catch (_: ProfileDataException) {
-            // load ya dejo el error en loadError
+        } catch (e: ProfileDataException) {
+            // load ya dejo el error en loadError; un permiso denegado es una sesion que ya no vale
+            if (e.error == ProfileError.NO_PERMISSION) _sessionExpired.tryEmit(Unit)
         }
     }
 
@@ -119,6 +158,9 @@ open class ProfileRepository private constructor(
         _loadError.value = null
         _profile.value = EMPTY
     }
+
+    private fun Throwable.isPermissionDenied() =
+        this is ProfileDataException && error == ProfileError.NO_PERMISSION
 
     private companion object {
         val EMPTY = Profile.default("", "", "")

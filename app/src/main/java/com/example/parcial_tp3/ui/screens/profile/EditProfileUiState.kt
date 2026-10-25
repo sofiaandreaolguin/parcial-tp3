@@ -14,6 +14,8 @@ data class EditProfileUiState(
     val isSaving: Boolean = false,
     /** Guardado pedido: la Route vuelve a Profile / 01 (C19). */
     val saved: Boolean = false,
+    /** No se pudo escribir: el perfil nunca se cargo (C24). */
+    @StringRes val saveError: Int? = null,
     @StringRes val firstNameError: Int? = null,
     @StringRes val birthDateError: Int? = null,
     @StringRes val heightError: Int? = null,

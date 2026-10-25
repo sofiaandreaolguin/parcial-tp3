@@ -183,4 +183,18 @@ class EditProfileViewModelTest {
         assertNull(conDatos.uiState.value.loadError)
         assertEquals("Ana López", conDatos.uiState.value.fullName)
     }
+
+    @Test
+    fun `sin perfil cargado no se da por guardado y muestra un error`() = runTest {
+        val sinPerfil = FakeProfileRepository().apply { ponerError(ProfileError.NO_CONNECTION) }
+        val vm = EditProfileViewModel(sinPerfil)
+        vm.uiState.onEach { }.launchIn(backgroundScope)
+        vm.completar()
+        vm.save()
+        advanceUntilIdle()
+
+        assertFalse(vm.estado.saved)
+        assertTrue(esTextoDeStrings(vm.estado.saveError))
+        assertTrue(sinPerfil.ediciones.isEmpty())
+    }
 }

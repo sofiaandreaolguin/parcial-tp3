@@ -306,6 +306,7 @@
     <string name="edit_error_height">Ingresá una altura de 1 cm o más</string>
     <string name="edit_error_weight">Ingresá un peso de 1 kg o más</string>
     <string name="edit_error_birth_date">La fecha de nacimiento no puede ser futura</string>
+    <string name="edit_error_not_loaded">Todavía no se cargó tu perfil. Volvé y reintentá</string>
     <string name="sign_in_subtitle">Tu plan de fuerza, nutrición y progreso en un solo lugar.</string>
     <string name="sign_in_forgot">¿Olvidaste tu contraseña?</string>
     <string name="sign_in_action">Iniciar sesión</string>
