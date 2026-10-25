@@ -102,7 +102,14 @@ enum class VoraTagTone {
     Dark,
     /** Sin fondo, texto verde: "TODAY" de Home (el nodo tiene padding pero no relleno). */
     Neutral,
+    /** Verde del tema al 8 % con texto verde: "P: 38g" de Nutrition / 06 (#ECF0EF sobre blanco). */
+    Green,
+    /** Lima del tema al 12 % con texto verde: "F: 14g" de Nutrition / 06 (#F8FCED sobre blanco). */
+    Lime,
 }
+
+private const val TAG_GREEN_ALPHA = 0.08f
+private const val TAG_LIME_ALPHA = 0.12f
 
 /**
  * Etiqueta compacta de disponibilidad o estado (lamina 04, "Indicadores"): pildora con
@@ -123,6 +130,8 @@ fun VoraTag(
         VoraTagTone.LimeOnDark -> VoraTheme.colors.onDarkSubtle to VoraTheme.colors.cta
         VoraTagTone.Dark -> MaterialTheme.colorScheme.primary to MaterialTheme.colorScheme.onPrimary
         VoraTagTone.Neutral -> Color.Transparent to MaterialTheme.colorScheme.primary
+        VoraTagTone.Green -> MaterialTheme.colorScheme.primary.copy(alpha = TAG_GREEN_ALPHA) to MaterialTheme.colorScheme.primary
+        VoraTagTone.Lime -> VoraTheme.colors.cta.copy(alpha = TAG_LIME_ALPHA) to MaterialTheme.colorScheme.primary
     }
     Text(
         text = text,
@@ -165,6 +174,8 @@ private fun VoraChipPreview() {
                 VoraTag(a.uppercase())
                 VoraPanel { VoraTag(b.uppercase(), tone = VoraTagTone.OnDark) }
                 VoraTag(a, tone = VoraTagTone.Dark)
+                VoraTag(a, tone = VoraTagTone.Green)
+                VoraTag(a, tone = VoraTagTone.Lime)
             }
         }
     }
