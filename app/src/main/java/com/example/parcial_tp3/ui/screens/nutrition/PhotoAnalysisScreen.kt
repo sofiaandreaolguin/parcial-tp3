@@ -154,9 +154,9 @@ private fun EstimateCard(draft: MealDraft) {
                     color = MaterialTheme.colorScheme.onSurface,
                 )
                 Row(horizontalArrangement = Arrangement.spacedBy(VoraTheme.spacing.s8)) {
-                    VoraTag(stringResource(R.string.nutrition_photo_protein, draft.proteinG))
+                    VoraTag(stringResource(R.string.nutrition_photo_protein, draft.proteinG), tone = VoraTagTone.Green)
                     VoraTag(stringResource(R.string.nutrition_photo_carbs, draft.carbsG))
-                    VoraTag(stringResource(R.string.nutrition_photo_fat, draft.fatG))
+                    VoraTag(stringResource(R.string.nutrition_photo_fat, draft.fatG), tone = VoraTagTone.Lime)
                 }
             }
         }
