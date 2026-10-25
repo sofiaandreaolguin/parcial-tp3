@@ -30,21 +30,26 @@ import com.example.parcial_tp3.ui.screens.nutrition.VoiceFoodLoggingRoute
 fun NavGraphBuilder.nutritionGraph(nav: NavController) {
     navigation(startDestination = Rutas.NUTRITION_DASHBOARD, route = Rutas.NUTRITION_GRAPH) {
 
+        // 01 y 02 piden NutritionViewModel a la entrada del grafo: comparten la fecha elegida.
         composable(Rutas.NUTRITION_DASHBOARD) { entrada ->
-            val captura = hiltViewModel<FoodCaptureViewModel>(remember(entrada) { nav.getBackStackEntry(Rutas.NUTRITION_GRAPH) })
+            val grafo = remember(entrada) { nav.getBackStackEntry(Rutas.NUTRITION_GRAPH) }
+            val captura = hiltViewModel<FoodCaptureViewModel>(grafo)
             NutritionDashboardRoute(
+                grafo = grafo,
                 onHistory = { nav.navigate(Rutas.TODAYS_MEALS) },
                 onMeal = { mealId -> nav.navigate(Rutas.mealDetails(mealId)) },
-                onAddDinner = { nav.navigate(Rutas.ADD_FOOD) },
+                onAddMeal = { nav.navigate(Rutas.ADD_FOOD) },
                 onVoice = { nav.navigate(Rutas.VOICE_FOOD_LOGGING) },
                 onPhoto = { abrirFoto(nav, captura) },
             )
         }
 
-        composable(Rutas.TODAYS_MEALS) {
+        composable(Rutas.TODAYS_MEALS) { entrada ->
+            val grafo = remember(entrada) { nav.getBackStackEntry(Rutas.NUTRITION_GRAPH) }
             TodaysMealsRoute(
+                grafo = grafo,
                 onMeal = { mealId -> nav.navigate(Rutas.mealDetails(mealId)) },
-                onAddDinner = { nav.navigate(Rutas.ADD_FOOD) },
+                onAddMeal = { nav.navigate(Rutas.ADD_FOOD) },
             )
         }
 
@@ -54,7 +59,7 @@ fun NavGraphBuilder.nutritionGraph(nav: NavController) {
                 onBack = { nav.popBackStack() },
                 onVoice = { nav.navigate(Rutas.VOICE_FOOD_LOGGING) },
                 onPhoto = { abrirFoto(nav, captura) },
-                onManual = { nav.navigate(Rutas.foodConfirmation()) },
+                onManual = { abrirCargaManual(nav, captura) },
             )
         }
 
@@ -62,10 +67,11 @@ fun NavGraphBuilder.nutritionGraph(nav: NavController) {
             // remember: si "X" ya sacó la pantalla mientras anima su salida, buscar la entrada de
             // nuevo en cada composición tiraría IllegalArgumentException.
             val grafo = remember(entrada) { nav.getBackStackEntry(Rutas.NUTRITION_GRAPH) }
+            val captura = hiltViewModel<FoodCaptureViewModel>(grafo)
             VoiceFoodLoggingRoute(
                 grafo = grafo,
                 onDone = { nav.navigate(Rutas.FOOD_ANALYSIS) { launchSingleTop = true } },
-                onTypeInstead = { nav.navigate(Rutas.foodConfirmation()) },
+                onTypeInstead = { abrirCargaManual(nav, captura) },
                 onClose = { nav.popBackStack() },
             )
         }
@@ -120,4 +126,10 @@ fun NavGraphBuilder.nutritionGraph(nav: NavController) {
 private fun abrirFoto(nav: NavController, captura: FoodCaptureViewModel) {
     captura.onPhotoCaptureStarted()
     nav.navigate(Rutas.PHOTO_ANALYSIS) { launchSingleTop = true }
+}
+
+// "Log Manually" y "Type instead": 07 tiene que abrir vacía aunque antes haya habido una foto.
+private fun abrirCargaManual(nav: NavController, captura: FoodCaptureViewModel) {
+    captura.onManualEntry()
+    nav.navigate(Rutas.foodConfirmation())
 }

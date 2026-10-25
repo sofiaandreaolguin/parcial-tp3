@@ -1,5 +1,6 @@
 package com.example.parcial_tp3.ui.screens.nutrition
 
+import com.example.parcial_tp3.ui.screens.home.FakeMealRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.toList
@@ -12,6 +13,7 @@ import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNull
 import org.junit.Before
 import org.junit.Test
 
@@ -29,7 +31,7 @@ class FoodCaptureViewModelTest {
 
     @Test
     fun `sin Done Speaking el analisis no arranca ni navega`() = runTest(dispatcher) {
-        val vm = FoodCaptureViewModel()
+        val vm = FoodCaptureViewModel(FakeMealRepository())
         val eventos = mutableListOf<FoodCaptureEvent>()
         backgroundScope.launch { vm.events.toList(eventos) }
 
@@ -42,7 +44,7 @@ class FoodCaptureViewModelTest {
 
     @Test
     fun `avanza un paso cada 700 ms`() = runTest(dispatcher) {
-        val vm = FoodCaptureViewModel()
+        val vm = FoodCaptureViewModel(FakeMealRepository())
         vm.onDoneSpeaking()
 
         runCurrent()
@@ -57,7 +59,7 @@ class FoodCaptureViewModelTest {
 
     @Test
     fun `navega una sola vez al terminar los tres pasos`() = runTest(dispatcher) {
-        val vm = FoodCaptureViewModel()
+        val vm = FoodCaptureViewModel(FakeMealRepository())
         val eventos = mutableListOf<FoodCaptureEvent>()
         backgroundScope.launch { vm.events.toList(eventos) }
         vm.onDoneSpeaking()
@@ -77,7 +79,7 @@ class FoodCaptureViewModelTest {
 
     @Test
     fun `cancelar a mitad corta el analisis y no navega`() = runTest(dispatcher) {
-        val vm = FoodCaptureViewModel()
+        val vm = FoodCaptureViewModel(FakeMealRepository())
         val eventos = mutableListOf<FoodCaptureEvent>()
         backgroundScope.launch { vm.events.toList(eventos) }
         vm.onDoneSpeaking()
@@ -93,7 +95,7 @@ class FoodCaptureViewModelTest {
 
     @Test
     fun `cancelar con el evento ya en el canal no lo deja para la proxima captura`() = runTest(dispatcher) {
-        val vm = FoodCaptureViewModel()
+        val vm = FoodCaptureViewModel(FakeMealRepository())
         vm.onDoneSpeaking()
         advanceTimeBy(2_101)
         runCurrent()
@@ -108,7 +110,7 @@ class FoodCaptureViewModelTest {
 
     @Test
     fun `Done Speaking dos veces seguidas no duplica la navegacion`() = runTest(dispatcher) {
-        val vm = FoodCaptureViewModel()
+        val vm = FoodCaptureViewModel(FakeMealRepository())
         val eventos = mutableListOf<FoodCaptureEvent>()
         backgroundScope.launch { vm.events.toList(eventos) }
         vm.onDoneSpeaking()
@@ -123,11 +125,23 @@ class FoodCaptureViewModelTest {
 
     @Test
     fun `un segundo Done Speaking no reinicia el avance`() = runTest(dispatcher) {
-        val vm = FoodCaptureViewModel()
+        val vm = FoodCaptureViewModel(FakeMealRepository())
         vm.onDoneSpeaking()
         advanceTimeBy(1_000)
         vm.onDoneSpeaking()
 
         assertEquals(AnalysisStep.Estimating, vm.uiState.value.analysisStep)
+    }
+
+    @Test
+    fun `C40 al terminar el analisis de voz el borrador es el de la foto`() = runTest(dispatcher) {
+        val vm = FoodCaptureViewModel(FakeMealRepository())
+        assertNull(vm.uiState.value.draft)
+
+        vm.onDoneSpeaking()
+        advanceTimeBy(2_101)
+        runCurrent()
+
+        assertEquals(PhotoMealDraft, vm.uiState.value.draft)
     }
 }

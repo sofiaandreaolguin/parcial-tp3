@@ -1,5 +1,6 @@
 package com.example.parcial_tp3.ui.screens.nutrition
 
+import com.example.parcial_tp3.ui.screens.home.FakeMealRepository
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotEquals
 import org.junit.Test
@@ -9,7 +10,7 @@ class FoodCapturePhotoDraftTest {
 
     @Test
     fun `al entrar a la foto el borrador es el de la foto`() {
-        val vm = FoodCaptureViewModel()
+        val vm = FoodCaptureViewModel(FakeMealRepository())
         assertNotEquals(PhotoMealDraft, vm.uiState.value.draft)
 
         vm.onPhotoCaptureStarted()
@@ -19,7 +20,7 @@ class FoodCapturePhotoDraftTest {
 
     @Test
     fun `volver a entrar a la foto no deja otra captura en el borrador`() {
-        val vm = FoodCaptureViewModel()
+        val vm = FoodCaptureViewModel(FakeMealRepository())
         vm.onPhotoCaptureStarted()
         vm.onPhotoCaptureStarted()
 

@@ -2,29 +2,53 @@ package com.example.parcial_tp3.ui.screens.nutrition
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavBackStackEntry
 import com.example.parcial_tp3.ui.components.rememberDemoToast
 
+/**
+ * @param grafo la entrada del grafo de Nutrition: el ViewModel se pide ahí para compartirlo con 02,
+ *  así las dos muestran la misma fecha.
+ */
 @Composable
 fun NutritionDashboardRoute(
+    grafo: NavBackStackEntry,
     onHistory: () -> Unit,
     onMeal: (mealId: Long) -> Unit,
-    onAddDinner: () -> Unit,
+    onAddMeal: () -> Unit,
     onVoice: () -> Unit,
     onPhoto: () -> Unit,
-    viewModel: NutritionViewModel = hiltViewModel(),
+    viewModel: NutritionViewModel = hiltViewModel(grafo),
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
-    val showDemoNotice = rememberDemoToast()
+    val date by viewModel.selectedDate.collectAsStateWithLifecycle()
+    var showDatePicker by rememberSaveable { mutableStateOf(false) }
+
     NutritionDashboardScreen(
         state = state,
-        onCalendar = showDemoNotice,
+        date = date,
+        onCalendar = { showDatePicker = true },
+        onRetry = viewModel::onRetry,
         onHistory = onHistory,
         onMeal = onMeal,
-        onAddDinner = onAddDinner,
+        onAddMeal = onAddMeal,
         onVoice = onVoice,
         onPhoto = onPhoto,
-        onSearch = showDemoNotice,
+        onSearch = rememberDemoToast(),
     )
+
+    if (showDatePicker) {
+        NutritionDatePickerDialog(
+            selected = date,
+            onConfirm = {
+                viewModel.onDateSelected(it)
+                showDatePicker = false
+            },
+            onDismiss = { showDatePicker = false },
+        )
+    }
 }

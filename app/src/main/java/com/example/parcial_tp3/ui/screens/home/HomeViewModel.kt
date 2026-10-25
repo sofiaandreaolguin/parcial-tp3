@@ -2,6 +2,7 @@ package com.example.parcial_tp3.ui.screens.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.parcial_tp3.data.repository.MealDataException
 import com.example.parcial_tp3.data.repository.MealRepository
 import com.example.parcial_tp3.data.repository.ProfileRepository
 import com.example.parcial_tp3.domain.model.Meal
@@ -13,6 +14,7 @@ import javax.inject.Inject
 import kotlin.math.roundToInt
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 
@@ -31,7 +33,9 @@ class HomeViewModel @Inject constructor(
 
     val uiState: StateFlow<HomeUiState> = combine(
         profileRepository.profile,
-        mealRepository.observeMealsByDate(LocalDate.now()),
+        // Si una comida guardada no se puede leer, Home muestra 0 en vez de cerrar la app (C44).
+        mealRepository.observeMealsByDate(LocalDate.now())
+            .catch { e -> if (e is MealDataException) emit(emptyList()) else throw e },
     ) { profile, meals -> toUiState(profile, meals) }
         .stateIn(
             scope = viewModelScope,
