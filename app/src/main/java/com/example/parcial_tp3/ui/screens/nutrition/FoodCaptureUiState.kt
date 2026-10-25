@@ -21,7 +21,7 @@ sealed interface FoodCaptureEvent {
     data object AnalysisDone : FoodCaptureEvent
 }
 
-/** Misma forma que `Meal`, con el nombre como recurso para no escribir texto en el código. */
+/** Misma forma que `Meal`. */
 data class MealDraft(
     @StringRes val name: Int = R.string.nutrition_voice_meal_demo,
     val type: MealType = MealType.LUNCH,
@@ -29,4 +29,20 @@ data class MealDraft(
     val proteinG: Double = 0.0,
     val carbsG: Double = 0.0,
     val fatG: Double = 0.0,
+    val ingredients: List<DraftIngredient> = emptyList(),
+)
+
+data class DraftIngredient(@StringRes val name: Int, val grams: Int, val kcal: Int)
+
+/** Lo que "estima"  / 06: los mismos números que muestra 07, que los lee de acá. */
+val PhotoMealDraft = MealDraft(
+    kcal = 520,
+    proteinG = 38.0,
+    carbsG = 54.0,
+    fatG = 14.0,
+    ingredients = listOf(
+        DraftIngredient(R.string.nutrition_meals_chicken, grams = 180, kcal = 280),
+        DraftIngredient(R.string.nutrition_meals_rice, grams = 150, kcal = 190),
+        DraftIngredient(R.string.nutrition_meals_vegetables, grams = 100, kcal = 50),
+    ),
 )

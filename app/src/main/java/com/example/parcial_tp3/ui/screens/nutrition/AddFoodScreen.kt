@@ -12,12 +12,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -26,8 +24,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.semantics.heading
-import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
@@ -68,7 +64,7 @@ fun AddFoodScreen(
             ),
         verticalArrangement = Arrangement.spacedBy(VoraTheme.spacing.s24),
     ) {
-        Header(onBack)
+        NutritionHeader(title = R.string.nutrition_add_title, onBack = onBack)
         Column(verticalArrangement = Arrangement.spacedBy(VoraTheme.spacing.s16)) {
             VoicePanel(onVoice)
             OptionCard(
@@ -94,32 +90,6 @@ fun AddFoodScreen(
                 onClick = onManual,
             )
         }
-    }
-}
-
-@Composable
-private fun Header(onBack: () -> Unit) {
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(VoraTheme.spacing.s8),
-    ) {
-        // El frame deja la flecha en una caja de 20 pegada al margen (nodo 1:966); el botón de 48 la
-        // desborda para no perder el área táctil.
-        Box(Modifier.size(VoraTheme.sizes.icon).wrapContentSize(unbounded = true)) {
-            IconButton(onClick = onBack) {
-                Icon(
-                    painter = painterResource(R.drawable.ic_back),
-                    contentDescription = stringResource(R.string.volver),
-                    tint = MaterialTheme.colorScheme.onBackground,
-                )
-            }
-        }
-        Text(
-            text = stringResource(R.string.nutrition_add_title),
-            style = MaterialTheme.typography.titleLarge,
-            color = MaterialTheme.colorScheme.onBackground,
-            modifier = Modifier.semantics { heading() },
-        )
     }
 }
 

@@ -709,6 +709,19 @@
     <string name="nutrition_analysis_step_calculating">Calculando nutrición…</string>
     <string name="nutrition_analysis_cancel">Cancelar análisis</string>
     <string name="nutrition_analysis_close">Cerrar el análisis de la comida</string>
+    <!-- Nutrition / 06 — Photo Analysis -->
+    <string name="nutrition_photo_title">Analizar comida</string>
+    <string name="nutrition_photo_tag_chicken">Pollo a la plancha (~180 g)</string>
+    <string name="nutrition_photo_tag_rice">Arroz basmati (~150 g)</string>
+    <string name="nutrition_photo_estimate">ESTIMACIÓN DE VORA</string>
+    <string name="nutrition_photo_estimate_note">Porciones estimadas</string>
+    <string name="nutrition_photo_kcal">%1$d kcal</string>
+    <string name="nutrition_photo_protein">P: %1$.0f g</string>
+    <string name="nutrition_photo_carbs">C: %1$.0f g</string>
+    <string name="nutrition_photo_fat">G: %1$.0f g</string>
+    <string name="nutrition_photo_hint">\"Las porciones y cantidades se pueden ajustar en el siguiente paso antes de guardar.\"</string>
+    <string name="nutrition_photo_review">Revisar y agregar</string>
+    <string name="nutrition_photo_retake">Volver a sacar la foto</string>
     <!-- Progress / 04 — Nutrition Progress (nodo 1:2032) -->
     <string name="progress_nutrition_title">Progreso de nutrición</string>
     <string name="progress_nutrition_calories">CALORÍAS PROM.</string>

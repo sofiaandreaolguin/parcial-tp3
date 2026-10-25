@@ -27,7 +27,9 @@ private const val ANALYSIS_STEP_MS = 700L
  * y mandaría a 07 en la próxima captura: quien saque a 05 de la pila tiene que llamar a
  * [onCancelAnalysis].
  *
- * Los macros del borrador quedan en 0 hasta que 07 los dibuje.
+ * El borrador de voz deja los macros en 0 hasta que 07 los dibuje. El de la foto ya los trae: se
+ * carga con [onPhotoCaptureStarted] al entrar a 06, para que no quede el de una captura anterior.
+ * Al revés no pasa: una captura de voz posterior a una foto conserva el borrador de la foto.
  */
 @HiltViewModel
 class FoodCaptureViewModel @Inject constructor() : ViewModel() {
@@ -54,6 +56,8 @@ class FoodCaptureViewModel @Inject constructor() : ViewModel() {
     }
 
     fun onCancelAnalysis() = stopAnalysis()
+
+    fun onPhotoCaptureStarted() = _uiState.update { it.copy(draft = PhotoMealDraft) }
 
     // Cancelar el Job no saca un AnalysisDone que ya está en el canal sin colector: se vacía.
     private fun stopAnalysis() {
