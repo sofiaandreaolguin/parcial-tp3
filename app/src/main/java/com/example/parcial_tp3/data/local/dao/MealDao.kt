@@ -8,8 +8,8 @@ import com.example.parcial_tp3.data.local.entity.MealEntity
 import kotlinx.coroutines.flow.Flow
 
 /**
- * Comidas guardadas en Room (RF04). Lo minimo para guardar y leer por dia: eliminar y el total
- * diario los suma la tarea l.
+ * Comidas guardadas en Room (RF04). El total del dia no sale de aca: lo suma el ViewModel
+ * (docs/decisiones/007-home-totales-del-dia.md).
  */
 @Dao
 interface MealDao {
