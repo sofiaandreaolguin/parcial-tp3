@@ -49,9 +49,13 @@ Inicio de sesión
 - C9. SI el email o la contraseña no coinciden con una cuenta, ENTONCES la app DEBE quedarse en SignIn y mostrar un único error de credenciales inválidas, sin decir cuál de los dos falló.
 - C10. SI no hay conexión al iniciar sesión o crear la cuenta, o Firebase no responde en 10 segundos, ENTONCES la app DEBE mostrar el error "sin conexión" y conservar lo tipeado.
 - C11. MIENTRAS el pedido a Firebase está en curso, la app DEBE mostrar el estado de carga en el botón y NO DEBE enviar un segundo pedido si la persona vuelve a tocarlo.
+- C43. SI Firebase responde email con formato inválido, cuenta deshabilitada o acceso por email no habilitado en el proyecto, ENTONCES la app DEBE mostrar un error propio y concreto para cada caso (no el genérico de C12) y quedarse en la pantalla.
 - C12. SI ocurre un error de Firebase no previsto, ENTONCES la app DEBE mostrar un error genérico traducido, nunca el mensaje crudo de la excepción.
 - C33. SI el email es inválido o la contraseña está vacía en SignIn, ENTONCES la app NO DEBE llamar a Firebase y DEBE mostrar el error del campo. El mínimo de 8 caracteres NO aplica al inicio de sesión (una cuenta creada fuera de la app puede tener una contraseña más corta).
 - C34. SI Firebase responde "demasiados intentos", ENTONCES la app DEBE mostrar ese error traducido y NO DEBE dar a entender que la contraseña es incorrecta.
+
+Nombre para mostrar
+- C42. CUANDO Home, Profile y Settings muestran el nombre, la app DEBE unir nombre y apellido recortados sin espacios sobrantes; SI no hay ninguno de los dos, ENTONCES DEBE mostrar la parte del email antes de la `@` (solo para mostrar: el documento sigue con el nombre vacío, C23 no cambia), y vacío si tampoco hay email.
 
 Sesión y cierre
 - C13. CUANDO se abre la app con una sesión de Firebase activa, la app DEBE arrancar en Home, sin pasar por SignIn. El destino inicial se calcula leyendo la sesión de forma síncrona antes de componer el `NavHost`.
@@ -132,6 +136,8 @@ Arquitectura y entrega
 | C30 | `scripts/reglas.sh` falla si `ui/` importa `com.google.firebase` | `scripts/` | Sí: con un import de Firebase en `ui/` (C30) o un `FirebaseUser` en una firma de `AuthRepository` (C32), la regla devuelve 2 |
 | C31 | `C31 cada excepcion de Firebase se traduce a un error propio` | `test/` | Sí: `expected:<INVALID_CREDENTIALS> but was:<UNKNOWN>` y mensajes sin texto de `strings.xml` |
 | C32 | `scripts/reglas.sh` falla si `FirebaseUser` o `DocumentSnapshot` aparecen en una firma pública de `data/repository` | `scripts/` | Sí: con un import de Firebase en `ui/` (C30) o un `FirebaseUser` en una firma de `AuthRepository` (C32), la regla devuelve 2 |
+| C42 | `C42 ...` en `DisplayNameTest`, `NombreDePerfilViewModelTest`, `HomeNombreDeRespaldoTest` | `test/` | Sí: no compilaba (`Unresolved reference 'displayName'`) |
+| C43 | `C43 email invalido, cuenta deshabilitada y acceso por email no habilitado tienen error propio` (`AuthErrorMappingTest`); el mensaje distinto por error lo cubre el test de C31 sobre `AuthError.entries` | `test/` | Sí: no compilaba (`Unresolved reference 'INVALID_EMAIL'`) |
 | C33 | `C33 signin con email invalido o contrasena vacia no llama a Firebase; contrasena corta si` | `test/` | Sí: `expected:<1> but was:<0>` (la contraseña corta no llega a Firebase) |
 | C34 | `C34 demasiados intentos muestra su error propio` | `test/` | Sí: `formError` nulo |
 | C35 | `C35 sin permiso o sesion invalida cierra la sesion` | `test/` | Sí: `expected:<1> but was:<0>` (no cierra la sesión) |
@@ -151,3 +157,4 @@ Evidencia de las reglas (C26 a C29): cuatro capturas del simulador de reglas de 
 - 2026-10-25: spec creada. Decisiones de la entrevista: perfil nuevo con nombre y email reales y el resto por defecto; nombre completo dividido en primera palabra y resto; el acceso de demostración se reemplaza.
 - 2026-10-25: tras la auditoría. Decisión: **Firebase siempre, sin camino demo** (la CRÍTICA 1 del auditor se acepta como riesgo: sin `google-services.json` o sin cuenta no se entra a Home; se mitiga con la plantilla `.example` para que el clon compile, C40). Decisión: **se deja la caché de Firestore y las escrituras sin red quedan en cola** (cambia C19/C22: no se espera la confirmación del servidor).
 - 2026-10-25: extras de Edit Profile (etapa 1). La fecha de nacimiento y el género dejan de ser de solo lectura: la fecha se elige con el `DatePickerDialog` de Material 3 (el mismo de Nutrition, sin fechas futuras) y el género con un menú desplegable de las 4 opciones de `Gender`. No cambian C19 ni C21; los tests `C19 elegir solo fecha y genero...` y `C21 una fecha valida elegida despues de una futura limpia el error` cubren que lo elegido llega a `saveEdit`.
+- 2026-10-25: extras de Firebase (etapa 2). C42 (nombre para mostrar con respaldo en el email) y C43 (errores de Auth `INVALID_EMAIL`, `USER_DISABLED`, `EMAIL_AUTH_DISABLED`). Se saca la dependencia `navigation-testing` de `androidTest` (sin uso).
