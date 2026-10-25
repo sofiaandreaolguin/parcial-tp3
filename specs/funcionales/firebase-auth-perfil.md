@@ -16,7 +16,7 @@ La persona crea una cuenta con email y contraseña, inicia y cierra sesión, y l
 - Errores propios: `AuthDataException` (credenciales inválidas, email ya registrado, contraseña débil, demasiados intentos, sin conexión, desconocido) y `ProfileDataException` (sin conexión, sin permiso, datos inválidos, desconocido). Se atrapan en el repositorio.
 - Persistencia de Firestore: se deja la caché local por defecto del SDK. Una escritura sin red queda en cola y se envía al volver la red.
 
-Perfil por defecto (`Profile.default`; **valores propuestos, a confirmar**):
+Perfil por defecto (`Profile.default`; valores confirmados por Martu el 2026-10-25):
 
 | Campo | Valor |
 |---|---|
@@ -100,44 +100,44 @@ Arquitectura y entrega
 ## Tests
 | Criterio | Test | Dónde | Vi el rojo |
 |---|---|---|---|
-| C1 | `C1 registro valido crea la cuenta y entra a Home` (ViewModel con repositorio falso) | `test/` | |
-| C2 | `C2 registro crea el documento con Profile default y nombre y email del formulario` | `test/` | |
-| C3 | `C3 nombre completo se separa en nombre y apellido` (una palabra, varias, espacios y tabuladores) | `test/` | |
-| C4 | `C4 formulario de registro invalido no llama al repositorio` | `test/` | |
-| C5 | `C5 email ya registrado muestra el error` | `test/` | |
-| C6 | `C6 contrasena debil muestra el error` | `test/` | |
-| C7 | `C7 falla el documento, no entra a Home y puede iniciar sesion despues` | `test/` | |
-| C8 | `C8 inicio valido entra a Home` | `test/` | |
-| C9 | `C9 credenciales invalidas dan un unico error` | `test/` | |
-| C10 | `C10 sin conexion o timeout muestra el error y conserva lo tipeado` | `test/` | |
-| C11 | `C11 un segundo toque durante la carga no envia otro pedido` | `test/` | |
-| C12 | `C12 error desconocido muestra mensaje generico` | `test/` | |
-| C13 | `C13 destino inicial con sesion es Home` (función pura del `startDestination`) | `test/` | |
-| C14 | `C14 destino inicial sin sesion es SignIn` | `test/` | |
-| C15 | `C15 log out cierra la sesion, vacia el perfil y navega a SignIn` | `test/` | |
-| C16 | `C16 despues del log out la pila no vuelve a Home` (`TestNavHostController`) | `test/` | |
-| C17 | `C17 otra cuenta no ve datos de perfil de la anterior` | `test/` | |
-| C18 | `C18 al iniciar sesion y en arranque en frio se lee el perfil de la cuenta` | `test/` | |
-| C19 | `C19 guardar perfil escribe solo los 6 campos y vuelve` | `test/` | |
-| C20 | `C20 un perfil guardado se recupera al volver a iniciar sesion` | `test/` | |
-| C21 | `C21 datos invalidos no se guardan y muestran error en el campo` (nombre en blanco, 0, negativo, fecha futura) | `test/` | |
-| C22 | `C22 una escritura rechazada vuelve a mostrar el perfil del servidor` | `test/` | |
-| C23 | `C23 documento inexistente se crea con el perfil por defecto` | `test/` | |
-| C24 | `C24 lectura sin red y sin cache da error con reintento; con cache la muestra` | `test/` | |
-| C25 | `C25 el ViewModel no repite el pedido al recrearse` (la rotación real se verifica a mano) | `test/` | |
+| C1 | `C1 registro valido crea la cuenta y entra a Home` (ViewModel con repositorio falso) | `test/` | Sí: `expected:<1> but was:<0>` (no llama a `signUp`) |
+| C2 | `C2 registro crea el documento con Profile default y nombre y email del formulario` | `test/` | Sí: no se crea el documento; `Profile.default` devuelve valores neutros (`expected:<[Ana]> but was:<[]>`) |
+| C3 | `C3 nombre completo se separa en nombre y apellido` (una palabra, varias, espacios y tabuladores) | `test/` | Sí: `expected:<(Ana, )> but was:<(, )>` |
+| C4 | `C4 formulario de registro invalido no llama al repositorio` | `test/` | **Pasó en rojo** (el stub ya valida la forma y no llama a nada). Control negativo: con `signedIn = true` forzado el test falla; restaurado |
+| C5 | `C5 email ya registrado muestra el error` | `test/` | Sí: `formError` nulo (no es texto de `strings.xml`) |
+| C6 | `C6 contrasena debil muestra el error` | `test/` | Sí: `formError` nulo |
+| C7 | `C7 falla el documento, no entra a Home y puede iniciar sesion despues` | `test/` | Sí: `signUp` no se llama (`expected:<1> but was:<0>`) |
+| C8 | `C8 inicio valido entra a Home` | `test/` | Sí: `expected:<1> but was:<0>` (no llama a `signIn`) |
+| C9 | `C9 credenciales invalidas dan un unico error` | `test/` | Sí: `expected:<2> but was:<0>` |
+| C10 | `C10 sin conexion o timeout muestra el error y conserva lo tipeado` | `test/` | Sí: sin `formError` ni `isLoading` tras el fallo; el timeout de 10 s se prueba con tiempo virtual |
+| C11 | `C11 un segundo toque durante la carga no envia otro pedido` | `test/` | Sí: `isLoading` nunca se prende |
+| C12 | `C12 error desconocido muestra mensaje generico` | `test/` | Sí: `formError` nulo con `UNKNOWN` y con una excepción cruda |
+| C13 | `C13 destino inicial con sesion es Home` (función pura del `startDestination`) | `test/` | Sí: `expected:<[home_graph]> but was:<[]>` |
+| C14 | `C14 destino inicial sin sesion es SignIn` | `test/` | Sí: `expected:<[access_graph]> but was:<[]>` |
+| C15 | `C15 log out cierra la sesion, vacia el perfil y navega a SignIn` | `test/` | Sí: `expected:<1> but was:<0>` (no cierra la sesión) |
+| C16 | `C16 despues del log out la pila no vuelve a Home` (`TestNavHostController`) | `test/` | **Pendiente**: no escrito. `TestNavHostController` no corre en `test/` sin `navigation-testing` y Robolectric (o va a `androidTest/`); falta decidir y coordinar `build.gradle.kts` |
+| C17 | `C17 otra cuenta no ve datos de perfil de la anterior` | `test/` | Sí: `expected:<[ana@mail.com]> but was:<[]>` (no lee el perfil de la cuenta) |
+| C18 | `C18 al iniciar sesion y en arranque en frio se lee el perfil de la cuenta` | `test/` | Sí: `expected:<[(uid-ana, ana@mail.com)]> but was:<[]>` |
+| C19 | `C19 guardar perfil escribe solo los 6 campos y vuelve` | `test/` | Sí: no hay escritura (`ediciones` vacío); y `toFields()` devuelve `{}` en vez de los 6 campos |
+| C20 | `C20 un perfil guardado se recupera al volver a iniciar sesion` | `test/` | Sí: `expected:<[Anita]> but was:<[]>` |
+| C21 | `C21 datos invalidos no se guardan y muestran error en el campo` (nombre en blanco, 0, negativo, fecha futura) | `test/` | Sí: no marca el error del campo |
+| C22 | `C22 una escritura rechazada vuelve a mostrar el perfil del servidor` | `test/` | Sí: `expected:<[Anita Pérez]> but was:<[ ]>`. Cubre el contrato del ViewModel con un repositorio falso; el rechazo real del servidor se verifica a mano |
+| C23 | `C23 documento inexistente se crea con el perfil por defecto` | `test/` | Sí: `expected:<[ana@mail.com]> but was:<[]>` (`profileOrDefault`) |
+| C24 | `C24 lectura sin red y sin cache da error con reintento; con cache la muestra` | `test/` | Sí: `loadError` nulo y `onRetry()` no reintenta |
+| C25 | `C25 el ViewModel no repite el pedido al recrearse` (la rotación real se verifica a mano) | `test/` | Sí: `expected:<1> but was:<0>` en Auth y `expected:<[Anita]> but was:<[]>` en Edit Profile |
 | C26 | Prueba manual: cuenta A lee y escribe `users/{uidA}`; evidencia `C26.png` | simulador de reglas o app | n/a (manual) |
 | C27 | Prueba manual: cuenta B lee y escribe `users/{uidA}` y se deniega; evidencia `C27.png` | simulador de reglas o app | n/a (manual) |
 | C28 | Prueba manual: sin sesión se deniega; evidencia `C28.png` | simulador de reglas | n/a (manual) |
 | C29 | Prueba manual: otra ruta se deniega; evidencia `C29.png` | simulador de reglas | n/a (manual) |
-| C30 | `scripts/reglas.sh` falla si `ui/` importa `com.google.firebase` | `scripts/` | |
-| C31 | `C31 cada excepcion de Firebase se traduce a un error propio` | `test/` | |
-| C32 | `scripts/reglas.sh` falla si `FirebaseUser` o `DocumentSnapshot` aparecen en una firma pública de `data/repository` | `scripts/` | |
-| C33 | `C33 signin con email invalido o contrasena vacia no llama a Firebase; contrasena corta si` | `test/` | |
-| C34 | `C34 demasiados intentos muestra su error propio` | `test/` | |
-| C35 | `C35 sin permiso o sesion invalida cierra la sesion` | `test/` | |
-| C36 | `C36 editar el nombre no modifica goals guardados` | `test/` | |
-| C37 | `C37 segundo toque en Save changes no envia otro pedido` | `test/` | |
-| C38 | `C38 enum desconocido o campo ausente usa el valor por defecto` | `test/` | |
+| C30 | `scripts/reglas.sh` falla si `ui/` importa `com.google.firebase` | `scripts/` | Pendiente para la implementación (extender `scripts/reglas.sh`) |
+| C31 | `C31 cada excepcion de Firebase se traduce a un error propio` | `test/` | Sí: `expected:<INVALID_CREDENTIALS> but was:<UNKNOWN>` y mensajes sin texto de `strings.xml` |
+| C32 | `scripts/reglas.sh` falla si `FirebaseUser` o `DocumentSnapshot` aparecen en una firma pública de `data/repository` | `scripts/` | Pendiente para la implementación (extender `scripts/reglas.sh`) |
+| C33 | `C33 signin con email invalido o contrasena vacia no llama a Firebase; contrasena corta si` | `test/` | Sí: `expected:<1> but was:<0>` (la contraseña corta no llega a Firebase) |
+| C34 | `C34 demasiados intentos muestra su error propio` | `test/` | Sí: `formError` nulo |
+| C35 | `C35 sin permiso o sesion invalida cierra la sesion` | `test/` | Sí: `expected:<1> but was:<0>` (no cierra la sesión) |
+| C36 | `C36 editar el nombre no modifica goals guardados` | `test/` | Sí: `toFields()` devuelve `{}` (no hay campos que comparar) |
+| C37 | `C37 segundo toque en Save changes no envia otro pedido` | `test/` | Sí: `expected:<1> but was:<0>` |
+| C38 | `C38 enum desconocido o campo ausente usa el valor por defecto` | `test/` | Sí: `expected` perfil por defecto con `Profile.default` neutro; compara contra valores escritos a mano en el test |
 | C39 | `./gradlew assembleDebug` compila el grafo de Hilt con el módulo | build | n/a |
 | C40 | Revisión: clon limpio + `.example` compila; `git ls-files` no lista `google-services.json` | CI y revisión | n/a |
 | C41 | Revisión del README (`revisor-requisitos`) | revisión | n/a |
