@@ -27,7 +27,12 @@ import com.example.parcial_tp3.ui.theme.VoraTheme
  * @param trailing texto gris a la derecha ("13:12" de 08).
  */
 @Composable
-internal fun NutritionHeader(@StringRes title: Int, onBack: () -> Unit, trailing: String? = null) {
+internal fun NutritionHeader(@StringRes title: Int, onBack: () -> Unit, trailing: String? = null) =
+    NutritionHeader(stringResource(title), onBack, trailing)
+
+/** Con el título ya resuelto: el de 08 depende del tipo de comida, que llega con los datos. */
+@Composable
+internal fun NutritionHeader(title: String, onBack: () -> Unit, trailing: String? = null) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
@@ -43,7 +48,7 @@ internal fun NutritionHeader(@StringRes title: Int, onBack: () -> Unit, trailing
             }
         }
         Text(
-            text = stringResource(title),
+            text = title,
             style = MaterialTheme.typography.titleLarge,
             color = MaterialTheme.colorScheme.onBackground,
             modifier = Modifier

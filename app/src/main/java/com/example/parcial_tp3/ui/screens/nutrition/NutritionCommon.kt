@@ -32,14 +32,15 @@ import java.time.LocalDate
 // Lo que comparten las pantallas de Nutrition.
 
 @Composable
-internal fun MealType.label(): String = stringResource(
-    when (this) {
-        MealType.BREAKFAST -> R.string.nutrition_dash_breakfast
-        MealType.LUNCH -> R.string.nutrition_dash_lunch
-        MealType.SNACK -> R.string.nutrition_dash_snack
-        MealType.DINNER -> R.string.nutrition_dash_dinner
-    },
-)
+internal fun MealType.label(): String = stringResource(labelRes())
+
+@StringRes
+internal fun MealType.labelRes(): Int = when (this) {
+    MealType.BREAKFAST -> R.string.nutrition_dash_breakfast
+    MealType.LUNCH -> R.string.nutrition_dash_lunch
+    MealType.SNACK -> R.string.nutrition_dash_snack
+    MealType.DINNER -> R.string.nutrition_dash_dinner
+}
 
 /** Cargando o error con reintento, como Workout / 01. Content lo dibuja cada pantalla. */
 @Composable
