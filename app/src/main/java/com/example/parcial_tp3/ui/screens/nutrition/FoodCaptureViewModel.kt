@@ -79,8 +79,10 @@ class FoodCaptureViewModel @Inject constructor(
     fun onManualEntry() = _uiState.update { it.copy(draft = null) }
 
     /**
-     * Abre 07. Con el mismo [mealId] y 07 ya abierta (rotación) no hace nada, así no se pierde lo
-     * escrito. [draftName] lo resuelve la Route con stringResource: el ViewModel no tiene Context.
+     * Abre 07. La llama el grafo antes de navegar, no la composición de 07, así que rotar no la
+     * repite. Con el mismo [mealId] y 07 ya abierta no hace nada: si 07 se dejara sin [onDiscard],
+     * la próxima apertura con ese id mostraría lo escrito antes. [draftName] lo resuelve el grafo
+     * desde strings.xml: el ViewModel no tiene Context.
      */
     fun onOpenConfirmation(mealId: Long, defaultDate: LocalDate, draftName: String) {
         if (_uiState.value.confirmation?.mealId == mealId) return
