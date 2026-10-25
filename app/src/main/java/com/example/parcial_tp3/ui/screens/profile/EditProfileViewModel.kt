@@ -51,7 +51,7 @@ class EditProfileViewModel @Inject constructor(
     /** "Save changes": valida y escribe sin esperar al servidor (C19, C21, C37). */
     fun save() {
         val form = _uiState.value
-        if (form.saved || form.isSaving) return
+        if (form.saved) return
         if (repository.loadError.value != null) {
             _uiState.value = form.copy(saveError = R.string.edit_error_not_loaded)
             return
@@ -69,6 +69,8 @@ class EditProfileViewModel @Inject constructor(
             _uiState.value = validated
             return
         }
+        // el perfil que vuelve de saveEdit (por ejemplo recortado) ya no debe pisar el formulario
+        edited = true
         _uiState.value = validated.copy(saved = true)
         repository.saveEdit(
             ProfileEdit(

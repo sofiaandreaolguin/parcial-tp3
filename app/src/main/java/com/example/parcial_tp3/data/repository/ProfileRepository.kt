@@ -125,14 +125,16 @@ open class ProfileRepository private constructor(
     /** Actualizacion parcial de los 6 campos; no espera al servidor (C19, C36). */
     open fun saveEdit(edit: ProfileEdit) {
         val uid = uid ?: return
-        _profile.value = _profile.value.copy(
-            firstName = edit.firstName,
-            lastName = edit.lastName,
-            birthDate = edit.birthDate,
-            heightCm = edit.heightCm,
-            weightKg = edit.weightKg,
-            gender = edit.gender,
-        )
+        _profile.update {
+            it.copy(
+                firstName = edit.firstName,
+                lastName = edit.lastName,
+                birthDate = edit.birthDate,
+                heightCm = edit.heightCm,
+                weightKg = edit.weightKg,
+                gender = edit.gender,
+            )
+        }
         remote.update(uid, edit.toFields()) { if (it == ProfileError.NO_PERMISSION) _sessionExpired.tryEmit(Unit) }
     }
 

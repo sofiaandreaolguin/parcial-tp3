@@ -120,8 +120,6 @@
     <string name="edit_gender">GÉNERO</string>
     <string name="edit_date_confirm">Aceptar</string>
     <string name="edit_date_cancel">Cancelar</string>
-    <string name="edit_height_value">%1$d cm</string>
-    <string name="edit_weight_value">%1$d kg</string>
     <string name="edit_info">Se usa para personalizar tus recomendaciones.</string>
     <string name="edit_save">Guardar cambios</string>
     <string name="edit_footer">Tu información se usa para personalizar tu experiencia en VORA.</string>
