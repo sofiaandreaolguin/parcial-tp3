@@ -288,4 +288,110 @@ class WorkoutDetailRepositoryImplTest {
             )
         }
     }
+
+    // Estados: specs/funcionales/estados-de-carga-y-error.md. Con el dao de setUp vacio, salvo C12.
+
+    private fun errorDe(resultado: Result<*>): AppError? = (resultado.exceptionOrNull() as? AppException)?.error
+
+    private fun repositorioCon(dao: FakeWorkoutDao, cliente: OkHttpClient = OkHttpClient()): WorkoutDetailRepositoryImpl {
+        val retrofit = NetworkModule.provideRetrofit(cliente, server.url("/").toString())
+        return WorkoutDetailRepositoryImpl(NetworkModule.provideVoraApi(retrofit), dao)
+    }
+
+    @Test
+    fun `C8 estados detalle con 503 es SERVER`() = runTest {
+        val casos = listOf(
+            "503" to falla503(),
+            "500" to MockResponse().setResponseCode(500).setBody("{}"),
+            "400" to MockResponse().setResponseCode(400).setBody("{}"),
+        )
+
+        for ((caso, respuesta) in casos) {
+            server.enqueue(respuesta)
+            val resultado = repository.getWorkoutDetail("w01")
+            assertEquals("con $caso, fue ${resultado.exceptionOrNull()}", AppError.SERVER, errorDe(resultado))
+        }
+    }
+
+    @Test
+    fun `C9 estados detalle con JSON roto o datos invalidos es INVALID_DATA`() = runTest {
+        val casos = listOf(
+            "JSON roto" to MockResponse().setBody("""{"data": INVALID_JSON"""),
+            "cuerpo cortado" to MockResponse().setBody("""{"data": {"id": "w01""""),
+            "JSON de otro tipo" to MockResponse().setBody("""{"data": [1, 2]}"""),
+            "sin data" to MockResponse().setBody("{}"),
+            "data null" to MockResponse().setBody("""{"data": null}"""),
+            "detalle con nivel invalido" to MockResponse().setBody(cuerpoDelDetalle.replace("\"beginner\"", "\"pro\"")),
+            "204 sin cuerpo" to MockResponse().setResponseCode(204),
+        )
+
+        for ((caso, respuesta) in casos) {
+            server.enqueue(respuesta)
+            val resultado = repository.getWorkoutDetail("w01")
+            assertEquals("con $caso, fue ${resultado.exceptionOrNull()}", AppError.INVALID_DATA, errorDe(resultado))
+        }
+    }
+
+    @Test
+    fun `C10 estados detalle con 404 es NOT_FOUND`() = runTest {
+        server.enqueue(
+            MockResponse()
+                .setResponseCode(404)
+                .setBody("""{"error": {"code": "WORKOUT_NOT_FOUND", "message": "Entrenamiento no encontrado."}}"""),
+        )
+
+        val resultado = repository.getWorkoutDetail("w99")
+
+        assertEquals("fue ${resultado.exceptionOrNull()}", AppError.NOT_FOUND, errorDe(resultado))
+        assertEquals("con 404 no tiene que leer Room", 0, dao.lecturas)
+    }
+
+    @Test
+    fun `C11 estados detalle con timeout y sin cache es WorkoutNotCachedException`() = runTest {
+        val clienteCorto = OkHttpClient.Builder().readTimeout(1, TimeUnit.SECONDS).build()
+        val conTimeoutCorto = repositorioCon(dao, clienteCorto)
+        server.enqueue(MockResponse().setBody(cuerpoDelDetalle).setHeadersDelay(2, TimeUnit.SECONDS))
+
+        val conTimeout = conTimeoutCorto.getWorkoutDetail("w01")
+        server.shutdown()
+        val sinServidor = repository.getWorkoutDetail("w01")
+
+        for ((caso, resultado) in listOf("con timeout" to conTimeout, "sin servidor" to sinServidor)) {
+            assertTrue(
+                "$caso tiene que ser WorkoutNotCachedException, fue ${resultado.exceptionOrNull()}",
+                resultado.exceptionOrNull() is WorkoutNotCachedException,
+            )
+        }
+    }
+
+    @Test
+    fun `C12 estados detalle si leer Room falla es UNKNOWN`() = runTest {
+        val alLeer = repositorioCon(
+            FakeWorkoutDao().apply {
+                precargar(listOf(filaW01), ejerciciosW01)
+                lanzarAlLeer = true
+            },
+        )
+        // Convertir lanza IllegalArgumentException: no es un dato invalido del servidor
+        val alConvertir = repositorioCon(
+            FakeWorkoutDao().apply { precargar(listOf(filaW01.copy(level = "pro")), ejerciciosW01) },
+        )
+
+        server.enqueue(falla503())
+        val alLeerCon503 = alLeer.getWorkoutDetail("w01")
+        server.enqueue(falla503())
+        val alConvertirCon503 = alConvertir.getWorkoutDetail("w01")
+        server.shutdown()
+        val alLeerSinServidor = alLeer.getWorkoutDetail("w01")
+        val alConvertirSinServidor = alConvertir.getWorkoutDetail("w01")
+
+        for ((caso, resultado) in listOf(
+            "leer Room con 503" to alLeerCon503,
+            "convertir lo de Room con 503" to alConvertirCon503,
+            "leer Room con el servidor apagado" to alLeerSinServidor,
+            "convertir lo de Room con el servidor apagado" to alConvertirSinServidor,
+        )) {
+            assertEquals("si falla $caso, fue ${resultado.exceptionOrNull()}", AppError.UNKNOWN, errorDe(resultado))
+        }
+    }
 }

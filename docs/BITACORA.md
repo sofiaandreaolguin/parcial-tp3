@@ -725,3 +725,41 @@ Formato:
     - A mano, Sofi probó en el emulador abrir una comida desde 01 y 02, editar, duplicar, eliminar con confirmación y rotar, y anduvo todo. Después de mover el anillo al estado no se volvió a probar.
     - Sin verificar: capturas del diálogo y de los estados de error, y que el total de Home baje al eliminar (es la misma consulta a Room que ya estaba).
 - Commit / PR:
+
+### 2026-10-25 · Hector · feat(workout): mostrar carga, vacío y error por tipo con reintento
+- Carril y requisitos: C, paso 3 (implementar) · RF05, RF07 (y RF06: errores traducidos en el repositorio) · tarea r. Spec: `specs/funcionales/estados-de-carga-y-error.md` (C1 a C36). Rama `feat/workout-estados-carga-error`.
+- Plan aprobado:
+  - `toAppError()` clasifica por tipo, sin mirar la causa, y los dos repositorios devuelven `AppException` según el fallo. Si falla Room, `UNKNOWN`.
+  - `WorkoutErrorMessages.kt` traduce cada error a su mensaje. Los tres ViewModels tienen `cargar()` y `onRetry()`, que solo actúa en `Error` (y en `NotAvailableOffline` del detalle) y pone `Loading` antes del `launch`. El catálogo vacío pasa a `Empty`.
+  - `WorkoutStatusMessage.kt` va en versión clara y oscura. 01 a 06 suman `onRetry`; 07 queda sin cambios.
+  - No se tocó `ui/components/`, `ui/theme/`, la navegación, Room ni `NetworkModule`.
+- Qué propuso la IA y qué cambiamos:
+  - En el detalle, la IA juntó las cuatro ramas de `catch` en una sola que usa `toAppError()`. Así el JSON roto se separa de la falta de conexión en un solo lugar, en vez de depender del orden de los `catch`.
+  - Dos controles negativos salieron mal a la primera y se rehicieron:
+    - C6: la rotura no hizo fallar el test porque Room ya tenía los tres entrenamientos.
+    - C20: con `stateIn` el test fallaba en su precondición y no en lo que prueba.
+  - Hector pidió que la IA probara la app en el emulador. Para no tocar su mock, la IA levantó una copia en el puerto 8001 con `adb reverse` y simuló el servidor apagado sacando el `adb reverse`. Antes de borrar los datos de la app con `pm clear` pidió permiso.
+  - En la primera corrida el emulador dio ANR por "no focused window" en el launcher, en la app, en `system` y en System UI. La IA comprobó que el hilo principal de la app respondía y, con el OK de Hector, reinició el emulador; después no se repitió.
+  - Para C33e la IA sumó `@Preview` en error para 04, 05 y 06 y las abrió en el emulador con `PreviewActivity`.
+  - C34 quedó parcial: Nutrition / 07 todavía es `PantallaVacia`, así que desde la app no se puede guardar una comida.
+  - Ningún test se modificó.
+- Revisores: ninguno marcó nada BLOQUEA, CRÍTICA ni ALTA, así que hubo una sola vuelta.
+  - revisor-requisitos: C1 a C36 cumplen, salvo la parte de Nutrition de C34. Se corrigieron en la spec la tabla de Tests y el Historial (C34 parcial; C33d probado solo con `error`).
+  - revisor-arquitectura: una MEDIA, que `ui/` importe `data.repository` en `WorkoutErrorMessages.kt`. La pide la spec, la usan solo los ViewModels y queda como sugerencia.
+  - revisor-visual: aprobada. Una MEDIA en la evidencia: en las `@Preview` de 06 la barra superior queda encima de la de estado porque falta el `Scaffold`. Quedó anotado en la evidencia.
+  - `/code-review`: 5 hallazgos bajos.
+- Sugerencias que quedan:
+  - `catalogErrorMessage` y `detailErrorMessage` como `internal`, y a futuro `AppError` en `domain/`;
+  - `AppException` sin mensaje: se pierde el código HTTP y el id para los logs;
+  - cualquier `IllegalArgumentException` cuenta como `INVALID_DATA`;
+  - las dos tablas de mensajes repiten tres ramas;
+  - la rama de `Content` vacío en 01 y 02 ya no se alcanza;
+  - falta `liveRegion` para TalkBack en el mensaje de error;
+  - Retry sin `workoutId` no hace nada (C25);
+  - 05 en error no tiene cómo salir salvo el atrás del sistema;
+  - la tarjeta de carga sobre verde está repetida en 04 y 05;
+  - en los `@Preview` viejos `onRetry` va primero;
+  - Retry Small mide menos de 48 dp (zona de Martu);
+  - faltan capturas en español, de 02 con `malformed` y sin servidor, y de un Retry con `malformed`.
+- Evidencia: `docs/evidencia/tests/2026-10-25-estados-verde.md` (216 unitarios en verde, `reglas.sh`, `assembleDebug` y los controles negativos de C3, C6, C9, C11, C13, C18, C20, C24, C25, C29 y C36) y `docs/evidencia/estados/estados-*.png` con `estados-log-del-mock.txt`. Tests en rojo en el commit `5877b2e`.
+- Commit / PR:

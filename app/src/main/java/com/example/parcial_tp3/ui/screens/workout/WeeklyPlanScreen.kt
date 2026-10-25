@@ -64,6 +64,7 @@ fun WeeklyPlanScreen(
     state: WorkoutsUiState,
     onWorkout: (workoutId: String) -> Unit,
     onAdjust: () -> Unit,
+    onRetry: () -> Unit,
 ) {
     val plan: Map<Int, Workout> = (state as? WorkoutsUiState.Content)
         ?.workouts
@@ -101,8 +102,9 @@ fun WeeklyPlanScreen(
         Calendar(plan, diasLargos, onWorkout)
         when (state) {
             WorkoutsUiState.Loading -> LoadingCard()
-            WorkoutsUiState.Error -> VoraInfoMessage(
-                text = stringResource(R.string.workout_error),
+            is WorkoutsUiState.Error -> WorkoutStatusMessage(text = stringResource(state.message), onRetry = onRetry)
+            WorkoutsUiState.Empty -> VoraInfoMessage(
+                text = stringResource(R.string.workout_empty),
                 icon = painterResource(R.drawable.ic_info),
             )
             is WorkoutsUiState.Content -> if (plan.isEmpty()) {
@@ -321,6 +323,7 @@ private fun AdjustPanel(onAdjust: () -> Unit) {
 private fun WeeklyPlanScreenPreview() {
     Parcialtp3Theme {
         WeeklyPlanScreen(
+            onRetry = {},
             state = WorkoutsUiState.Content(
                 listOf(
                     Workout("w01", "Upper Body Strength", WorkoutLevel.INTERMEDIATE, 42, 5),

@@ -18,5 +18,6 @@ fun ExerciseDetailsRoute(
         onBack = onBack,
         onHelp = rememberDemoToast(),
         onAskVora = onAskVora,
+        onRetry = viewModel::onRetry,
     )
 }

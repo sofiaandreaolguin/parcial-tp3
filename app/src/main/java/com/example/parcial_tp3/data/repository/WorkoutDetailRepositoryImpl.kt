@@ -3,9 +3,6 @@ package com.example.parcial_tp3.data.repository
 import com.example.parcial_tp3.data.local.dao.WorkoutDao
 import com.example.parcial_tp3.data.remote.VoraApi
 import com.example.parcial_tp3.domain.model.WorkoutDetail
-import com.google.gson.stream.MalformedJsonException
-import java.io.EOFException
-import java.io.IOException
 import javax.inject.Inject
 import kotlinx.coroutines.CancellationException
 
@@ -23,9 +20,9 @@ class WorkoutDetailRepositoryImpl @Inject constructor(
             val response = api.getWorkoutDetail(id)
             val data = response.body()?.data
             when {
-                response.code() == HTTP_NOT_FOUND -> Result.failure(NoSuchElementException("Entrenamiento no encontrado: $id"))
-                !response.isSuccessful -> desdeRoom(id, IllegalStateException("HTTP ${response.code()}"))
-                data == null -> desdeRoom(id, IllegalStateException("Respuesta sin data"))
+                response.code() == HTTP_NOT_FOUND -> Result.failure(AppException(AppError.NOT_FOUND))
+                !response.isSuccessful -> desdeRoom(id, AppException(AppError.SERVER))
+                data == null -> desdeRoom(id, AppException(AppError.INVALID_DATA))
                 else -> {
                     val detail = data.toDomain()
                     guardar(detail)
@@ -34,16 +31,11 @@ class WorkoutDetailRepositoryImpl @Inject constructor(
             }
         } catch (e: CancellationException) {
             throw e
-        } catch (e: MalformedJsonException) {
-            // JSON roto: el servidor respondio. Estas dos heredan de IOException, por eso van antes;
-            // si no, un JSON roto se mostraria como "no disponible sin conexion".
-            desdeRoom(id, e)
-        } catch (e: EOFException) {
-            desdeRoom(id, e)
-        } catch (e: IOException) {
-            desdeRoom(id, e, sinConexion = true)
         } catch (e: Exception) {
-            desdeRoom(id, e)
+            // toAppError() separa el JSON roto (que hereda de IOException) de la falta de conexion;
+            // si no, un JSON roto se mostraria como "no disponible sin conexion".
+            val error = e.toAppError()
+            desdeRoom(id, AppException(error, e), sinConexion = error == AppError.NO_CONNECTION)
         }
 
     // Un problema de la cache no tapa un dato bueno de la red: el error de Room se descarta.
@@ -60,7 +52,8 @@ class WorkoutDetailRepositoryImpl @Inject constructor(
         }
     }
 
-    private suspend fun desdeRoom(id: String, error: Exception, sinConexion: Boolean = false): Result<WorkoutDetail> =
+    // Si falla Room es UNKNOWN, sin toAppError() ni WorkoutNotCachedException: el problema es la cache.
+    private suspend fun desdeRoom(id: String, error: AppException, sinConexion: Boolean = false): Result<WorkoutDetail> =
         try {
             val fila = dao.getById(id)
             when {
@@ -71,7 +64,7 @@ class WorkoutDetailRepositoryImpl @Inject constructor(
         } catch (e: CancellationException) {
             throw e
         } catch (e: Exception) {
-            Result.failure(e)
+            Result.failure(AppException(AppError.UNKNOWN, e))
         }
 
     private companion object {

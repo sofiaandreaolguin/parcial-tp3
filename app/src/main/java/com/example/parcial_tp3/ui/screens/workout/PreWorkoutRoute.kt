@@ -21,5 +21,6 @@ fun PreWorkoutRoute(
         onClose = onClose,
         onAskVora = onAskVora,
         onStartWorkout = onStartWorkout,
+        onRetry = viewModel::onRetry,
     )
 }

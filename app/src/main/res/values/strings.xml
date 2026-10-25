@@ -330,6 +330,10 @@
     <string name="workout_details">Details</string>
     <string name="workout_loading">Loading workouts</string>
     <string name="workout_error">We couldn\'t load your workouts.</string>
+    <string name="workout_error_no_connection">No connection. Check your internet and try again.</string>
+    <string name="workout_error_server">The service isn\'t available right now.</string>
+    <string name="workout_error_invalid_data">We received data we couldn\'t read.</string>
+    <string name="workout_retry">Retry</string>
     <string name="workout_empty">There are no workouts yet.</string>
     <string name="workout_recommends">VORA RECOMMENDS</string>
     <string name="workout_recommends_demo">Your last upper-body session was 4 days ago. Today is a great opportunity to hit your strength volume targets.</string>
@@ -384,6 +388,7 @@
     <string name="details_edit">Edit workout</string>
     <string name="details_loading">Loading workout</string>
     <string name="details_error">We couldn\'t load this workout.</string>
+    <string name="details_not_found">This workout doesn\'t exist.</string>
     <string name="workout_not_available_offline">This workout isn\'t available offline yet.</string>
     <string name="pre_workout_get_ready">GET READY</string>
     <string name="pre_workout_focus_label">TODAY\'S FOCUS</string>
