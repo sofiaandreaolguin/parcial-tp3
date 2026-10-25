@@ -1,14 +1,22 @@
 package com.example.parcial_tp3.ui.screens.nutrition
 
+import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import com.example.parcial_tp3.R
@@ -21,7 +29,7 @@ import com.example.parcial_tp3.ui.screens.workout.LoadingCard
 import com.example.parcial_tp3.ui.theme.VoraTheme
 import java.time.LocalDate
 
-// Lo que comparten Nutrition / 01 y 02.
+// Lo que comparten las pantallas de Nutrition.
 
 @Composable
 internal fun MealType.label(): String = stringResource(
@@ -75,5 +83,37 @@ internal fun NutritionDatePickerDialog(
         },
     ) {
         DatePicker(state = pickerState)
+    }
+}
+
+/**
+ * PROTEIN, CARBS y FAT con sus gramos, en tres columnas con el mismo espacio entre ellas (en el panel
+ * de 07, CARBS queda en x 151 de 318; en la tarjeta de 08, en x 146 de 310). Los gramos llegan como
+ * texto: 07 muestra lo que dice el formulario.
+ *
+ * @param valueColor sin especificar toma el color del contenedor (blanco dentro de VoraPanel).
+ */
+@Composable
+internal fun MacroTotalsRow(
+    protein: String,
+    carbs: String,
+    fat: String,
+    labelColor: Color,
+    modifier: Modifier = Modifier,
+    valueColor: Color = Color.Unspecified,
+    valueStyle: TextStyle = MaterialTheme.typography.titleSmall,
+) {
+    Row(modifier = modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
+        MacroTotal(R.string.nutrition_confirm_protein, protein, labelColor, valueColor, valueStyle)
+        MacroTotal(R.string.nutrition_confirm_carbs, carbs, labelColor, valueColor, valueStyle)
+        MacroTotal(R.string.nutrition_confirm_fat, fat, labelColor, valueColor, valueStyle)
+    }
+}
+
+@Composable
+private fun MacroTotal(@StringRes label: Int, grams: String, labelColor: Color, valueColor: Color, valueStyle: TextStyle) {
+    Column(Modifier.semantics(mergeDescendants = true) {}) {
+        Text(text = stringResource(label), style = MaterialTheme.typography.bodySmall, color = labelColor)
+        Text(text = stringResource(R.string.nutrition_confirm_macro_value, grams), style = valueStyle, color = valueColor)
     }
 }
