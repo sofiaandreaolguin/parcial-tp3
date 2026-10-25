@@ -14,4 +14,5 @@ sealed interface WorkoutDetailUiState {
         val selectedExercise: Exercise? = null,
     ) : WorkoutDetailUiState
     data object Error : WorkoutDetailUiState
+    data object NotAvailableOffline : WorkoutDetailUiState
 }

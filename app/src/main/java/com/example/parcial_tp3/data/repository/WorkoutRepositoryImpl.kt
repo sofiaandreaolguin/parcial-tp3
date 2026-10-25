@@ -1,12 +1,15 @@
 package com.example.parcial_tp3.data.repository
 
+import com.example.parcial_tp3.data.local.dao.WorkoutDao
 import com.example.parcial_tp3.data.remote.VoraApi
 import com.example.parcial_tp3.domain.model.Workout
 import javax.inject.Inject
 import kotlinx.coroutines.CancellationException
 
+// Firma de la tarea del detalle y la cache: la sesion de implementar suma el uso del dao.
 class WorkoutRepositoryImpl @Inject constructor(
     private val api: VoraApi,
+    private val dao: WorkoutDao,
 ) : WorkoutRepository {
 
     override suspend fun getWorkouts(): Result<List<Workout>> =

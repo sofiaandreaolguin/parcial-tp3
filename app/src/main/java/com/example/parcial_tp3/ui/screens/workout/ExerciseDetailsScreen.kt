@@ -99,7 +99,7 @@ fun ExerciseDetailsScreen(
         ) {
             when (state) {
                 WorkoutDetailUiState.Loading -> LoadingCard(stringResource(R.string.details_loading))
-                WorkoutDetailUiState.Error -> ErrorMessage()
+                WorkoutDetailUiState.Error, WorkoutDetailUiState.NotAvailableOffline -> ErrorMessage()
                 is WorkoutDetailUiState.Content -> state.selectedExercise
                     ?.let { ExerciseContent(exercise = it, onAskVora = onAskVora, onBack = onBack) }
                     ?: ErrorMessage()

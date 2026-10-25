@@ -141,34 +141,34 @@ Casos de la plantilla y cómo se cubren acá:
 ## Tests
 | Criterio | Test | Dónde | Vi el rojo |
 |---|---|---|---|
-| C1 | `` `C1 cache getWorkoutDetail pide GET v1 workouts w01` `` | `test/` · `WorkoutApiTest` (MockWebServer) | |
-| C2 | `` `C2 cache Gson convierte el detalle del mock en WorkoutDetailDto` `` | `test/` · `WorkoutApiTest` | |
-| C3 | `` `C3 cache detalle toDomain conserva los campos y los ejercicios en orden` `` | `test/` · `WorkoutMappersTest` | |
-| C4 | `` `C4 cache cada campo nulo del detalle o de un ejercicio lanza IllegalArgumentException` `` (15 casos) | `test/` · `WorkoutMappersTest` | |
-| C5 | `` `C5 cache un nivel desconocido en el detalle lanza IllegalArgumentException` `` | `test/` · `WorkoutMappersTest` | |
-| C6 | `` `C6 cache detalle y resumen van a Entity y vuelven iguales` `` (con `level` `"beginner"` fijo en la Entity) | `test/` · `WorkoutMappersTest` | |
-| C7 | `` `C7 cache una fila sin description no es un detalle` `` | `test/` · `WorkoutMappersTest` | |
-| C8 | `cache_C8_saveDetail_guarda_la_fila_y_los_ejercicios_en_orden` | `androidTest/` · `WorkoutDaoTest` | |
-| C9 | `cache_C9_saveDetail_otra_vez_reemplaza_los_ejercicios` | `androidTest/` · `WorkoutDaoTest` | |
-| C10 | `cache_C10_saveSummaries_conserva_el_detalle_ya_guardado` | `androidTest/` · `WorkoutDaoTest` | |
-| C11 | `cache_C11_saveSummaries_de_uno_nuevo_deja_description_nulo` | `androidTest/` · `WorkoutDaoTest` | |
-| C12 | `` `C12 cache catalogo con 200 guarda en Room y devuelve los tres` `` | `test/` · `WorkoutRepositoryImplTest` (MockWebServer y `FakeWorkoutDao`) | |
-| C13 | `` `C13 cache catalogo que falla devuelve lo de Room` `` (servidor apagado, 503, cuerpo sin `data`, JSON roto, JSON de otro tipo, ítem inválido) | `test/` · `WorkoutRepositoryImplTest` | |
+| C1 | `` `C1 cache getWorkoutDetail pide GET v1 workouts w01` `` | `test/` · `WorkoutApiTest` (MockWebServer) | Pasó en rojo: la firma del endpoint ya es el contrato. Control negativo hecho el 25/10: con `@GET("v1/workout/{workoutId}")` falla con `expected:</v1/workout[s]/w01> but was:</v1/workout[]/w01>` |
+| C2 | `` `C2 cache Gson convierte el detalle del mock en WorkoutDetailDto` `` | `test/` · `WorkoutApiTest` | Pasó en rojo: el DTO ya es el contrato. Control negativo hecho el 25/10: con `@SerializedName("musculo")` en `muscleGroup` falla con `expected:<WorkoutDetailDto(id=w01, …)> but was:<…>` |
+| C3 | `` `C3 cache detalle toDomain conserva los campos y los ejercicios en orden` `` | `test/` · `WorkoutMappersTest` | Sí (25/10): `expected:<WorkoutDetail(id=w01, …)> but was:<WorkoutDetail(id=, …)>` |
+| C4 | `` `C4 cache cada campo nulo del detalle o de un ejercicio lanza IllegalArgumentException` `` (15 casos) | `test/` · `WorkoutMappersTest` | Sí: `detalle con id nulo: expected java.lang.IllegalArgumentException to be thrown, but nothing was thrown` |
+| C5 | `` `C5 cache un nivel desconocido en el detalle lanza IllegalArgumentException` `` | `test/` · `WorkoutMappersTest` | Sí: `nivel pro: expected java.lang.IllegalArgumentException to be thrown, but nothing was thrown` |
+| C6 | `` `C6 cache detalle y resumen van a Entity y vuelven iguales` `` (con `level` `"beginner"` fijo en la Entity) | `test/` · `WorkoutMappersTest` | Sí: `expected:<WorkoutEntity(id=w01, …, level=beginner, …)> but was:<WorkoutEntity(id=, name=, level=, …)>` |
+| C7 | `` `C7 cache una fila sin description no es un detalle` `` | `test/` · `WorkoutMappersTest` | Sí: `expected java.lang.IllegalArgumentException to be thrown, but nothing was thrown` |
+| C8 | `cache_C8_saveDetail_guarda_la_fila_y_los_ejercicios_en_orden` | `androidTest/` · `WorkoutDaoTest` | Sí (emulador, 25/10): `expected:<WorkoutEntity(id=w01, …)> but was:<null>` |
+| C9 | `cache_C9_saveDetail_otra_vez_reemplaza_los_ejercicios` | `androidTest/` · `WorkoutDaoTest` | Sí: `expected:<[WorkoutExerciseEntity(…, exerciseId=e04, …), …]> but was:<[]>` |
+| C10 | `cache_C10_saveSummaries_conserva_el_detalle_ya_guardado` | `androidTest/` · `WorkoutDaoTest` | Sí: `expected:<WorkoutEntity(id=w01, name=Fuerza inicial renovada, …, description=Rutina de ejemplo…)> but was:<null>` |
+| C11 | `cache_C11_saveSummaries_de_uno_nuevo_deja_description_nulo` | `androidTest/` · `WorkoutDaoTest` | Sí: `saveSummaries tiene que guardar la fila nueva` |
+| C12 | `` `C12 cache catalogo con 200 guarda en Room y devuelve los tres` `` | `test/` · `WorkoutRepositoryImplTest` (MockWebServer y `FakeWorkoutDao`) | Sí: `expected:<[WorkoutEntity(id=w01, …, description=null), …]>`; Room queda vacía porque todavía no se guarda |
+| C13 | `` `C13 cache catalogo que falla devuelve lo de Room` `` (servidor apagado, 503, cuerpo sin `data`, JSON roto, JSON de otro tipo, ítem inválido) | `test/` · `WorkoutRepositoryImplTest` | Sí: `con 503 expected:<Success([Workout(id=w01, …), Workout(id=w02, name=Entrenamiento guardado, …)])> but was:<Failure(…)>` |
 | C14 | Los `C8` a `C11` del catálogo, con `FakeWorkoutDao` vacío | `test/` · `WorkoutRepositoryImplTest` | Ya en verde: lleva control negativo (devolver éxito vacío si Room está vacía) |
-| C15 | `` `C15 cache catalogo vacio del servidor no borra Room` `` | `test/` · `WorkoutRepositoryImplTest` | |
-| C16 | `` `C16 cache catalogo que falla deja Room igual` `` | `test/` · `WorkoutRepositoryImplTest` | |
-| C17 | `` `C17 cache catalogo si guardar en Room falla devuelve lo de la red` `` | `test/` · `WorkoutRepositoryImplTest` (`FakeWorkoutDao` que lanza al guardar) | |
-| C18 | `` `C18 cache catalogo si leer Room falla devuelve failure sin lanzar` `` | `test/` · `WorkoutRepositoryImplTest` (`FakeWorkoutDao` que lanza al leer) | |
-| C19 | `` `C19 cache detalle con 200 guarda en Room y lo devuelve` `` | `test/` · `WorkoutDetailRepositoryImplTest` (MockWebServer y `FakeWorkoutDao`) | |
-| C20 | `` `C20 cache detalle que falla devuelve lo de Room` `` (servidor apagado, 503, cuerpo sin `data`, JSON roto, JSON de otro tipo, detalle inválido) | `test/` · `WorkoutDetailRepositoryImplTest` | |
-| C21 | `` `C21 cache detalle nunca descargado sin servidor falla con WorkoutNotCachedException` `` (sin fila, y con fila del catálogo con `description` nulo) | `test/` · `WorkoutDetailRepositoryImplTest` | |
-| C22 | `` `C22 cache detalle sin cache y sin falla de conexion no es WorkoutNotCachedException` `` (503, `INVALID_JSON`, cuerpo cortado, JSON de otro tipo, cuerpo sin `data`, detalle inválido) | `test/` · `WorkoutDetailRepositoryImplTest` | |
-| C23 | `` `C23 cache detalle con 404 falla sin leer Room y sin borrarlo` `` | `test/` · `WorkoutDetailRepositoryImplTest` | |
-| C24 | `` `C24 cache detalle que falla deja Room igual` `` | `test/` · `WorkoutDetailRepositoryImplTest` | |
-| C25 | `` `C25 cache detalle al cancelar relanza CancellationException` `` | `test/` · `WorkoutDetailRepositoryImplTest` (MockWebServer con demora) | |
-| C26 | `` `C26 cache detalle si guardar en Room falla devuelve lo de la red` `` | `test/` · `WorkoutDetailRepositoryImplTest` (`FakeWorkoutDao` que lanza al guardar) | |
-| C27 | `` `C27 cache detalle si leer Room falla devuelve failure sin WorkoutNotCachedException` `` | `test/` · `WorkoutDetailRepositoryImplTest` (`FakeWorkoutDao` que lanza al leer) | |
-| C28 | `` `C28 cache detalle no descargado pasa a NotAvailableOffline` `` | `test/` · `WorkoutDetailViewModelTest` (`FakeWorkoutDetailRepository`) | |
+| C15 | `` `C15 cache catalogo vacio del servidor no borra Room` `` | `test/` · `WorkoutRepositoryImplTest` | Pasó en rojo: el repositorio actual no toca Room. Control negativo en implementar: que el 200 vacío reemplace la tabla (por ejemplo, borrar las filas antes de `saveSummaries`) |
+| C16 | `` `C16 cache catalogo que falla deja Room igual` `` | `test/` · `WorkoutRepositoryImplTest` | Pasó en rojo: el repositorio actual no toca Room. Control negativo en implementar: borrar la caché en el `catch` del fallo |
+| C17 | `` `C17 cache catalogo si guardar en Room falla devuelve lo de la red` `` | `test/` · `WorkoutRepositoryImplTest` (`FakeWorkoutDao` que lanza al guardar) | Pasó en rojo: hoy no guarda en Room. Control negativo en implementar: guardar dentro del mismo `try` de la red, sin atrapar aparte el error de Room (devuelve `failure`) |
+| C18 | `` `C18 cache catalogo si leer Room falla devuelve failure sin lanzar` `` | `test/` · `WorkoutRepositoryImplTest` (`FakeWorkoutDao` que lanza al leer) | Pasó en rojo: hoy cualquier fallo de red ya es `failure`. Control negativo en implementar: leer Room fuera del `try` (el test lanza) |
+| C19 | `` `C19 cache detalle con 200 guarda en Room y lo devuelve` `` | `test/` · `WorkoutDetailRepositoryImplTest` (MockWebServer y `FakeWorkoutDao`) | Sí: `expected:<Success(WorkoutDetail(id=w01, …))> but was:<Success(WorkoutDetail(id=, …))>` |
+| C20 | `` `C20 cache detalle que falla devuelve lo de Room` `` (servidor apagado, 503, cuerpo sin `data`, JSON roto, JSON de otro tipo, detalle inválido) | `test/` · `WorkoutDetailRepositoryImplTest` | Sí: `con 503 expected:<Success(WorkoutDetail(id=w01, …))> but was:<Success(WorkoutDetail(id=, …))>` |
+| C21 | `` `C21 cache detalle nunca descargado sin servidor falla con WorkoutNotCachedException` `` (sin fila, y con fila del catálogo con `description` nulo) | `test/` · `WorkoutDetailRepositoryImplTest` | Sí: `sin fila tiene que ser WorkoutNotCachedException, fue Success(WorkoutDetail(id=, …))` |
+| C22 | `` `C22 cache detalle sin cache y sin falla de conexion no es WorkoutNotCachedException` `` (503, `INVALID_JSON`, cuerpo cortado, JSON de otro tipo, cuerpo sin `data`, detalle inválido) | `test/` · `WorkoutDetailRepositoryImplTest` | Sí: `con 503 tiene que ser failure, fue Success(WorkoutDetail(id=, …))` |
+| C23 | `` `C23 cache detalle con 404 falla sin leer Room y sin borrarlo` `` | `test/` · `WorkoutDetailRepositoryImplTest` | Sí: `404 tiene que ser failure, fue Success(WorkoutDetail(id=, …))` |
+| C24 | `` `C24 cache detalle que falla deja Room igual` `` | `test/` · `WorkoutDetailRepositoryImplTest` | Pasó en rojo: la firma vacía no toca Room. Control negativo en implementar: borrar la fila o los ejercicios al fallar (por ejemplo, `deleteExercises` en el `catch`) |
+| C25 | `` `C25 cache detalle al cancelar relanza CancellationException` `` | `test/` · `WorkoutDetailRepositoryImplTest` (MockWebServer con demora) | Sí: `la consulta tiene que llegar al servidor antes de cancelarla` (la firma vacía no va a la red). Control negativo en implementar: `runCatching`, como prevé la spec |
+| C26 | `` `C26 cache detalle si guardar en Room falla devuelve lo de la red` `` | `test/` · `WorkoutDetailRepositoryImplTest` (`FakeWorkoutDao` que lanza al guardar) | Sí: `expected:<Success(WorkoutDetail(id=w01, …))> but was:<Success(WorkoutDetail(id=, …))>` |
+| C27 | `` `C27 cache detalle si leer Room falla devuelve failure sin WorkoutNotCachedException` `` | `test/` · `WorkoutDetailRepositoryImplTest` (`FakeWorkoutDao` que lanza al leer) | Sí: `si falla leer Room con 503 tiene que ser failure, fue Success(WorkoutDetail(id=, …))` |
+| C28 | `` `C28 cache detalle no descargado pasa a NotAvailableOffline` `` | `test/` · `WorkoutDetailViewModelTest` (`FakeWorkoutDetailRepository`) | Sí: `expected:<NotAvailableOffline> but was:<Error>` |
 | C29 | Captura de 03, 04 y 06 en el emulador con el servidor apagado | `docs/evidencia/estados/` | No es test unitario |
 | C30 | `./gradlew assembleDebug` | build | Control negativo: sacar el `@Binds` y ver que falla |
 | C31 | Prueba manual de la consigna con el mock local, con capturas | `docs/evidencia/estados/` | No es test unitario |

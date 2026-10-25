@@ -6,8 +6,9 @@ import androidx.room.PrimaryKey
 /**
  * Tabla de la cache de entrenamientos (RF02).
  *
- * Por ahora solo los campos del resumen del catalogo (GET /v1/workouts). El detalle y los
- * ejercicios los suma la tarea j. El id es String porque el mock usa "w01", "w02"...
+ * Los campos del resumen del catalogo (GET /v1/workouts) mas description, que llega solo con el
+ * detalle: description nulo quiere decir "detalle nunca descargado". Los ejercicios van en
+ * WorkoutExerciseEntity. El id es String porque el mock usa "w01", "w02"...
  */
 @Entity(tableName = "workouts")
 data class WorkoutEntity(
@@ -16,4 +17,5 @@ data class WorkoutEntity(
     val level: String,
     val durationMinutes: Int,
     val exerciseCount: Int,
+    val description: String? = null,
 )
