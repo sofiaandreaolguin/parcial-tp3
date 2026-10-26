@@ -10,7 +10,11 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination
@@ -25,6 +29,10 @@ import com.example.parcial_tp3.ui.navigation.Rutas
 import com.example.parcial_tp3.ui.navigation.VoraTab
 import com.example.parcial_tp3.ui.navigation.accessGraph
 import com.example.parcial_tp3.ui.navigation.homeGraph
+import com.example.parcial_tp3.ui.navigation.cerrarSesion
+import com.example.parcial_tp3.ui.navigation.startDestination
+import com.example.parcial_tp3.ui.session.SessionState
+import com.example.parcial_tp3.ui.session.SessionViewModel
 import com.example.parcial_tp3.ui.navigation.nutritionGraph
 import com.example.parcial_tp3.ui.navigation.profileGraph
 import com.example.parcial_tp3.ui.navigation.progressGraph
@@ -65,8 +73,16 @@ class MainActivity : ComponentActivity() {
  * Cada flujo vive en su propio archivo de grafo, asi cada rol trabaja en el suyo.
  */
 @Composable
-fun VoraApp() {
+fun VoraApp(session: SessionViewModel = hiltViewModel()) {
     val nav = rememberNavController()
+    val sesion by session.state.collectAsStateWithLifecycle()
+    // la sesion ya no vale (C35): a SignIn; el ViewModel hace el restore una sola vez (RF07)
+    LaunchedEffect(sesion) {
+        if (sesion == SessionState.Invalid) {
+            nav.cerrarSesion()
+            session.onInvalidHandled()
+        }
+    }
     val backStackEntry by nav.currentBackStackEntryAsState()
     val destino = backStackEntry?.destination
     val rutaActual = destino?.route
@@ -89,10 +105,10 @@ fun VoraApp() {
     ) { padding ->
         NavHost(
             navController = nav,
-            // El inicio es el GRAFO de acceso, no la pantalla: startDestination tiene que
-            // ser hijo directo del grafo raiz, y sign_in vive adentro de access_graph.
-            // El access_graph arranca en sign_in, asi que la primera pantalla es la misma.
-            startDestination = Rutas.ACCESS_GRAPH,
+            // El inicio es un GRAFO, no una pantalla: startDestination tiene que ser hijo directo
+            // del grafo raiz. Sin sesion es access_graph (arranca en sign_in); con sesion, home_graph.
+            // la sesion se lee antes de componer el NavHost: no hay parpadeo de SignIn (C13, C14)
+            startDestination = remember { startDestination(session.hasSession) },
             modifier = if (aSangre) Modifier else Modifier.padding(padding),
         ) {
             accessGraph(nav)

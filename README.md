@@ -35,7 +35,8 @@ En [`docs/figma/`](docs/figma/) hay una imagen por flujo, exportada a 2x, para c
 
    Sin `sdk.dir`, Gradle corta con `SDK location not found`. En Windows la ruta suele ser
    `C:\\Users\\TU-USUARIO\\AppData\\Local\\Android\\Sdk`.
-3. Correr en un emulador. El tamaño de referencia es **394 dp**; se controla también en **360 dp** (UI03).
+3. Configurar Firebase (ver [Firebase](#firebase-extra-aa)). Sin `app/google-services.json` no compila.
+4. Correr en un emulador. El tamaño de referencia es **394 dp**; se controla también en **360 dp** (UI03).
 
 ```bash
 ./gradlew assembleDebug        # compilar
@@ -227,6 +228,30 @@ Los 5 estados del Asistente VORA son **una sola ruta** `voice` con estado distin
 | 36 | Profile / 05 — Voice & AI Settings | `voice_ai_settings` | Demostración |
 | 37 | Profile / 06 — Settings | `settings` | Demostración |
 
+## Firebase (extra aa)
+
+Cuenta con email y contraseña (Firebase Authentication), perfil en Firestore y reglas de seguridad. Spec: [`specs/funcionales/firebase-auth-perfil.md`](specs/funcionales/firebase-auth-perfil.md). La app no tiene camino sin cuenta: sin sesión no se entra a Home.
+
+### Configurarlo
+
+1. En la [consola de Firebase](https://console.firebase.google.com) crear un proyecto y agregar una app Android con el paquete `com.example.parcial_tp3`.
+2. En **Authentication > Sign-in method**, habilitar **Email/Password**.
+3. En **Firestore Database**, crear la base en modo producción.
+4. Descargar `google-services.json` y ponerlo en `app/google-services.json`. Está en `.gitignore`: no se sube. Para compilar sin proyecto propio (por ejemplo en la CI) alcanza con copiar la plantilla: `cp app/google-services.json.example app/google-services.json` (compila, pero no se puede iniciar sesión).
+5. Publicar las reglas de [`firebase/firestore.rules`](firebase/firestore.rules): en **Firestore > Rules** pegar el contenido y publicar, o `firebase deploy --only firestore:rules`.
+
+### Probar las reglas con dos cuentas
+
+Se prueban a mano, con el simulador de reglas de la consola (**Firestore > Rules > Rules playground**) o desde la app:
+
+1. Crear las cuentas A y B desde la app y anotar el `uid` de cada una (**Authentication > Users**).
+2. Cuenta A lee y escribe `users/{uidA}`: permitido (C26).
+3. Cuenta B lee y escribe `users/{uidA}`: denegado (C27).
+4. Sin sesión (*Unauthenticated*), cualquier lectura o escritura: denegada (C28).
+5. Cualquier otra ruta, por ejemplo `/otra/x`: denegada (C29).
+
+Las capturas van en `docs/evidencia/firebase/` como `C26.png` a `C29.png`, indicando el `uid` usado.
+
 ## Funciones simuladas
 
 Están declaradas para que no parezcan faltantes. Ninguna es parte del núcleo obligatorio.
@@ -238,8 +263,8 @@ Están declaradas para que no parezcan faltantes. Ninguna es parte del núcleo o
 | Nutrition | Carga por voz y por foto. **No se piden permisos de cámara ni micrófono** (NAV05) |
 | Workout | Cronómetro, series y volumen de la sesión activa |
 | Progress | Las métricas e indicadores, identificados como demostración |
-| Profile | Perfil local, sin Firebase. "Change photo" y "Permissions & Data Controls" avisan modo demostración |
-| Acceso | Ingreso de demostración hasta Home, sin Firebase |
+| Profile | Perfil en Firestore (`users/{uid}`). "Change photo" y "Permissions & Data Controls" avisan modo demostración |
+| Acceso | Email y contraseña con Firebase Authentication. Apple, Google y biometría avisan modo demostración |
 
 Los controles del Figma que no tienen pantalla de destino ("Connected Data", "Account", Notifications, Units, Appearance, Help Centre, Contact Support, Privacy Policy) avisan que están en modo demostración: ninguno queda sin respuesta (NAV03).
 

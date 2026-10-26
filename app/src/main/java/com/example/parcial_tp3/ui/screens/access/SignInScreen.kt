@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -153,7 +154,12 @@ private fun SignInForm(
             },
         )
         Spacer(Modifier.height(VoraTheme.spacing.s24))
-        VoraAccessButton(text = stringResource(R.string.sign_in_action), onClick = onSignIn)
+        state.formError?.let {
+            Spacer(Modifier.height(VoraTheme.spacing.s12))
+            Text(text = stringResource(it), style = VoraTheme.text.footnote, color = MaterialTheme.colorScheme.error)
+        }
+        Spacer(Modifier.height(VoraTheme.spacing.s12))
+        VoraAccessButton(text = stringResource(R.string.sign_in_action), onClick = onSignIn, isLoading = state.isLoading)
         Spacer(Modifier.height(VoraTheme.spacing.s20))
         VoraTextDivider(stringResource(R.string.sign_in_or_continue))
         Spacer(Modifier.height(VoraTheme.spacing.s20))

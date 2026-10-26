@@ -58,6 +58,7 @@ fun ProfileDashboardScreen(
     onGoals: () -> Unit,
     onPreferences: () -> Unit,
     onDemo: () -> Unit,
+    onRetry: () -> Unit = {},
 ) {
     val goals = goalsSummary(state.goals)
     Column(
@@ -69,6 +70,21 @@ fun ProfileDashboardScreen(
         verticalArrangement = Arrangement.spacedBy(VoraTheme.spacing.s12),
     ) {
         Header(onSettings)
+        state.loadError?.let { message ->
+            VoraCard(modifier = Modifier.fillMaxWidth()) {
+                Text(
+                    text = stringResource(message),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.error,
+                )
+                VoraButton(
+                    text = stringResource(R.string.profile_retry),
+                    onClick = onRetry,
+                    style = VoraButtonStyle.Outlined,
+                    size = VoraButtonSize.Small,
+                )
+            }
+        }
         IdentityCard(state.fullName, onEditProfile)
         SnapshotCard(state, goals)
         PersonalisationPanel(onReviewPreferences)
