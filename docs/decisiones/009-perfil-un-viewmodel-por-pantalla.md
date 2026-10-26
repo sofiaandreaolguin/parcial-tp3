@@ -1,6 +1,15 @@
-# 004 · Perfil: un ViewModel por pantalla, con el perfil en un repositorio
+# 009 · Perfil: un ViewModel por pantalla, con el perfil en un repositorio
 
-**Fecha:** 21/10/2026 · **Propuso:** Fiore (tarea VC-c, inventario) · **Estado:** propuesta para el grupo
+**Fecha:** 21/10/2026 · **Propuso:** Fiore (tarea VC-c, inventario) · **Estado:** aceptada y aplicada
+
+> Al 26/10 está implementada: las seis pantallas de Profile tienen su propio ViewModel
+> (`ProfileDashboardViewModel`, `EditProfileViewModel`, `GoalsViewModel`,
+> `NutritionPreferencesViewModel`, `VoiceSettingsViewModel`, `SettingsViewModel`) y el perfil
+> vive en `data/repository/ProfileRepository.kt`.
+>
+> Esta ficha se numeró 008 el 26/10: había nacido como 004, número que ya tenía
+> [`004-rutas-object-y-route-screen.md`](004-rutas-object-y-route-screen.md) (del 20/10, y
+> citada desde `CONTEXTO.md`). Se renumeró la más nueva para no romper esas referencias.
 
 ## Contexto
 
