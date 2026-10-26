@@ -52,7 +52,7 @@ seis del asistente que usa datos reales. Reemplaza el C27 de
 
 Cumplido en fecha. Lo que respalda cada punto:
 
-- [x] **Compila** — `./gradlew assembleDebug` en verde, con los tests unitarios de ese momento sin fallos (hoy son 258: el número de hoy es el del repo, no el del hito)
+- [x] **Compila** — `./gradlew assembleDebug` en verde, con los tests unitarios de ese momento sin fallos (hoy son 309: el número de hoy es el del repo, no el del hito)
 - [x] **Tema y componentes principales** — `ui/theme/` y `ui/components/`, PR #5 a #7 del 20/10 (UI02)
 - [x] **Inventario de pantallas** — `specs/PANTALLAS.md`, PR #2 del 18/10; los 37 frames verificados contra el panel de capas del Figma
 - [x] **Navegación entre áreas** — 7 grafos y 33 destinos en `ui/navigation/`, PR #2 del 18/10, con la barra inferior en las 16 que la comparten

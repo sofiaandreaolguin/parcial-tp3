@@ -1,6 +1,6 @@
-> **Base: `feat/firebase-extra` (la rama de Martu), no `main`.** Los dos extras se entregan
-> juntos desde esa rama. Abrirlo con:
-> `gh pr create --base feat/firebase-extra --head feat/voice-coach-historial`
+> **Base: `main`.** El extra "aa" de Martu (Firebase) entró a `main` en el PR #57, y esta rama ya
+> tiene `main` mergeado con sus dos conflictos resueltos. Abrirlo con:
+> `gh pr create --base main --head feat/voice-coach-historial`
 
 ## Qué cambia
 
@@ -11,16 +11,23 @@ consigna; se encaró con los ocho requisitos obligatorios ya en `main`.
 ## Carril y requisitos
 
 - Carril: **C datos** (spec → tests en rojo → implementar) y después **B pantalla**.
-- Requisitos: **EXT01**. Se apoya en RF05, RF06, RF07 y RF08, y respeta NAV05 y UI01.
+- Requisitos: **EXT01**, el de `specs/METODOLOGIA.md`. Se apoya en RF05, RF06, RF07 y RF08, y
+  respeta NAV05 y UI01. No se superpone con el extra **"aa"** de Martu, que es el de Firebase:
+  son dos ampliaciones distintas de la consigna.
 - Spec: `specs/funcionales/coach-con-historial.md`, 31 criterios más C11b.
 - **Reemplaza el C27 de `specs/funcionales/asistente-vora.md`** ("la app NO DEBE responder sola"),
   que queda tachado y explicado ahí mismo, y borra su test.
 
 ## Cómo probarlo
 
+> **Hace falta poder iniciar sesión.** Desde que entró el extra "aa", sin sesión no se entra a Home
+> (`startDestination(hasSession)`), y sin Home no se llega al coach. La plantilla
+> `google-services.json.example` alcanza para **compilar** pero no para **entrar**: hay que poner un
+> `app/google-services.json` de un proyecto Firebase real, como explica el README.
+
 1. En `local.properties`, `api.baseUrl=https://tp3.martinrivas.ar/` (el servidor publicado; no hay
    que levantar nada). Con el mock local hace falta además `adb reverse tcp:8000 tcp:8000`.
-2. Entrar a Home → "Start voice session" → "Type instead".
+2. Iniciar sesión (o crear la cuenta) y entrar a Home → "Start voice session" → "Type instead".
 3. Se ve la conversación del frame y, debajo, las tres preguntas sugeridas que manda el servidor.
 4. Tocar un chip: VORA contesta y la respuesta llega con la etiqueta "Simulated response". Los chips
    se van y no vuelven.
@@ -34,11 +41,13 @@ consigna; se encaró con los ocho requisitos obligatorios ya en `main`.
 
 ## Evidencia
 
-- **258 tests unitarios, 0 fallos** (`./gradlew testDebugUnitTest`). Tests en rojo verificados antes
+- **309 tests unitarios, 0 fallos** (`./gradlew testDebugUnitTest`), ya con `main` mergeado: 258
+  de esta rama más los del extra "aa". Tests en rojo verificados antes
   de implementar: 27 fallaban por el resultado, ninguno por excepción.
 - **21 tests con emulador, 0 fallos** (`./gradlew connectedDebugAndroidTest`): los de Room más
-  `ConversationRotacionTest`, el primer test de Compose del proyecto.
-- `./gradlew assembleDebug` en verde y `./scripts/reglas.sh` sin hallazgos.
+  `ConversationRotacionTest`, el primer test de Compose del proyecto. Medidos antes del merge.
+- `./gradlew assembleDebug` en verde y `./scripts/reglas.sh` sin hallazgos, las dos cosas **después**
+  del merge con `main`.
 - **Control negativo de todos los tests nuevos**: se rompió el código a propósito, uno por uno, y se
   comprobó que cada test lo detecta. Está la medición en la spec.
 - Capturas en `docs/evidencia/coach/`: sugerencias en 411 y 360 dp (UI03), respuesta con la marca de
@@ -84,31 +93,33 @@ consigna; se encaró con los ocho requisitos obligatorios ya en `main`.
 
 ## Ojo: este PR trae además la puesta al día de la documentación
 
-Se había pensado mandarla en un pull request aparte a `main`, y se decidió que viaje acá. Son los
+Se había pensado mandarla en un pull request aparte, y se decidió que viaje acá. Son los
 cambios de la mañana del 26/10, que describen **los ocho requisitos obligatorios que ya están en
 `main`**: la tabla de estado con su pull request y su fecha, el Hito 1 tildado, el `sdk.dir` que
 faltaba en el README, cómo levantar el mock, las secciones de idiomas y de qué cambiaríamos al
 escalar, y la sección 17 de `PANTALLAS.md`. Tienen su propia entrada en la bitácora y su propio
 commit.
 
-**Consecuencia a tener en cuenta:** esa puesta al día llega a `main` cuando se mergee esta rama. Si
-los extras no se terminan integrando, `main` se queda con la documentación vieja.
+Como este pull request va directo a `main`, esa puesta al día entra con él y deja de depender de
+que los extras se integren.
 
-## Antes de mergear: lo que va a chocar con la rama de Martu
+## El merge con `main` ya está hecho
 
-Las dos ramas salieron de `main` por separado y tocan siete archivos en común. Ninguno es un
-problema de fondo, pero hay que resolverlos a mano y conviene hacerlo entre las dos:
+Las dos ramas salieron de `main` por separado. Martu mergeó `main` en la suya y entró por el PR #57;
+esta rama mergeó `main` después, así que los choques **ya están resueltos acá** y no los hereda nadie.
+Fueron dos, los dos resueltos quedándose con las dos partes:
 
-| Archivo | Qué pasa |
-|---|---|
-| `README.md` | las dos agregan secciones: la de Firebase y la del coach |
-| `docs/BITACORA.md` | las dos agregan entradas al final |
-| `specs/PANTALLAS.md` | Martu cambia las de Acceso y Profile; esta, `Voice / 05` |
-| `app/src/main/res/values/strings.xml` y `values-es/` | las dos agregan claves al final |
-| `di/RepositoryModule.kt` | Martu agrega los de Firebase; esta, `bindCoachRepository` |
-| `gradle/libs.versions.toml` | Martu suma Firebase; esta sube `espresso-core` a 3.7.0 y `androidx.test.ext:junit` a 1.3.0 |
+| Archivo | Qué chocaba | Cómo quedó |
+|---|---|---|
+| `di/RepositoryModule.kt` | solo el bloque de imports; el cuerpo se juntó solo | los dos juegos de imports, en orden alfabético, y los `@Binds` de las dos |
+| `README.md` | las dos editamos los pasos de "Cómo ejecutar" | quedan el detalle de `sdk.dir` con la ruta de Windows **y** el paso de configurar Firebase, renumerado |
+
+`strings.xml` (los dos idiomas), `gradle/libs.versions.toml`, `specs/PANTALLAS.md` y
+`docs/BITACORA.md` se juntaron solos. Los que chocaban en el intento anterior
+(`NutritionCommon.kt` y la bitácora) eran en realidad choques de la rama de Martu contra `main`, y los
+resolvió ella.
 
 **Un choque de números que ya quedó resuelto de este lado:** la tarea de documentación había
 renumerado la ficha de perfil de `004` a `008`, sin mirar que Martu ya tenía
-`008-firebase-sin-acceso-demo.md` en su rama. Acá pasó a `009-perfil-un-viewmodel-por-pantalla.md`,
-así que el `008` queda libre para la de Martu y no hay que tocar nada de su lado.
+`008-firebase-sin-acceso-demo.md`. Acá pasó a `009-perfil-un-viewmodel-por-pantalla.md`, así que el
+`008` quedó libre y no hubo que tocar nada de su lado.

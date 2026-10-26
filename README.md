@@ -40,7 +40,7 @@ En [`docs/figma/`](docs/figma/) hay una imagen por flujo, exportada a 2x, para c
 
 ```bash
 ./gradlew assembleDebug        # compilar
-./gradlew testDebugUnitTest    # tests unitarios (sin emulador): 258, sin fallos
+./gradlew testDebugUnitTest    # tests unitarios (sin emulador): 309, sin fallos
 ./gradlew connectedDebugAndroidTest   # tests de Room (con el emulador abierto)
 ```
 
@@ -302,7 +302,7 @@ Reutiliza lo mismo que los ocho obligatorios: las tres capas separadas con sus m
 
 ### Cómo comprobarlo sin instalar nada
 
-**258 tests unitarios, sin fallos**, que no necesitan emulador:
+**309 tests unitarios, sin fallos**, que no necesitan emulador:
 
 ```bash
 ./gradlew testDebugUnitTest
