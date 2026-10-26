@@ -671,3 +671,141 @@ Formato:
 - Revisores: revisor-requisitos, revisor-arquitectura y `/code-review` corrieron al final sobre toda la rama (etapas 1 y 2 incluidas): sin BLOQUEA ni CRÍTICA, 43 criterios cubiertos. Se corrigieron tres hallazgos baratos: la carrera de `edited` en `EditProfileViewModel` (guardar sin editar con un perfil que se recorta dejaba la pantalla abierta), `ProfileRepository.saveEdit` pasó a `_profile.update { }` y se sacó código muerto (`isSaving` de Edit Profile y dos strings; 220 tests en verde, con `EditProfileGuardarSinEditarTest` nuevo). Quedan como sugerencia: documento con un campo de otro tipo (C38), `SessionState.Restoring` sin usar en la UI, mover el diálogo de fecha de Nutrition a `ui/components/` y el scope de `ProfileRepository` sin inyectar.
 - Evidencia: 219 tests en verde (eran 208), `assembleDebug` y `scripts/reglas.sh` sin fallas. Tests nuevos: `AuthErrorMappingTest`, `DisplayNameTest`, `HomeNombreDeRespaldoTest` y `NombreDePerfilViewModelTest`, con su rojo (no compilaban antes). Ningún test existente se modificó.
 - Commit / PR: sin commitear al escribir esta entrada (el pull request es el general de la tarea aa).
+
+### 2026-10-25 · Hector · feat(workout): leer el detalle real y guardar catálogo y detalle en Room
+- Carril y requisitos: C, paso 3 (implementar) · RF01 (parte 2), RF02, RF05 (parcial), RF06, RF07, RF08 (parcial). Spec: `specs/funcionales/detalle-y-cache-de-entrenamientos.md` (C1 a C31). Rama `feat/workout-detalle-cache-room`.
+- Plan aprobado: mappers DTO ↔ modelo ↔ Entity en `WorkoutMappers.kt`; cuerpos de `saveSummaries` (upsert parcial que conserva `description`) y `saveDetail` (reemplaza los ejercicios) en `WorkoutDao`; los dos repositorios con red primero y Room de respaldo; el 404 no cae a la caché; `WorkoutNotCachedException` solo con una `IOException` que no es `MalformedJsonException` ni `EOFException` (se atrapan antes). `NotAvailableOffline` en el ViewModel y en 03, 04 y 06, dibujado como el `Error` de cada pantalla. El `@Binds` pasa a `WorkoutDetailRepositoryImpl` y se borra la demo con su test. `VoraDatabase` no se tocó (ya estaba en versión 3 desde el rojo).
+- Qué propuso la IA y qué cambiamos:
+  - Hector pidió sumar las capturas de C29 y C31 en esta etapa, con el emulador y el mock prendidos. Para "apagar el servidor" la IA cortó `adb reverse` en lugar de matar el proceso del mock. A 06 sin conexión no se llega por el flujo normal: la IA restauró la pila después de matar el proceso y sacó w03 de la caché editando `vora.db` (documentado en la evidencia).
+  - En el emulador la IA vio que C31 pedía algo que 01 no hace: 01 destaca solo el primero del catálogo (`TodayPanel` con `firstOrNull()`). Hector eligió corregir el texto del criterio (01 muestra el primero desde Room y 02 los tres) en vez de cambiar la pantalla.
+  - Al probarlo, Hector preguntó por los "25 min" de 07: es la duración planificada del servidor, como decidió la spec de la sesión. La IA propuso una tarea aparte para el tiempo real; Hector la descartó.
+  - Ningún test se modificó. Se actualizaron las specs vecinas: D1 a D3 retirados y C8 y C25 reemplazados por C30.
+- Revisores: revisor-requisitos sin nada que bloquee (los 31 criterios cumplen; volvió a correr los 189 tests). revisor-arquitectura sin BLOQUEA ni ALTA: las dos MEDIA ya estaban previstas por la spec (errores propios para la tarea r, avisarle a Sofi). `/code-review`: 6 hallazgos, ninguno bloquea. Por los revisores se ordenó el Historial de `detalle-de-entrenamiento-demo.md`. Quedan como sugerencia:
+  - una `IOException` que no sea de conexión (por ejemplo `ProtocolException`) también cuenta como "sin conexión";
+  - `desdeRoom` lee la fila y los ejercicios en dos consultas sin transacción;
+  - se guarda con el id que manda el servidor y se lee con el de la ruta;
+  - el `try`/`catch` con `CancellationException` se repite cuatro veces (un helper le serviría a la tarea r);
+  - `HTTP_NOT_FOUND` propio en vez de `HttpURLConnection.HTTP_NOT_FOUND`;
+  - comentarios que repiten o quedaron viejos (`// se sigue con lo de la red`, "hace fallar toda la consulta" en `WorkoutMappers.kt` y `WorkoutRepositoryImpl.kt`);
+  - `ErrorMessage(text: Int)` se leería mejor como `textRes`;
+  - 05 con `WorkoutNotCachedException` va al `Error` común (sin cambios, como dice la spec);
+  - el timeout como "sin conexión" no tiene test propio.
+- Evidencia: `docs/evidencia/tests/2026-10-25-detalle-y-cache-verde.md` (189 unitarios, `WorkoutDaoTest` 6/6 en el emulador, `assembleDebug`, `reglas.sh` y once controles negativos) y `docs/evidencia/estados/workout-*.png` (C29 y C31). Tests en rojo en el commit `a77dc2b`.
+- Commit / PR:
+
+### 2026-10-25 · Sofi · feat(nutrition): maquetar Nutrition / 07 Food Confirmation según Figma
+- Carril y requisitos: B · UI01, UI03, NAV02, NAV03, NAV04, RF03, RF04 · tarea m, PR 7 de 8. Frame: `Nutrition / 07 — Food Confirmation` (nodo 1:1185 de la copia `GRk3uXr8…`). Rama `feat/nutrition-food-confirmation`, sacada de `main` con el PR 6 y VC-l (comidas en Room) ya unidos.
+- Plan aprobado: `FoodConfirmationRoute` y `FoodConfirmationScreen` sobre `FoodCaptureViewModel`, que ya tenía la lógica de 07 desde VC-l (formulario, validación, guardado en Room y evento `Saved`). Con borrador: tarjetas `VoraCard` con `VoraStepper(onDark = false)` y "Remove", "+ Add Ingredient", panel MEAL TOTALS y botones Primary y Outlined. Sin borrador: los campos de RF03. "Add to …" guarda y vuelve al Dashboard; ‹ y atrás descartan; −/+, "Remove", "+ Add Ingredient" y "Save without logging" muestran el aviso. La barra la pone el Scaffold; con scroll (UI03).
+- Qué propuso la IA y qué cambiamos:
+    - El pedido de Sofi era hacer solo la maqueta (sin guardar), pensando que VC-l venía después. VC-l ya estaba en `main`, así que la IA propuso conectar el guardado real y Sofi aceptó. La carga manual y la edición muestran campos (`VoraTextField` y chips de tipo) en lugar de las tarjetas, porque el frame no los dibuja. La edición no lleva lógica nueva: es la misma del ViewModel y llega desde 08 en el PR 8.
+    - El tipo de la carga manual se elige con chips. La regla "tipo = comida pendiente del día" quedó para un PR aparte, con su criterio y su test. El botón dice "Add to [tipo]", o "Save Meal" sin tipo o al editar. En español van cuatro textos ("Agregar al almuerzo") en lugar de un `%1$s`, para que el artículo concuerde.
+    - Los totales muestran el formulario que se va a guardar, precargado del mismo `PhotoMealDraft` que 06. No hay una suma aparte: sumar macros por ingrediente obligaba a inventar valores que el Figma no tiene.
+    - Componentes (zona de Martu), los tres con valor por defecto y sin cambiar otras pantallas:
+        - `VoraButtonStyle.TextDestructive`, para "Remove" (rojo sin borde);
+        - `valueStyle` en `VoraStepper`, porque los gramos son de 14 en el frame (medidos: "180g" ocupa 32 dp) y el selector los dibujaba en 18 Bold;
+        - `square` en `VoraStepper` con el token `stepperButtonSquare` (32), para los botones cuadrados. El radio es 8: en el nodo mide unos 6 y el tema no tiene ese valor. El área táctil sigue en 48, así que la tarjeta mide 101 y no 85.
+    - Por revisor-arquitectura (BLOQUEA): la Route abría la confirmación en un `LaunchedEffect`, es decir, desde la composición (CONTEXTO §2). Sofi eligió que la abra el grafo antes de navegar, como `abrirFoto`. Costo aceptado: si muere el proceso con 07 abierta, solo se ve el encabezado con ‹. Por la MEDIA, ‹ y atrás no hacen nada mientras se guarda.
+    - Al guardar se navega con `popUpTo(NUTRITION_GRAPH)` y no hasta el Dashboard. Desde "Log breakfast" de Home el Dashboard no está en la pila. Atrás no vuelve a 07.
+    - El nombre y las kcal de las tarjetas son de 14 (`labelLarge`): "Grilled Chicken Breast" mide 145 dp en el frame. El revisor estimó 16 y medido daba 15.
+- Revisores:
+    - revisor-visual: CON CAMBIOS en la vuelta 1 ("+ Add Ingredient" con ~13 dp de más arriba y abajo, y el tamaño del texto de las tarjetas) y APROBADA en la vuelta 2, con las medidas a 2 dp o menos.
+    - revisor-arquitectura: 1 BLOQUEA y 1 MEDIA en la vuelta 1, corregidas; en la vuelta 2, nada bloquea.
+    - revisor-requisitos: nada bloquea; C28, C29, C31, C32, C34 a C36, C38 y C39 tienen camino desde la UI. C30, C33 y C37 (edición) esperan al PR 8.
+    - `/code-review`: 7 hallazgos. Se corrigieron solo los comentarios desactualizados (KDoc de `onOpenConfirmation` y de la Route).
+- Sugerencias sin aplicar:
+    - Para Fiore, como sugerencia y no como arreglo necesario: tocar Home después de entrar a Nutrition desde Home ("Log breakfast", "Start workout" o la notificación de Nutrition) vuelve a mostrar Nutrition. `irAPestana` hace `popUpTo(HOME_DASHBOARD) { saveState = true }` con `restoreState = true`, y Navigation guarda lo que se apiló arriba de Home como si fuera de Home y lo restaura. Opciones: que tocar Home vuelva siempre limpio (sin guardar ni restaurar), o que "Log breakfast" cambie primero a la pestaña Nutrition. Ya pasaba antes de 07.
+    - Para Fiore: `PANTALLAS.md` §7 dice que −/+ y "Remove" cambian el borrador, y la §17 (punto 4) que "Remove" saca un ingrediente. Acá muestran el aviso de demostración (decisión 4 del plan de VC-m: los ingredientes no se guardan). `Rutas.foodConfirmation` repite el `-1` en vez de usar `NEW_MEAL_ID`.
+    - Para Martu: revisar `TextDestructive`, `valueStyle`, `square` y `stepperButtonSquare`, y sumar la firma nueva de `VoraStepper` a CONTEXTO §9. "Remove" sale en 13 SemiBold y en el frame parece Regular.
+    - Para el PR 8: "Edit Meal" tiene que llamar a `onOpenConfirmation(id, …)` antes de navegar a 07; si no, 07 abre vacía. Si falla la carga al editar, el formulario queda vacío y se puede guardar.
+    - Bajas:
+        - doble toque en "Log Manually" o "Type instead" sin `launchSingleTop`: Sofi lo probó y no se reproduce;
+        - tocar una pestaña mientras se guarda deja `Saved` en el canal y la próxima 07 navega al Dashboard;
+        - con borrador, los errores de validación no tienen dónde verse (hoy el borrador siempre es válido);
+        - una confirmación sin descartar se reusaría en la próxima captura (no se encontró un camino);
+        - los tres "Remove" se leen igual con TalkBack;
+        - los cinco campos repetidos de `MealFields`;
+        - el objeto `Shown` que la Route escribe al componer.
+- Tests: no se sumaron ni se cambiaron tests: la lógica es la de VC-l (C28 a C39). 189 unitarios en verde.
+- Evidencia: `docs/evidencia/visual/nutrition-07-{411dp,360dp,360dp-abajo}.png`, de un emulador de 1080x2424 a 420 y 480 dpi (la densidad se devolvió). A 411 dp entra sin scroll; a 360 dp "Save without logging" se alcanza con scroll. `assembleDebug`, `testDebugUnitTest` y `lintDebug` en verde, y `reglas.sh` exit 0.
+    - A mano, Sofi probó el recorrido después de la maqueta y anduvo: 06 y la voz abren 07 con el borrador, los controles sin destino muestran el aviso, rotar no pierde nada, guardar vuelve al Dashboard y atrás no vuelve a 07, la carga manual valida y "Type instead" abre los campos.
+    - Después de las correcciones de los revisores se probó solo el doble toque.
+    - Sin verificar: C51 (la comida sigue al cerrar la app) sin evidencia guardada, y `connectedDebugAndroidTest` (la rama no toca Room).
+- Commit / PR:
+
+### 2026-10-25 · Hector · feat(workout): mostrar carga, vacío y error por tipo con reintento
+- Carril y requisitos: C, paso 3 (implementar) · RF05, RF07 (y RF06: errores traducidos en el repositorio) · tarea r. Spec: `specs/funcionales/estados-de-carga-y-error.md` (C1 a C36). Rama `feat/workout-estados-carga-error`.
+- Plan aprobado:
+  - `toAppError()` clasifica por tipo, sin mirar la causa, y los dos repositorios devuelven `AppException` según el fallo. Si falla Room, `UNKNOWN`.
+  - `WorkoutErrorMessages.kt` traduce cada error a su mensaje. Los tres ViewModels tienen `cargar()` y `onRetry()`, que solo actúa en `Error` (y en `NotAvailableOffline` del detalle) y pone `Loading` antes del `launch`. El catálogo vacío pasa a `Empty`.
+  - `WorkoutStatusMessage.kt` va en versión clara y oscura. 01 a 06 suman `onRetry`; 07 queda sin cambios.
+  - No se tocó `ui/components/`, `ui/theme/`, la navegación, Room ni `NetworkModule`.
+- Qué propuso la IA y qué cambiamos:
+  - En el detalle, la IA juntó las cuatro ramas de `catch` en una sola que usa `toAppError()`. Así el JSON roto se separa de la falta de conexión en un solo lugar, en vez de depender del orden de los `catch`.
+  - Dos controles negativos salieron mal a la primera y se rehicieron:
+    - C6: la rotura no hizo fallar el test porque Room ya tenía los tres entrenamientos.
+    - C20: con `stateIn` el test fallaba en su precondición y no en lo que prueba.
+  - Hector pidió que la IA probara la app en el emulador. Para no tocar su mock, la IA levantó una copia en el puerto 8001 con `adb reverse` y simuló el servidor apagado sacando el `adb reverse`. Antes de borrar los datos de la app con `pm clear` pidió permiso.
+  - En la primera corrida el emulador dio ANR por "no focused window" en el launcher, en la app, en `system` y en System UI. La IA comprobó que el hilo principal de la app respondía y, con el OK de Hector, reinició el emulador; después no se repitió.
+  - Para C33e la IA sumó `@Preview` en error para 04, 05 y 06 y las abrió en el emulador con `PreviewActivity`.
+  - C34 quedó parcial: Nutrition / 07 todavía es `PantallaVacia`, así que desde la app no se puede guardar una comida.
+  - Ningún test se modificó.
+- Revisores: ninguno marcó nada BLOQUEA, CRÍTICA ni ALTA, así que hubo una sola vuelta.
+  - revisor-requisitos: C1 a C36 cumplen, salvo la parte de Nutrition de C34. Se corrigieron en la spec la tabla de Tests y el Historial (C34 parcial; C33d probado solo con `error`).
+  - revisor-arquitectura: una MEDIA, que `ui/` importe `data.repository` en `WorkoutErrorMessages.kt`. La pide la spec, la usan solo los ViewModels y queda como sugerencia.
+  - revisor-visual: aprobada. Una MEDIA en la evidencia: en las `@Preview` de 06 la barra superior queda encima de la de estado porque falta el `Scaffold`. Quedó anotado en la evidencia.
+  - `/code-review`: 5 hallazgos bajos.
+- Sugerencias que quedan:
+  - `catalogErrorMessage` y `detailErrorMessage` como `internal`, y a futuro `AppError` en `domain/`;
+  - `AppException` sin mensaje: se pierde el código HTTP y el id para los logs;
+  - cualquier `IllegalArgumentException` cuenta como `INVALID_DATA`;
+  - las dos tablas de mensajes repiten tres ramas;
+  - la rama de `Content` vacío en 01 y 02 ya no se alcanza;
+  - falta `liveRegion` para TalkBack en el mensaje de error;
+  - Retry sin `workoutId` no hace nada (C25);
+  - 05 en error no tiene cómo salir salvo el atrás del sistema;
+  - la tarjeta de carga sobre verde está repetida en 04 y 05;
+  - en los `@Preview` viejos `onRetry` va primero;
+  - Retry Small mide menos de 48 dp (zona de Martu);
+  - faltan capturas en español, de 02 con `malformed` y sin servidor, y de un Retry con `malformed`.
+- Evidencia: `docs/evidencia/tests/2026-10-25-estados-verde.md` (216 unitarios en verde, `reglas.sh`, `assembleDebug` y los controles negativos de C3, C6, C9, C11, C13, C18, C20, C24, C25, C29 y C36) y `docs/evidencia/estados/estados-*.png` con `estados-log-del-mock.txt`. Tests en rojo en el commit `5877b2e`.
+- Commit / PR:
+
+### 2026-10-25 · Sofi · feat(nutrition): maquetar Nutrition / 08 Meal Details según Figma
+- Carril y requisitos: B · UI01, UI03, NAV02, NAV03, NAV04, RF04 · tarea m, PR 8 de 8. Frame: `Nutrition / 08 — Meal Details` (nodo 1:1284 de la copia `GRk3uXr8…`). Rama `feat/nutrition-meal-details`, sacada de `main` con el PR 7 ya unido.
+- Plan aprobado: `MealDetailRoute` y `MealDetailScreen` sobre `MealDetailViewModel`, que ya tenía la lógica desde VC-l (C41 a C50). Encabezado con el tipo de comida, tarjeta de totales con `VoraProgressRing` y P/C/F, consejo con `VoraInfoMessage`, la comida en "Ingredients" y tres botones. "Edit Meal" abre 07 con el id (el grafo arma la confirmación antes de navegar, como en el PR 7); "Duplicate Meal" guarda una copia y vuelve; "Delete Meal" pide confirmación y vuelve. La barra la pone el Scaffold; con scroll (UI03).
+- Qué propuso la IA y qué cambiamos:
+    - Room guarda la comida con sus totales, sin ingredientes, peso ni hora. Sofi eligió dejar el título "Ingredients" con una sola tarjeta: el nombre de la comida, la proteína en el lugar de los gramos ("38g protein") y las kcal. Cada 08 muestra una sola comida: la que se tocó en 01 o 02.
+    - La IA propuso mostrar la fecha de la comida en el lugar del "13:12"; Sofi prefirió el "13:12" del Figma fijo. El consejo ("36g away…") también es fijo, como el de 01. Los dos son datos de demostración.
+    - Eliminar (RF04) no tiene control en el Figma. Sofi preguntó si "Edit Meal" se podía reemplazar por "Delete Meal", pensando que editar era de demostración. La IA aclaró que la edición es real (C30, C37) y quedó un tercer botón "Delete Meal" con el estilo `Destructive` y un `AlertDialog` de Material 3.
+    - El anillo es kcal de la comida / 2100 (`HomeDemoData.KCAL_GOAL`, la meta de demostración de 01), topado en 1. Por revisor-arquitectura (MEDIA), la cuenta salió de la pantalla: es la propiedad `kcalProgress` de `MealDetailUiState.Content`, como `kcalProgress` en 01. No cambia el ViewModel ni los tests.
+    - La fila de P/C/F pasó a `NutritionCommon.kt` (`MacroTotalsRow`), compartida con 07 en un commit `refactor` aparte. Sofi confirmó en el emulador que 03, 06 y 07 se ven igual. `NutritionHeader` suma un texto opcional a la derecha y una versión con el título como texto.
+    - Las tipografías se midieron contra Manrope, porque el conector de Figma no tenía cupo: "520 kcal" 32 SemiBold, "TOTAL CALORIES" 12, macros e "Ingredients" 16 SemiBold, nombre 13 SemiBold y kcal de la fila 14 Regular.
+- Revisores:
+    - revisor-visual: APROBADA en la primera vuelta, con todo a menos de 3 dp del frame.
+    - revisor-arquitectura: nada bloquea. La MEDIA del anillo se corrigió, igual que el comentario viejo de la Route de 07.
+    - revisor-requisitos: nada bloquea. C41 a C50 y la edición (C30, C33 y C37) tienen camino desde la UI.
+    - `/code-review`: 5 hallazgos, ninguno aplicado.
+- Sugerencias sin aplicar:
+    - Guardar una edición lleva al Dashboard y no vuelve a 08: Sofi lo dejó así a propósito.
+    - Mientras se elimina, los botones siguen activos. El ViewModel corta el doble toque, pero "Edit Meal" abriría 07 con "esta comida ya no existe".
+    - "Duplicate Meal" vuelve sin avisar que se creó la copia.
+    - El error de carga no tiene "Reintentar" (es Room, no una consulta remota).
+    - El encabezado vacío mientras carga se anuncia como título en TalkBack.
+    - Al editar, el grafo pasa `meal.name` como nombre del borrador, y ese dato no se usa.
+    - Para Martu y Hector: `LoadingCard` vive en `WorkoutDashboardScreen.kt` y Nutrition lo importa de Workout. Moverlo a `ui/components/` toca 7 archivos de 3 zonas: queda para ellos.
+    - Para Fiore: `PANTALLAS.md` línea 256 (dice que 03 carga, que 02 elimina y que el total sale de un `SUM`) y el punto 4 de la §17: eliminar ya tiene control, en 08.
+- Tests: no se sumaron ni se cambiaron tests: la lógica es la de VC-l. 189 unitarios en verde.
+- Evidencia: `docs/evidencia/visual/nutrition-08-{411dp,360dp}.png`, de un emulador de 1080x2424 a 420 y 480 dpi (la densidad se devolvió). Entra sin scroll en los dos tamaños. `assembleDebug`, `testDebugUnitTest` y `lintDebug` en verde, y `reglas.sh` exit 0.
+    - A mano, Sofi probó en el emulador abrir una comida desde 01 y 02, editar, duplicar, eliminar con confirmación y rotar, y anduvo todo. Después de mover el anillo al estado no se volvió a probar.
+    - Sin verificar: capturas del diálogo y de los estados de error, y que el total de Home baje al eliminar (es la misma consulta a Room que ya estaba).
+- Commit / PR:
+
+### 2026-10-25 · Hector · docs(workout): completar la evidencia de C34 con una comida de Nutrition / 07
+- Carril y requisitos: C, cierre de la tarea r · RF05 ("un fallo no borra caché ni registros locales"). Spec: `specs/funcionales/estados-de-carga-y-error.md`, C34.
+- Qué faltaba: en el PR #53 la parte de Nutrition de C34 quedó sin probar, porque Nutrition / 07 todavía era `PantallaVacia`. Con el PR #52 de Sofi en `main` ya se puede guardar una comida.
+- Qué propuso la IA y qué cambiamos:
+  - La IA guardó "Prueba C34" (Lunch, 500 kcal) desde 07 y reinstaló con `malformed` y con `error`, sin `pm clear`. Usó la misma copia del mock en el puerto 8001 con `adb reverse`.
+  - La primera captura con `malformed` salió en 03, que no tiene barra inferior, y la de `error` se quedó en el login. Las dos se borraron y se repitieron.
+  - Como el PR #53 ya estaba unido, Hector lo sube en un PR nuevo y chico, solo de documentos. No hay cambios de código.
+- Evidencia: `docs/evidencia/estados/estados-c34-nutrition-01-antes.png`, `-con-error.png` y `-con-malformed.png`, y la tercera corrida en `estados-log-del-mock.txt`. Actualizados `docs/evidencia/tests/2026-10-25-estados-verde.md` y el Historial de la spec.
+- Commit / PR:

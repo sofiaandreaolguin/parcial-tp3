@@ -79,12 +79,14 @@ class FoodCaptureViewModel @Inject constructor(
     fun onManualEntry() = _uiState.update { it.copy(draft = null) }
 
     /**
-     * Abre 07. Con el mismo [mealId] y 07 ya abierta (rotación) no hace nada, así no se pierde lo
-     * escrito. [draftName] lo resuelve la Route con stringResource: el ViewModel no tiene Context.
+     * Abre 07. La llama el grafo antes de navegar, no la composición de 07, así que rotar no la
+     * repite. Con el mismo [mealId] y 07 ya abierta no hace nada: si 07 se dejara sin [onDiscard],
+     * la próxima apertura con ese id mostraría lo escrito antes. [draftName] lo resuelve el grafo
+     * desde strings.xml: el ViewModel no tiene Context.
      */
     fun onOpenConfirmation(mealId: Long, defaultDate: LocalDate, draftName: String) {
         if (_uiState.value.confirmation?.mealId == mealId) return
-        if (mealId == NEW_MEAL) {
+        if (mealId == NEW_MEAL_ID) {
             val form = _uiState.value.draft?.toForm(draftName, defaultDate) ?: MealForm(date = defaultDate)
             _uiState.update { it.copy(confirmation = ConfirmationState(mealId, form)) }
             return
@@ -110,7 +112,7 @@ class FoodCaptureViewModel @Inject constructor(
     fun onSave() {
         val c = _uiState.value.confirmation ?: return
         if (c.isSaving) return
-        val id = if (c.mealId == NEW_MEAL) 0 else c.mealId
+        val id = if (c.mealId == NEW_MEAL_ID) 0 else c.mealId
         when (val result = validateMeal(c.form, id)) {
             is MealValidation.Invalid -> updateConfirmation { it.copy(errors = result.errors) }
             is MealValidation.Valid -> save(c.mealId, result.meal)
@@ -123,7 +125,7 @@ class FoodCaptureViewModel @Inject constructor(
         updateConfirmation { it.copy(isSaving = true, errors = emptyMap(), saveError = null) }
         viewModelScope.launch {
             try {
-                if (mealId == NEW_MEAL) repo.addMeal(meal) else repo.updateMeal(meal)
+                if (mealId == NEW_MEAL_ID) repo.addMeal(meal) else repo.updateMeal(meal)
             } catch (e: MealDataException) {
                 updateConfirmation { it.copy(isSaving = false, saveError = R.string.nutrition_error_save) }
                 return@launch
@@ -147,9 +149,6 @@ class FoodCaptureViewModel @Inject constructor(
         _uiState.update { it.copy(analysisStep = AnalysisStep.Identifying) }
     }
 }
-
-/** mealId de 07 para una comida nueva (el valor por defecto del argumento de la ruta). */
-private const val NEW_MEAL = -1L
 
 private fun MealDraft.toForm(name: String, date: LocalDate) = MealForm(
     name = name,

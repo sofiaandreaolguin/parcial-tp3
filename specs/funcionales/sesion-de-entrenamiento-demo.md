@@ -120,7 +120,7 @@ Robustez y rotación:
 - C22. MIENTRAS el estado es `Loading` o `Error`, los siete eventos NO DEBEN cambiar el estado ni lanzar una excepción. Si se llamaron en `Loading`, CUANDO después llega el detalle, el `Content` DEBE tener los valores por defecto de C1 y seguir igual después de 61 s de tiempo virtual.
 - C23. CUANDO el estado del mismo ViewModel se deja de observar y se vuelve a observar con más de 5 s de tiempo virtual entre una y otra (como al rotar), el repositorio DEBE haber sido llamado una sola vez y el estado DEBE seguir siendo el mismo `Content`, con el avance de la sesión (criterio de RF07).
 - C24. CUANDO se deja de observar con el descanso en 60 y se vuelve a observar 6 s después, `restRemainingSeconds` DEBE valer 54 y el repositorio DEBE haber sido llamado una sola vez (el descanso sigue contando al rotar).
-- C25. La app DEBE compilar con `./gradlew assembleDebug` con `ActiveWorkoutViewModel` inyectable: Hilt valida al compilar el grafo `ActiveWorkoutViewModel` → `WorkoutDetailRepository` → `DemoWorkoutDetailRepository` (RF08).
+- C25. La app DEBE compilar con `./gradlew assembleDebug` con `ActiveWorkoutViewModel` inyectable: Hilt valida al compilar el grafo `ActiveWorkoutViewModel` → `WorkoutDetailRepository` → `DemoWorkoutDetailRepository` (RF08). **Reemplazado el 25/10 por C30 de `detalle-y-cache-de-entrenamientos.md`**: el grafo termina en `WorkoutDetailRepositoryImpl`.
 
 Plantillas: **La app DEBE** (siempre) · **CUANDO** (ante un evento) · **MIENTRAS** (durante un estado) · **SI ... ENTONCES** (algo sale mal) · **DONDE** (opcional, para ampliaciones).
 
@@ -169,7 +169,7 @@ Casos de la plantilla y cómo se cubren acá:
 | C22 | `` `C22 sesion sin Content los eventos no cambian nada` `` (en `Loading` y en `Error`) | `test/` · `ActiveWorkoutViewModelTest` | Pasó con los eventos vacíos. Control: `onRate()` que pasa a `Error` fuera de `Content` da `en Loading expected Loading but was Error` |
 | C23 | `` `C23 sesion volver a observar no repite la consulta ni pierde el avance` `` | `test/` · `ActiveWorkoutViewModelTest` | Sí. Por el criterio: `expected Content(... setIndex=1 ...)`. Control: volver a cargar en cada nueva suscripción da `el repositorio tiene que llamarse una sola vez expected [w02] but was [w02, w02]`. El control con `stateIn(WhileSubscribed)` falla antes, en el avance, porque con `stateIn` el valor no cambia en el momento |
 | C24 | `` `C24 sesion el descanso sigue contando sin observar` `` | `test/` · `ActiveWorkoutViewModelTest` | Sí. Por el criterio: `expected 60 but was 0` |
-| C25 | `./gradlew assembleDebug` (no es un test unitario: la salida va a la evidencia) | build | Pasó en rojo: `BUILD SUCCESSFUL` con la firma vacía. Control: sin `@Inject` falla KSP con `[Hilt] @HiltViewModel annotated class should contain exactly one @Inject or @AssistedInject annotated constructor` |
+| C25 | `./gradlew assembleDebug` (no es un test unitario: la salida va a la evidencia) | build | Pasó en rojo: `BUILD SUCCESSFUL` con la firma vacía. Control: sin `@Inject` falla KSP con `[Hilt] @HiltViewModel annotated class should contain exactly one @Inject or @AssistedInject annotated constructor`. **Reemplazado el 25/10 por C30** de `detalle-y-cache-de-entrenamientos.md` |
 
 - Todo va en `test/`: no hay Room. Los nombres empiezan con "sesion" para no confundirse con los `C1`… del catálogo y del detalle.
 - Se reusa `FakeWorkoutDetailRepository` (guarda los ids y retiene la respuesta con un `CompletableDeferred`) y `MainDispatcherRule` (`StandardTestDispatcher`, que comparte el reloj virtual con `runTest`).
@@ -198,3 +198,4 @@ Casos de la plantilla y cómo se cubren acá:
 - 2026-10-23. Hector aprueba la spec.
 - 2026-10-23. Tests en rojo: los 25 de `ActiveWorkoutViewModelTest` fallan por aserción (ver "Vi el rojo"); el build pasa con la firma vacía.
 - 2026-10-23. Implementado `ActiveWorkoutViewModel`: los 25 tests en verde (112 en total) y `assembleDebug` OK. Hallazgo para Hector: C19 no detecta un descanso que no se canceló, porque mira recién a los 61 s y para entonces uno de 60 ya volvió a 0 (C14 sí lo detecta, porque mira a los 5 s). El código cancela igual. El test no se tocó: decide Hector si se le agrega un control a 1 s de terminar.
+- 2026-10-25. Con el detalle real (spec `detalle-y-cache-de-entrenamientos.md`), `ActiveWorkoutViewModel` lee `WorkoutDetailRepositoryImpl` sin cambios y C25 pasa a reemplazado por C30.

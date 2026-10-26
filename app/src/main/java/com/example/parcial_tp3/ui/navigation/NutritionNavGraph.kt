@@ -1,20 +1,26 @@
 package com.example.parcial_tp3.ui.navigation
 
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
-import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.platform.LocalResources
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavController
+import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavGraphBuilder
+import androidx.navigation.NavOptionsBuilder
 import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.navArgument
-import com.example.parcial_tp3.R
-import com.example.parcial_tp3.ui.components.PantallaVacia
 import com.example.parcial_tp3.ui.screens.nutrition.AddFoodRoute
 import com.example.parcial_tp3.ui.screens.nutrition.FoodAnalysisRoute
 import com.example.parcial_tp3.ui.screens.nutrition.FoodCaptureViewModel
+import com.example.parcial_tp3.ui.screens.nutrition.FoodConfirmationRoute
+import com.example.parcial_tp3.ui.screens.nutrition.MealDetailRoute
+import com.example.parcial_tp3.ui.screens.nutrition.MealDraft
+import com.example.parcial_tp3.ui.screens.nutrition.NEW_MEAL_ID
 import com.example.parcial_tp3.ui.screens.nutrition.NutritionDashboardRoute
+import com.example.parcial_tp3.ui.screens.nutrition.NutritionViewModel
 import com.example.parcial_tp3.ui.screens.nutrition.PhotoAnalysisRoute
 import com.example.parcial_tp3.ui.screens.nutrition.TodaysMealsRoute
 import com.example.parcial_tp3.ui.screens.nutrition.VoiceFoodLoggingRoute
@@ -54,12 +60,14 @@ fun NavGraphBuilder.nutritionGraph(nav: NavController) {
         }
 
         composable(Rutas.ADD_FOOD) { entrada ->
-            val captura = hiltViewModel<FoodCaptureViewModel>(remember(entrada) { nav.getBackStackEntry(Rutas.NUTRITION_GRAPH) })
+            val grafo = remember(entrada) { nav.getBackStackEntry(Rutas.NUTRITION_GRAPH) }
+            val captura = hiltViewModel<FoodCaptureViewModel>(grafo)
+            val abrirConfirmacion = rememberAbrirConfirmacion(nav, grafo)
             AddFoodRoute(
                 onBack = { nav.popBackStack() },
                 onVoice = { nav.navigate(Rutas.VOICE_FOOD_LOGGING) },
                 onPhoto = { abrirFoto(nav, captura) },
-                onManual = { abrirCargaManual(nav, captura) },
+                onManual = { abrirCargaManual(captura, abrirConfirmacion) },
             )
         }
 
@@ -68,24 +76,22 @@ fun NavGraphBuilder.nutritionGraph(nav: NavController) {
             // nuevo en cada composición tiraría IllegalArgumentException.
             val grafo = remember(entrada) { nav.getBackStackEntry(Rutas.NUTRITION_GRAPH) }
             val captura = hiltViewModel<FoodCaptureViewModel>(grafo)
+            val abrirConfirmacion = rememberAbrirConfirmacion(nav, grafo)
             VoiceFoodLoggingRoute(
                 grafo = grafo,
                 onDone = { nav.navigate(Rutas.FOOD_ANALYSIS) { launchSingleTop = true } },
-                onTypeInstead = { abrirCargaManual(nav, captura) },
+                onTypeInstead = { abrirCargaManual(captura, abrirConfirmacion) },
                 onClose = { nav.popBackStack() },
             )
         }
 
         composable(Rutas.FOOD_ANALYSIS) { entrada ->
             val grafo = remember(entrada) { nav.getBackStackEntry(Rutas.NUTRITION_GRAPH) }
+            val abrirConfirmacion = rememberAbrirConfirmacion(nav, grafo)
             FoodAnalysisRoute(
                 grafo = grafo,
                 // 05 sale de la pila: si no, atrás desde 07 dejaría un análisis que ya no corre.
-                onDone = {
-                    nav.navigate(Rutas.foodConfirmation()) {
-                        popUpTo(Rutas.FOOD_ANALYSIS) { inclusive = true }
-                    }
-                },
+                onDone = { abrirConfirmacion { popUpTo(Rutas.FOOD_ANALYSIS) { inclusive = true } } },
                 // inclusive y por ruta: un segundo toque no saca también a 04
                 onClose = { nav.popBackStack(Rutas.FOOD_ANALYSIS, inclusive = true) },
             )
@@ -93,10 +99,11 @@ fun NavGraphBuilder.nutritionGraph(nav: NavController) {
 
         composable(Rutas.PHOTO_ANALYSIS) { entrada ->
             val grafo = remember(entrada) { nav.getBackStackEntry(Rutas.NUTRITION_GRAPH) }
+            val abrirConfirmacion = rememberAbrirConfirmacion(nav, grafo)
             PhotoAnalysisRoute(
                 grafo = grafo,
                 onBack = { nav.popBackStack() },
-                onReview = { nav.navigate(Rutas.foodConfirmation()) { launchSingleTop = true } },
+                onReview = { abrirConfirmacion { launchSingleTop = true } },
             )
         }
 
@@ -106,18 +113,42 @@ fun NavGraphBuilder.nutritionGraph(nav: NavController) {
             arguments = listOf(
                 navArgument(Rutas.ARG_MEAL_ID) {
                     type = NavType.LongType
-                    defaultValue = -1L
+                    defaultValue = NEW_MEAL_ID
                 },
             ),
-        ) {
-            PantallaVacia(nombre = stringResource(R.string.pant_nutrition_07))
+        ) { entrada ->
+            val grafo = remember(entrada) { nav.getBackStackEntry(Rutas.NUTRITION_GRAPH) }
+            FoodConfirmationRoute(
+                grafo = grafo,
+                // por ruta e inclusive: un segundo toque no saca también la pantalla de abajo
+                onBack = { nav.popBackStack(Rutas.FOOD_CONFIRMATION, inclusive = true) },
+                // Hasta el grafo y no hasta el Dashboard: desde Home ("Log breakfast") el Dashboard no
+                // está en la pila. Así atrás no vuelve a 07 ni a los pasos de la captura.
+                onSaved = {
+                    nav.navigate(Rutas.NUTRITION_DASHBOARD) {
+                        popUpTo(Rutas.NUTRITION_GRAPH)
+                        launchSingleTop = true
+                    }
+                },
+            )
         }
 
         composable(
             route = Rutas.MEAL_DETAILS,
             arguments = listOf(navArgument(Rutas.ARG_MEAL_ID) { type = NavType.LongType }),
-        ) {
-            PantallaVacia(nombre = stringResource(R.string.pant_nutrition_08))
+        ) { entrada ->
+            val grafo = remember(entrada) { nav.getBackStackEntry(Rutas.NUTRITION_GRAPH) }
+            val captura = hiltViewModel<FoodCaptureViewModel>(grafo)
+            MealDetailRoute(
+                // por ruta e inclusive: después de eliminar, un toque de más en ‹ no saca también 01
+                onBack = { nav.popBackStack(Rutas.MEAL_DETAILS, inclusive = true) },
+                // Como las capturas: la confirmación se abre antes de navegar, con la comida ya cargada
+                // de Room como fecha y nombre de arranque; 07 la vuelve a leer por id (C30).
+                onEdit = { meal ->
+                    captura.onOpenConfirmation(meal.id, meal.date, meal.name)
+                    nav.navigate(Rutas.foodConfirmation(meal.id)) { launchSingleTop = true }
+                },
+            )
         }
     }
 }
@@ -129,7 +160,28 @@ private fun abrirFoto(nav: NavController, captura: FoodCaptureViewModel) {
 }
 
 // "Log Manually" y "Type instead": 07 tiene que abrir vacía aunque antes haya habido una foto.
-private fun abrirCargaManual(nav: NavController, captura: FoodCaptureViewModel) {
+private fun abrirCargaManual(captura: FoodCaptureViewModel, abrirConfirmacion: AbrirConfirmacion) {
     captura.onManualEntry()
-    nav.navigate(Rutas.foodConfirmation())
+    abrirConfirmacion {}
+}
+
+private typealias AbrirConfirmacion = (NavOptionsBuilder.() -> Unit) -> Unit
+
+/**
+ * Arma la confirmación en el ViewModel y recién después navega a 07, como [abrirFoto]: la carga no
+ * arranca al componer 07 (CONTEXTO §2), así que rotar no la repite. El nombre del borrador se
+ * resuelve acá porque el ViewModel no tiene Context; la fecha es la elegida en 01.
+ */
+@Composable
+private fun rememberAbrirConfirmacion(nav: NavController, grafo: NavBackStackEntry): AbrirConfirmacion {
+    val captura = hiltViewModel<FoodCaptureViewModel>(grafo)
+    val nutricion = hiltViewModel<NutritionViewModel>(grafo)
+    val resources = LocalResources.current
+    return remember(nav, captura, nutricion, resources) {
+        { opciones ->
+            val nombre = resources.getString(captura.uiState.value.draft?.name ?: MealDraft().name)
+            captura.onOpenConfirmation(NEW_MEAL_ID, nutricion.selectedDate.value, nombre)
+            nav.navigate(Rutas.foodConfirmation(), opciones)
+        }
+    }
 }

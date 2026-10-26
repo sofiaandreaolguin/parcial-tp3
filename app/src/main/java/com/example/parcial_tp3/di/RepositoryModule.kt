@@ -3,11 +3,11 @@ package com.example.parcial_tp3.di
 import com.example.parcial_tp3.data.remote.FirestoreProfileRemote
 import com.example.parcial_tp3.data.remote.ProfileRemote
 import com.example.parcial_tp3.data.repository.AuthRepository
-import com.example.parcial_tp3.data.repository.DemoWorkoutDetailRepository
 import com.example.parcial_tp3.data.repository.FirebaseAuthRepository
 import com.example.parcial_tp3.data.repository.MealRepository
 import com.example.parcial_tp3.data.repository.MealRepositoryImpl
 import com.example.parcial_tp3.data.repository.WorkoutDetailRepository
+import com.example.parcial_tp3.data.repository.WorkoutDetailRepositoryImpl
 import com.example.parcial_tp3.data.repository.WorkoutRepository
 import com.example.parcial_tp3.data.repository.WorkoutRepositoryImpl
 import dagger.Binds
@@ -40,8 +40,7 @@ abstract class RepositoryModule {
     @Singleton
     abstract fun bindProfileRemote(impl: FirestoreProfileRemote): ProfileRemote
 
-    // Demostracion: la tarea del detalle real cambia solo esta linea por su implementacion.
     @Binds
     @Singleton
-    abstract fun bindWorkoutDetailRepository(impl: DemoWorkoutDetailRepository): WorkoutDetailRepository
+    abstract fun bindWorkoutDetailRepository(impl: WorkoutDetailRepositoryImpl): WorkoutDetailRepository
 }
