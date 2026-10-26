@@ -1,5 +1,3 @@
-# feat(voice): coach por Retrofit con historial en Room (EXT01)
-
 > **Base: `feat/firebase-extra` (la rama de Martu), no `main`.** Los dos extras se entregan
 > juntos desde esa rama. Abrirlo con:
 > `gh pr create --base feat/firebase-extra --head feat/voice-coach-historial`
