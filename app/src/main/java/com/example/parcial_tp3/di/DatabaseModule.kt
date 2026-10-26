@@ -3,6 +3,7 @@ package com.example.parcial_tp3.di
 import android.content.Context
 import androidx.room.Room
 import com.example.parcial_tp3.data.local.VoraDatabase
+import com.example.parcial_tp3.data.local.dao.CoachDao
 import com.example.parcial_tp3.data.local.dao.MealDao
 import com.example.parcial_tp3.data.local.dao.WorkoutDao
 import dagger.Module
@@ -39,4 +40,7 @@ object DatabaseModule {
 
     @Provides
     fun provideMealDao(db: VoraDatabase): MealDao = db.mealDao()
+
+    @Provides
+    fun provideCoachDao(db: VoraDatabase): CoachDao = db.coachDao()
 }

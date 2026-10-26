@@ -547,7 +547,10 @@ Agregarle a `scripts/reglas.sh` el control de C18 (que ningún `.kt` llame a
 - C24. CUANDO la persona escribe un texto y toca enviar, la app DEBE agregarlo al final de la lista como mensaje propio y vaciar el campo.
 - C25. MIENTRAS el campo está vacío, el botón de enviar DEBE estar deshabilitado.
 - C26. CUANDO se agrega un mensaje, la lista DEBE desplazarse hasta el último.
-- C27. La app NO DEBE responder sola a un mensaje enviado: la conversación es de demostración y queda como está.
+- C27. ~~La app NO DEBE responder sola a un mensaje enviado: la conversación es de demostración y queda como está.~~
+  **Reemplazado el 26/10 por el C6 de [`coach-con-historial.md`](coach-con-historial.md) (EXT01):** VORA ahora
+  contesta consultando al servidor del docente y el hilo se guarda en Room. Era un criterio de la etapa en que
+  `conversation` era maqueta; se deja tachado y no borrado para que se vea de dónde viene el cambio.
 - C28. CUANDO se rota la pantalla, la app DEBE conservar los mensajes y lo que estaba escrito sin mandar.
 
 ### Componentes y tema
@@ -590,7 +593,7 @@ controla con el subagente `revisor-visual` contra el frame, no con tests.
 | C8, C9, C10 | `cancelarYReintentarVuelvenAIdle` | `test/` | |
 | C19, C20 | `allowAccessYNotNowVuelvenAIdleSinPedirPermiso` | `test/` | |
 | C24, C25 | `enviarAgregaElMensajeYVaciaElCampo` | `test/` | |
-| C27 | `enviarNoGeneraRespuestaAutomatica` | `test/` | |
+| ~~C27~~ | ~~`enviarNoGeneraRespuestaAutomatica`~~ — **borrado el 26/10**: afirmaba lo contrario del C6 de EXT01 | — | — |
 | C17 | `scripts/reglas.sh`, que ya busca `RECORD_AUDIO` en el manifiesto | control | |
 | C18 | **falta**: agregarle a `scripts/reglas.sh` la busqueda de `RequestPermission` y `checkSelfPermission` en los `.kt` | control | |
 | C31, C32 | `scripts/reglas.sh` (ya lo hace) | control | |
@@ -609,3 +612,4 @@ controla con el subagente `revisor-visual` contra el frame, no con tests.
 ## Historial
 
 - 21/10/2026 · Primera versión (Fiore). Se agrega la alternancia de Processing para que el estado Error sea alcanzable: antes no tenía ninguna entrada en la tabla NAV03.
+- 26/10/2026 · Fiore. Se hizo el extra **EXT01** ([`coach-con-historial.md`](coach-con-historial.md)): `Voice / 05 — Conversation` dejó de ser maqueta y pasó a **Funcional**, con las respuestas del servidor del docente por Retrofit y el hilo guardado en Room. Acá cambia una sola cosa: **C27 queda reemplazado** por el C6 de esa spec, y su test se borró. Los demás criterios de Conversation (C23 a C26 y C28) siguen valiendo tal cual, ahora sobre datos reales en vez de la lista de demostración. Los cinco estados de la ruta `voice` y `Voice / 01 — Idle` **no se tocaron**.
