@@ -45,7 +45,7 @@ Repositorio (inyectado por constructor)
 - **Textos:** ninguno escrito en el código. `res/values/strings.xml` en inglés (como el Figma) y `res/values-es/strings.xml` con las mismas claves. Siempre `stringResource(R.string.clave)`.
 - **Barra inferior:** se arma **una sola vez** en el `Scaffold` de `MainActivity` y aparece en las pantallas de `RUTAS_CON_BARRA` (16). Las 19 que se abren encima no la tienen y llevan su encabezado con volver o cerrar. Las 2 de acceso tampoco. **Nunca se copia la barra en una pantalla.**
 - **Un grafo de navegación por flujo**, cada uno en su archivo (`WorkoutNavGraph.kt`, `NutritionNavGraph.kt`, ...). `MainActivity`, la barra y `RUTAS_CON_BARRA` se tocan solo por pull request de Navegación e inventario.
-- Cambio de pestaña: `popUpTo` a la pantalla base de Home con `saveState`, `launchSingleTop` y `restoreState`. **No** `popUpTo(startDestination)` ni `findStartDestination()`: el inicio del `NavHost` es el login y se saca de la pila al entrar.
+- Cambio de pestaña: `popUpTo` a la pantalla base de Home con `saveState`, `launchSingleTop` y `restoreState`. **No** `popUpTo(startDestination)` ni `findStartDestination()`: el inicio del `NavHost` es el login (o Home, si con Firebase hay una sesión activa) y el login se saca de la pila al entrar.
 - Pantallas más altas que el frame (unos 850 dp): llevan scroll (UI03).
 
 ## 4. Estructura de carpetas

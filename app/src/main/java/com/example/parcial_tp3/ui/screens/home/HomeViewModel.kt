@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.parcial_tp3.data.repository.MealDataException
 import com.example.parcial_tp3.data.repository.MealRepository
 import com.example.parcial_tp3.data.repository.ProfileRepository
+import com.example.parcial_tp3.domain.displayName
 import com.example.parcial_tp3.domain.model.Meal
 import com.example.parcial_tp3.domain.model.Profile
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -46,8 +47,8 @@ class HomeViewModel @Inject constructor(
     // El total del dia se suma aca y no en la consulta: con muchas comidas convendria un SUM
     // en el DAO (docs/decisiones/007-home-totales-del-dia.md).
     private fun toUiState(profile: Profile, meals: List<Meal>) = HomeUiState(
-        firstName = profile.firstName,
-        lastName = profile.lastName,
+        firstName = displayName(profile.firstName, "", profile.email),
+        lastName = if (profile.firstName.isBlank() && profile.lastName.isBlank()) "" else profile.lastName,
         greeting = greeting,
         kcal = meals.sumOf { it.kcal },
         kcalGoal = HomeDemoData.KCAL_GOAL,

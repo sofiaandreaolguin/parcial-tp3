@@ -43,14 +43,7 @@ fun NavGraphBuilder.profileGraph(nav: NavController) {
             SettingsRoute(
                 onBack = { nav.popBackStack() },
                 onEditProfile = { nav.navigate(Rutas.EDIT_PROFILE) },
-                // cerrar sesión: vacía toda la pila y lo que cada pestaña guardó (saveState de
-                // irAPestana), así al volver a entrar ninguna abre una pantalla de la sesión anterior
-                onLogOut = {
-                    VoraTab.entries.forEach { nav.clearBackStack(it.inicio) }
-                    nav.navigate(Rutas.ACCESS_GRAPH) {
-                        popUpTo(nav.graph.id) { inclusive = true }
-                    }
-                },
+                onLogOut = { nav.cerrarSesion() },
             )
         }
     }
