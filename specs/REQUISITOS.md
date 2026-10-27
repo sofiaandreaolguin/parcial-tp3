@@ -8,9 +8,9 @@ Estados: **pendiente** · **en curso** · **hecho** (está en `main`) · **verif
 
 | Código | Qué pide | Responsable | Dónde se cubre | Estado | Verificó |
 |---|---|---|---|---|---|
-| UI01 | Maquetación fiel al Figma: estructura, colores, tipografías, espaciados, íconos; sin textos cortados ni superpuestos | Todos, cada uno las suyas; control visual Zaki | `PANTALLAS.md` | pendiente | |
+| UI01 | Maquetación fiel al Figma: estructura, colores, tipografías, espaciados, íconos; sin textos cortados ni superpuestos | Todos, cada uno las suyas; control visual Zaki | `PANTALLAS.md` y `docs/evidencia/visual/control-final.md` | hecho | |
 | UI02 | Tema propio y componentes reutilizados (corregir uno lo corrige en todas) | Martu | `ui/theme/`, `ui/components/` | pendiente | |
-| UI03 | Consistente en el tamaño del Figma y en otro emulador; lo que no entra se desplaza | Todos; control visual Zaki | `PANTALLAS.md` | pendiente | |
+| UI03 | Consistente en el tamaño del Figma y en otro emulador; lo que no entra se desplaza | Todos; control visual Zaki | `PANTALLAS.md` y `docs/evidencia/visual/control-final.md` | hecho | |
 | NAV01 | Cada pantalla de Figma con su destino y estado (funcional o demostración) en el README | Fiore | `PANTALLAS.md` y README | pendiente | |
 | NAV02 | Recorridos entre áreas; volver, cerrar y cancelar; atrás del sistema coherente | Fiore | Grafos de navegación | pendiente | |
 | NAV03 | Todo control que abre algo lleva a su destino | Todos, cada uno las suyas | `PANTALLAS.md` | pendiente | |
