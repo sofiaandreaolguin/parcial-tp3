@@ -1,6 +1,6 @@
 # Control visual final de las 37 pantallas (UI01, UI03)
 
-Pase sobre `main` en 394fc28 (26/10/2026), en la rama `fix/visual-control-final`. Las capturas se sacaron en un moto g(8) plus: 411 dp es el tamaño del teléfono y 360 dp se forzó con `wm density 480`. El teléfono estaba en inglés y en modo claro, con el mock local para Workout. Cada flujo lo revisó `revisor-visual` en contexto limpio, contra su frame de `docs/figma/<Flujo> Flow.png`.
+Pase sobre `main` en 394fc28 (26/10/2026), en la rama `fix/visual-control-final`. Las capturas se sacaron en un moto g(8) plus: 411 dp es el tamaño del teléfono y 360 dp se forzó con `wm density 480`. El teléfono estaba en inglés y en modo claro, con el mock local para Workout. Después de traer `main` (PR #57, Firebase, y PR #58, coach con historial) se repitieron Login 01 y 02, Home 01, Voice 05 y Profile 01, 02 y 06, con una sesión real de Firebase. Cada flujo lo revisó `revisor-visual` en contexto limpio, contra su frame de `docs/figma/<Flujo> Flow.png`.
 
 Nombres: `<flujo>-NN-411dp.png` y `-360dp.png`. Cuando la pantalla no entra entera, hay además una `-scroll.png` con la pantalla bajada hasta el final. En la columna "Scroll" se indica en qué tamaño hay esa captura extra.
 
@@ -38,13 +38,13 @@ Nombres: `<flujo>-NN-411dp.png` y `-360dp.png`. Cuando la pantalla no entra ente
 | 30 | Progress / 05 Health Trends | `progress-05-411dp` | `progress-05-360dp` | 360 | APROBADA | — |
 | 31 | Progress / 06 Weekly Review | `progress-06-411dp` | `progress-06-360dp` | 411 y 360 | APROBADA | — |
 | 32 | Profile / 01 Dashboard | `profile-01-411dp` | `profile-01-360dp` | 411 y 360 | APROBADA | — |
-| 33 | Profile / 02 Edit Profile | `profile-02-411dp` | `profile-02-360dp` | 360 | APROBADA | — |
+| 33 | Profile / 02 Edit Profile | `profile-02-411dp` | `profile-02-360dp` | 360 | APROBADA | Corregida (ver nota 5) |
 | 34 | Profile / 03 Goals & Preferences | `profile-03-411dp` | `profile-03-360dp` | 411 y 360 | APROBADA | — |
 | 35 | Profile / 04 Nutrition Preferences | `profile-04-411dp` | `profile-04-360dp` | 411 y 360 | APROBADA | — |
 | 36 | Profile / 05 Voice & AI Settings | `profile-05-411dp` | `profile-05-360dp` | 411 y 360 | APROBADA | — |
 | 37 | Profile / 06 Settings | `profile-06-411dp` | `profile-06-360dp` | 411 y 360 | APROBADA | — |
 
-Resultado: las 37 pantallas están APROBADA. Login 01 y 02 pasaron en la segunda vuelta del revisor, después de la corrección. UI03 se cumple en las 37: a 360 dp no queda contenido inalcanzable, y lo que no entra se alcanza con scroll.
+Resultado: las 37 pantallas están APROBADA. Login 01 y 02 y Edit Profile pasaron en la segunda vuelta del revisor, después de sus correcciones. UI03 se cumple en las 37: a 360 dp no queda contenido inalcanzable, y lo que no entra se alcanza con scroll.
 
 ## Notas
 
@@ -52,8 +52,11 @@ Resultado: las 37 pantallas están APROBADA. Login 01 y 02 pasaron en la segunda
 2. **Photo Analysis:** el revisor marcó que las etiquetas "Grilled Chicken" y "Basmati Rice" parecen cruzadas sobre la foto. Zaki comparó el frame en Figma y las etiquetas están igual que en el diseño, así que no hay nada que corregir.
 3. **Workout Dashboard:** el Figma muestra "Focus: Chest & Back" en la tarjeta del entrenamiento recomendado. El catálogo de la API (`/v1/workouts`) no trae los grupos musculares, que solo vienen en el detalle (`/v1/workouts/{id}`), así que el focus se muestra en Workout Details (13). Agregarlo en el Dashboard sería una tarea del carril C: otra consulta desde `WorkoutsViewModel`.
 4. **Today's Meals y Meal Details:** el Figma lista cada alimento con sus gramos y sus kcal. La app muestra una sola fila por comida, porque la comida se guarda sin separar los alimentos. "Delete Meal" (25) no está en el Figma: es un agregado por RF04.
+5. **Edit Profile (corregida):** después del PR #57, Height y Weight mostraban "178" y "76", sin unidad. En el Figma dicen "178 cm" y "76 kg". Ahora `NumberField` (`EditProfileScreen.kt`) dibuja la unidad como sufijo visual, con los textos `edit_unit_cm` y `edit_unit_kg`. El valor que se edita sigue siendo solo el número.
 
 ## Diferencias menores que se aceptan
+
+- SignIn: desde el PR #57 hay unos 13 dp de más entre Password y "Sign In". Es el lugar que queda reservado para el error de Firebase.
 
 - Exercise Details: hay un solo paso y la foto es fija, porque eso es lo que trae el mock.
 - Los datos de ejemplo (calorías, fechas fijas de Progress, nombres en castellano del mock) no se cuentan como diferencias.
