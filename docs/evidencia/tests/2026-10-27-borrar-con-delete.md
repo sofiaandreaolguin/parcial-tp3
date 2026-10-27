@@ -37,3 +37,22 @@ C11_delete_saca_la_comida_y_devuelve_las_filas_borradas -> expected:<[MealEntity
 C12_observeById_emite_la_comida_y_null_al_borrarla -> expected null, but was:<MealEntity(id=1, ...)>
 C72_delete_borra_por_id_aunque_cambien_los_otros_valores -> AssertionError (la tabla no quedó vacía)
 ```
+
+## Verde (implementación)
+
+`MealDao.delete` con `@Delete` (se borró `deleteById`), `MealRepositoryImpl.deleteMeal(meal)` llama a `dao.delete(meal.toEntity())` y `MealDetailViewModel.onConfirmDelete` borra la comida de `Content`, o nada si no hay `Content`. Ningún test se modificó después del rojo (`f7a7200`); del `FakeMealDao` solo se sacó el `override` de `deleteById`, que dejó de existir en el DAO.
+
+```text
+./gradlew assembleDebug testDebugUnitTest lintDebug
+BUILD SUCCESSFUL · 367 tests, 0 fallas
+./gradlew connectedDebugAndroidTest   (emulator-5554)
+BUILD SUCCESSFUL · 27 tests, 0 fallas (C11, C12 y C72 incluidos)
+scripts/reglas.sh: exit 0
+```
+
+| Código roto a propósito | Falla |
+|---|---|
+| El repositorio le pasa al DAO otra Entity (`copy(name = "")`) | C14, C73 |
+| `deleteMeal` lanza `NOT_FOUND` con 0 filas | C73 |
+| El ViewModel le pasa al repositorio otra comida | C45 |
+| Sin `Content`, el ViewModel borra igual con el id de la ruta | C74 |
