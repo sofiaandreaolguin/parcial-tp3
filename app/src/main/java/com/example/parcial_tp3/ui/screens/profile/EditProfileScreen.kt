@@ -39,7 +39,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.OffsetMapping
+import androidx.compose.ui.text.input.TransformedText
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.parcial_tp3.R
@@ -138,6 +142,7 @@ fun EditProfileScreen(
             Row(horizontalArrangement = Arrangement.spacedBy(VoraTheme.spacing.s12)) {
                 NumberField(
                     label = stringResource(R.string.edit_height),
+                    unit = stringResource(R.string.edit_unit_cm),
                     value = state.heightCm,
                     onValueChange = onHeightChange,
                     error = state.heightError,
@@ -145,6 +150,7 @@ fun EditProfileScreen(
                 )
                 NumberField(
                     label = stringResource(R.string.edit_weight),
+                    unit = stringResource(R.string.edit_unit_kg),
                     value = state.weightKg,
                     onValueChange = onWeightChange,
                     error = state.weightError,
@@ -211,6 +217,7 @@ private object NoFutureDates : SelectableDates {
 @Composable
 private fun NumberField(
     label: String,
+    unit: String,
     value: Int,
     onValueChange: (Int) -> Unit,
     error: Int?,
@@ -222,8 +229,21 @@ private fun NumberField(
         modifier = modifier,
         label = label,
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+        visualTransformation = remember(unit) { UnitSuffix(unit) },
         error = error?.let { stringResource(it) },
     )
+}
+
+// El Figma muestra "178 cm" dentro del campo; la unidad se dibuja pero no forma parte del valor.
+private class UnitSuffix(private val unit: String) : VisualTransformation {
+    override fun filter(text: AnnotatedString): TransformedText {
+        if (text.isEmpty()) return TransformedText(text, OffsetMapping.Identity)
+        val mapping = object : OffsetMapping {
+            override fun originalToTransformed(offset: Int) = offset
+            override fun transformedToOriginal(offset: Int) = offset.coerceAtMost(text.length)
+        }
+        return TransformedText(text + AnnotatedString(" $unit"), mapping)
+    }
 }
 
 /** Se ve como [VoraTextField]; el toque abre un selector en vez del teclado. */
