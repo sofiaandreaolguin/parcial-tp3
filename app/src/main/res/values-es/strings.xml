@@ -846,4 +846,12 @@
     <string name="progress_review_view_plan">Ver el plan de la próxima semana</string>
     <string name="progress_review_ask_vora">Preguntale a VORA</string>
     <string name="progress_review_done">Listo</string>
+    <string name="conversation_simulated">Respuesta simulada</string>
+    <string name="conversation_sending">Enviando…</string>
+    <string name="conversation_retry">Reintentar</string>
+    <string name="conversation_error_no_connection">Sin conexión. Revisá tu red.</string>
+    <string name="conversation_error_server">El servidor no responde.</string>
+    <string name="conversation_error_invalid_data">No se pudo leer la respuesta.</string>
+    <string name="conversation_error_too_long">El mensaje es demasiado largo.</string>
+    <string name="conversation_suggestions_empty">No hay sugerencias disponibles.</string>
 </resources>

@@ -848,4 +848,12 @@
     <string name="progress_review_view_plan">View next week\'s plan</string>
     <string name="progress_review_ask_vora">Ask VORA</string>
     <string name="progress_review_done">Done</string>
+    <string name="conversation_simulated">Simulated response</string>
+    <string name="conversation_sending">Sending…</string>
+    <string name="conversation_retry">Retry</string>
+    <string name="conversation_error_no_connection">No connection. Check your network.</string>
+    <string name="conversation_error_server">The server is not responding.</string>
+    <string name="conversation_error_invalid_data">The response could not be read.</string>
+    <string name="conversation_error_too_long">The message is too long.</string>
+    <string name="conversation_suggestions_empty">No suggestions available.</string>
 </resources>

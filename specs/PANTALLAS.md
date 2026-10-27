@@ -159,13 +159,16 @@ Leído de los frames el 18/10. Lo que dice *a confirmar* es lectura mía del dib
 | 6 | Voice / 02 — Listening | `voice` (estado `Listening`) | Encima | `VoiceViewModel` | Demostración | Coach y Progress |
 | 7 | Voice / 03 — Processing | `voice` (estado `Processing`) | Encima | `VoiceViewModel` | Demostración | Coach y Progress |
 | 8 | Voice / 04 — Speaking | `voice` (estado `Speaking`) | Encima | `VoiceViewModel` | Demostración | Coach y Progress |
-| 9 | Voice / 05 — Conversation | `conversation` | Encima | `ConversationViewModel` | Demostración | Coach y Progress |
+| 9 | Voice / 05 — Conversation | `conversation` | Encima | `ConversationViewModel` | **Funcional** | Coach y Progress |
 | 10 | Voice / 06 — Error | `voice` (estado `Error`) | Encima | `VoiceViewModel` | Demostración | Coach y Progress |
 
 - **5 frames, 1 ruta.** Idle, Listening, Processing, Speaking y Error comparten layout: son estados de `VoiceScreen`, no destinos distintos. Un cambio de estado no es navegación. Ficha: `docs/decisiones/002-voice-una-pantalla-con-estados.md`.
 - Conversation sí es una ruta aparte: cambia el layout (lista de mensajes).
 - **NAV05:** se recorre escucha, procesamiento, respuesta y error con botones de demostración. **No se pide permiso de micrófono.**
-- Si se hace EXT01 (coach por Retrofit con historial en Room), `conversation` pasa a **Funcional**.
+- **EXT01, hecho el 26/10:** `conversation` es la única **Funcional** de las seis. VORA contesta consultando
+  `GET /v1/coach/suggestions` y `POST /v1/coach/messages`, y el hilo se guarda en Room, así que sobrevive a
+  cerrar la app. Spec: [`funcionales/coach-con-historial.md`](funcionales/coach-con-historial.md).
+  Las otras cinco siguen siendo de demostración y `Voice / 01 — Idle` no se tocó.
 
 ### A dónde lleva cada control (NAV03)
 
@@ -445,7 +448,7 @@ Son las que **no puede cerrar una sola persona**: necesitan algo de otra zona. A
 | Las 16 con barra | Navegación e inventario (la enchufa) | Tema y componentes (la dibuja) | Firma de `VoraBottomBar(selected: VoraTab?, onTab: (VoraTab) -> Unit)` y el enum `VoraTab` con su ruta de grafo. Se entrega sin estado y se enchufa en el `Scaffold` |
 | Todas (encabezado) | Cada zona la suya | Tema y componentes | Firma de `VoraTopBar` (título, acción de volver o cerrar). Se usa con datos propios; **no se copia su código** |
 | Nutrition / 04, 05, 06 y 07 | Nutrition | Coach y Progress (simulación de voz y análisis) | Los estados de demostración del análisis (NAV05 cruza las dos zonas) y qué borrador le deja el análisis a `food_confirmation` |
-| Voice / 05 — Conversation | Coach y Progress | Workout (solo si se hace EXT01: Retrofit y Room) | Únicamente si se encara el extra: endpoint del coach y tabla del historial |
+| Voice / 05 — Conversation | Coach y Progress | Red (Hector) y base Room (Sofi) | **Cerrado el 26/10 con EXT01.** Se avisó a las dos zonas: dos endpoints nuevos en `VoraApi` y la tabla `coach_messages` con la base en `version = 4` |
 | Progress / 03 y 04 | Coach y Progress | Workout y Nutrition (forma de los modelos) | Que los datos de ejemplo usen los modelos `Workout` y `Meal`, para poder conectarlos después si sobra tiempo |
 | Profile / 06 — Settings | Home y Profile | Navegación e inventario | Qué opción abre pantalla, cuál abre diálogo y cuál solo cambia un ajuste (NAV03) |
 | De Login 01 a Home | Acceso | Navegación e inventario | El `popUpTo(access_graph) { inclusive = true }` lo pone el grafo de acceso (`entrarAHome()`) |
@@ -621,15 +624,17 @@ Test del inventario (tarea VC-e, `app/src/test/`): que `RUTAS_CON_BARRA.size == 
 
 ---
 
-## 17. Pendientes
+## 17. Los puntos que estaban abiertos, y cómo cerraron
 
-1. **Tarea VC-b sin asignar** (acordar rutas, modelos y componentes). Las rutas de la sección 15 y la firma de `VoraBottomBar` salen de ahí; mientras no se acuerden, esto es una propuesta.
+Al 26/10 **no queda ninguno sin resolver**. Se deja el registro de cada uno porque explica por qué la app quedó como quedó, y porque cuatro se resolvieron preguntándole al profe.
+
+1. ~~**Tarea VC-b sin asignar**~~ · **Cerrado.** Se acordaron las rutas, los modelos y los componentes; las rutas de la sección 15 son las que están en `ui/navigation/Rutas.kt` y la firma de `VoraBottomBar` quedó fija. Ya no es una propuesta: es lo implementado.
 2. **Ya no hay entradas sin confirmar.** `Progress / 01 — Today's Overview` se resolvió el 22/10 (duda #2): es la pantalla base de la pestaña Progress y su "Start Workout" lleva a `progress_dashboard`. La de `Profile / 05 — Voice & AI Settings` quedó confirmada el 21/10 al maquetar `Profile / 01` (Zaki, tarea VC-q). Una pantalla sin entrada rompe NAV01, así que si alguna fila cambia hay que revisar esto de nuevo.
-3. **El formulario de carga manual de comidas (RF03) no tiene frame propio.** Por ahora "Log Manually" abre `Nutrition / 07 — Food Confirmation` vacío, que ya tiene los campos. La consigna prohíbe inventar pantallas.
-4. **Eliminar una comida (RF04) no tiene control en ningún frame.** `Nutrition / 08` tiene solo ‹, "Edit Meal" y "Duplicate Meal"; `Nutrition / 02` no tiene papelera ni swipe. El "Remove" de `07` saca un ingrediente del borrador, no borra una comida guardada. Lo define la zona de Nutrition antes de maquetar.
+3. ~~**El formulario de carga manual de comidas (RF03) no tiene frame propio**~~ · **Cerrado con el profe (duda #3).** Respondió: *"Podríamos conectarlo a la pantalla que decidamos, no es necesario"*. "Log Manually" abre `Nutrition / 07 — Food Confirmation` vacío, que ya tiene los campos, con la validación de `domain/MealValidation.kt`. No se inventó ninguna pantalla.
+4. ~~**Eliminar una comida (RF04) no tiene control en ningún frame**~~ · **Cerrado con el profe (duda #4).** Respondió: *"Eliminar el componente en la base, no en la API. Ya está el botón al editar el meal"*. Se borra desde `Nutrition / 08 — Meal Details`, con diálogo de confirmación (`MealDetailScreen.kt`) y `MealDao.deleteById`; el total del día se recalcula solo. El "Remove" de `07` sigue sacando un ingrediente del borrador, que es otra cosa.
 5. **El catálogo de entrenamientos (RF01) se muestra en `Workout / 02 — Your Plan`**, que lista tres con entrada por ítem, igual que devuelve el mock. `Workout / 01` muestra solo el destacado. **NAV04 se demuestra en `02`.**
-6. **Controles sin frame de destino:** "Connected Data" y "Account" en `Profile / 01`; Notifications, Units, Appearance, Help Centre, Contact Support y Privacy Policy en `Profile / 06`. NAV03 permite que "una acción de servicio opcional dé un resultado de ejemplo o avise que es modo demostración". Lo que no pueden hacer es quedarse sin respuesta.
-7. **Firebase:** si se hace, Login 01 y 02 pasan de Demostración a Funcional acá y en el README.
+6. **Controles sin frame de destino:** "Connected Data" y "Account" en `Profile / 01`; Notifications, Units, Appearance, Help Centre, Contact Support y Privacy Policy en `Profile / 06`. NAV03 permite que "una acción de servicio opcional dé un resultado de ejemplo o avise que es modo demostración". Ninguno queda sin respuesta: todos avisan modo demostración.
+7. **Firebase:** quedó en una rama aparte (`feat/firebase-extra`) y **no se integró a `main`**. Login 01 y 02 siguen siendo **Demostración** acá y en el README. Si alguna vez se integra, las dos filas cambian a Funcional.
 
 ---
 
