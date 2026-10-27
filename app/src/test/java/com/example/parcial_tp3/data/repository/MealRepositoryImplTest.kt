@@ -130,10 +130,20 @@ class MealRepositoryImplTest {
     @Test
     fun `C14 updateMeal y deleteMeal llegan al DAO con el mismo id`() = runTest {
         repository.updateMeal(comidaGuardada.copy(kcal = 400))
-        repository.deleteMeal(4)
+        repository.deleteMeal(comidaGuardada)
 
         assertEquals(listOf(entityGuardada.copy(kcal = 400)), dao.actualizadas)
-        assertEquals(listOf(4L), dao.idsBorrados)
+        assertEquals(listOf(entityGuardada), dao.borradas)
+    }
+
+    @Test
+    fun `C73 deleteMeal no falla si no habia nada que borrar`() = runTest {
+        dao.filasBorradas = 0
+
+        val error = errorDe { repository.deleteMeal(comidaGuardada) }
+
+        assertNull("no debería tirar nada: $error", error)
+        assertEquals(listOf(entityGuardada), dao.borradas)
     }
 
     @Test
@@ -217,6 +227,13 @@ private class FakeMealDao : MealDao {
 
     override suspend fun deleteById(id: Long): Int {
         idsBorrados += id
+        return filasBorradas
+    }
+
+    val borradas = mutableListOf<MealEntity>()
+
+    override suspend fun delete(meal: MealEntity): Int {
+        borradas += meal
         return filasBorradas
     }
 }

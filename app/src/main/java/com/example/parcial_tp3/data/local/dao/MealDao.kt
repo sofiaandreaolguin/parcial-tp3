@@ -1,6 +1,7 @@
 package com.example.parcial_tp3.data.local.dao
 
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
@@ -32,4 +33,7 @@ interface MealDao {
     /** Devuelve las filas borradas: 0 si el id no existe. */
     @Query("DELETE FROM meals WHERE id = :id")
     suspend fun deleteById(id: Long): Int
+
+    @Delete
+    suspend fun delete(meal: MealEntity): Int
 }

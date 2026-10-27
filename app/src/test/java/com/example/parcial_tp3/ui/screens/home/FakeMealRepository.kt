@@ -32,6 +32,7 @@ class FakeMealRepository(comidas: List<Meal> = emptyList()) : MealRepository {
     val agregadas = mutableListOf<Meal>()
     val actualizadas = mutableListOf<Meal>()
     val eliminadas = mutableListOf<Long>()
+    val comidasEliminadas = mutableListOf<Meal>()
 
     /** Lo tira cada Flow al suscribirse. */
     var errorAlLeer: MealDataException? = null
@@ -75,10 +76,11 @@ class FakeMealRepository(comidas: List<Meal> = emptyList()) : MealRepository {
         meals.value = meals.value.map { if (it.id == meal.id) meal else it }
     }
 
-    override suspend fun deleteMeal(id: Long) {
-        eliminadas += id
+    override suspend fun deleteMeal(meal: Meal) {
+        eliminadas += meal.id
+        comidasEliminadas += meal
         antesDeEscribir()
-        meals.value = meals.value.filterNot { it.id == id }
+        meals.value = meals.value.filterNot { it.id == meal.id }
     }
 
     private suspend fun antesDeEscribir() {

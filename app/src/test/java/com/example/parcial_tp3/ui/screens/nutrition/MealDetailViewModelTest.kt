@@ -111,8 +111,27 @@ class MealDetailViewModelTest {
         vm.onDeleteClick()
         vm.onConfirmDelete()
 
-        assertEquals(listOf(7L), repo.eliminadas)
+        assertEquals(listOf(guardada), repo.comidasEliminadas)
         assertEquals(listOf<MealDetailEvent>(MealDetailEvent.Deleted), eventos)
+    }
+
+    @Test
+    fun `C74 sin Content confirmar no borra`() = runTest {
+        // Sin colectores uiState se queda en Loading.
+        val enCarga = viewModel()
+        val eventosEnCarga = eventos(enCarga)
+        enCarga.onConfirmDelete()
+
+        // Con un id que no existe, NotFound.
+        val noEncontrada = viewModel(mealId = 99)
+        observar(noEncontrada)
+        assertEquals(MealDetailUiState.NotFound, noEncontrada.uiState.value)
+        val eventosNoEncontrada = eventos(noEncontrada)
+        noEncontrada.onConfirmDelete()
+
+        assertTrue("no debería borrar: ${repo.eliminadas}", repo.eliminadas.isEmpty())
+        assertTrue(eventosEnCarga.isEmpty())
+        assertTrue(eventosNoEncontrada.isEmpty())
     }
 
     @Test

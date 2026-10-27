@@ -8,8 +8,10 @@ import com.example.parcial_tp3.data.repository.MealDataException
 import com.example.parcial_tp3.data.repository.MealRepository
 import com.example.parcial_tp3.domain.isValidIngredient
 import com.example.parcial_tp3.domain.model.Meal
+import com.example.parcial_tp3.domain.model.MealType
 import com.example.parcial_tp3.ui.navigation.Rutas
 import dagger.hilt.android.lifecycle.HiltViewModel
+import java.time.LocalDate
 import javax.inject.Inject
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.Flow
@@ -60,7 +62,10 @@ class MealDetailViewModel @Inject constructor(
 
     fun onDismissDelete() = actions.update { it.copy(confirmingDelete = false) }
 
-    fun onConfirmDelete() = runAction(deleting = true, MealDetailEvent.Deleted) { repo.deleteMeal(mealId) }
+    // Firma provisoria de los tests en rojo (C45, C74): borra por el id de la ruta, como antes.
+    fun onConfirmDelete() = runAction(deleting = true, MealDetailEvent.Deleted) {
+        repo.deleteMeal(Meal(mealId, "", LocalDate.MIN, MealType.BREAKFAST, 0, 0.0, 0.0, 0.0))
+    }
 
     fun onDuplicate() {
         val meal = (uiState.value as? MealDetailUiState.Content)?.meal ?: return
