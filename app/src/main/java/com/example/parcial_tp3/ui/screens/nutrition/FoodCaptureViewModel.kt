@@ -79,6 +79,15 @@ class FoodCaptureViewModel @Inject constructor(
     fun onManualEntry() = _uiState.update { it.copy(draft = null) }
 
     /**
+     * Abre 07 con el formulario ya armado por la busqueda de alimentos (EXT02, C31).
+     * La llama el grafo antes de navegar, como onOpenConfirmation.
+     */
+    fun onPrefill(form: MealForm) = _uiState.update {
+        // draft = null o 07 mostraria los ingredientes de un analisis anterior (C31).
+        it.copy(draft = null, confirmation = ConfirmationState(NEW_MEAL_ID, form))
+    }
+
+    /**
      * Abre 07. La llama el grafo antes de navegar, no la composición de 07, así que rotar no la
      * repite. Con el mismo [mealId] y 07 ya abierta no hace nada: si 07 se dejara sin [onDiscard],
      * la próxima apertura con ese id mostraría lo escrito antes. [draftName] lo resuelve el grafo
@@ -171,7 +180,9 @@ private fun Meal.toForm() = MealForm(
 )
 
 // 38.0 se muestra "38", como se tipearía.
-private fun Double.toFormText(): String = if (this % 1.0 == 0.0) toLong().toString() else toString()
+// internal porque la busqueda de alimentos (EXT02) precarga por el mismo camino:
+// "248.0" haria que parseKcal marque NOT_A_WHOLE_NUMBER y 07 no dejaria guardar.
+internal fun Double.toFormText(): String = if (this % 1.0 == 0.0) toLong().toString() else toString()
 
 private fun changedFields(old: MealForm, new: MealForm): Set<MealField> = buildSet {
     if (old.name != new.name) add(MealField.NAME)

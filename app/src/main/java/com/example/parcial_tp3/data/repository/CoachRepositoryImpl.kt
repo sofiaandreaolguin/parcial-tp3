@@ -6,7 +6,6 @@ import com.example.parcial_tp3.data.remote.dto.CoachRequestDto
 import com.example.parcial_tp3.domain.model.CoachMessage
 import com.example.parcial_tp3.domain.model.CoachRole
 import com.example.parcial_tp3.domain.model.CoachSuggestion
-import java.net.HttpURLConnection
 import javax.inject.Inject
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.flow.Flow
@@ -103,7 +102,3 @@ class CoachRepositoryImpl @Inject constructor(
     /** El orden del hilo no depende del reloj del sistema: se apoya en lo que ya hay guardado. */
     private suspend fun siguienteMomento(): Long = dao.count().toLong() + 1
 }
-
-/** 404 es "no encontrado" y cualquier otro codigo de fallo es un problema del servidor (RF05). */
-private fun retrofit2.Response<*>.aError(): AppError =
-    if (code() == HttpURLConnection.HTTP_NOT_FOUND) AppError.NOT_FOUND else AppError.SERVER

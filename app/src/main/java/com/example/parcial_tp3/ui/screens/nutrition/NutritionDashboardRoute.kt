@@ -8,7 +8,6 @@ import androidx.compose.runtime.setValue
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavBackStackEntry
-import com.example.parcial_tp3.ui.components.rememberDemoToast
 
 /**
  * @param grafo la entrada del grafo de Nutrition: el ViewModel se pide ahí para compartirlo con 02,
@@ -22,11 +21,13 @@ fun NutritionDashboardRoute(
     onAddMeal: () -> Unit,
     onVoice: () -> Unit,
     onPhoto: () -> Unit,
+    onConfirmed: () -> Unit,
     viewModel: NutritionViewModel = hiltViewModel(grafo),
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     val date by viewModel.selectedDate.collectAsStateWithLifecycle()
     var showDatePicker by rememberSaveable { mutableStateOf(false) }
+    var mostrarBuscador by rememberSaveable { mutableStateOf(false) }
 
     NutritionDashboardScreen(
         state = state,
@@ -38,8 +39,16 @@ fun NutritionDashboardRoute(
         onAddMeal = onAddMeal,
         onVoice = onVoice,
         onPhoto = onPhoto,
-        onSearch = rememberDemoToast(),
+        onSearch = { mostrarBuscador = true },
     )
+
+    if (mostrarBuscador) {
+        FoodSearchSheetHost(
+            grafo = grafo,
+            onDismiss = { mostrarBuscador = false },
+            onConfirmed = { mostrarBuscador = false; onConfirmed() },
+        )
+    }
 
     if (showDatePicker) {
         NutritionDatePickerDialog(

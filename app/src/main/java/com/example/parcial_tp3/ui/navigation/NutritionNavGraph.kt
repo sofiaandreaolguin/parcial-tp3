@@ -47,6 +47,7 @@ fun NavGraphBuilder.nutritionGraph(nav: NavController) {
                 onAddMeal = { nav.navigate(Rutas.ADD_FOOD) },
                 onVoice = { nav.navigate(Rutas.VOICE_FOOD_LOGGING) },
                 onPhoto = { abrirFoto(nav, captura) },
+                onConfirmed = { nav.navigate(Rutas.foodConfirmation()) },
             )
         }
 
@@ -64,10 +65,12 @@ fun NavGraphBuilder.nutritionGraph(nav: NavController) {
             val captura = hiltViewModel<FoodCaptureViewModel>(grafo)
             val abrirConfirmacion = rememberAbrirConfirmacion(nav, grafo)
             AddFoodRoute(
+                grafo = grafo,
                 onBack = { nav.popBackStack() },
                 onVoice = { nav.navigate(Rutas.VOICE_FOOD_LOGGING) },
                 onPhoto = { abrirFoto(nav, captura) },
                 onManual = { abrirCargaManual(captura, abrirConfirmacion) },
+                onConfirmed = { nav.navigate(Rutas.foodConfirmation()) },
             )
         }
 

@@ -4,6 +4,7 @@ import com.google.gson.JsonParseException
 import com.google.gson.stream.MalformedJsonException
 import java.io.EOFException
 import java.io.IOException
+import java.net.HttpURLConnection
 
 /** Error de la red o de la cache de entrenamientos, traducido en el repositorio (RF05, RF06). */
 class AppException(val error: AppError, cause: Throwable? = null) : Exception(cause)
@@ -21,3 +22,7 @@ fun Throwable.toAppError(): AppError = when (this) {
     is IOException -> AppError.NO_CONNECTION
     else -> AppError.UNKNOWN
 }
+
+/** El codigo HTTP traducido. 404 es "no existe"; el resto (503, 400, 500...) es el servidor. */
+internal fun retrofit2.Response<*>.aError(): AppError =
+    if (code() == HttpURLConnection.HTTP_NOT_FOUND) AppError.NOT_FOUND else AppError.SERVER
