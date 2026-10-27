@@ -110,7 +110,7 @@ data class ConfirmationState(
   - Comida nueva sin borrador (carga manual o `onPrefill` de la búsqueda): `ingredients` queda vacía.
   - ~~Comida guardada (edición): `ingredients` son los de esa comida y se conservan al guardar.~~ *(PR 2: sin edición.)*
   - **La comida se guarda armada, de una vez:** mientras 07 está abierta vive solo en memoria. Al guardar, la `Meal` de `validateMeal` se completa con `copy(ingredients = …)` y va en un solo `addMeal` (un INSERT de una fila); hasta el PR 2, `updateMeal` al editar. `validateMeal` no cambia.
-  - Antes de escribir, cada ingrediente pasa por `isValidIngredient`, también al editar. Si alguno no cumple, no se escribe nada y `saveError` toma `R.string.nutrition_error_ingredients`.
+  - Antes de escribir, cada ingrediente pasa por `isValidIngredient` (hasta el PR 2, también al editar). Si alguno no cumple, no se escribe nada y `saveError` toma `R.string.nutrition_error_ingredients`.
   - Hasta el PR 2, 07 mostraba tarjetas solo para una comida nueva con borrador, y el formulario en los demás casos. **Las tarjetas se dibujan con `confirmation.ingredients`**, no con `draft.ingredients`, así lo que se ve es lo que se guarda.
 - **Eventos nuevos** *(del PR 1; el PR 2 reemplaza `onManualEntry` y `onFormChange` y le saca `mealId` a `onOpenConfirmation`, ver "Pop-ups y 07")*:
   - `onManualEntry()` deja `draft = null`. Lo llaman "Log Manually" (03) y "Type instead" (04) antes de navegar, como `abrirFoto`.
@@ -150,19 +150,20 @@ data class IngredientEntryState(
 ```
 - `ConfirmationState.errors` se va: 07 ya no tiene campos donde mostrarlos. Los errores de nombre, tipo y macros se muestran en el pop-up de carga.
 - **`ConfirmationState.mealId` se va** (no el id de la comida: `Meal.id` sigue, porque lo usan `@Delete`, la ruta de 08 y Duplicate). Se va de `ConfirmationState` y de `onOpenConfirmation`, y con él `NEW_MEAL_ID`: sin edición, 07 solo abre comidas nuevas. `onOpenConfirmation(defaultDate: LocalDate, draftName: String, draftIngredients: List<Ingredient> = emptyList())`. También se van `notFound` y su uso en 07 (`FoodConfirmationScreen`); el texto `nutrition_confirm_not_found` **queda**, porque lo usa 08 en `NotFound` (C42).
-- **Abrir 07 siempre reemplaza** la `confirmation` anterior, venga de `onOpenConfirmation` o de `onContinueManualEntry` (C31). Hace falta porque 07 tiene barra inferior: salir por la barra no llama a `onDiscard`, y sin esto el próximo "Review" mostraría la comida vieja.
+- **Abrir 07 reemplaza** la `confirmation` anterior, salvo mientras se guarda (C102), venga de `onOpenConfirmation` o de `onContinueManualEntry` (C31). Hace falta porque 07 tiene barra inferior: salir por la barra no llama a `onDiscard`, y sin esto el próximo "Review" mostraría la comida vieja.
 - **Los pop-ups viven en el ViewModel**, no en un `remember`: rotar no pierde lo escrito, y la pantalla los dibuja cuando `manualEntry` o `ingredientEntry` no son `null`.
 - **Eventos del pop-up de carga** (reemplazan a `onManualEntry()` y a `onFormChange`):
   - `onOpenManualEntry(defaultDate: LocalDate)`: `draft = null` y abre el pop-up vacío con esa fecha.
   - `onManualEntryChange(form: MealForm)`: borra el error de los campos que cambiaron.
   - `onContinueManualEntry(): Boolean`: valida con `validateMealDetails`. Si es válido, cierra el pop-up, abre `confirmation` (reemplazando la anterior) y devuelve `true`. Con `manualEntry == null` (doble toque) devuelve `false` sin tocar nada; la Route navega a 07 solo con `true`, como `FoodSearchViewModel.onConfirm` devuelve `null` si no hay nada que usar.
   - `onDismissManualEntry()`: cierra el pop-up sin abrir 07.
+  - Controles de la hoja: "Continue" (`nutrition_manual_continue`) → `onContinueManualEntry()`; "Cancel" (`nutrition_manual_cancel`), deslizarla hacia abajo o el botón atrás → `onDismissManualEntry()`. Título: `nutrition_manual_title`. El pop-up de ingrediente: "Add" (`nutrition_ingredient_add`) → `onConfirmIngredient()`; "Cancel" o tocar afuera → `onDismissIngredientEntry()`; título `nutrition_ingredient_title`.
   - `onPrefill(selection: FoodSelection)`: lo llama la hoja de búsqueda. Antes abría 07; ahora abre el pop-up con `selection.form` y `ingredients = listOf(selection.ingredient)`, y `draft = null`.
 - **Eventos de 07:**
   - `onAddIngredientClick()`, `onIngredientEntryChange(form: IngredientForm)`, `onConfirmIngredient()` y `onDismissIngredientEntry()`: el pop-up de ingrediente. Confirmar valida con `validateIngredient` y agrega el ingrediente **al final**.
   - `onRemoveIngredient(index: Int)`: "Remove" de cada tarjeta.
   - Agregar o sacar un ingrediente borra `saveError` (C101): antes lo borraba `onFormChange`, que se va.
-  - `onSave()`: si no hay ingredientes, no guarda (C88). Si hay, valida `c.form.copy(kcal = c.totalKcal.toString())` **sin cambiar `confirmation.form`**, así las kcal guardadas son siempre la suma (C87) y lo que se ve no cambia si falla (C39). Siempre llama a `addMeal`. `validateMeal` y `isValidIngredient` no cambian.
+  - `onSave()`: los controles van en este orden y se corta en el primero que falla: sin ingredientes (C88), `validateMeal` (C34) e `isValidIngredient` (C62). Si hay ingredientes, valida `c.form.copy(kcal = c.totalKcal.toString())` **sin cambiar `confirmation.form`**, así las kcal guardadas son siempre la suma (C87) y lo que se ve no cambia si falla (C39). Siempre llama a `addMeal`. `validateMeal` y `isValidIngredient` no cambian.
   - −/+ siguen llamando a `onDemo`.
 - **07 dibuja siempre tarjetas** con `confirmation.ingredients`; sin ingredientes, solo "+ Add Ingredient", el panel de totales con 0 kcal y los botones. `MealFields` (los campos y los chips de tipo) pasan del cuerpo de 07 al pop-up de carga. El panel de totales muestra `totalKcal` y los macros de `form`.
 - **07 sigue con `Column` y `verticalScroll`, sin `LazyColumn`.** Una comida lleva 10 a 20 ingredientes livianos (texto y dos botones, sin imágenes), que se componen sin costo apreciable; la pantalla scrollea entera (UI03). Pasar a `LazyColumn` obligaría a rearmar con `Spacer` los espaciados medidos del Figma: 6 dp entre tarjetas, "+ Add Ingredient" y totales; 20 dp el resto.
@@ -171,7 +172,7 @@ data class IngredientEntryState(
   - **el de ingrediente es un `AlertDialog`** de Material 3: son tres campos.
 - **Quién prepara el ViewModel: las Routes, no el grafo** (cambia la decisión del 25/10, ver Historial). `NutritionNavGraph` queda como los de Workout y Progress: solo navega y no pide ViewModels. Cada Route llama al ViewModel y después al `onX()` que navega, como ya hacen `FoodSearchSheetHost` y `VoiceFoodLoggingRoute`:
   - 01 y 03: "Photo" llama a `onPhotoCaptureStarted()` y después a `onPhoto()`.
-  - 01 y 03 (búsqueda), 03 ("Log Manually") y 04 ("Type instead"): abren el pop-up de carga **sobre la misma pantalla**, sin navegar. "Continue" navega a 07 solo si `onContinueManualEntry()` devuelve `true`. El pop-up lo dibuja un `ManualEntryDialogHost(grafo, onContinued)` compartido, como `FoodSearchSheetHost`.
+  - 01 y 03 (búsqueda), 03 ("Log Manually") y 04 ("Type instead"): abren el pop-up de carga **sobre la misma pantalla**, sin navegar. "Continue" navega a 07 solo si `onContinueManualEntry()` devuelve `true`. El pop-up lo dibuja un `ManualEntrySheetHost(grafo, onContinued)` compartido, como `FoodSearchSheetHost`.
   - 05 ("listo") y 06 ("Review"): llaman a `onOpenConfirmation(fecha, nombre, ingredientes)` con los nombres resueltos con `getString` en la Route, y después navegan. Lo que hoy hace `rememberAbrirConfirmacion` pasa a un helper de `ui/screens/nutrition/`.
   - Al volver de 07 sin guardar (‹ o atrás) se llama a `onDiscard()` y se vuelve a la pantalla de abajo **sin** el pop-up: lo escrito en él se pierde, como hoy lo escrito en 07.
 
@@ -220,7 +221,7 @@ sealed interface MealDetailEvent { data object Deleted : MealDetailEvent; data o
 
 **PR 2 de ingredientes (2026-10-27):**
 - Dominio: `domain/MealValidation.kt` (`IngredientForm`, `validateIngredient`, `validateMealDetails`).
-- 07 y pop-ups: `FoodCaptureViewModel`, `FoodCaptureUiState` (su KDoc de "null = carga manual" cambia, y se van `NEW_MEAL_ID` y su KDoc del "argumento de la ruta"), `FoodConfirmationRoute` y `FoodConfirmationScreen` (sin `MealFields`, Add y Remove reales, totales con `totalKcal`), y nuevos `ManualEntryDialog` / `ManualEntryDialogHost` e `IngredientEntryDialog` en `ui/screens/nutrition/`.
+- 07 y pop-ups: `FoodCaptureViewModel`, `FoodCaptureUiState` (su KDoc de "null = carga manual" cambia, y se van `NEW_MEAL_ID` y su KDoc del "argumento de la ruta"), `FoodConfirmationRoute` y `FoodConfirmationScreen` (sin `MealFields`, Add y Remove reales, totales con `totalKcal`), y nuevos `ManualEntrySheet` / `ManualEntrySheetHost` e `IngredientEntryDialog` en `ui/screens/nutrition/`.
 - Routes que pasan a preparar el ViewModel: `NutritionDashboardRoute`, `AddFoodRoute`, `VoiceFoodLoggingRoute`, `FoodAnalysisRoute` y `PhotoAnalysisRoute`. El helper que reemplaza a `rememberAbrirConfirmacion`, en `ui/screens/nutrition/`.
 - Sin edición ("Edición: fuera de alcance"): `MealDetailScreen` y `MealDetailRoute` ("Edit Meal" pasa a demostración), `MealRepository`, `MealRepositoryImpl`, `MealDao`, `MealDataException` y `Rutas.kt`; en los tests, `MealDaoTest`, `MealRepositoryImplTest` y `FakeMealRepository`.
 - `res/values/strings.xml` y `res/values-es/strings.xml`: títulos y botones de los dos pop-ups, `nutrition_error_no_ingredients`, y los rangos de gramos y kcal del ingrediente.
@@ -233,13 +234,14 @@ sealed interface MealDetailEvent { data object Deleted : MealDetailEvent; data o
 - **Tests que cambian porque cambia el contrato** (los reescribe la sesión de tests en rojo; no es "cambiar un test para que pase", porque cambia el criterio, y lo decidió Sofi):
   - `FoodConfirmationViewModelTest`:
     - **todos** los que llaman a `onOpenConfirmation(nueva, …)` o `(7, …)`: la firma pierde `mealId`;
-    - C29, C34, C35 y C63 llaman directo a `onManualEntry` / `onFormChange`: se reescriben con su criterio nuevo (C35 pasa a `FoodCaptureManualEntryTest`);
+    - C29, C34, C35 y C63 llaman directo a `onManualEntry` / `onFormChange`: se reescriben con su criterio nuevo (C35 pasa a `FoodCaptureManualEntryTest`). C63 además pierde sus dos `onSave` y la mitad que usa `onPrefill(MealForm)`: hoy guarda dos comidas sin ingredientes, que C88 no deja;
     - C31 y C32: C31 se reescribe entero (reemplazar, no conservar; ver C31); C32 cambia cómo se abre 07;
     - C36 entra por la foto sin `draftIngredients`: con C88 ya no guardaría. Se le pasan los tres ingredientes del borrador, y las kcal esperadas siguen siendo 520 porque son su suma;
     - C38 y C39 usan el helper `abrirManualConFormValido` (`onManualEntry` + `onFormChange`): se rearma con el pop-up y un ingrediente. Lo que comprueban no cambia;
     - C62: se borra su segunda mitad (la de edición, `repoEdicion`), y su texto deja de nombrar `updateMeal`.
   - `FakeMealRepository` (home) pierde `updateMeal` y `actualizadas`: se sacan sus usos en C34, C61 y C62.
-  - `FoodCapturePrefillTest` (C31 de la búsqueda) y `FoodSearchViewModelTest` (C29, C30, C32 y C35 de la búsqueda: leen `onConfirm(...)?.form`).
+  - `FoodCapturePrefillTest` (C31 de la búsqueda): el primer test (`C31 onPrefill limpia el borrador del analisis`) pasa a `onPrefill(selection)`; el segundo (`C31 onPrefill deja la confirmacion con el formulario de la busqueda`) **se borra**: pide `confirmation` no nula y lo contradice C82, que lo reemplaza en `FoodCaptureManualEntryTest`.
+  - `FoodSearchViewModelTest`: C29, C30 y C32 de la búsqueda leen `onConfirm(...)?.form` (C35 y C18 descartan o comparan con `null` y compilan igual).
   - `FoodSearchGuardadoRoomTest` (C33 de la búsqueda, `androidTest/`): el camino pasa por el pop-up (elegir el tipo y `onContinueManualEntry`); el alimento ya llega como ingrediente, no hay que agregarlo. Su KDoc dice que "248.0" no deja guardar: deja de valer, porque las kcal ahora son la suma.
   - **Se borran** (decisión de Sofi: la edición sale del alcance): C10 y C17 con sus tests, C30, C33, C37 y C64 de `FoodConfirmationViewModelTest`, y la parte de `update` de C14. `FakeMealDao` pierde `update`.
 
@@ -317,7 +319,7 @@ Regla de formato: el texto se evalúa sin espacios en los bordes; **primero el f
 - C31. CUANDO se llama a `onOpenConfirmation` o a `onContinueManualEntry()` (válido) con una `confirmation` ya abierta (se salió de 07 por la barra inferior sin descartar), la nueva DEBE reemplazar a la anterior: los ingredientes y el formulario DEBEN ser los de la nueva apertura, no los que se habían agregado o sacado. *(PR 2: antes conservaba lo escrito al reabrir con el mismo id; esa regla servía para la edición y, sin ella, dejaba una comida vieja en 07.)*
 - C32. CUANDO se llama a `onDiscard()`, `confirmation` DEBE ser `null`; una nueva apertura arranca de cero.
 - ~~C33~~. *Borrado en el PR 2 (07 ya no abre por id; `notFound` se va).* Decía: SI se abre 07 con un id que no existe, ENTONCES `confirmation.notFound` DEBE ser `true`.
-- C34. SI al guardar `validateMeal` da `Invalid`, ENTONCES no DEBE escribirse en el repositorio, `saveError` DEBE tener un texto de `strings.xml` y no DEBE emitirse `Saved`. Desde la pantalla no se llega (el pop-up ya validó y las kcal son una suma); el test llega con `onPhotoCaptureStarted()` y `onOpenConfirmation(fecha, "", ingredientes)`, que deja el nombre vacío. *(PR 2: antes los errores iban a `confirmation.errors`, que se va.)*
+- C34. SI al guardar `validateMeal` da `Invalid`, ENTONCES no DEBE escribirse en el repositorio, `saveError` DEBE ser `R.string.nutrition_error_save` y no DEBE emitirse `Saved`. Desde la pantalla no se llega (el pop-up ya validó y las kcal son una suma); el test llega con `onPhotoCaptureStarted()` y `onOpenConfirmation(fecha, "", ingredientes)`, que deja el nombre vacío. *(PR 2: antes los errores iban a `confirmation.errors`, que se va.)*
 - C35. CUANDO se llama a `onManualEntryChange` después de un "Continue" inválido, DEBE desaparecer el error de los campos que cambiaron, y los demás DEBEN quedar. *(PR 2: antes era `onFormChange` en 07.)*
 - C36. CUANDO se guarda una comida nueva válida, DEBE llamarse una vez a `addMeal` con los valores validados (las kcal, la suma de los ingredientes: C87) y emitirse `Saved` una sola vez. Después, `draft` y `confirmation` DEBEN ser `null`.
 - ~~C37~~. *Borrado en el PR 2 (sin edición).* Decía: CUANDO se guarda una edición válida, DEBE llamarse a `updateMeal` con el mismo `id` (no a `addMeal`) y emitirse `Saved`.
@@ -349,7 +351,7 @@ Regla de formato: el texto se evalúa sin espacios en los bordes; **primero el f
 - C60. CUANDO se abre 07 para una comida nueva con borrador, `confirmation.ingredients` DEBE ser la lista `draftIngredients` que pasó el grafo.
 - C61. CUANDO se guarda una comida nueva con borrador, DEBE llamarse una sola vez a `addMeal`, con la `Meal` y sus ingredientes juntos.
 - C62. SI al guardar algún ingrediente no pasa `isValidIngredient`, ENTONCES no DEBE llamarse a `addMeal`, `saveError` DEBE tener un texto de `strings.xml`, `isSaving` DEBE quedar en `false` y no DEBE emitirse `Saved`.
-- C63. CUANDO se llama a `onOpenConfirmation(-1, …)` con `draft = null`, `confirmation.ingredients` DEBE estar vacía aunque se pasen `draftIngredients`. *(PR 2: la carga manual y la búsqueda ya no pasan por acá, y una comida sin ingredientes no se guarda, C88.)*
+- C63. CUANDO se llama a `onOpenConfirmation(d, nombre, ingredientes)` con `draft = null`, `confirmation.ingredients` DEBE estar vacía aunque se pasen `draftIngredients`. *(PR 2: la carga manual y la búsqueda ya no pasan por acá, y una comida sin ingredientes no se guarda, C88.)*
 - ~~C64~~. *Borrado en el PR 2 (sin edición).* Decía: CUANDO se abre 07 con un id guardado, `confirmation.ingredients` DEBE traer los de esa comida, y guardar la edición DEBE llamar a `updateMeal` con esos mismos ingredientes aunque haya cambiado el formulario.
 - C65. CUANDO se duplica una comida con ingredientes, `addMeal` DEBE recibir los mismos ingredientes.
 - C66. Cada `MealRow` de `Content` DEBE traer los ingredientes de su comida, en el mismo orden.
@@ -386,6 +388,7 @@ Reglas del ingrediente a mano (`validateIngredient`). El texto se evalúa sin es
 - C88. SI se llama a `onSave()` sin ingredientes, ENTONCES no DEBE llamarse a `addMeal`, `saveError` DEBE ser `R.string.nutrition_error_no_ingredients`, `isSaving` DEBE quedar en `false` y no DEBE emitirse `Saved`.
 - C89. Una comida con un solo ingrediente de 0 kcal DEBE guardarse, con 0 kcal (RF03 acepta el cero).
 - C90. CUANDO se llama a `onRemoveIngredient(i)`, DEBE sacarse el ingrediente de la posición `i` y los demás DEBEN quedar en el mismo orden; también con los que vinieron de la foto o la voz. Con `i` fuera de la lista (`-1` o el tamaño), la lista NO DEBE cambiar.
+- C102. SI la `confirmation` abierta tiene `isSaving = true` (se salió de 07 por la barra mientras guardaba), ENTONCES `onOpenConfirmation` NO DEBE reemplazarla y `onContinueManualEntry()` DEBE devolver `false` sin cerrar el pop-up. Si no, el guardado viejo, al terminar, borraría la confirmación nueva y emitiría `Saved`.
 - C101. CUANDO `onConfirmIngredient()` agrega un ingrediente o `onRemoveIngredient(i)` saca uno, `confirmation.saveError` DEBE pasar a `null` (el "sin ingredientes" de C88 o el error de C39 no quedan en pantalla).
 - C91. MIENTRAS `isSaving` es `true`, `onAddIngredientClick()`, `onConfirmIngredient()` y `onRemoveIngredient(i)` NO DEBEN cambiar `confirmation.ingredients` ni abrir el pop-up de ingrediente.
 
@@ -393,7 +396,7 @@ Reglas del ingrediente a mano (`validateIngredient`). El texto se evalúa sin es
 La edición se saca aunque ya estaba implementada (VC-l y PR 8 de VC-m). Con los ingredientes dejaba de servir: abría 07 con los campos del formulario, que 07 ya no tiene, y para que anduviera había que rehacerla (abrir el pop-up precargado, llevar a 07 los ingredientes guardados, recalcular las kcal y resolver qué pasa con las comidas guardadas sin ingredientes, que no se podrían volver a guardar por C88). Eran unos 8 criterios más y unos 5 archivos con lógica nueva. Tan cerca de la entrega, y como la consigna no la pide (RF04: guardar, listar por fecha y eliminar con confirmación), queda fuera de alcance.
 
 - "Edit Meal" **queda en 08 como botón de demostración**: está en el frame del Figma (lo que no está es "Delete Meal") y sacarlo alejaría 08 del diseño (UI01). Muestra el mismo aviso de demostración que −/+ en 07 (`rememberDemoToast()`).
-- Se va toda la lógica, así no queda código sin uso: `onEdit` de `MealDetailRoute`, `MealDetailScreen` y `NutritionNavGraph`; el argumento `mealId` de la ruta de 07 (`Rutas.FOOD_CONFIRMATION` y `foodConfirmation(mealId)`); la carga por id de `onOpenConfirmation`, `ConfirmationState.notFound` y `nutrition_confirm_not_found`; la rama `updateMeal` de `onSave`; `MealRepository.updateMeal`, `MealDao.update` (`@Update`) y `MealError.NOT_FOUND`, que solo usaba `updateMeal`.
+- Se va toda la lógica, así no queda código sin uso: `onEdit` de `MealDetailRoute`, `MealDetailScreen` y `NutritionNavGraph`; el argumento `mealId` de la ruta de 07 (`Rutas.FOOD_CONFIRMATION` y `foodConfirmation(mealId)`); la carga por id de `onOpenConfirmation` y `ConfirmationState.notFound` con su uso en `FoodConfirmationScreen` (el texto `nutrition_confirm_not_found` **queda**: lo usa 08 en `NotFound`, C42); la rama `updateMeal` de `onSave`; `MealRepository.updateMeal`, `MealDao.update` (`@Update`) y `MealError.NOT_FOUND`, que solo usaba `updateMeal`; `Meal.toForm()` y el parámetro `mealId` de `updateConfirmation` en `FoodCaptureViewModel`; en `FoodConfirmationScreen`, las ramas del rótulo del botón que dicen "Save Meal" (al editar o sin tipo) y el `mealId` de sus previews. El botón de 07 dice siempre "Add to [tipo]", porque el tipo siempre está elegido (el pop-up lo pide y la foto y la voz traen almuerzo); el texto `nutrition_confirm_save_meal` se va.
 - Criterios que se borran: C10, C17, C30, C33, C37, C64 y la parte de `update` de C14.
 - Avisos a Fiore: `Rutas.kt` y `specs/PANTALLAS.md` (la fila de "Edit Meal" de 08 pasa a "demostración").
 - Si el proyecto siguiera, la forma de volver a editar está en el Historial del 27/10 (pop-up precargado y 07 con los ingredientes guardados).
@@ -410,7 +413,7 @@ La edición se saca aunque ya estaba implementada (VC-l y PR 8 de VC-m). Con los
 - C92. CUANDO se toca "Log Manually" en 03, DEBE abrirse el pop-up de carga **encima** de 03. "Continue" con el nombre vacío o sin tipo DEBE mostrar el error en el pop-up sin cerrarlo. Con datos válidos, DEBE abrirse 07 sin tarjetas, con la fecha elegida en 01; después de agregar dos ingredientes y guardar, 01 DEBE mostrar la comida en esa fecha con la suma de sus kcal y sus ingredientes como bajada, y el total del día DEBE subir en esa suma (RF04).
 - C93. CUANDO se toca "Type instead" en 04, DEBE abrirse el mismo pop-up encima de 04. "Cancel" DEBE cerrarlo y dejar 04; "Continue" DEBE llevar a 07.
 - C94. CUANDO se toca "Usar este alimento" en la búsqueda, abierta desde 01 o desde 03, la hoja DEBE cerrarse y el pop-up DEBE abrirse sobre la misma pantalla, con el nombre y los macros de la porción y sin tipo. "Continue" DEBE llevar a 07 con una tarjeta: el alimento, sus gramos y sus kcal.
-- C95. `NutritionNavGraph.kt` NO DEBE pedir ViewModels (`grep -n "hiltViewModel\|ViewModel" NutritionNavGraph.kt` sin resultados). Los caminos no cambian: foto y voz siguen llegando a 07 con sus tres ingredientes, y atrás desde 07 sin guardar vuelve a la pantalla de abajo sin el pop-up y sin guardar nada.
+- C95. `NutritionNavGraph.kt` NO DEBE pedir ViewModels (`grep -nE "hiltViewModel|import .*ViewModel" NutritionNavGraph.kt` sin resultados; un comentario que diga "ViewModel" no cuenta). Los caminos no cambian: foto y voz siguen llegando a 07 con sus tres ingredientes, y atrás desde 07 sin guardar vuelve a la pantalla de abajo sin el pop-up y sin guardar nada.
 - C96. En 02, las kcal de cada ingrediente DEBEN verse en 12 SemiBold (`VoraTheme.text.fieldLabel`) y las del encabezado de la comida en 14 Bold (`labelLarge` con `FontWeight.Bold`), como el frame (medido por Sofi en el Figma, 27/10). El código ya los usa: se comprueba en la captura, sin cambio de código.
 - C97. CUANDO se rota con el pop-up de carga o el de ingrediente abiertos, lo escrito y los errores DEBEN seguir ahí.
 - C98. Con 20 ingredientes en 07, la pantalla DEBE scrollear hasta los botones de guardar sin cortar nada, en 360 dp (UI03).
@@ -438,7 +441,7 @@ Casos de la plantilla que no aplican: sin conexión, 404, 503 y JSON inválido (
 
 ## Fuera de alcance
 - Una tabla aparte de ingredientes: la lista vive en la fila de la comida (ver Datos).
-- ~~Va en el PR 2:~~ cargar ingredientes a mano, guardar como ingrediente el alimento de la búsqueda y calcular las kcal como suma: **hechos en el PR 2** (C75 a C101). La edición queda fuera de alcance (ver "Edición: fuera de alcance").
+- ~~Va en el PR 2:~~ cargar ingredientes a mano, guardar como ingrediente el alimento de la búsqueda y calcular las kcal como suma: **hechos en el PR 2** (C75 a C102). La edición queda fuera de alcance (ver "Edición: fuera de alcance").
 - −/+ de 07: siguen de demostración (decisión de Sofi, PR 2). RF04 no los necesita: el total del día (kcal y macros, C22) cambia al agregar o eliminar comidas, no al cambiar gramos dentro de 07.
 - Macros por ingrediente: `Ingredient` sigue con nombre, gramos y kcal; los macros se tipean para toda la comida (PR 2). Por eso, desde la búsqueda, los macros son los de un solo alimento: si en 07 se agregan más ingredientes, las kcal suman pero los macros no se recalculan ni se editan en 07.
 - Elegir la fecha en el pop-up de carga: es la elegida en 01 (decisión de Sofi, PR 2).
@@ -474,7 +477,7 @@ Casos de la plantilla que no aplican: sin conexión, 404, 503 y JSON inválido (
 | C11 | `C11_delete_saca_la_comida_y_devuelve_las_filas_borradas` (antes `C11_deleteById_…`) | `androidTest/` · `MealDaoTest` | no: pasa desde el principio porque Room genera `@Delete`. Control negativo del refactor, 2026-10-27: `@Update` en lugar de `@Delete` (misma firma, no borra) y fallan C11, C12 y C72 |
 | C12 | `C12_observeById_emite_la_comida_y_null_al_borrarla` | `androidTest/` · `MealDaoTest` | no: pasa desde el principio porque Room genera el DAO con las anotaciones; control negativo el 2026-10-24 (docs/evidencia/tests/2026-10-24-vc-l-verde.md) |
 | C13 | `` `C13 observeMeal devuelve Meal y null cuando no existe` `` | `test/` · `MealRepositoryImplTest` | sí, 2026-10-24 |
-| C14 | `` `C14 updateMeal y deleteMeal llegan al DAO con el mismo id` `` | `test/` · `MealRepositoryImplTest` | sí, 2026-10-24; de nuevo el 2026-10-27 con `deleteMeal(meal)`: `delete` no recibe la Entity; en el PR 2 se queda solo con `deleteMeal` (se cambia el test) |
+| C14 | `` `C14 deleteMeal llega al DAO con la Entity de la comida` `` (antes `C14 updateMeal y deleteMeal llegan…`) | `test/` · `MealRepositoryImplTest` | sí, 2026-10-24; de nuevo el 2026-10-27 con `deleteMeal(meal)`: `delete` no recibe la Entity; en el PR 2 se queda solo con `deleteMeal` (se cambia el test) |
 | C72 | `C72_delete_borra_por_id_aunque_cambien_los_otros_valores` | `androidTest/` · `MealDaoTest` | no: pasa desde el principio, como C11. Control negativo: el mismo de C11, falla |
 | C73 | `` `C73 deleteMeal no falla si no habia nada que borrar` `` | `test/` · `MealRepositoryImplTest` | sí, 2026-10-27: con la firma provisoria `deleteMeal` llama a `deleteById` y `delete` no recibe la Entity |
 | C15 | `C15_un_id_repetido_es_MealDataException_STORAGE` | `androidTest/` · `MealRepositoryRoomTest` | sí, 2026-10-24 (tiró `SQLiteConstraintException` sin traducir) |
@@ -553,6 +556,7 @@ Casos de la plantilla que no aplican: sin conexión, 404, 503 y JSON inválido (
 | C90 | `` `C90 Remove saca el ingrediente de esa posicion` `` | `test/` · `FoodConfirmationViewModelTest` | pendiente |
 | C91 | `` `C91 mientras guarda no cambian los ingredientes` `` | `test/` · `FoodConfirmationViewModelTest` | pendiente |
 | C101 | `` `C101 agregar o sacar un ingrediente borra el error de guardado` `` | `test/` · `FoodConfirmationViewModelTest` | pendiente |
+| C102 | `` `C102 mientras guarda abrir 07 no reemplaza la confirmacion` `` | `test/` · `FoodConfirmationViewModelTest` | pendiente |
 | C92 a C98 | recorrido a mano y capturas | emulador (411 y 360 dp) | no aplica |
 | C99 | capturas de la tabla y `revisor-visual` | `docs/evidencia/visual/` | no aplica |
 | C100 | recorrido a mano y captura | emulador | no aplica |
@@ -671,3 +675,4 @@ Casos de la plantilla que no aplican: sin conexión, 404, 503 y JSON inválido (
   - #15: los macros desde la búsqueda no se recalculan, en "Fuera de alcance".
 
   Además, por decisión de Sofi: el pop-up de carga es una hoja inferior, como la búsqueda, y el de ingrediente un `AlertDialog`.
+- 2026-10-27. Corregida según la segunda vuelta del `auditor-spec` (13 hallazgos: 0 BLOQUEA, 2 ALTA, 4 MEDIA, 7 BAJA). Se corrigieron todos: `nutrition_confirm_not_found` queda también en "Edición: fuera de alcance"; C63 sin `mealId` y sin guardar dos veces; C102 nuevo (mientras se guarda, abrir 07 no reemplaza la confirmación); el segundo test de `FoodCapturePrefillTest` se borra (lo reemplaza C82); C34 con `nutrition_error_save` y el orden de los controles de `onSave`; la spec de búsqueda con la marca del PR 2 en las secciones que faltaban; C14 con nombre nuevo; la lista de código sin uso completa (el botón de 07 dice siempre "Add to [tipo]"); `ManualEntrySheet` en lugar de "Dialog"; los controles de la hoja y sus textos; el `grep` de C95. Decidido por la IA (Sofi puede cambiarlo): el texto de C34 y el orden de `onSave`.
