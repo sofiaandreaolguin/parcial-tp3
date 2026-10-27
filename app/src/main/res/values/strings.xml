@@ -858,4 +858,21 @@
     <string name="conversation_error_invalid_data">The response could not be read.</string>
     <string name="conversation_error_too_long">The message is too long.</string>
     <string name="conversation_suggestions_empty">No suggestions available.</string>
+
+    <!-- EXT02: busqueda de alimentos (food_search) -->
+    <string name="food_search_title">Search food</string>
+    <string name="food_search_hint">Search a food by name</string>
+    <string name="food_search_loading">Searching…</string>
+    <string name="food_search_empty">No food found with that name</string>
+    <string name="food_search_retry">Retry</string>
+    <string name="food_search_error_no_connection">No connection. Check the server and try again.</string>
+    <string name="food_search_error_server">The server is not responding right now.</string>
+    <string name="food_search_error_invalid_data">The answer could not be read.</string>
+    <string name="food_search_per_100g">%1$d kcal per 100 g</string>
+    <string name="food_search_grams_label">Portion (g)</string>
+    <string name="food_search_grams_required">Enter how many grams</string>
+    <string name="food_search_grams_not_a_number">Only numbers, with comma or dot</string>
+    <string name="food_search_grams_negative">Between 1 and 10000 grams</string>
+    <string name="food_search_confirm">Use this food</string>
+    <string name="food_search_back_to_results">Back to results</string>
 </resources>

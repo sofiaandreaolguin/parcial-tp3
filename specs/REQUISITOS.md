@@ -32,7 +32,7 @@ Ninguna fila figura todavía como **verificado**: ese estado pide que otro integ
 | RF05 | Carga, contenido, vacío y error con reintento; un fallo no borra caché ni registros | Hector (y Sofi en lo local) | [`estados-de-carga-y-error.md`](funcionales/estados-de-carga-y-error.md) · **PR #53, 25/10** | hecho | `docs/evidencia/estados/` (C31 a C33) |
 | RF06 | DTO, modelo y Entity separados; repositorio; la UI no toca Retrofit ni DAO | Hector y Sofi | `CONTEXTO.md` §2 · **PR #4, 20/10**, y sostenido en cada PR desde entonces | hecho | lo controla `reglas.sh` |
 | RF07 | ViewModel con estado observable; rotar no repite consultas ni pierde estado | Hector y Sofi | las dos specs · PR #11 (22/10) y #50 (25/10) | hecho | `docs/evidencia/estados/` (C35) |
-| RF08 | Hilt: `@AndroidEntryPoint`, `@HiltViewModel`, repositorios por constructor, módulos; saber explicar qué construye Hilt y su relación con Dagger | Hector y Sofi | `di/`: 4 módulos, 1 `@HiltAndroidApp`, 1 `@AndroidEntryPoint`, 26 `@HiltViewModel` · **PR #4, 20/10** | hecho | |
+| RF08 | Hilt: `@AndroidEntryPoint`, `@HiltViewModel`, repositorios por constructor, módulos; saber explicar qué construye Hilt y su relación con Dagger | Hector y Sofi | `di/`: 4 módulos, 1 `@HiltAndroidApp`, 1 `@AndroidEntryPoint`, 28 `@HiltViewModel` · **PR #4, 20/10** | hecho | |
 
 ## Extras
 
@@ -42,17 +42,18 @@ encararon recién con los ocho requisitos obligatorios ya en `main`.
 | Código | Qué pide | Responsable | Spec · En `main` desde | Estado | Verificó |
 |---|---|---|---|---|---|
 | EXT01 | Coach con respuestas del servidor (`GET /v1/coach/suggestions`, `POST /v1/coach/messages`) e historial guardado en Room que sobrevive a cerrar la app | Fiore | [`coach-con-historial.md`](funcionales/coach-con-historial.md) · rama `feat/voice-coach-historial`, **todavía sin unir a `main`** | hecho | `docs/evidencia/coach/` |
-| EXT02 | Búsqueda de alimentos contra el servidor para cargar una comida | Fiore | — | sin empezar | |
+| EXT02 | Búsqueda de alimentos en `GET /v1/foods`, cálculo de los nutrientes de la porción y precarga de la carga manual | Fiore | [`busqueda-de-alimentos.md`](funcionales/busqueda-de-alimentos.md) · rama `feat/nutrition-busqueda-alimentos`, **todavía sin unir a `main`** | hecho | |
 
 Con EXT01, `Voice / 05 — Conversation` pasa de **Demostración** a **Funcional**: es la única de las
-seis del asistente que usa datos reales. Reemplaza el C27 de
+seis del asistente que usa datos reales. Con EXT02, la búsqueda de alimentos se abre como **hoja inferior** sobre la pantalla que la llama,
+así que el inventario sigue en 37 pantallas y 33 destinos. Reemplaza el C27 de
 [`asistente-vora.md`](funcionales/asistente-vora.md), que decía que la app no respondía sola.
 
 ## Hito 1 (miércoles 21/10)
 
 Cumplido en fecha. Lo que respalda cada punto:
 
-- [x] **Compila** — `./gradlew assembleDebug` en verde, con los tests unitarios de ese momento sin fallos (hoy son 309: el número de hoy es el del repo, no el del hito)
+- [x] **Compila** — `./gradlew assembleDebug` en verde, con los tests unitarios de ese momento sin fallos (hoy son 351: el número de hoy es el del repo, no el del hito)
 - [x] **Tema y componentes principales** — `ui/theme/` y `ui/components/`, PR #5 a #7 del 20/10 (UI02)
 - [x] **Inventario de pantallas** — `specs/PANTALLAS.md`, PR #2 del 18/10; los 37 frames verificados contra el panel de capas del Figma
 - [x] **Navegación entre áreas** — 7 grafos y 33 destinos en `ui/navigation/`, PR #2 del 18/10, con la barra inferior en las 16 que la comparten

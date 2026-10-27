@@ -40,7 +40,7 @@ En [`docs/figma/`](docs/figma/) hay una imagen por flujo, exportada a 2x, para c
 
 ```bash
 ./gradlew assembleDebug        # compilar
-./gradlew testDebugUnitTest    # tests unitarios (sin emulador): 309, sin fallos
+./gradlew testDebugUnitTest    # tests unitarios (sin emulador): 351, sin fallos
 ./gradlew connectedDebugAndroidTest   # tests de Room (con el emulador abierto)
 ```
 
@@ -281,7 +281,7 @@ Las ocho integraciones obligatorias **están implementadas y en `main`**. Cada f
 | RF05 | Carga, contenido, vacío y error con reintento; un fallo no borra caché ni registros | hecho | `WorkoutsUiState`, `WorkoutStatusMessage` | PR #53 (25/10) |
 | RF06 | DTO, modelo y Entity separados; repositorio; la UI no toca Retrofit ni DAO | hecho | `WorkoutDto` / `Workout` / `WorkoutEntity` + mappers | PR #4 (20/10), sostenido desde entonces |
 | RF07 | ViewModel con estado observable; rotar no repite consultas ni pierde estado | hecho | `StateFlow` + `SavedStateHandle` en los ViewModel | PR #11 (22/10) y #50 (25/10) |
-| RF08 | Hilt: `@AndroidEntryPoint`, `@HiltViewModel`, repositorios por constructor, módulos; saber explicar qué construye Hilt y su relación con Dagger | hecho | `di/`: 4 módulos, 26 `@HiltViewModel` | PR #4 (20/10) |
+| RF08 | Hilt: `@AndroidEntryPoint`, `@HiltViewModel`, repositorios por constructor, módulos; saber explicar qué construye Hilt y su relación con Dagger | hecho | `di/`: 4 módulos, 28 `@HiltViewModel` | PR #4 (20/10) |
 
 Los requisitos de maquetación y navegación (UI01 a UI03, NAV01 a NAV05) se ven en el inventario de arriba y en [`specs/REQUISITOS.md`](specs/REQUISITOS.md), también con su pull request; los ocho están en `main`.
 
@@ -300,9 +300,26 @@ Reutiliza lo mismo que los ocho obligatorios: las tres capas separadas con sus m
 
 **Sube la base de Room a `version = 4`.** Como el proyecto usa `fallbackToDestructiveMigration`, la primera vez que se abre después del cambio **se borran las tablas, incluidas las comidas** (decisión [`003`](docs/decisiones/003-base-room-compartida.md)). En una instalación nueva no se nota; sobre una app ya instalada hay que volver a cargar una comida para rehacer la evidencia de RF04.
 
+### El segundo extra: buscar alimentos y calcular la porción (EXT02)
+
+El botón **"Search Database"** de `Nutrition / 03` y el chip **"Search"** de `Nutrition / 01` estaban dibujados en el Figma y avisaban modo demostración. Ahora abren una **hoja inferior** sobre la pantalla, que se sigue viendo detrás:
+
+| Qué hace | Dónde mirarlo |
+|---|---|
+| Busca en el catálogo del servidor, esperando a que dejes de tipear | `FoodRepositoryImpl`, `VoraApi.getFoods`, `DEBOUNCE_MS` |
+| Calcula los nutrientes de la porción a partir de los valores cada 100 g | `domain/FoodPortion.kt` |
+| Deja cargado el formulario de `Nutrition / 07`, editable | `FoodCaptureViewModel.onPrefill` |
+| Guarda por el mismo camino de Room y cambia el total del día | `MealRepository.addMeal` (sin tocar) |
+
+**El servidor no calcula nada:** devuelve los valores cada 100 g y la regla de tres la hace la app. Es la única lógica propia de la ampliación, y por eso es la mejor probada: la cuenta va en `BigDecimal` con `HALF_UP` y no en `Double`, porque 16,9 × 1,5 en coma flotante da 25.349999999999998 y redondeado daría 25,3 cuando el valor exacto es 25,35 y tiene que quedar en **25,4**.
+
+**No agrega ninguna pantalla ni ninguna ruta.** Siendo una hoja y no un destino del `NavHost`, el inventario sigue en 37 pantallas y 33 rutas: ver [`docs/decisiones/010-buscador-como-hoja.md`](docs/decisiones/010-buscador-como-hoja.md). La spec, con sus 36 criterios, está en [`specs/funcionales/busqueda-de-alimentos.md`](specs/funcionales/busqueda-de-alimentos.md), y las capturas en 411 y 360 dp y en modo oscuro, en [`docs/evidencia/busqueda/`](docs/evidencia/busqueda/).
+
+**Sin paginación, a propósito:** el catálogo tiene 12 alimentos y el servidor acepta `pageSize` hasta 50, así que entran todos en una consulta y nunca se dispararía. Queda tachado y explicado en `specs/METODOLOGIA.md`.
+
 ### Cómo comprobarlo sin instalar nada
 
-**309 tests unitarios, sin fallos**, que no necesitan emulador:
+**351 tests unitarios, sin fallos**, que no necesitan emulador:
 
 ```bash
 ./gradlew testDebugUnitTest
@@ -310,7 +327,7 @@ Reutiliza lo mismo que los ocho obligatorios: las tres capas separadas con sus m
 
 Cubren los mappers de las tres capas, los repositorios (con `MockWebServer` y DAO falsos), la validación de comidas, los errores y 19 ViewModels.
 
-Con el emulador abierto corren **21 más, sin fallos**:
+Con el emulador abierto corren **25 más, sin fallos**:
 
 ```bash
 ./gradlew connectedDebugAndroidTest

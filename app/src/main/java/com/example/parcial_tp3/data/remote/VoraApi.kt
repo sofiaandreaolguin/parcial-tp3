@@ -3,6 +3,7 @@ package com.example.parcial_tp3.data.remote
 import com.example.parcial_tp3.data.remote.dto.ApiResponseDto
 import com.example.parcial_tp3.data.remote.dto.CoachReplyDto
 import com.example.parcial_tp3.data.remote.dto.CoachRequestDto
+import com.example.parcial_tp3.data.remote.dto.FoodsResponseDto
 import com.example.parcial_tp3.data.remote.dto.HealthDto
 import com.example.parcial_tp3.data.remote.dto.SuggestionDto
 import com.example.parcial_tp3.data.remote.dto.WorkoutDetailDto
@@ -12,6 +13,7 @@ import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 /**
  * Los endpoints del mock del profe (specs/API.md).
@@ -33,6 +35,13 @@ interface VoraApi {
 
     @GET("v1/coach/suggestions")
     suspend fun getCoachSuggestions(): Response<ApiResponseDto<List<SuggestionDto>>>
+
+    @GET("v1/foods")
+    suspend fun getFoods(
+        @Query("q") q: String,
+        @Query("page") page: Int,
+        @Query("pageSize") pageSize: Int,
+    ): Response<FoodsResponseDto>
 
     @POST("v1/coach/messages")
     suspend fun postCoachMessage(@Body body: CoachRequestDto): Response<ApiResponseDto<CoachReplyDto>>

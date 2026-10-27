@@ -257,7 +257,8 @@ Leído de los frames el 18/10. Lo que dice *a confirmar* es lectura mía del dib
 
 - **Las que sorprenden:** 03, 06, 07 y 08 **sí** tienen barra; 04 y 05 **no**. Es lo que muestra el Figma y se respeta.
 - **RF03 y RF04:** 03 carga a mano con validación; 02 lista por fecha y elimina con confirmación; 01 muestra el total diario con una consulta (`SUM`); 08 es el detalle de la comida elegida.
-- **Nutrition / 07:** los valores llegan del análisis simulado (04, 05 o 06), pero **el guardado es real** (Room).
+- **Nutrition / 07:** los valores llegan del análisis simulado (04, 05 o 06) **o de la búsqueda de alimentos**, y **el guardado es real** (Room).
+- **La búsqueda de alimentos (EXT02) no es una pantalla:** es una **hoja inferior** que se abre sobre `01` o sobre `03`, que se siguen viendo detrás. Por eso el inventario no cambia: siguen siendo 37 pantallas y 33 destinos. La abren el chip "Search" de 01 y el botón "Search Database" de 03 (NAV03), y termina dejando el formulario de 07 cargado. La regla con la que se dibujó, en [`docs/decisiones/010-buscador-como-hoja.md`](../docs/decisiones/010-buscador-como-hoja.md).
 - **NAV05:** 04, 05 y 06 son estados de demostración. **No se pide permiso de cámara ni de micrófono.**
 - **NAV04:** el `mealId` viaja en la ruta (08).
 - `FoodCaptureViewModel` lo comparten 04, 05, 06 y 07: se obtiene con el `NavBackStackEntry` del grafo (`hiltViewModel(navController.getBackStackEntry(Rutas.NUTRITION_GRAPH))`) para que el borrador de la comida sobreviva el paso de una pantalla a la siguiente. *A acordar en la tarea VC-b con la zona de Nutrition.* **Ojo:** colgarlo del grafo entero lo deja vivo mientras haya cualquier pantalla de Nutrition en la pila, así que una captura cancelada reaparece en la siguiente. Conviene acotarlo al subflujo de captura (04 a 07) o limpiar el borrador al salir de `food_confirmation`.
@@ -270,7 +271,7 @@ Leído de los frames el 18/10. Lo que dice *a confirmar* es lectura mía del dib
 |---|---|---|
 | 01 Dashboard | "Voice" (chip lima) | `voice_food_logging` |
 | | "Photo" | `photo_analysis` |
-| | "Search" | EXT02; si no se hace, aviso de modo demostración |
+| | "Search" | abre la hoja de búsqueda de alimentos (EXT02); no es un destino |
 | | "View History" | `todays_meals` |
 | | Una comida (Breakfast, Lunch, Snack) | `meal_details/{mealId}` |
 | | "+ Add" en Dinner | `add_food` |

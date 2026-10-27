@@ -6,6 +6,8 @@ import com.example.parcial_tp3.data.repository.AuthRepository
 import com.example.parcial_tp3.data.repository.CoachRepository
 import com.example.parcial_tp3.data.repository.CoachRepositoryImpl
 import com.example.parcial_tp3.data.repository.FirebaseAuthRepository
+import com.example.parcial_tp3.data.repository.FoodRepository
+import com.example.parcial_tp3.data.repository.FoodRepositoryImpl
 import com.example.parcial_tp3.data.repository.MealRepository
 import com.example.parcial_tp3.data.repository.MealRepositoryImpl
 import com.example.parcial_tp3.data.repository.WorkoutDetailRepository
@@ -49,4 +51,8 @@ abstract class RepositoryModule {
     @Binds
     @Singleton
     abstract fun bindCoachRepository(impl: CoachRepositoryImpl): CoachRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindFoodRepository(impl: FoodRepositoryImpl): FoodRepository
 }

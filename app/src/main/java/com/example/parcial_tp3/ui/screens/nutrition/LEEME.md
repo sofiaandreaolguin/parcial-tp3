@@ -1,6 +1,7 @@
 # Pantallas del flujo Nutrición
 
 Son 8 pantallas: 01, 02, 03, 06, 07 y 08 con barra; 04 y 05 se abren encima.
+La búsqueda de alimentos (EXT02) no es una pantalla: es una hoja inferior que se abre sobre 01 y 03.
 
 ## Qué archivos van acá
 
