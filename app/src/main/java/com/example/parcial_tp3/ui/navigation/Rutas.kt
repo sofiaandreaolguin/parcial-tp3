@@ -62,11 +62,9 @@ object Rutas {
     const val FOOD_ANALYSIS = "food_analysis"
     const val PHOTO_ANALYSIS = "photo_analysis"
 
-    /** mealId = -1 significa "comida nueva"; con id, se edita una ya guardada (NAV04). */
-    const val FOOD_CONFIRMATION = "food_confirmation?$ARG_MEAL_ID={$ARG_MEAL_ID}"
+    const val FOOD_CONFIRMATION = "food_confirmation"
     const val MEAL_DETAILS = "meal_details/{$ARG_MEAL_ID}"
 
-    fun foodConfirmation(mealId: Long = -1L) = "food_confirmation?$ARG_MEAL_ID=$mealId"
     fun mealDetails(mealId: Long) = "meal_details/$mealId"
 
     // Progreso

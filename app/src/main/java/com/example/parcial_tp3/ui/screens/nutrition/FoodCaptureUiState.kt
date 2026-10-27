@@ -12,12 +12,12 @@ import com.example.parcial_tp3.domain.model.MealType
 
 /**
  * 04 a 07: lo que se escuchó, el borrador de la comida y el formulario de 07. El borrador es de
- * demostración: al confirmar, en Room queda la comida con sus totales y con los ingredientes de
- * [ConfirmationState.ingredients], que el grafo arma a partir de los del borrador.
+ * demostración: al confirmar, en Room queda la comida con los ingredientes de
+ * [ConfirmationState.ingredients] y sus kcal como suma.
  */
 data class FoodCaptureUiState(
     @StringRes val transcript: Int = R.string.nutrition_voice_transcript_demo,
-    /** null = no hubo captura (carga manual). */
+    /** null = no hubo captura (carga manual o búsqueda). */
     val draft: MealDraft? = null,
     val analysisStep: AnalysisStep = AnalysisStep.Identifying,
     /** null = pop-up de carga cerrado. */
@@ -26,23 +26,16 @@ data class FoodCaptureUiState(
     val confirmation: ConfirmationState? = null,
 )
 
-/** mealId de 07 para una comida nueva (el valor por defecto del argumento de la ruta). */
-const val NEW_MEAL_ID = -1L
-
 data class ConfirmationState(
-    /** [NEW_MEAL_ID] = nueva. */
-    val mealId: Long,
     val form: MealForm,
-    val errors: Map<MealField, FieldError> = emptyMap(),
     val isSaving: Boolean = false,
-    val notFound: Boolean = false,
     @StringRes val saveError: Int? = null,
     val ingredients: List<Ingredient> = emptyList(),
     /** null = pop-up de ingrediente cerrado. */
     val ingredientEntry: IngredientEntryState? = null,
 ) {
-    // Provisorio (tests en rojo del PR 2): la suma la escribe implementar (C87).
-    val totalKcal: Int get() = 0
+    /** Las kcal de la comida: lo que se guarda, sin importar form.kcal (C87). */
+    val totalKcal: Int get() = ingredients.sumOf { it.kcal }
 }
 
 data class ManualEntryState(

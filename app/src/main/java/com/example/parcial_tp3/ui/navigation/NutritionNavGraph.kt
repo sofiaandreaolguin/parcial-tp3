@@ -19,7 +19,6 @@ import com.example.parcial_tp3.ui.screens.nutrition.FoodCaptureViewModel
 import com.example.parcial_tp3.ui.screens.nutrition.FoodConfirmationRoute
 import com.example.parcial_tp3.ui.screens.nutrition.MealDetailRoute
 import com.example.parcial_tp3.ui.screens.nutrition.MealDraft
-import com.example.parcial_tp3.ui.screens.nutrition.NEW_MEAL_ID
 import com.example.parcial_tp3.ui.screens.nutrition.NutritionDashboardRoute
 import com.example.parcial_tp3.ui.screens.nutrition.NutritionViewModel
 import com.example.parcial_tp3.ui.screens.nutrition.PhotoAnalysisRoute
@@ -48,7 +47,7 @@ fun NavGraphBuilder.nutritionGraph(nav: NavController) {
                 onAddMeal = { nav.navigate(Rutas.ADD_FOOD) },
                 onVoice = { nav.navigate(Rutas.VOICE_FOOD_LOGGING) },
                 onPhoto = { abrirFoto(nav, captura) },
-                onConfirmed = { nav.navigate(Rutas.foodConfirmation()) },
+                onConfirmed = { nav.navigate(Rutas.FOOD_CONFIRMATION) },
             )
         }
 
@@ -64,14 +63,14 @@ fun NavGraphBuilder.nutritionGraph(nav: NavController) {
         composable(Rutas.ADD_FOOD) { entrada ->
             val grafo = remember(entrada) { nav.getBackStackEntry(Rutas.NUTRITION_GRAPH) }
             val captura = hiltViewModel<FoodCaptureViewModel>(grafo)
-            val abrirConfirmacion = rememberAbrirConfirmacion(nav, grafo)
+            val nutricion = hiltViewModel<NutritionViewModel>(grafo)
             AddFoodRoute(
                 grafo = grafo,
                 onBack = { nav.popBackStack() },
                 onVoice = { nav.navigate(Rutas.VOICE_FOOD_LOGGING) },
                 onPhoto = { abrirFoto(nav, captura) },
-                onManual = { abrirCargaManual(captura, abrirConfirmacion) },
-                onConfirmed = { nav.navigate(Rutas.foodConfirmation()) },
+                onManual = { abrirCargaManual(captura, nutricion) },
+                onConfirmed = { nav.navigate(Rutas.FOOD_CONFIRMATION) },
             )
         }
 
@@ -80,11 +79,11 @@ fun NavGraphBuilder.nutritionGraph(nav: NavController) {
             // nuevo en cada composición tiraría IllegalArgumentException.
             val grafo = remember(entrada) { nav.getBackStackEntry(Rutas.NUTRITION_GRAPH) }
             val captura = hiltViewModel<FoodCaptureViewModel>(grafo)
-            val abrirConfirmacion = rememberAbrirConfirmacion(nav, grafo)
+            val nutricion = hiltViewModel<NutritionViewModel>(grafo)
             VoiceFoodLoggingRoute(
                 grafo = grafo,
                 onDone = { nav.navigate(Rutas.FOOD_ANALYSIS) { launchSingleTop = true } },
-                onTypeInstead = { abrirCargaManual(captura, abrirConfirmacion) },
+                onTypeInstead = { abrirCargaManual(captura, nutricion) },
                 onClose = { nav.popBackStack() },
             )
         }
@@ -111,16 +110,7 @@ fun NavGraphBuilder.nutritionGraph(nav: NavController) {
             )
         }
 
-        composable(
-            route = Rutas.FOOD_CONFIRMATION,
-            // Sin mealId (-1) es una comida nueva; con id se edita una ya guardada (NAV04).
-            arguments = listOf(
-                navArgument(Rutas.ARG_MEAL_ID) {
-                    type = NavType.LongType
-                    defaultValue = NEW_MEAL_ID
-                },
-            ),
-        ) { entrada ->
+        composable(Rutas.FOOD_CONFIRMATION) { entrada ->
             val grafo = remember(entrada) { nav.getBackStackEntry(Rutas.NUTRITION_GRAPH) }
             FoodConfirmationRoute(
                 grafo = grafo,
@@ -140,18 +130,10 @@ fun NavGraphBuilder.nutritionGraph(nav: NavController) {
         composable(
             route = Rutas.MEAL_DETAILS,
             arguments = listOf(navArgument(Rutas.ARG_MEAL_ID) { type = NavType.LongType }),
-        ) { entrada ->
-            val grafo = remember(entrada) { nav.getBackStackEntry(Rutas.NUTRITION_GRAPH) }
-            val captura = hiltViewModel<FoodCaptureViewModel>(grafo)
+        ) {
             MealDetailRoute(
                 // por ruta e inclusive: después de eliminar, un toque de más en ‹ no saca también 01
                 onBack = { nav.popBackStack(Rutas.MEAL_DETAILS, inclusive = true) },
-                // Como las capturas: la confirmación se abre antes de navegar, con la comida ya cargada
-                // de Room como fecha y nombre de arranque; 07 la vuelve a leer por id (C30).
-                onEdit = { meal ->
-                    captura.onOpenConfirmation(meal.id, meal.date, meal.name)
-                    nav.navigate(Rutas.foodConfirmation(meal.id)) { launchSingleTop = true }
-                },
             )
         }
     }
@@ -163,10 +145,10 @@ private fun abrirFoto(nav: NavController, captura: FoodCaptureViewModel) {
     nav.navigate(Rutas.PHOTO_ANALYSIS) { launchSingleTop = true }
 }
 
-// "Log Manually" y "Type instead": 07 tiene que abrir vacía aunque antes haya habido una foto.
-private fun abrirCargaManual(captura: FoodCaptureViewModel, abrirConfirmacion: AbrirConfirmacion) {
-    captura.onManualEntry()
-    abrirConfirmacion {}
+// "Log Manually" y "Type instead": abren el pop-up de carga con la fecha de 01. La hoja que lo
+// dibuja (ManualEntrySheetHost) y el paso a 07 con "Continue" van en la pantalla del pop-up.
+private fun abrirCargaManual(captura: FoodCaptureViewModel, nutricion: NutritionViewModel) {
+    captura.onOpenManualEntry(nutricion.selectedDate.value)
 }
 
 private typealias AbrirConfirmacion = (NavOptionsBuilder.() -> Unit) -> Unit
@@ -188,8 +170,8 @@ private fun rememberAbrirConfirmacion(nav: NavController, grafo: NavBackStackEnt
             val ingredientes = borrador?.ingredients.orEmpty().map {
                 Ingredient(resources.getString(it.name), it.grams, it.kcal)
             }
-            captura.onOpenConfirmation(NEW_MEAL_ID, nutricion.selectedDate.value, nombre, ingredientes)
-            nav.navigate(Rutas.foodConfirmation(), opciones)
+            captura.onOpenConfirmation(nutricion.selectedDate.value, nombre, ingredientes)
+            nav.navigate(Rutas.FOOD_CONFIRMATION, opciones)
         }
     }
 }

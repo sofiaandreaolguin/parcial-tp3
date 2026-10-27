@@ -13,8 +13,7 @@ import com.example.parcial_tp3.domain.model.Ingredient
 import com.example.parcial_tp3.ui.components.rememberDemoToast
 
 /**
- * La confirmación ya llega abierta: la arma el grafo antes de navegar (CONTEXTO §2). Las capturas
- * abren una comida nueva con la fecha de 01; "Edit Meal" de 08 la abre con el id de la comida. Si
+ * La confirmación ya llega abierta: la arma quien navega (CONTEXTO §2), con la fecha de 01. Si
  * el proceso murió, `confirmation` vuelve en null y solo se ve el encabezado, con ‹ para salir.
  *
  * @param grafo la entrada del grafo de Nutrition, de donde se pide el ViewModel que 04 a 07 comparten.
@@ -56,14 +55,13 @@ fun FoodConfirmationRoute(
     state.confirmation?.let { c ->
         shown.confirmation = c
         // Los que se van a guardar, no los del borrador: lo que se ve es lo que queda en Room.
-        shown.ingredients = if (c.mealId == NEW_MEAL_ID) c.ingredients else emptyList()
+        shown.ingredients = c.ingredients
     }
 
     FoodConfirmationScreen(
         confirmation = shown.confirmation,
         ingredients = shown.ingredients,
         onBack = back,
-        onFormChange = viewModel::onFormChange,
         onSave = viewModel::onSave,
         onDemo = rememberDemoToast(),
     )

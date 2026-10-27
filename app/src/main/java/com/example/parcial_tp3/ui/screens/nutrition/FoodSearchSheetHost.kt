@@ -14,7 +14,7 @@ import androidx.navigation.NavBackStackEntry
  * Asi la pantalla de atras se sigue viendo y el inventario de rutas no cambia.
  *
  * Pide FoodCaptureViewModel y NutritionViewModel atados a la entrada del grafo, igual que
- * `rememberAbrirConfirmacion`: el primero recibe el formulario precargado y el segundo da la
+ * `rememberAbrirConfirmacion`: el primero recibe la comida y el alimento y el segundo da la
  * fecha que se esta mirando, para que el total diario que cambie sea el de ese dia (C32).
  */
 @Composable
@@ -35,9 +35,9 @@ fun FoodSearchSheetHost(
         onGramsChange = viewModel::onGramsChange,
         onBackFromPortion = viewModel::onBackFromPortion,
         onConfirm = {
-            val form = viewModel.onConfirm(nutricion.selectedDate.value)?.form
-            if (form != null) {
-                captura.onPrefill(form)
+            val seleccion = viewModel.onConfirm(nutricion.selectedDate.value)
+            if (seleccion != null) {
+                captura.onPrefill(seleccion)
                 onConfirmed()
             }
         },
