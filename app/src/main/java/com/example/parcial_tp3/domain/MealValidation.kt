@@ -48,7 +48,8 @@ fun validateMeal(form: MealForm, id: Long = 0): MealValidation {
     )
 }
 
-fun isValidIngredient(ingredient: Ingredient): Boolean = false
+fun isValidIngredient(ingredient: Ingredient): Boolean =
+    ingredient.name.isNotBlank() && ingredient.grams > 0 && ingredient.kcal >= 0
 
 private class Parsed(val value: Double? = null, val error: FieldError? = null)
 

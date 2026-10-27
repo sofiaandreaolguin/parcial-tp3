@@ -10,7 +10,8 @@ import com.example.parcial_tp3.domain.model.MealType
 
 /**
  * 04 a 07: lo que se escuchó, el borrador de la comida y el formulario de 07. El borrador es de
- * demostración y no se guarda: al confirmar, en Room queda la comida con sus totales.
+ * demostración: al confirmar, en Room queda la comida con sus totales y con los ingredientes de
+ * [ConfirmationState.ingredients], que el grafo arma a partir de los del borrador.
  */
 data class FoodCaptureUiState(
     @StringRes val transcript: Int = R.string.nutrition_voice_transcript_demo,

@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.parcial_tp3.R
 import com.example.parcial_tp3.data.repository.MealDataException
 import com.example.parcial_tp3.data.repository.MealRepository
+import com.example.parcial_tp3.domain.isValidIngredient
 import com.example.parcial_tp3.domain.model.Meal
 import com.example.parcial_tp3.ui.navigation.Rutas
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -63,6 +64,10 @@ class MealDetailViewModel @Inject constructor(
 
     fun onDuplicate() {
         val meal = (uiState.value as? MealDetailUiState.Content)?.meal ?: return
+        if (!meal.ingredients.all(::isValidIngredient)) {
+            actions.update { it.copy(confirmingDelete = false, actionError = R.string.nutrition_error_ingredients) }
+            return
+        }
         runAction(deleting = false, MealDetailEvent.Duplicated) { repo.addMeal(meal.copy(id = 0)) }
     }
 

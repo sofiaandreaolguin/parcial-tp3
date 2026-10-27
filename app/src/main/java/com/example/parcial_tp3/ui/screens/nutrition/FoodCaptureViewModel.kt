@@ -8,6 +8,7 @@ import com.example.parcial_tp3.data.repository.MealRepository
 import com.example.parcial_tp3.domain.MealField
 import com.example.parcial_tp3.domain.MealForm
 import com.example.parcial_tp3.domain.MealValidation
+import com.example.parcial_tp3.domain.isValidIngredient
 import com.example.parcial_tp3.domain.model.Ingredient
 import com.example.parcial_tp3.domain.model.Meal
 import com.example.parcial_tp3.domain.validateMeal
@@ -91,8 +92,9 @@ class FoodCaptureViewModel @Inject constructor(
     /**
      * Abre 07. La llama el grafo antes de navegar, no la composición de 07, así que rotar no la
      * repite. Con el mismo [mealId] y 07 ya abierta no hace nada: si 07 se dejara sin [onDiscard],
-     * la próxima apertura con ese id mostraría lo escrito antes. [draftName] lo resuelve el grafo
-     * desde strings.xml: el ViewModel no tiene Context.
+     * la próxima apertura con ese id mostraría lo escrito antes. [draftName] y los nombres de
+     * [draftIngredients] los resuelve el grafo desde strings.xml: el ViewModel no tiene Context.
+     * Sin borrador (carga manual o búsqueda) se ignoran los [draftIngredients].
      */
     fun onOpenConfirmation(
         mealId: Long,
@@ -102,8 +104,13 @@ class FoodCaptureViewModel @Inject constructor(
     ) {
         if (_uiState.value.confirmation?.mealId == mealId) return
         if (mealId == NEW_MEAL_ID) {
-            val form = _uiState.value.draft?.toForm(draftName, defaultDate) ?: MealForm(date = defaultDate)
-            _uiState.update { it.copy(confirmation = ConfirmationState(mealId, form)) }
+            val draft = _uiState.value.draft
+            val confirmation = if (draft == null) {
+                ConfirmationState(mealId, MealForm(date = defaultDate))
+            } else {
+                ConfirmationState(mealId, draft.toForm(draftName, defaultDate), ingredients = draftIngredients)
+            }
+            _uiState.update { it.copy(confirmation = confirmation) }
             return
         }
         _uiState.update { it.copy(confirmation = ConfirmationState(mealId, MealForm(date = defaultDate))) }
@@ -114,7 +121,9 @@ class FoodCaptureViewModel @Inject constructor(
                 updateConfirmation(mealId) { it.copy(saveError = R.string.nutrition_error_load) }
                 return@launch
             }
-            updateConfirmation(mealId) { if (meal == null) it.copy(notFound = true) else it.copy(form = meal.toForm()) }
+            updateConfirmation(mealId) {
+                if (meal == null) it.copy(notFound = true) else it.copy(form = meal.toForm(), ingredients = meal.ingredients)
+            }
         }
     }
 
@@ -130,7 +139,12 @@ class FoodCaptureViewModel @Inject constructor(
         val id = if (c.mealId == NEW_MEAL_ID) 0 else c.mealId
         when (val result = validateMeal(c.form, id)) {
             is MealValidation.Invalid -> updateConfirmation { it.copy(errors = result.errors) }
-            is MealValidation.Valid -> save(c.mealId, result.meal)
+            is MealValidation.Valid ->
+                if (c.ingredients.all(::isValidIngredient)) {
+                    save(c.mealId, result.meal.copy(ingredients = c.ingredients))
+                } else {
+                    updateConfirmation { it.copy(errors = emptyMap(), saveError = R.string.nutrition_error_ingredients) }
+                }
         }
     }
 

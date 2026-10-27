@@ -78,7 +78,7 @@ class NutritionViewModel @Inject constructor(
                 macro(MacroKind.CARBS, meals.sumOf { it.carbsG }, HomeDemoData.CARBS_GOAL_G),
                 macro(MacroKind.FAT, meals.sumOf { it.fatG }, NutritionDemoData.FAT_GOAL_G),
             ),
-            meals = meals.map { MealRow(it.id, it.type, it.name, it.kcal) },
+            meals = meals.map { MealRow(it.id, it.type, it.name, it.kcal, it.ingredients) },
             pending = MealType.entries.firstOrNull { type -> meals.none { it.type == type } },
         )
     }
