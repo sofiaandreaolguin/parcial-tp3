@@ -1,6 +1,24 @@
 package com.example.parcial_tp3.ui.screens.profile
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.unit.dp
+import androidx.compose.foundation.layout.Box
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.SelectableDates
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.semantics.Role
+import com.example.parcial_tp3.ui.screens.nutrition.NutritionDatePickerDialog
+import com.example.parcial_tp3.ui.screens.nutrition.toPickerMillis
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -11,6 +29,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -20,6 +39,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.parcial_tp3.R
@@ -42,11 +62,32 @@ fun EditProfileScreen(
     onBack: () -> Unit,
     onSave: () -> Unit,
     onDemo: () -> Unit,
+    onFirstNameChange: (String) -> Unit = {},
+    onLastNameChange: (String) -> Unit = {},
+    onHeightChange: (Int) -> Unit = {},
+    onWeightChange: (Int) -> Unit = {},
+    onBirthDateChange: (LocalDate) -> Unit = {},
+    onGenderChange: (Gender) -> Unit = {},
 ) {
+    var showDatePicker by rememberSaveable { mutableStateOf(false) }
+    var showGenderMenu by rememberSaveable { mutableStateOf(false) }
     val locale = LocalConfiguration.current.locales[0]
     val pattern = stringResource(R.string.edit_birth_date_pattern)
     val formatter = remember(pattern, locale) { DateTimeFormatter.ofPattern(pattern, locale) }
     val birthDate = state.birthDate.format(formatter)
+    if (showDatePicker) {
+        NutritionDatePickerDialog(
+            selected = state.birthDate,
+            onConfirm = {
+                onBirthDateChange(it)
+                showDatePicker = false
+            },
+            onDismiss = { showDatePicker = false },
+            selectableDates = NoFutureDates,
+            confirmText = stringResource(R.string.edit_date_confirm),
+            cancelText = stringResource(R.string.edit_date_cancel),
+        )
+    }
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -77,26 +118,72 @@ fun EditProfileScreen(
                     size = VoraButtonSize.Small,
                 )
             }
-            ReadOnlyField(stringResource(R.string.edit_first_name), state.firstName)
-            ReadOnlyField(stringResource(R.string.edit_last_name), state.lastName)
-            ReadOnlyField(stringResource(R.string.edit_birth_date), birthDate)
+            VoraTextField(
+                value = state.firstName,
+                onValueChange = onFirstNameChange,
+                label = stringResource(R.string.edit_first_name),
+                error = state.firstNameError?.let { stringResource(it) },
+            )
+            VoraTextField(
+                value = state.lastName,
+                onValueChange = onLastNameChange,
+                label = stringResource(R.string.edit_last_name),
+            )
+            PickerField(
+                label = stringResource(R.string.edit_birth_date),
+                value = birthDate,
+                onClick = { showDatePicker = true },
+                error = state.birthDateError?.let { stringResource(it) },
+            )
             Row(horizontalArrangement = Arrangement.spacedBy(VoraTheme.spacing.s12)) {
-                ReadOnlyField(
+                NumberField(
                     label = stringResource(R.string.edit_height),
-                    value = stringResource(R.string.edit_height_value, state.heightCm),
+                    value = state.heightCm,
+                    onValueChange = onHeightChange,
+                    error = state.heightError,
                     modifier = Modifier.weight(1f),
                 )
-                ReadOnlyField(
+                NumberField(
                     label = stringResource(R.string.edit_weight),
-                    value = stringResource(R.string.edit_weight_value, state.weightKg),
+                    value = state.weightKg,
+                    onValueChange = onWeightChange,
+                    error = state.weightError,
                     modifier = Modifier.weight(1f),
                 )
             }
-            ReadOnlyField(stringResource(R.string.edit_gender), stringResource(state.gender.label()))
+            var fieldWidth by remember { mutableStateOf(0.dp) }
+            val density = LocalDensity.current
+            Box(Modifier.onSizeChanged { fieldWidth = with(density) { it.width.toDp() } }) {
+                PickerField(
+                    label = stringResource(R.string.edit_gender),
+                    value = stringResource(state.gender.label()),
+                    onClick = { showGenderMenu = true },
+                )
+                DropdownMenu(
+                    expanded = showGenderMenu,
+                    onDismissRequest = { showGenderMenu = false },
+                    modifier = Modifier.width(fieldWidth),
+                    shape = RoundedCornerShape(VoraTheme.radius.r12),
+                    containerColor = MaterialTheme.colorScheme.surface,
+                ) {
+                    Gender.entries.forEach { gender ->
+                        DropdownMenuItem(
+                            text = { Text(stringResource(gender.label())) },
+                            onClick = {
+                                onGenderChange(gender)
+                                showGenderMenu = false
+                            },
+                        )
+                    }
+                }
+            }
             VoraInfoMessage(
                 text = stringResource(R.string.edit_info),
                 icon = painterResource(R.drawable.ic_info),
             )
+            state.saveError?.let {
+                Text(text = stringResource(it), style = VoraTheme.text.footnote, color = MaterialTheme.colorScheme.error)
+            }
             Spacer(Modifier.height(VoraTheme.spacing.s8))
             VoraButton(
                 text = stringResource(R.string.edit_save),
@@ -114,15 +201,50 @@ fun EditProfileScreen(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
+private object NoFutureDates : SelectableDates {
+    override fun isSelectableDate(utcTimeMillis: Long) = utcTimeMillis <= LocalDate.now().toPickerMillis()
+    override fun isSelectableYear(year: Int) = year <= LocalDate.now().year
+}
+
+/** Entero de 0 en adelante: vacio es 0, que la validacion rechaza (C21). */
 @Composable
-private fun ReadOnlyField(label: String, value: String, modifier: Modifier = Modifier) {
+private fun NumberField(
+    label: String,
+    value: Int,
+    onValueChange: (Int) -> Unit,
+    error: Int?,
+    modifier: Modifier = Modifier,
+) {
     VoraTextField(
-        value = value,
-        onValueChange = {},
+        value = if (value > 0) value.toString() else "",
+        onValueChange = { text -> onValueChange(text.filter(Char::isDigit).take(3).toIntOrNull() ?: 0) },
         modifier = modifier,
         label = label,
-        readOnly = true,
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+        error = error?.let { stringResource(it) },
     )
+}
+
+/** Se ve como [VoraTextField]; el toque abre un selector en vez del teclado. */
+@Composable
+private fun PickerField(
+    label: String,
+    value: String,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    error: String? = null,
+) {
+    Box(modifier) {
+        VoraTextField(value = value, onValueChange = {}, label = label, readOnly = true, error = error)
+        // el campo de texto se come el toque: una capa encima lo recibe. Cubre solo el campo (la etiqueta mide 18)
+        Box(
+            Modifier
+                .matchParentSize()
+                .padding(top = VoraTheme.spacing.s20)
+                .clickable(role = Role.DropdownList, onClick = onClick),
+        )
+    }
 }
 
 @Preview(showBackground = true, heightDp = 900)

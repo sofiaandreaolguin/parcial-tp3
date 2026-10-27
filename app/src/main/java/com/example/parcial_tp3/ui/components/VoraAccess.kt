@@ -30,6 +30,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -371,6 +372,7 @@ fun VoraAccessButton(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     compact: Boolean = false,
+    isLoading: Boolean = false,
 ) {
     val access = VoraTheme.colors.access
     val shape = RoundedCornerShape(VoraTheme.radius.r16)
@@ -381,18 +383,26 @@ fun VoraAccessButton(
             .shadow(VoraTheme.sizes.accessShadowCta, shape, ambientColor = access.cta, spotColor = access.cta)
             .clip(shape)
             .background(access.cta)
-            .clickable(role = Role.Button, onClick = onClick),
+            .clickable(enabled = !isLoading, role = Role.Button, onClick = onClick),
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        Text(text = text, style = VoraTheme.text.accessCta, color = access.ink)
-        Spacer(Modifier.width(VoraTheme.spacing.s8))
-        Icon(
-            painter = painterResource(R.drawable.ic_arrow_right),
-            contentDescription = null,
-            tint = access.ink,
-            modifier = Modifier.size(if (compact) VoraTheme.sizes.accessIconTiny else VoraTheme.sizes.accessIconSmall),
-        )
+        if (isLoading) {
+            CircularProgressIndicator(
+                modifier = Modifier.size(VoraTheme.sizes.accessIconSmall),
+                color = access.ink,
+                strokeWidth = VoraTheme.spacing.s2,
+            )
+        } else {
+            Text(text = text, style = VoraTheme.text.accessCta, color = access.ink)
+            Spacer(Modifier.width(VoraTheme.spacing.s8))
+            Icon(
+                painter = painterResource(R.drawable.ic_arrow_right),
+                contentDescription = null,
+                tint = access.ink,
+                modifier = Modifier.size(if (compact) VoraTheme.sizes.accessIconTiny else VoraTheme.sizes.accessIconSmall),
+            )
+        }
     }
 }
 

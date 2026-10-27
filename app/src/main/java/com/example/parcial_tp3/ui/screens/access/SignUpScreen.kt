@@ -187,7 +187,16 @@ private fun SignUpForm(
         Spacer(Modifier.height(VoraTheme.spacing.s14))
         SecureNote(passwordLongEnough = state.passwordLongEnough, onHelp = onDemo)
         Spacer(Modifier.height(VoraTheme.spacing.s14))
-        VoraAccessButton(text = stringResource(R.string.sign_up_action), onClick = onSignUp, compact = true)
+        state.formError?.let {
+            Text(text = stringResource(it), style = VoraTheme.text.footnote, color = MaterialTheme.colorScheme.error)
+            Spacer(Modifier.height(VoraTheme.spacing.s14))
+        }
+        VoraAccessButton(
+            text = stringResource(R.string.sign_up_action),
+            onClick = onSignUp,
+            compact = true,
+            isLoading = state.isLoading,
+        )
         Spacer(Modifier.height(VoraTheme.spacing.s14))
         VoraTextDivider(stringResource(R.string.sign_up_or), lines = false)
         Spacer(Modifier.height(VoraTheme.spacing.s14))

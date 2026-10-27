@@ -1,5 +1,11 @@
 package com.example.parcial_tp3.di
 
+import com.example.parcial_tp3.data.remote.FirestoreProfileRemote
+import com.example.parcial_tp3.data.remote.ProfileRemote
+import com.example.parcial_tp3.data.repository.AuthRepository
+import com.example.parcial_tp3.data.repository.CoachRepository
+import com.example.parcial_tp3.data.repository.CoachRepositoryImpl
+import com.example.parcial_tp3.data.repository.FirebaseAuthRepository
 import com.example.parcial_tp3.data.repository.MealRepository
 import com.example.parcial_tp3.data.repository.MealRepositoryImpl
 import com.example.parcial_tp3.data.repository.WorkoutDetailRepository
@@ -30,5 +36,17 @@ abstract class RepositoryModule {
 
     @Binds
     @Singleton
+    abstract fun bindAuthRepository(impl: FirebaseAuthRepository): AuthRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindProfileRemote(impl: FirestoreProfileRemote): ProfileRemote
+
+    @Binds
+    @Singleton
     abstract fun bindWorkoutDetailRepository(impl: WorkoutDetailRepositoryImpl): WorkoutDetailRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindCoachRepository(impl: CoachRepositoryImpl): CoachRepository
 }

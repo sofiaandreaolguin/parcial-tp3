@@ -1,6 +1,7 @@
 package com.example.parcial_tp3.ui.screens.profile
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -13,10 +14,19 @@ fun EditProfileRoute(
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     val demo = rememberDemoToast()
+    LaunchedEffect(state.saved) {
+        if (state.saved) onBack()
+    }
     EditProfileScreen(
         state = state,
         onBack = onBack,
-        onSave = { demo(); onBack() },
+        onSave = viewModel::save,
+        onFirstNameChange = viewModel::onFirstNameChange,
+        onLastNameChange = viewModel::onLastNameChange,
+        onHeightChange = viewModel::onHeightChange,
+        onWeightChange = viewModel::onWeightChange,
+        onBirthDateChange = viewModel::onBirthDateChange,
+        onGenderChange = viewModel::onGenderChange,
         onDemo = demo,
     )
 }

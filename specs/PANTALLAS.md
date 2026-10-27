@@ -49,8 +49,8 @@ Por estado (NAV01):
 
 | Estado | Cuántas | Cuáles |
 |---|---|---|
-| Funcional | 8 | Workout 01, 02, 03 y 06; Nutrition 01, 02, 07 y 08 |
-| Demostración | 29 | Las demás |
+| Funcional | 11 | Workout 01, 02, 03 y 06; Nutrition 01, 02, 07 y 08; **con Firebase (extra aa):** Login 01 y 02 y Profile 02 |
+| Demostración | 26 | Las demás |
 
 Son los dos estados que nombra NAV01, y coinciden con la tabla de **cobertura mínima por área** de la consigna, donde el profe ya clasifica Acceso, Home y Profile como demostración, Workout como Retrofit + Room, Nutrition como Room, y Coach y Progress como simulado.
 
@@ -95,12 +95,12 @@ El estado previsto lo confirma el rol dueño del flujo al implementar la pantall
 
 | # | Frame de Figma | Ruta | Tipo | Controlador | Estado | Área |
 |---|---|---|---|---|---|---|
-| 1 | Login - 01 — SignIn | `sign_in` | Acceso | `AuthViewModel` | Demostración | Acceso |
-| 2 | Login - 02 — SignUp | `sign_up` | Acceso | `AuthViewModel` | Demostración | Acceso |
+| 1 | Login - 01 — SignIn | `sign_in` | Acceso | `AuthViewModel` | Funcional (Firebase, extra aa) | Acceso |
+| 2 | Login - 02 — SignUp | `sign_up` | Acceso | `AuthViewModel` | Funcional (Firebase, extra aa) | Acceso |
 
-- **Entrada:** el `NavHost` arranca en `access_graph`, que a su vez arranca en `sign_in`. El `startDestination` del `NavHost` tiene que ser un **hijo directo** del grafo raíz: poner `sign_in` directo revienta en cuanto abrís la app.
+- **Entrada:** el `NavHost` arranca en `access_graph`, que a su vez arranca en `sign_in`. El `startDestination` del `NavHost` tiene que ser un **hijo directo** del grafo raíz: poner `sign_in` directo revienta en cuanto abrís la app. **Con Firebase (extra aa, spec `firebase-auth-perfil`, C13 y C14):** se lee la sesión de forma síncrona antes de componer el `NavHost`; con sesión activa el destino inicial es `home_graph`, y sin sesión, `access_graph`.
 - **Salida:** al entrar se navega a `home_dashboard` con `popUpTo(access_graph) { inclusive = true }`, así el botón atrás del sistema no vuelve al login (NAV02). Se saca **todo el grafo** y no solo `sign_in`: desde SignUp el login queda debajo, y además se libera el `AuthViewModel`, que es del grafo (acordado el 22/10).
-- Sin Firebase es un acceso de demostración: valida el formulario y entra. Firebase es extra; si se hace, esta fila pasa a **Funcional**.
+- **Con Firebase (extra aa)** estas dos filas son **Funcionales**: SignUp crea la cuenta y SignIn inicia sesión, ambos contra Firebase Authentication, y el formulario se valida antes (C1 a C12 y C33 de la spec). Si el grupo descarta el extra, vuelven a ser un acceso de demostración que valida el formulario y entra.
 - Ojo visual: acá el botón es **lima sobre tarjeta clara**, distinto de la lámina de componentes.
 
 ### A dónde lleva cada control (NAV03)
@@ -112,14 +112,14 @@ Leído de los frames el 18/10. Lo que dice *a confirmar* es lectura mía del dib
 | Login - 01 — SignIn | "Sign In →" | `home_dashboard`, **sacando el login de la pila** |
 | | "Sign up here" | `sign_up` |
 | | Flecha ‹ (arriba izq.) | **A ningún lado**: es la primera pantalla. Se dibuja sin acción |
-| | Apple / Google / biometría | Aviso de modo demostración (salvo que se haga Firebase) |
+| | Apple / Google / biometría | Aviso de modo demostración (también con Firebase: solo se usa email y contraseña) |
 | | "Forgot your password?" | Aviso de modo demostración |
 | | Selector "EN ⌄" (las dos pantallas) | Aviso de modo demostración. **El idioma lo elige Android solo** según el teléfono (`values/` y `values-es/`), no este control |
 | Login - 02 — SignUp | "Sign Up →" | `home_dashboard`, sacando el login de la pila |
 | | "Sign In" (abajo) | `sign_in` |
 | | "Recover" / "Password help?" | Aviso de modo demostración |
 | | Flecha ‹ (arriba izq.) y atrás del sistema | `sign_in` (igual que "Sign In") |
-| | Apple / Google / biometría | Aviso de modo demostración (salvo que se haga Firebase) |
+| | Apple / Google / biometría | Aviso de modo demostración (también con Firebase: solo se usa email y contraseña) |
 
 ## 4. Inicio (2 pantallas)
 
@@ -159,13 +159,16 @@ Leído de los frames el 18/10. Lo que dice *a confirmar* es lectura mía del dib
 | 6 | Voice / 02 — Listening | `voice` (estado `Listening`) | Encima | `VoiceViewModel` | Demostración | Coach y Progress |
 | 7 | Voice / 03 — Processing | `voice` (estado `Processing`) | Encima | `VoiceViewModel` | Demostración | Coach y Progress |
 | 8 | Voice / 04 — Speaking | `voice` (estado `Speaking`) | Encima | `VoiceViewModel` | Demostración | Coach y Progress |
-| 9 | Voice / 05 — Conversation | `conversation` | Encima | `ConversationViewModel` | Demostración | Coach y Progress |
+| 9 | Voice / 05 — Conversation | `conversation` | Encima | `ConversationViewModel` | **Funcional** | Coach y Progress |
 | 10 | Voice / 06 — Error | `voice` (estado `Error`) | Encima | `VoiceViewModel` | Demostración | Coach y Progress |
 
 - **5 frames, 1 ruta.** Idle, Listening, Processing, Speaking y Error comparten layout: son estados de `VoiceScreen`, no destinos distintos. Un cambio de estado no es navegación. Ficha: `docs/decisiones/002-voice-una-pantalla-con-estados.md`.
 - Conversation sí es una ruta aparte: cambia el layout (lista de mensajes).
 - **NAV05:** se recorre escucha, procesamiento, respuesta y error con botones de demostración. **No se pide permiso de micrófono.**
-- Si se hace EXT01 (coach por Retrofit con historial en Room), `conversation` pasa a **Funcional**.
+- **EXT01, hecho el 26/10:** `conversation` es la única **Funcional** de las seis. VORA contesta consultando
+  `GET /v1/coach/suggestions` y `POST /v1/coach/messages`, y el hilo se guarda en Room, así que sobrevive a
+  cerrar la app. Spec: [`funcionales/coach-con-historial.md`](funcionales/coach-con-historial.md).
+  Las otras cinco siguen siendo de demostración y `Voice / 01 — Idle` no se tocó.
 
 ### A dónde lleva cada control (NAV03)
 
@@ -343,7 +346,7 @@ Leído de los frames el 18/10. Lo que dice *a confirmar* es lectura mía del dib
 | # | Frame de Figma | Ruta | Tipo | Controlador | Estado | Área |
 |---|---|---|---|---|---|---|
 | 32 | Profile / 01 — Dashboard | `profile_dashboard` | Con barra | `ProfileDashboardViewModel` | Demostración | Home y Profile |
-| 33 | Profile / 02 — Edit Profile | `edit_profile` | Encima | `EditProfileViewModel` | Demostración | Home y Profile |
+| 33 | Profile / 02 — Edit Profile | `edit_profile` | Encima | `EditProfileViewModel` | Funcional (Firebase, extra aa) | Home y Profile |
 | 34 | Profile / 03 — Goals & Preferences | `goals_preferences` | Encima | `GoalsPreferencesViewModel` | Demostración | Home y Profile |
 | 35 | Profile / 04 — Nutrition Preferences | `nutrition_preferences` | Encima | `NutritionPreferencesViewModel` | Demostración | Home y Profile |
 | 36 | Profile / 05 — Voice & AI Settings | `voice_ai_settings` | Encima | `VoiceAiSettingsViewModel` | Demostración | Home y Profile |
@@ -370,7 +373,7 @@ Leído de los frames el 18/10. Lo que dice *a confirmar* es lectura mía del dib
 | | "Your Preferences" | `nutrition_preferences` |
 | | "Connected Data · Synced" | **Sin frame** → aviso de modo demostración |
 | | "Account" | **Sin frame** → aviso de modo demostración |
-| 02 Edit Profile | "Save changes" | `popBackStack()` → 01 |
+| 02 Edit Profile | "Save changes" | `popBackStack()` → 01. **Con Firebase (extra aa):** guarda nombre, apellido, fecha de nacimiento, altura, peso y género en Firestore antes de volver (C19 de la spec) |
 | | **"Change photo"** | Aviso de modo demostración. **No abre la cámara ni la galería** (NAV05) |
 | 03 Goals & Preferences | "Save preferences" | `popBackStack()` |
 | 04 Nutrition Preferences | "Save preferences" | `popBackStack()` |
@@ -382,7 +385,7 @@ Leído de los frames el 18/10. Lo que dice *a confirmar* es lectura mía del dib
 | | "Health & Activity" | **Sin frame** → aviso de modo demostración |
 | | **"Permissions & Data Controls"** | Aviso de modo demostración. **No abre los ajustes del sistema ni pide permisos** (NAV05) |
 | | Help Centre, Contact Support, Privacy Policy | **Sin frame** → aviso de modo demostración |
-| | **"Log out"** | `sign_in`, **vaciando toda la pila** |
+| | **"Log out"** | `sign_in`, **vaciando toda la pila**. **Con Firebase (extra aa):** antes cierra la sesión y vacía el perfil (C15 y C16 de la spec) |
 
 **`05 Voice & AI Settings` ya tiene entrada confirmada.** Era la única pantalla a la que no le encontré una entrada clara en el Figma, y quedó colgada de "Review preferences" (panel VORA de `01 Dashboard`). Zaki la confirmó el 21/10 al maquetar `01 Dashboard` (tarea VC-q). **Una pantalla sin entrada rompe NAV01**, así que esta fila no se cambia sin darle antes otra entrada.
 
@@ -431,7 +434,7 @@ Son 6 + 5 + 2 + 1 + 5 = **19**.
 
 ## 12. Las 2 de acceso
 
-`sign_in` y `sign_up`. Antes de entrar a la app, sin barra. El `NavHost` arranca en `access_graph` (que arranca en `sign_in`), y el login se saca de la pila al entrar.
+`sign_in` y `sign_up`. Antes de entrar a la app, sin barra. El `NavHost` arranca en `access_graph` (que arranca en `sign_in`), y el login se saca de la pila al entrar. **Con Firebase (extra aa)** el destino inicial depende de la sesión (ver sección 3).
 
 ---
 
@@ -445,7 +448,7 @@ Son las que **no puede cerrar una sola persona**: necesitan algo de otra zona. A
 | Las 16 con barra | Navegación e inventario (la enchufa) | Tema y componentes (la dibuja) | Firma de `VoraBottomBar(selected: VoraTab?, onTab: (VoraTab) -> Unit)` y el enum `VoraTab` con su ruta de grafo. Se entrega sin estado y se enchufa en el `Scaffold` |
 | Todas (encabezado) | Cada zona la suya | Tema y componentes | Firma de `VoraTopBar` (título, acción de volver o cerrar). Se usa con datos propios; **no se copia su código** |
 | Nutrition / 04, 05, 06 y 07 | Nutrition | Coach y Progress (simulación de voz y análisis) | Los estados de demostración del análisis (NAV05 cruza las dos zonas) y qué borrador le deja el análisis a `food_confirmation` |
-| Voice / 05 — Conversation | Coach y Progress | Workout (solo si se hace EXT01: Retrofit y Room) | Únicamente si se encara el extra: endpoint del coach y tabla del historial |
+| Voice / 05 — Conversation | Coach y Progress | Red (Hector) y base Room (Sofi) | **Cerrado el 26/10 con EXT01.** Se avisó a las dos zonas: dos endpoints nuevos en `VoraApi` y la tabla `coach_messages` con la base en `version = 4` |
 | Progress / 03 y 04 | Coach y Progress | Workout y Nutrition (forma de los modelos) | Que los datos de ejemplo usen los modelos `Workout` y `Meal`, para poder conectarlos después si sobra tiempo |
 | Profile / 06 — Settings | Home y Profile | Navegación e inventario | Qué opción abre pantalla, cuál abre diálogo y cuál solo cambia un ajuste (NAV03) |
 | De Login 01 a Home | Acceso | Navegación e inventario | El `popUpTo(access_graph) { inclusive = true }` lo pone el grafo de acceso (`entrarAHome()`) |
@@ -468,7 +471,7 @@ Cada flujo en su archivo, así cada rol trabaja en el suyo y casi no hay conflic
 
 Reglas de la zona (son de Navegación e inventario; se tocan solo por pull request de Fiore):
 - `MainActivity.kt`, `VoraBottomBar` enchufado en el `Scaffold`, `Rutas.kt` y `RUTAS_CON_BARRA`.
-- **Cambio de pestaña:** `popUpTo("home_dashboard") { saveState = true }`, `launchSingleTop = true`, `restoreState = true`. **No** `popUpTo(startDestination)` ni `findStartDestination()`: el inicio del `NavHost` es el login y se saca de la pila al entrar, así que ese `popUpTo` no encontraría nada y cada toque de pestaña apilaría pantallas.
+- **Cambio de pestaña:** `popUpTo("home_dashboard") { saveState = true }`, `launchSingleTop = true`, `restoreState = true`. **No** `popUpTo(startDestination)` ni `findStartDestination()`: el inicio del `NavHost` es el login (o Home, con una sesión de Firebase activa) y el login se saca de la pila al entrar, así que ese `popUpTo` no encontraría nada y cada toque de pestaña apilaría pantallas.
 - **Pestaña activa:** se calcula con la jerarquía del destino, no comparando la ruta: `VoraTab.entries.firstOrNull { tab -> destino?.hierarchy?.any { it.route == tab.graph } == true }`. Comparando solo la ruta, la pestaña se apagaría en Weekly Plan o en cualquier pantalla que no sea la primera del flujo.
 
 ---
@@ -621,15 +624,17 @@ Test del inventario (tarea VC-e, `app/src/test/`): que `RUTAS_CON_BARRA.size == 
 
 ---
 
-## 17. Pendientes
+## 17. Los puntos que estaban abiertos, y cómo cerraron
 
-1. **Tarea VC-b sin asignar** (acordar rutas, modelos y componentes). Las rutas de la sección 15 y la firma de `VoraBottomBar` salen de ahí; mientras no se acuerden, esto es una propuesta.
+Al 26/10 **no queda ninguno sin resolver**. Se deja el registro de cada uno porque explica por qué la app quedó como quedó, y porque cuatro se resolvieron preguntándole al profe.
+
+1. ~~**Tarea VC-b sin asignar**~~ · **Cerrado.** Se acordaron las rutas, los modelos y los componentes; las rutas de la sección 15 son las que están en `ui/navigation/Rutas.kt` y la firma de `VoraBottomBar` quedó fija. Ya no es una propuesta: es lo implementado.
 2. **Ya no hay entradas sin confirmar.** `Progress / 01 — Today's Overview` se resolvió el 22/10 (duda #2): es la pantalla base de la pestaña Progress y su "Start Workout" lleva a `progress_dashboard`. La de `Profile / 05 — Voice & AI Settings` quedó confirmada el 21/10 al maquetar `Profile / 01` (Zaki, tarea VC-q). Una pantalla sin entrada rompe NAV01, así que si alguna fila cambia hay que revisar esto de nuevo.
-3. **El formulario de carga manual de comidas (RF03) no tiene frame propio.** Por ahora "Log Manually" abre `Nutrition / 07 — Food Confirmation` vacío, que ya tiene los campos. La consigna prohíbe inventar pantallas.
-4. **Eliminar una comida (RF04) no tiene control en ningún frame.** `Nutrition / 08` tiene solo ‹, "Edit Meal" y "Duplicate Meal"; `Nutrition / 02` no tiene papelera ni swipe. El "Remove" de `07` saca un ingrediente del borrador, no borra una comida guardada. Lo define la zona de Nutrition antes de maquetar.
+3. ~~**El formulario de carga manual de comidas (RF03) no tiene frame propio**~~ · **Cerrado con el profe (duda #3).** Respondió: *"Podríamos conectarlo a la pantalla que decidamos, no es necesario"*. "Log Manually" abre `Nutrition / 07 — Food Confirmation` vacío, que ya tiene los campos, con la validación de `domain/MealValidation.kt`. No se inventó ninguna pantalla.
+4. ~~**Eliminar una comida (RF04) no tiene control en ningún frame**~~ · **Cerrado con el profe (duda #4).** Respondió: *"Eliminar el componente en la base, no en la API. Ya está el botón al editar el meal"*. Se borra desde `Nutrition / 08 — Meal Details`, con diálogo de confirmación (`MealDetailScreen.kt`) y `MealDao.deleteById`; el total del día se recalcula solo. El "Remove" de `07` sigue sacando un ingrediente del borrador, que es otra cosa.
 5. **El catálogo de entrenamientos (RF01) se muestra en `Workout / 02 — Your Plan`**, que lista tres con entrada por ítem, igual que devuelve el mock. `Workout / 01` muestra solo el destacado. **NAV04 se demuestra en `02`.**
-6. **Controles sin frame de destino:** "Connected Data" y "Account" en `Profile / 01`; Notifications, Units, Appearance, Help Centre, Contact Support y Privacy Policy en `Profile / 06`. NAV03 permite que "una acción de servicio opcional dé un resultado de ejemplo o avise que es modo demostración". Lo que no pueden hacer es quedarse sin respuesta.
-7. **Firebase:** si se hace, Login 01 y 02 pasan de Demostración a Funcional acá y en el README.
+6. **Controles sin frame de destino:** "Connected Data" y "Account" en `Profile / 01`; Notifications, Units, Appearance, Help Centre, Contact Support y Privacy Policy en `Profile / 06`. NAV03 permite que "una acción de servicio opcional dé un resultado de ejemplo o avise que es modo demostración". Ninguno queda sin respuesta: todos avisan modo demostración.
+7. **Firebase:** quedó en una rama aparte (`feat/firebase-extra`) y **no se integró a `main`**. Login 01 y 02 siguen siendo **Demostración** acá y en el README. Si alguna vez se integra, las dos filas cambian a Funcional.
 
 ---
 

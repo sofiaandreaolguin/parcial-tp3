@@ -11,11 +11,23 @@ if [ -n "$UI" ]; then
     echo "RF06: una pantalla importa Retrofit o la capa de datos. Tiene que pasar por el ViewModel y el repositorio." >&2
     fallas=1
   fi
+  # C30: la UI no importa Firebase; usa AuthRepository y ProfileRepository
+  if grep -nE '^import com\.google\.firebase' $UI >&2; then
+    echo "C30: una pantalla importa Firebase. Tiene que pasar por el ViewModel y el repositorio." >&2
+    fallas=1
+  fi
   # Idiomas: nada de texto escrito directo en Text("...")
   if grep -nE 'Text\(\s*(text\s*=\s*)?"' $UI >&2; then
     echo "Idiomas: hay texto escrito directo en una pantalla. Va en strings.xml y se usa con stringResource()." >&2
     fallas=1
   fi
+fi
+
+# C32: los repositorios no exponen tipos de Firebase en su API publica
+REPOS=$(find app/src/main -path '*/data/repository/*' -name '*.kt' 2>/dev/null)
+if [ -n "$REPOS" ] && grep -nE '^\s*(override |open |abstract )*(suspend )?(fun|val|var) [^{=]*(FirebaseUser|DocumentSnapshot)' $REPOS >&2; then
+  echo "C32: un repositorio expone FirebaseUser o DocumentSnapshot en su API publica. Solo modelos de dominio." >&2
+  fallas=1
 fi
 
 # NAV05: sin permisos de micrófono ni cámara
