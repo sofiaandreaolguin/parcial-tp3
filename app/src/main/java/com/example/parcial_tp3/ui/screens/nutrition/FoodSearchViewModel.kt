@@ -12,6 +12,7 @@ import com.example.parcial_tp3.domain.nutrientsForPortion
 import com.example.parcial_tp3.domain.parseGrams
 import dagger.hilt.android.lifecycle.HiltViewModel
 import java.time.LocalDate
+import kotlin.math.roundToInt
 import javax.inject.Inject
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -102,8 +103,9 @@ class FoodSearchViewModel @Inject constructor(
             carbs = porcion.carbsG.toFormText(),
             fat = porcion.fatG.toFormText(),
         )
-        // Provisorio (tests en rojo del PR 2): el ingrediente lo arma implementar (C81).
-        return FoodSelection(form, Ingredient(name = "", grams = 0, kcal = 0))
+        // Ingredient guarda gramos enteros: "0,4" no puede quedar en 0, que isValidIngredient rechaza (C81).
+        val gramos = (parseGrams(actual.gramos) as? GramsParse.Ok)?.grams ?: return null
+        return FoodSelection(form, Ingredient(alimento.name, gramos.roundToInt().coerceAtLeast(1), porcion.kcal))
     }
 
     private fun FoodSearchUiState.sinSeleccion() =
