@@ -15,9 +15,10 @@ import com.example.parcial_tp3.data.local.entity.WorkoutExerciseEntity
  * las comidas de Nutrition (tarea h) y el historial del coach (EXT01).
  *
  * **Al subir la version se pierde lo guardado.** DatabaseModule construye con
- * fallbackToDestructiveMigration(dropAllTables = true), asi que la version 4 borra tambien
- * `meals`: hay que volver a cargar una comida antes de sacar evidencia de RF04
- * (docs/decisiones/003-base-room-compartida.md).
+ * fallbackToDestructiveMigration(dropAllTables = true), asi que la version 5 (columna
+ * `ingredients` de `meals`) borra una vez todas las tablas: comidas, cache de entrenamientos e
+ * historial del coach. Hay que volver a cargar una comida antes de sacar evidencia de RF04
+ * (docs/decisiones/003-base-room-compartida.md, C70 de carga-y-eliminacion-de-comidas).
  */
 @Database(
     entities = [
@@ -26,7 +27,7 @@ import com.example.parcial_tp3.data.local.entity.WorkoutExerciseEntity
         MealEntity::class,
         CoachMessageEntity::class,
     ],
-    version = 4,
+    version = 5,
     exportSchema = false,
 )
 abstract class VoraDatabase : RoomDatabase() {
