@@ -548,6 +548,7 @@
     <string name="nutrition_dash_breakfast_items">Greek yoghurt · berries · granola</string>
     <string name="nutrition_dash_lunch">Lunch</string>
     <string name="nutrition_dash_lunch_items">Chicken · rice · vegetables</string>
+    <string name="nutrition_ingredients_separator">" · "</string>
     <string name="nutrition_dash_snack">Snack</string>
     <string name="nutrition_dash_snack_items">Protein shake</string>
     <string name="nutrition_dash_dinner">Dinner</string>

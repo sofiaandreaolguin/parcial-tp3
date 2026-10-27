@@ -546,6 +546,7 @@
     <string name="nutrition_dash_breakfast_items">Yogur griego · frutos rojos · granola</string>
     <string name="nutrition_dash_lunch">Almuerzo</string>
     <string name="nutrition_dash_lunch_items">Pollo · arroz · verduras</string>
+    <string name="nutrition_ingredients_separator">" · "</string>
     <string name="nutrition_dash_snack">Merienda</string>
     <string name="nutrition_dash_snack_items">Batido de proteínas</string>
     <string name="nutrition_dash_dinner">Cena</string>

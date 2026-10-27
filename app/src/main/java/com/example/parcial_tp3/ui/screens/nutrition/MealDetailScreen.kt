@@ -42,8 +42,8 @@ import kotlin.math.roundToInt
  * Nutrition / 08 — Meal Details. La barra inferior la pone el Scaffold de MainActivity y el scroll
  * cubre pantallas más bajas (UI03).
  *
- * Room guarda la comida con sus totales, sin ingredientes ni hora: "Ingredients" muestra una sola
- * tarjeta con la comida, y la hora y el consejo son los del frame, fijos (demostración). "Delete
+ * "Ingredients" muestra los que se guardaron con la comida (foto o voz), o una sola tarjeta con la
+ * comida si no tiene. Room no guarda la hora: la hora y el consejo son los del frame, fijos (demostración). "Delete
  * Meal" no está en el Figma: es el control de RF04.
  */
 @Composable
@@ -149,7 +149,8 @@ private fun TotalsCard(meal: Meal, progress: Float) {
     }
 }
 
-// Una sola tarjeta: la comida guardada no tiene ingredientes. La línea gris de los gramos muestra la proteína.
+// Una tarjeta por ingrediente, como el frame. Sin ingredientes (carga manual), una sola con la
+// comida: la línea gris de los gramos muestra la proteína.
 @Composable
 private fun MealSection(meal: Meal) {
     Column(verticalArrangement = Arrangement.spacedBy(VoraTheme.spacing.s12)) {
@@ -158,39 +159,60 @@ private fun MealSection(meal: Meal) {
             style = MaterialTheme.typography.titleSmall,
             color = MaterialTheme.colorScheme.onSurface,
         )
-        VoraCard(
-            modifier = Modifier
-                .fillMaxWidth()
-                .semantics(mergeDescendants = true) {},
-            padding = VoraTheme.spacing.s12,
-            radius = VoraTheme.radius.r12,
-        ) {
-            Row(
-                horizontalArrangement = Arrangement.spacedBy(VoraTheme.spacing.s12),
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                Column(
-                    modifier = Modifier.weight(1f),
-                    verticalArrangement = Arrangement.spacedBy(VoraTheme.spacing.s2),
-                ) {
-                    Text(
-                        text = meal.name,
-                        style = MaterialTheme.typography.labelMedium,
-                        color = MaterialTheme.colorScheme.onSurface,
-                    )
-                    Text(
-                        text = stringResource(R.string.nutrition_detail_protein_line, meal.proteinG.roundToInt()),
-                        style = MaterialTheme.typography.bodySmall,
-                        color = VoraTheme.colors.textMuted,
+        Column(verticalArrangement = Arrangement.spacedBy(VoraTheme.spacing.s10)) {
+            if (meal.ingredients.isEmpty()) {
+                DetailLineCard(
+                    title = meal.name,
+                    subtitle = stringResource(R.string.nutrition_detail_protein_line, meal.proteinG.roundToInt()),
+                    kcal = meal.kcal,
+                )
+            } else {
+                meal.ingredients.forEach {
+                    DetailLineCard(
+                        title = it.name,
+                        subtitle = stringResource(R.string.nutrition_confirm_grams, it.grams),
+                        kcal = it.kcal,
                     )
                 }
+            }
+        }
+    }
+}
+
+@Composable
+private fun DetailLineCard(title: String, subtitle: String, kcal: Int) {
+    VoraCard(
+        modifier = Modifier
+            .fillMaxWidth()
+            .semantics(mergeDescendants = true) {},
+        padding = VoraTheme.spacing.s12,
+        radius = VoraTheme.radius.r12,
+    ) {
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(VoraTheme.spacing.s12),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Column(
+                modifier = Modifier.weight(1f),
+                verticalArrangement = Arrangement.spacedBy(VoraTheme.spacing.s2),
+            ) {
                 Text(
-                    text = stringResource(R.string.nutrition_kcal, meal.kcal),
-                    style = MaterialTheme.typography.labelLarge,
-                    fontWeight = FontWeight.Normal,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    text = title,
+                    style = MaterialTheme.typography.labelMedium,
+                    color = MaterialTheme.colorScheme.onSurface,
+                )
+                Text(
+                    text = subtitle,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = VoraTheme.colors.textMuted,
                 )
             }
+            Text(
+                text = stringResource(R.string.nutrition_kcal, kcal),
+                style = MaterialTheme.typography.labelLarge,
+                fontWeight = FontWeight.Normal,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
         }
     }
 }
@@ -247,6 +269,7 @@ private fun previewMeal() = Meal(
     proteinG = PhotoMealDraft.proteinG,
     carbsG = PhotoMealDraft.carbsG,
     fatG = PhotoMealDraft.fatG,
+    ingredients = NutritionDemoData.photoIngredients(),
 )
 
 @Preview(showBackground = true, widthDp = 393, heightDp = 820)
