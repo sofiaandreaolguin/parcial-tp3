@@ -4,6 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import com.example.parcial_tp3.data.repository.MealDataException
 import com.example.parcial_tp3.data.repository.MealError
 import com.example.parcial_tp3.data.repository.ProfileRepository
+import com.example.parcial_tp3.domain.model.Ingredient
 import com.example.parcial_tp3.domain.model.Meal
 import com.example.parcial_tp3.domain.model.MealType
 import com.example.parcial_tp3.ui.screens.home.FakeMealRepository
@@ -205,5 +206,21 @@ class NutritionViewModelTest {
 
         assertEquals(listOf(1L), vm.contenido().meals.map { it.id })
         assertEquals(1, repo.suscripcionesPorFecha)
+    }
+    @Test
+    fun `C66 cada MealRow trae sus ingredientes`() = runTest {
+        val delAlmuerzo = listOf(Ingredient("Pollo", grams = 180, kcal = 280), Ingredient("Arroz", grams = 150, kcal = 190))
+        val deLaCena = listOf(Ingredient("Pasta", grams = 200, kcal = 600), Ingredient("Queso", grams = 20, kcal = 80))
+        val repo = FakeMealRepository(
+            listOf(
+                comida(3, MealType.LUNCH, kcal = 470).copy(ingredients = delAlmuerzo),
+                comida(4, MealType.DINNER, kcal = 680).copy(ingredients = deLaCena),
+                comida(5, MealType.SNACK, kcal = 150),
+            ),
+        )
+        val vm = viewModel(repo)
+        observar(vm)
+
+        assertEquals(listOf(delAlmuerzo, deLaCena, emptyList()), vm.contenido().meals.map { it.ingredients })
     }
 }

@@ -578,6 +578,7 @@
     <string name="nutrition_error_load">We couldn\'t load your meals.</string>
     <string name="nutrition_error_save">We couldn\'t save this meal. Try again.</string>
     <string name="nutrition_error_action">Something went wrong. Try again.</string>
+    <string name="nutrition_error_ingredients">Some ingredients aren\'t valid. Check their name, grams and kcal.</string>
     <string name="nutrition_retry">Retry</string>
 
     <!-- Nutrition / 03 — Add Food -->

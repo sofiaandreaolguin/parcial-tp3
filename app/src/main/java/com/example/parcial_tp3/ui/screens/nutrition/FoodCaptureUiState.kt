@@ -5,6 +5,7 @@ import com.example.parcial_tp3.R
 import com.example.parcial_tp3.domain.FieldError
 import com.example.parcial_tp3.domain.MealField
 import com.example.parcial_tp3.domain.MealForm
+import com.example.parcial_tp3.domain.model.Ingredient
 import com.example.parcial_tp3.domain.model.MealType
 
 /**
@@ -31,6 +32,7 @@ data class ConfirmationState(
     val isSaving: Boolean = false,
     val notFound: Boolean = false,
     @StringRes val saveError: Int? = null,
+    val ingredients: List<Ingredient> = emptyList(),
 )
 
 /** El paso de Nutrition / 05 que se está haciendo; los anteriores están hechos y los siguientes pendientes. */

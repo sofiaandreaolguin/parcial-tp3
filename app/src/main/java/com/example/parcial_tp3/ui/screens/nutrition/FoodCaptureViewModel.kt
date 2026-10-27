@@ -8,6 +8,7 @@ import com.example.parcial_tp3.data.repository.MealRepository
 import com.example.parcial_tp3.domain.MealField
 import com.example.parcial_tp3.domain.MealForm
 import com.example.parcial_tp3.domain.MealValidation
+import com.example.parcial_tp3.domain.model.Ingredient
 import com.example.parcial_tp3.domain.model.Meal
 import com.example.parcial_tp3.domain.validateMeal
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -93,7 +94,12 @@ class FoodCaptureViewModel @Inject constructor(
      * la próxima apertura con ese id mostraría lo escrito antes. [draftName] lo resuelve el grafo
      * desde strings.xml: el ViewModel no tiene Context.
      */
-    fun onOpenConfirmation(mealId: Long, defaultDate: LocalDate, draftName: String) {
+    fun onOpenConfirmation(
+        mealId: Long,
+        defaultDate: LocalDate,
+        draftName: String,
+        draftIngredients: List<Ingredient> = emptyList(),
+    ) {
         if (_uiState.value.confirmation?.mealId == mealId) return
         if (mealId == NEW_MEAL_ID) {
             val form = _uiState.value.draft?.toForm(draftName, defaultDate) ?: MealForm(date = defaultDate)

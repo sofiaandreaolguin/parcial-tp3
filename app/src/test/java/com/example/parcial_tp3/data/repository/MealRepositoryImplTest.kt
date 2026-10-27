@@ -154,6 +154,30 @@ class MealRepositoryImplTest {
 
         assertMealError(MealError.NOT_FOUND, errorDe { repository.updateMeal(comidaGuardada) })
     }
+
+    @Test
+    fun `C56 ingredientes invalidos son MealDataException INVALID_DATA`() = runTest {
+        val invalidos = listOf(
+            "hola",
+            "{}",
+            "",
+            "null",
+            "[null]",
+            """[{"name":"x","grams":"abc","kcal":1}]""",
+            """[{"grams":1,"kcal":1}]""",
+            """[{"name":null,"grams":1,"kcal":1}]""",
+        )
+
+        for (texto in invalidos) {
+            dao.emitidas.value = listOf(entityGuardada.copy(ingredients = texto))
+            val porFecha = errorDe { repository.observeMealsByDate(hoy).first() }
+            assertEquals("observeMealsByDate con '$texto' tiró: $porFecha", MealError.INVALID_DATA, (porFecha as? MealDataException)?.error)
+
+            dao.porId.value = entityGuardada.copy(ingredients = texto)
+            val porId = errorDe { repository.observeMeal(4).first() }
+            assertEquals("observeMeal con '$texto' tiró: $porId", MealError.INVALID_DATA, (porId as? MealDataException)?.error)
+        }
+    }
 }
 
 /** DAO falso: anota lo que le piden y devuelve lo que el test le deja preparado. */

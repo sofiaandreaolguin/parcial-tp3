@@ -1,6 +1,7 @@
 package com.example.parcial_tp3.ui.screens.nutrition
 
 import androidx.annotation.StringRes
+import com.example.parcial_tp3.domain.model.Ingredient
 import com.example.parcial_tp3.domain.model.MealType
 import java.time.LocalDate
 
@@ -21,6 +22,12 @@ sealed interface NutritionUiState {
 
 data class MacroTotal(val kind: MacroKind, val grams: Int, val goal: Int, val progress: Float)
 
-data class MealRow(val id: Long, val type: MealType, val name: String, val kcal: Int)
+data class MealRow(
+    val id: Long,
+    val type: MealType,
+    val name: String,
+    val kcal: Int,
+    val ingredients: List<Ingredient> = emptyList(),
+)
 
 enum class MacroKind { PROTEIN, CARBS, FAT }

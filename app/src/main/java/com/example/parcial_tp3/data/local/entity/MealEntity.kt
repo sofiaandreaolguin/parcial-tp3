@@ -20,4 +20,5 @@ data class MealEntity(
     val proteinG: Double,
     val carbsG: Double,
     val fatG: Double,
+    val ingredients: String = "[]",
 )

@@ -4,9 +4,11 @@ import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.example.parcial_tp3.data.local.VoraDatabase
+import com.example.parcial_tp3.domain.model.Ingredient
 import com.example.parcial_tp3.domain.model.Meal
 import com.example.parcial_tp3.domain.model.MealType
 import java.time.LocalDate
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import org.junit.After
 import org.junit.Assert.assertEquals
@@ -59,5 +61,17 @@ class MealRepositoryRoomTest {
         }
 
         assertEquals("tiró: $error", MealError.STORAGE, (error as? MealDataException)?.error)
+    }
+    @Test
+    fun C58_addMeal_guarda_y_devuelve_los_ingredientes() = runTest {
+        val ingredientes = listOf(
+            Ingredient("Pollo", grams = 180, kcal = 280),
+            Ingredient("Arroz, integral", grams = 150, kcal = 190),
+            Ingredient("Verduras", grams = 100, kcal = 50),
+        )
+
+        val id = repository.addMeal(almuerzo.copy(ingredients = ingredientes))
+
+        assertEquals(ingredientes, repository.observeMeal(id).first()?.ingredients)
     }
 }

@@ -337,21 +337,21 @@ Casos de la plantilla que no aplican: sin conexión, 404, 503 y JSON inválido (
 | C50 | `` `C50 recolectar en menos de 5 s no vuelve a pedir la comida` `` | `test/` · `MealDetailViewModelTest` | sí, 2026-10-24 |
 | C51 | recorrido a mano | emulador | no aplica |
 | C52 | recorrido a mano | emulador | no aplica |
-| C53 | `` `C53 los ingredientes van y vuelven por los mappers en orden` `` | `test/` · `MealMappersTest` | |
-| C54 | `` `C54 sin ingredientes se guarda corchetes vacios` `` | `test/` · `MealMappersTest` | no: pasa al agregar el campo (`"[]"` por defecto); control negativo rompiendo el mapper |
-| C55 | `` `C55 un nombre con coma comillas y tildes vuelve igual` `` | `test/` · `MealMappersTest` | |
-| C56 | `` `C56 ingredientes invalidos son MealDataException INVALID_DATA` `` | `test/` · `MealRepositoryImplTest` | |
-| C57 | `` `C57 gramos o kcal que faltan se leen como 0` `` | `test/` · `MealMappersTest` | |
-| C58 | `C58_addMeal_guarda_y_devuelve_los_ingredientes` | `androidTest/` · `MealRepositoryRoomTest` | |
-| C59 | `` `C59 isValidIngredient pide nombre gramos mayores a 0 y kcal no negativas` `` | `test/` · `MealValidationTest` | |
-| C60 | `` `C60 con borrador 07 trae los ingredientes que paso el grafo` `` | `test/` · `FoodConfirmationViewModelTest` | |
-| C61 | `` `C61 guardar con borrador hace un solo addMeal con sus ingredientes` `` | `test/` · `FoodConfirmationViewModelTest` | |
-| C62 | `` `C62 un ingrediente invalido no guarda y muestra el error` `` | `test/` · `FoodConfirmationViewModelTest` | |
-| C63 | `` `C63 sin borrador 07 no tiene ingredientes` `` | `test/` · `FoodConfirmationViewModelTest` | no: pasa al agregar el campo (lista vacía por defecto); control negativo asignando `draftIngredients` sin mirar `draft` |
-| C64 | `` `C64 editar conserva los ingredientes guardados` `` | `test/` · `FoodConfirmationViewModelTest` | |
-| C65 | `` `C65 Duplicate copia los ingredientes` `` | `test/` · `MealDetailViewModelTest` | no: `meal.copy(id = 0)` ya los copia; control negativo con `copy(ingredients = emptyList())` |
-| C66 | `` `C66 cada MealRow trae sus ingredientes` `` | `test/` · `NutritionViewModelTest` | |
-| C71 | `` `C71 Duplicate con un ingrediente invalido no guarda y muestra el error` `` | `test/` · `MealDetailViewModelTest` | |
+| C53 | `` `C53 los ingredientes van y vuelven por los mappers en orden` `` | `test/` · `MealMappersTest` | sí, 2026-10-27 |
+| C54 | `` `C54 sin ingredientes se guarda corchetes vacios` `` | `test/` · `MealMappersTest` | no: pasa al agregar el campo (`"[]"` por defecto); control negativo rompiendo el mapper (`ingredients = ""`): falla, 2026-10-27 |
+| C55 | `` `C55 un nombre con coma comillas y tildes vuelve igual` `` | `test/` · `MealMappersTest` | sí, 2026-10-27 |
+| C56 | `` `C56 ingredientes invalidos son MealDataException INVALID_DATA` `` | `test/` · `MealRepositoryImplTest` | sí, 2026-10-27 |
+| C57 | `` `C57 gramos o kcal que faltan se leen como 0` `` | `test/` · `MealMappersTest` | sí, 2026-10-27 |
+| C58 | `C58_addMeal_guarda_y_devuelve_los_ingredientes` | `androidTest/` · `MealRepositoryRoomTest` | compila, 2026-10-27; falta correrlo con el emulador |
+| C59 | `` `C59 isValidIngredient pide nombre gramos mayores a 0 y kcal no negativas` `` | `test/` · `MealValidationTest` | sí, 2026-10-27 |
+| C60 | `` `C60 con borrador 07 trae los ingredientes que paso el grafo` `` | `test/` · `FoodConfirmationViewModelTest` | sí, 2026-10-27 |
+| C61 | `` `C61 guardar con borrador hace un solo addMeal con sus ingredientes` `` | `test/` · `FoodConfirmationViewModelTest` | sí, 2026-10-27 |
+| C62 | `` `C62 un ingrediente invalido no guarda y muestra el error` `` | `test/` · `FoodConfirmationViewModelTest` | sí, 2026-10-27 |
+| C63 | `` `C63 sin borrador 07 no tiene ingredientes` `` | `test/` · `FoodConfirmationViewModelTest` | no: pasa al agregar el campo (lista vacía por defecto); control negativo asignando `draftIngredients` sin mirar `draft`: falla, 2026-10-27 |
+| C64 | `` `C64 editar conserva los ingredientes guardados` `` | `test/` · `FoodConfirmationViewModelTest` | sí, 2026-10-27 |
+| C65 | `` `C65 Duplicate copia los ingredientes` `` | `test/` · `MealDetailViewModelTest` | no: `meal.copy(id = 0)` ya los copia; control negativo con `copy(ingredients = emptyList())`: falla, 2026-10-27 |
+| C66 | `` `C66 cada MealRow trae sus ingredientes` `` | `test/` · `NutritionViewModelTest` | sí, 2026-10-27 |
+| C71 | `` `C71 Duplicate con un ingrediente invalido no guarda y muestra el error` `` | `test/` · `MealDetailViewModelTest` | sí, 2026-10-27 |
 | C67 | recorrido a mano y captura | emulador (360 y 411 dp) | no aplica |
 | C68 | recorrido a mano y captura | emulador (360 y 411 dp) | no aplica |
 | C69 | recorrido a mano y captura | emulador (360 y 411 dp) | no aplica |
@@ -434,3 +434,4 @@ Casos de la plantilla que no aplican: sin conexión, 404, 503 y JSON inválido (
   - el borrado pasa a `@Delete`, como en la clase, en un PR aparte entre el 1 y el 2.
   
   Los tests existentes no cambian: `Meal`, `MealEntity`, `MealRow` y `onOpenConfirmation` traen valores por defecto.
+- 2026-10-27. Tests en rojo del PR 1 de ingredientes: fallan 11 de `test/` por el resultado (C53, C55 a C57, C59 a C62, C64, C66 y C71); C54, C63 y C65 pasan y su control negativo falla; C58 compila y queda para correr con el emulador. Firmas sin lógica: `Ingredient`, las columnas y campos nuevos con su valor por defecto, `isValidIngredient` (devuelve `false`), el cuarto parámetro de `onOpenConfirmation` y `nutrition_error_ingredients`.

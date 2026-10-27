@@ -1,10 +1,12 @@
 package com.example.parcial_tp3.ui.screens.nutrition
 
+import com.example.parcial_tp3.R
 import com.example.parcial_tp3.data.repository.MealDataException
 import com.example.parcial_tp3.data.repository.MealError
 import com.example.parcial_tp3.domain.FieldError
 import com.example.parcial_tp3.domain.MealField
 import com.example.parcial_tp3.domain.MealForm
+import com.example.parcial_tp3.domain.model.Ingredient
 import com.example.parcial_tp3.domain.model.Meal
 import com.example.parcial_tp3.domain.model.MealType
 import com.example.parcial_tp3.ui.screens.home.FakeMealRepository
@@ -244,5 +246,111 @@ class FoodConfirmationViewModelTest {
         assertTrue("saveError no es un texto de strings.xml: ${c.saveError}", esTextoDeStrings(c.saveError))
         assertFalse(c.isSaving)
         assertEquals(emptyList<FoodCaptureEvent>(), eventos)
+    }
+    // Lo que el grafo resuelve con getString a partir de PhotoMealDraft.
+    private val ingredientes = listOf(
+        Ingredient("Pollo", grams = 180, kcal = 280),
+        Ingredient("Arroz", grams = 150, kcal = 190),
+        Ingredient("Verduras", grams = 100, kcal = 50),
+    )
+
+    private fun TestScope.eventosDe(v: FoodCaptureViewModel): List<FoodCaptureEvent> {
+        val lista = mutableListOf<FoodCaptureEvent>()
+        backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) { v.events.toList(lista) }
+        return lista
+    }
+
+    @Test
+    fun `C60 con borrador 07 trae los ingredientes que paso el grafo`() = runTest {
+        vm.onPhotoCaptureStarted()
+
+        vm.onOpenConfirmation(nueva, fecha, "Pollo con arroz", ingredientes)
+
+        assertEquals(ingredientes, confirmacion().ingredients)
+    }
+
+    @Test
+    fun `C61 guardar con borrador hace un solo addMeal con sus ingredientes`() = runTest {
+        vm.onPhotoCaptureStarted()
+        vm.onOpenConfirmation(nueva, fecha, "Pollo con arroz", ingredientes)
+
+        vm.onSave()
+
+        assertEquals("addMeal no se llamó una sola vez", 1, repo.agregadas.size)
+        val meal = repo.agregadas.single()
+        assertEquals("Pollo con arroz", meal.name)
+        assertEquals(ingredientes, meal.ingredients)
+        assertTrue("no debería actualizar", repo.actualizadas.isEmpty())
+    }
+
+    @Test
+    fun `C62 un ingrediente invalido no guarda y muestra el error`() = runTest {
+        val ev = eventos()
+        vm.onPhotoCaptureStarted()
+        vm.onOpenConfirmation(nueva, fecha, "Pollo con arroz", listOf(ingredientes[0], Ingredient("Arroz", grams = 0, kcal = 190)))
+
+        vm.onSave()
+
+        assertTrue("no debería llamar a addMeal: ${repo.agregadas}", repo.agregadas.isEmpty())
+        val c = confirmacion()
+        assertEquals(R.string.nutrition_error_ingredients, c.saveError)
+        assertFalse(c.isSaving)
+        assertTrue("no debería emitir Saved: $ev", ev.isEmpty())
+
+        // También al editar una comida guardada con un ingrediente inválido.
+        val repoEdicion = FakeMealRepository(listOf(guardada.copy(ingredients = listOf(Ingredient("  ", grams = 100, kcal = 10)))))
+        val edicion = FoodCaptureViewModel(repoEdicion)
+        val evEdicion = eventosDe(edicion)
+        edicion.onOpenConfirmation(7, fecha, "Pollo con arroz")
+
+        edicion.onSave()
+
+        assertTrue("no debería llamar a updateMeal: ${repoEdicion.actualizadas}", repoEdicion.actualizadas.isEmpty())
+        assertTrue("no debería llamar a addMeal", repoEdicion.agregadas.isEmpty())
+        val ce = edicion.uiState.value.confirmation
+        assertEquals(R.string.nutrition_error_ingredients, ce?.saveError)
+        assertEquals(false, ce?.isSaving)
+        assertTrue("no debería emitir Saved: $evEdicion", evEdicion.isEmpty())
+    }
+
+    @Test
+    fun `C63 sin borrador 07 no tiene ingredientes`() = runTest {
+        // Carga manual después de una foto.
+        vm.onPhotoCaptureStarted()
+        vm.onManualEntry()
+        vm.onOpenConfirmation(nueva, fecha, "Comida estimada", ingredientes)
+        assertEquals(emptyList<Ingredient>(), confirmacion().ingredients)
+
+        vm.onFormChange(formValido)
+        vm.onSave()
+        assertEquals(emptyList<Ingredient>(), repo.agregadas.single().ingredients)
+
+        // Precarga de la búsqueda (onPrefill) después de una foto.
+        vm.onPhotoCaptureStarted()
+        vm.onPrefill(formValido)
+        vm.onOpenConfirmation(nueva, fecha, "Comida estimada", ingredientes)
+        assertEquals(emptyList<Ingredient>(), confirmacion().ingredients)
+
+        vm.onSave()
+        assertEquals(2, repo.agregadas.size)
+        assertEquals(emptyList<Ingredient>(), repo.agregadas[1].ingredients)
+    }
+
+    @Test
+    fun `C64 editar conserva los ingredientes guardados`() = runTest {
+        val repoEdicion = FakeMealRepository(listOf(guardada.copy(ingredients = ingredientes)))
+        val edicion = FoodCaptureViewModel(repoEdicion)
+        edicion.onOpenConfirmation(7, fecha, "Pollo con arroz")
+
+        val c = edicion.uiState.value.confirmation
+        assertEquals(ingredientes, c?.ingredients)
+
+        edicion.onFormChange(c!!.form.copy(name = "Avena editada", kcal = "400", type = MealType.SNACK))
+        edicion.onSave()
+
+        assertEquals("updateMeal no se llamó una sola vez", 1, repoEdicion.actualizadas.size)
+        val meal = repoEdicion.actualizadas.single()
+        assertEquals(7L, meal.id)
+        assertEquals(ingredientes, meal.ingredients)
     }
 }
