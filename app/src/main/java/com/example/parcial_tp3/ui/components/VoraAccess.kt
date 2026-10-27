@@ -98,14 +98,18 @@ fun VoraAccessScaffold(
     content: @Composable ColumnScope.() -> Unit,
 ) {
     VoraAccessBackground(modifier) {
-        BoxWithConstraints {
+        // Los margenes de las barras van afuera del scroll: adentro se desplazaban con el
+        // contenido y al bajar el logo y el selector de idioma quedaban debajo de la hora.
+        BoxWithConstraints(
+            Modifier
+                .statusBarsPadding()
+                .navigationBarsPadding()
+                .imePadding(),
+        ) {
             Column(
                 modifier = Modifier
                     .verticalScroll(rememberScrollState())
                     .heightIn(min = maxHeight)
-                    .statusBarsPadding()
-                    .navigationBarsPadding()
-                    .imePadding()
                     .padding(horizontal = VoraTheme.spacing.s24),
                 verticalArrangement = Arrangement.SpaceBetween,
             ) {
