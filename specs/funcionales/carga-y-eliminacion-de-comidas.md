@@ -71,7 +71,7 @@ data class MealRow(
 - **02:** las comidas agrupadas por tipo. El encabezado del grupo lleva el tipo y la suma de kcal; cada comida es una línea con su nombre y sus kcal, y tocarla abre su detalle.
 
 **Con ingredientes, como el Figma:**
-- **01:** la bajada son los nombres de los ingredientes separados por `" · "`, en una sola línea; si no entra, se corta con `…` (`maxLines = 1`, `TextOverflow.Ellipsis`), como el Figma.
+- **01:** la bajada son los nombres de los ingredientes separados por `" · "`, en hasta dos líneas; si no entra, se corta con `…` (`maxLines = 2`, `TextOverflow.Ellipsis`). El Figma la dibuja en una línea porque sus nombres son cortos; con nombres cortos queda igual.
 - **02:** en vez de la línea de la comida, una línea por ingrediente (nombre, gramos en gris abajo y kcal), una comida debajo de la otra y sin el nombre de la comida. Tocar cualquier línea abre la 08 de su comida. El encabezado sigue sumando las kcal de las comidas.
 - **08:** "Ingredients" muestra una tarjeta por ingrediente con nombre, gramos en la línea gris y kcal. Sin ingredientes, una sola tarjeta con el nombre de la comida y la proteína en la línea gris.
 
@@ -258,7 +258,7 @@ Regla de formato: el texto se evalúa sin espacios en los bordes; **primero el f
 ### A mano (no tienen test automático)
 - C51. CUANDO se guarda una comida y se cierra la app (`adb shell am force-stop`), al reabrirla la comida DEBE seguir en 02 y en el total (RF04).
 - C52. El ícono de calendario de 01 DEBE abrir un `DatePickerDialog` de Material 3 con la fecha elegida, y elegir otra DEBE cambiar lo que listan 01 y 02.
-- C67. CUANDO se guarda una comida desde la foto o la voz, 01 DEBE mostrar como bajada sus ingredientes separados por `" · "` en una sola línea, cortada con `…` si no entra en 360 dp, y una comida manual DEBE seguir mostrando su nombre.
+- C67. CUANDO se guarda una comida desde la foto o la voz, 01 DEBE mostrar como bajada sus ingredientes separados por `" · "` en hasta dos líneas, cortada con `…` si no entra en 360 dp, y una comida manual DEBE seguir mostrando su nombre.
 - C68. En 02, una comida con ingredientes DEBE verse como una línea por ingrediente (nombre, gramos y kcal), y tocar cualquiera de esas líneas DEBE abrir la 08 de esa comida. Una manual DEBE verse como dice "Qué muestran 01 y 02 sin ingredientes".
 - C69. En 08, una comida con ingredientes DEBE mostrar una tarjeta por ingrediente con nombre, gramos y kcal. Una manual DEBE mostrar una sola tarjeta con su nombre y la proteína en la línea gris.
 - C70. CUANDO se instala la versión con `version = 5` sobre una base vieja, la app DEBE abrir sin cerrarse. Room borra una vez todas las tablas y las vuelve a crear vacías, así que se pierden los registros de comidas, caché de entrenamientos e historial del coach. Lo que se cargue después DEBE seguir al cerrar y reabrir (C51).
@@ -342,7 +342,7 @@ Casos de la plantilla que no aplican: sin conexión, 404, 503 y JSON inválido (
 | C55 | `` `C55 un nombre con coma comillas y tildes vuelve igual` `` | `test/` · `MealMappersTest` | sí, 2026-10-27 |
 | C56 | `` `C56 ingredientes invalidos son MealDataException INVALID_DATA` `` | `test/` · `MealRepositoryImplTest` | sí, 2026-10-27 |
 | C57 | `` `C57 gramos o kcal que faltan se leen como 0` `` | `test/` · `MealMappersTest` | sí, 2026-10-27 |
-| C58 | `C58_addMeal_guarda_y_devuelve_los_ingredientes` | `androidTest/` · `MealRepositoryRoomTest` | compila, 2026-10-27; falta correrlo con el emulador |
+| C58 | `C58_addMeal_guarda_y_devuelve_los_ingredientes` | `androidTest/` · `MealRepositoryRoomTest` | compila, 2026-10-27; verde en el emulador el mismo día |
 | C59 | `` `C59 isValidIngredient pide nombre gramos mayores a 0 y kcal no negativas` `` | `test/` · `MealValidationTest` | sí, 2026-10-27 |
 | C60 | `` `C60 con borrador 07 trae los ingredientes que paso el grafo` `` | `test/` · `FoodConfirmationViewModelTest` | sí, 2026-10-27 |
 | C61 | `` `C61 guardar con borrador hace un solo addMeal con sus ingredientes` `` | `test/` · `FoodConfirmationViewModelTest` | sí, 2026-10-27 |
@@ -352,9 +352,9 @@ Casos de la plantilla que no aplican: sin conexión, 404, 503 y JSON inválido (
 | C65 | `` `C65 Duplicate copia los ingredientes` `` | `test/` · `MealDetailViewModelTest` | no: `meal.copy(id = 0)` ya los copia; control negativo con `copy(ingredients = emptyList())`: falla, 2026-10-27 |
 | C66 | `` `C66 cada MealRow trae sus ingredientes` `` | `test/` · `NutritionViewModelTest` | sí, 2026-10-27 |
 | C71 | `` `C71 Duplicate con un ingrediente invalido no guarda y muestra el error` `` | `test/` · `MealDetailViewModelTest` | sí, 2026-10-27 |
-| C67 | recorrido a mano y captura | emulador (360 y 411 dp) | no aplica |
-| C68 | recorrido a mano y captura | emulador (360 y 411 dp) | no aplica |
-| C69 | recorrido a mano y captura | emulador (360 y 411 dp) | no aplica |
+| C67 | recorrido a mano y captura | emulador (360 y 411 dp) · `docs/evidencia/visual/nutrition-01-ingredientes-*` | no aplica; hecho 2026-10-27 |
+| C68 | recorrido a mano y captura | emulador (360 y 411 dp) · `nutrition-02-ingredientes-*` | no aplica; hecho 2026-10-27 |
+| C69 | recorrido a mano y captura | emulador (360 y 411 dp) · `nutrition-08-ingredientes-*` y `nutrition-08-sin-ingredientes-*` | no aplica; hecho 2026-10-27 |
 | C70 | recorrido a mano | emulador | no aplica |
 
 - Los tests de `androidTest/` van con guion bajo (con `minSdk` 29 el DEX no acepta espacios) y se corren a mano con `./gradlew connectedDebugAndroidTest`. La salida se guarda en `docs/evidencia/tests/`.
@@ -435,3 +435,5 @@ Casos de la plantilla que no aplican: sin conexión, 404, 503 y JSON inválido (
   
   Los tests existentes no cambian: `Meal`, `MealEntity`, `MealRow` y `onOpenConfirmation` traen valores por defecto.
 - 2026-10-27. Tests en rojo del PR 1 de ingredientes: fallan 11 de `test/` por el resultado (C53, C55 a C57, C59 a C62, C64, C66 y C71); C54, C63 y C65 pasan y su control negativo falla; C58 compila y queda para correr con el emulador. Firmas sin lógica: `Ingredient`, las columnas y campos nuevos con su valor por defecto, `isValidIngredient` (devuelve `false`), el cuarto parámetro de `onOpenConfirmation` y `nutrition_error_ingredients`.
+- 2026-10-27. Implementación del PR 1 de ingredientes (datos y ViewModels, commits `425e2d6` y `d0fd972`): C53 a C66 y C71 en verde, C58 en el emulador. Decisión con Sofi al maquetar: la bajada de 01 va en hasta dos líneas y no en una (C67), para que se vean más ingredientes sin un gesto escondido; se descartó el scroll horizontal porque, sin `…`, no se nota que hay más.
+- 2026-10-27. Pantallas del PR 1 de ingredientes: 01, 02, 07 y 08 dibujan los ingredientes guardados (C67 a C69), y 07 dibuja sus tarjetas con `confirmation.ingredients` (lo marcó el revisor de arquitectura). Al capturar en 360 dp la bajada de 01 quedaba pegada a las kcal: se separó con 12 dp, también en las líneas de 02. `revisor-visual`: las cinco APROBADA en la primera vuelta. C70 (instalar la versión 5 sobre una base vieja) no se recorrió a mano.
