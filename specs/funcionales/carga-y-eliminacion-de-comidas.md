@@ -20,6 +20,7 @@ Se apoya en lo que dejó VC-h (`specs/funcionales/registro-de-comidas.md`): `Mea
   - Sin Entity ni DAO nuevos (en clase: un DAO por entidad).
   - `VoraDatabase` pasa de `version = 4` a `5`. Cambiar el esquema obliga a subirla. No se escribe `Migration`: el fallback destructivo de la decisión 003 (`dropAllTables = true`) borra **todas** las tablas una vez y las vuelve a crear vacías con el esquema nuevo. Se pierden los registros (comidas, caché de entrenamientos e historial del coach); la caché se vuelve a llenar desde el servidor.
   - Antes de unir el PR, confirmar que ningún otro PR abierto sube también a `version = 5`.
+- **Por qué la comida tiene id y el ingrediente no.** Hace falta un id cuando hay que elegir **una** comida: para abrir su detalle (`meal_details/{mealId}`, NAV04), para editarla (`updateMeal`) y para borrarla (`deleteMeal`). Nace en la capa de datos: las comidas no vienen de una API, así que lo crea Room al insertar (`@PrimaryKey(autoGenerate = true)` en `MealEntity`), y `Meal` lo lleva porque el ViewModel y la ruta lo necesitan (`id = 0`: todavía no se guardó). `@Delete` y `@Update` reciben la Entity entera, pero Room busca la fila **solo por la clave primaria**: por eso el objeto tiene que traer su id. `Ingredient` no tiene id porque nunca se elige uno solo en la base: vive dentro de la fila de su comida y se lee y se guarda con ella.
 - Formulario (nuevo, en `domain/`): `MealForm(name: String = "", type: MealType? = null, date: LocalDate, kcal: String = "", protein: String = "", carbs: String = "", fat: String = "")`. Los números van como texto porque es lo que se tipea. **No tiene ingredientes:** viajan aparte, en `ConfirmationState.ingredients`.
 
 ## Contrato
@@ -27,8 +28,8 @@ Se apoya en lo que dejó VC-h (`specs/funcionales/registro-de-comidas.md`): `Mea
 ### Datos y dominio
 | Pieza | Archivo | Firma |
 |---|---|---|
-| DAO | `data/local/dao/MealDao.kt` | suma `@Query("SELECT * FROM meals WHERE id = :id") fun observeById(id: Long): Flow<MealEntity?>`, `@Update suspend fun update(meal: MealEntity): Int` y `@Query("DELETE FROM meals WHERE id = :id") suspend fun deleteById(id: Long): Int` |
-| Repositorio | `data/repository/MealRepository.kt` e Impl | suma `fun observeMeal(id: Long): Flow<Meal?>`, `suspend fun updateMeal(meal: Meal)` y `suspend fun deleteMeal(id: Long)` |
+| DAO | `data/local/dao/MealDao.kt` | suma `@Query("SELECT * FROM meals WHERE id = :id") fun observeById(id: Long): Flow<MealEntity?>`, `@Update suspend fun update(meal: MealEntity): Int` y `@Delete suspend fun delete(meal: MealEntity): Int` (devuelve las filas borradas; hasta el 27/10 era `@Query("DELETE FROM meals WHERE id = :id") deleteById(id: Long)`, ver Historial) |
+| Repositorio | `data/repository/MealRepository.kt` e Impl | suma `fun observeMeal(id: Long): Flow<Meal?>`, `suspend fun updateMeal(meal: Meal)` y `suspend fun deleteMeal(meal: Meal)`, que llama a `dao.delete(meal.toEntity())`. Si borra 0 filas (la comida ya no estaba) no es un error: lo que se quería ya pasó. `updateMeal` sí avisa (C17), porque ahí se perdería lo escrito |
 | Errores | `data/repository/MealDataException.kt` | `class MealDataException(val error: MealError, cause: Throwable? = null) : Exception(cause)` y `enum class MealError { INVALID_DATA, STORAGE, NOT_FOUND }` |
 | Validación | `domain/MealValidation.kt` | `fun validateMeal(form: MealForm, id: Long = 0): MealValidation`; `sealed interface MealValidation { data class Valid(val meal: Meal); data class Invalid(val errors: Map<MealField, FieldError>) }`; `enum class MealField { NAME, TYPE, KCAL, PROTEIN, CARBS, FAT }`; `enum class FieldError { REQUIRED, NOT_A_NUMBER, NOT_A_WHOLE_NUMBER, NEGATIVE }` |
 | Reloj | `di/ClockModule.kt` | `@Provides fun provideClock(): Clock = Clock.systemDefaultZone()`. Los ViewModels piden "hoy" con `LocalDate.now(clock)`, así los tests fijan el día |
@@ -146,16 +147,21 @@ sealed interface MealDetailEvent { data object Deleted : MealDetailEvent; data o
 - `res/values/strings.xml` y `res/values-es/strings.xml`: `nutrition_error_ingredients` (hoy no existe).
 - **Fiore:** `ui/navigation/NutritionNavGraph.kt`. `rememberAbrirConfirmacion` resuelve con `getString` los nombres de `draft.ingredients` y los pasa como cuarto argumento de `onOpenConfirmation`. Se le avisa en el PR.
 
+**Borrado con `@Delete` (refactor, entre el PR 1 y el 2 de ingredientes):** `MealDao` (`delete` en lugar de `deleteById`), `MealRepository` y `MealRepositoryImpl` (`deleteMeal(meal)`) y `MealDetailViewModel.onConfirmDelete`. En los tests: `MealDaoTest` (C11, C12, que hoy borra con `deleteById`, y C72), el `FakeMealDao` de `MealRepositoryImplTest` (C14 y C73), `FakeMealRepository` y `MealDetailViewModelTest` (C45 y C74).
+  - `FakeMealRepository.deleteMeal(meal)` **sigue anotando el id** en `eliminadas: List<Long>` y suma `comidasEliminadas: List<Meal>`, que usa solo C45. Así C43, C46, C47 y C48, que comprueban `eliminadas` con `listOf(7L)`, no se tocan.
+  - KDoc de `MealRepository.deleteMeal`: no avisa si la comida ya no estaba (C73). El de `MealDao.delete` dice que devuelve las filas borradas y que busca por la clave primaria (C72).
+  - Lo que comprueban C11, C12, C14 y C45 no cambia: cambia solo qué se le pasa al DAO y al repositorio.
+
 **Home (Martu):** `HomeViewModel` suma un `catch` (C44). Es un cambio chico y se avisa en el PR.
 
 **Tests:**
 - `FakeMealRepository` (home) suma los métodos nuevos.
-- `FakeMealDao`, privado de `MealRepositoryImplTest`, suma `observeById`, `update` y `deleteById`, registra lo que recibe y puede tirar excepciones.
+- `FakeMealDao`, privado de `MealRepositoryImplTest`, suma `observeById`, `update` y `delete` (desde el refactor del 27/10; antes `deleteById`), registra lo que recibe y puede tirar excepciones. Con `delete` anota las Entity que recibe y devuelve las filas que el test le prepara (C73 usa 0).
 - Los tests de `FoodCaptureViewModel` pasan a crearlo con un repositorio falso.
 
 Ninguno cambia lo que comprueba.
 
-**Fiore:** `specs/PANTALLAS.md` línea 256 (dice que 03 carga, que 02 elimina y que el total sale de un `SUM`) y punto 4 de la §17 (eliminar no tiene control). Se le avisa en el PR para que lo actualice: carga en 07, elimina en 08 y el total se suma en el ViewModel, como Home (decisión 007).
+**Fiore:** `specs/PANTALLAS.md` línea 256 (dice que 03 carga, que 02 elimina y que el total sale de un `SUM`) y punto 4 de la §17 (eliminar no tiene control; además nombra `MealDao.deleteById`, que con el refactor del 27/10 pasa a `MealDao.delete`). Se le avisa en el PR para que lo actualice: carga en 07, elimina en 08 y el total se suma en el ViewModel, como Home (decisión 007).
 
 No se tocan `Rutas.kt`, `MainActivity` ni `RUTAS_*`.
 
@@ -191,13 +197,15 @@ Regla de formato: el texto se evalúa sin espacios en los bordes; **primero el f
 
 ### Room y repositorio (RF04, RF06)
 - C10. CUANDO se actualiza una comida guardada, `observeByDate` DEBE emitir la lista con los valores nuevos y el mismo `id`.
-- C11. CUANDO se elimina una comida por id, `observeByDate` DEBE emitir la lista sin ella y `deleteById` DEBE devolver 1; con un id que no existe, DEBE devolver 0 y no cambiar la tabla.
+- C11. CUANDO se elimina una comida guardada con `delete`, `observeByDate` DEBE emitir la lista sin ella y `delete` DEBE devolver 1; con una Entity cuyo `id` no existe, DEBE devolver 0 y no cambiar la tabla.
 - C12. `observeById` DEBE emitir la comida guardada y, después de eliminarla, `null`.
 - C13. `observeMeal` DEBE devolver `Meal` (no Entity) con el contenido de la Entity del DAO, y `null` cuando el DAO emite `null`.
-- C14. CUANDO se actualiza o elimina por el repositorio, el DAO DEBE recibir la Entity con el mismo `id` o ese `id`, respectivamente.
+- C14. CUANDO se actualiza o elimina por el repositorio, `update` y `delete` del DAO DEBEN recibir la Entity de esa comida, con el mismo `id`.
 - C15. SI Room falla al escribir (por ejemplo, `addMeal` de una comida con un `id` que ya existe, que con ABORT tira `SQLiteConstraintException`), ENTONCES el repositorio DEBE lanzar `MealDataException(STORAGE)`. Va en `androidTest/` con Room en memoria, porque `SQLiteException` no se puede crear en un test JVM sin Robolectric.
 - C16. SI una Entity leída tiene un tipo o una fecha inválidos, ENTONCES el Flow de `observeMealsByDate` y el de `observeMeal` DEBEN fallar con `MealDataException(INVALID_DATA)`.
 - C17. SI `update` devuelve 0 (la comida se borró mientras se editaba), ENTONCES `updateMeal` DEBE lanzar `MealDataException(NOT_FOUND)`.
+- C72. CUANDO se llama a `delete` con una Entity que tiene el `id` de una comida guardada pero otros valores (nombre, kcal, ingredientes), Room DEBE borrar esa fila igual: busca solo por la clave primaria.
+- C73. SI `delete` devuelve 0, ENTONCES `deleteMeal` NO DEBE lanzar una excepción.
 
 ### Listado por fecha y total diario (RF04, RF07)
 - C18. Con el `SavedStateHandle` vacío, `NutritionViewModel` DEBE pedirle al repositorio la fecha de hoy según el `Clock` inyectado.
@@ -231,7 +239,8 @@ Regla de formato: el texto se evalúa sin espacios en los bordes; **primero el f
 - C42. SI la comida no existe, ENTONCES el estado DEBE ser `NotFound`. SI `observeMeal` falla con `MealDataException`, ENTONCES DEBE ser `Error` con un texto de `strings.xml`.
 - C43. CUANDO se toca "Delete Meal", `confirmingDelete` DEBE ser `true`. CUANDO se cancela, DEBE volver a `false` y no DEBE eliminarse nada.
 - C44. SI el Flow de comidas de `HomeViewModel` falla con `MealDataException`, ENTONCES Home DEBE mostrar 0 kcal y 0 g, sin cerrarse la app.
-- C45. CUANDO se confirma, DEBE llamarse una vez a `deleteMeal(id)` y emitirse `Deleted` una sola vez.
+- C45. CUANDO se confirma, DEBE llamarse una vez a `deleteMeal` con la comida que muestra `Content` y emitirse `Deleted` una sola vez.
+- C74. SI `uiState` no es `Content` (`Loading`, `NotFound` o `Error`), ENTONCES `onConfirmDelete()` NO DEBE llamar a `deleteMeal` ni emitir `Deleted`. Antes borraba con el `mealId` de la ruta; la pantalla solo muestra "Delete Meal" con `Content`, así que no cambia nada para quien la usa.
 - C46. MIENTRAS `isBusy` es `true`, otro `onConfirmDelete()` u `onDuplicate()` no DEBE llamar al repositorio ni emitir otro evento.
 - C47. MIENTRAS se elimina, o después de eliminar con éxito, un `null` de `observeMeal` no DEBE pasar el estado a `NotFound`.
 - C48. SI eliminar o duplicar falla con `MealDataException`, ENTONCES `actionError` DEBE tener un texto de `strings.xml`, `isBusy` DEBE volver a `false`, la comida DEBE seguir en pantalla y no DEBE emitirse ningún evento.
@@ -273,7 +282,6 @@ Casos de la plantilla que no aplican: sin conexión, 404, 503 y JSON inválido (
 - Que −/+, "Remove" y "+ Add Ingredient" de 07 funcionen: siguen como demostración.
 - Traducir los nombres ya guardados si se cambia el idioma de la app.
 - Corregir una comida guardada con un ingrediente inválido (por ejemplo, gramos en 0 leídos de un JSON viejo): la validación también frena la edición y Duplicate, así que solo se puede eliminar. No se da por la app, porque todo lo que se escribe pasa por `isValidIngredient`, y la edición se va en el PR 2.
-- Pasar `deleteById` de `@Query` a `@Delete`, como en la clase: va en un PR aparte, entre el 1 y el 2 (cambia la llamada de C11).
 - "Retake Photo".
 - Eliminar desde 02 o con deslizar: se elimina solo desde 08.
 - Maquetar 07 y 08: son los PR 7 y 8 de VC-m. En VC-l solo se tocan para que compile.
@@ -295,10 +303,12 @@ Casos de la plantilla que no aplican: sin conexión, 404, 503 y JSON inválido (
 | C8 | `` `C8 trae el error de cada campo invalido` `` | `test/` · `MealValidationTest` | sí, 2026-10-24 |
 | C9 | `` `C9 un formulario valido da la Meal con el id pedido` `` | `test/` · `MealValidationTest` | sí, 2026-10-24 |
 | C10 | `C10_update_cambia_los_valores_y_conserva_el_id` | `androidTest/` · `MealDaoTest` | no: pasa desde el principio porque Room genera el DAO con las anotaciones; control negativo el 2026-10-24 (docs/evidencia/tests/2026-10-24-vc-l-verde.md) |
-| C11 | `C11_deleteById_saca_la_comida_y_devuelve_las_filas_borradas` | `androidTest/` · `MealDaoTest` | no: pasa desde el principio porque Room genera el DAO con las anotaciones; control negativo el 2026-10-24 (docs/evidencia/tests/2026-10-24-vc-l-verde.md) |
+| C11 | `C11_delete_saca_la_comida_y_devuelve_las_filas_borradas` (antes `C11_deleteById_…`) | `androidTest/` · `MealDaoTest` | no compila hasta que exista `delete`. Control negativo del refactor: cambiar `delete` por una `@Query` que no borra filas (`DELETE FROM meals WHERE id = :id AND 0`, recibiendo la Entity): C11 y C72 tienen que fallar |
 | C12 | `C12_observeById_emite_la_comida_y_null_al_borrarla` | `androidTest/` · `MealDaoTest` | no: pasa desde el principio porque Room genera el DAO con las anotaciones; control negativo el 2026-10-24 (docs/evidencia/tests/2026-10-24-vc-l-verde.md) |
 | C13 | `` `C13 observeMeal devuelve Meal y null cuando no existe` `` | `test/` · `MealRepositoryImplTest` | sí, 2026-10-24 |
-| C14 | `` `C14 updateMeal y deleteMeal llegan al DAO con el mismo id` `` | `test/` · `MealRepositoryImplTest` | sí, 2026-10-24 |
+| C14 | `` `C14 updateMeal y deleteMeal llegan al DAO con el mismo id` `` | `test/` · `MealRepositoryImplTest` | sí, 2026-10-24; se rehace en el refactor (`deleteMeal(meal)`) |
+| C72 | `C72_delete_borra_por_id_aunque_cambien_los_otros_valores` | `androidTest/` · `MealDaoTest` | va a pasar apenas compile (Room genera `@Delete`); control negativo: el mismo de C11 |
+| C73 | `` `C73 deleteMeal no falla si no habia nada que borrar` `` | `test/` · `MealRepositoryImplTest` | va a pasar apenas compile (el `deleteMeal` de hoy no lanza); control negativo: hacer que lance `NOT_FOUND` con 0 filas |
 | C15 | `C15_un_id_repetido_es_MealDataException_STORAGE` | `androidTest/` · `MealRepositoryRoomTest` | sí, 2026-10-24 (tiró `SQLiteConstraintException` sin traducir) |
 | C16 | `` `C16 una Entity invalida es MealDataException INVALID_DATA` `` | `test/` · `MealRepositoryImplTest` | sí, 2026-10-24 |
 | C17 | `` `C17 update de una comida borrada es NOT_FOUND` `` | `test/` · `MealRepositoryImplTest` | sí, 2026-10-24 |
@@ -329,7 +339,8 @@ Casos de la plantilla que no aplican: sin conexión, 404, 503 y JSON inválido (
 | C42 | `` `C42 no existe es NotFound y un error de datos es Error` `` | `test/` · `MealDetailViewModelTest` | sí, 2026-10-24 |
 | C43 | `` `C43 Delete pide confirmacion y cancelar no borra` `` | `test/` · `MealDetailViewModelTest` | sí, 2026-10-24 |
 | C44 | `` `C44 un error de datos en Home muestra 0 sin romper` `` | `test/` · `HomeViewModelTest` | sí, 2026-10-24 (se cae con `MealDataException` sin atrapar) |
-| C45 | `` `C45 confirmar borra una vez y emite Deleted` `` | `test/` · `MealDetailViewModelTest` | sí, 2026-10-24 |
+| C45 | `` `C45 confirmar borra una vez y emite Deleted` `` | `test/` · `MealDetailViewModelTest` | sí, 2026-10-24; se rehace en el refactor (recibe la comida) |
+| C74 | `` `C74 sin Content confirmar no borra` `` | `test/` · `MealDetailViewModelTest` | pendiente: hoy borra con el `mealId`, así que tiene que fallar |
 | C46 | `` `C46 mientras esta ocupado no repite borrar ni duplicar` `` | `test/` · `MealDetailViewModelTest` | sí, 2026-10-24 |
 | C47 | `` `C47 el null despues de borrar no muestra NotFound` `` | `test/` · `MealDetailViewModelTest` | sí, 2026-10-24 |
 | C48 | `` `C48 si borrar o duplicar falla muestra el error y no emite` `` | `test/` · `MealDetailViewModelTest` | sí, 2026-10-24 |
@@ -358,7 +369,7 @@ Casos de la plantilla que no aplican: sin conexión, 404, 503 y JSON inválido (
 | C70 | recorrido a mano | emulador | no aplica |
 
 - Los tests de `androidTest/` van con guion bajo (con `minSdk` 29 el DEX no acepta espacios) y se corren a mano con `./gradlew connectedDebugAndroidTest`. La salida se guarda en `docs/evidencia/tests/`.
-- Los de ViewModel usan un repositorio falso, `runTest`, la regla de `Dispatchers.Main` y `UnconfinedTestDispatcher` para observar, como `HomeViewModelTest`. El falso cuenta las suscripciones con `onStart` (C26 y C50). `deleteMeal` lo saca de la lista que emite y `updateMeal` lo reemplaza.
+- Los de ViewModel usan un repositorio falso, `runTest`, la regla de `Dispatchers.Main` y `UnconfinedTestDispatcher` para observar, como `HomeViewModelTest`. El falso cuenta las suscripciones con `onStart` (C26 y C50). `deleteMeal(meal)` saca de la lista la comida con `meal.id`, como Room (C72), y `updateMeal` la reemplaza.
 - `FoodConfirmationViewModelTest` prueba `FoodCaptureViewModel`: el nombre separa lo de 07 de lo de 04 a 06.
 
 ## Auditoría
@@ -437,3 +448,5 @@ Casos de la plantilla que no aplican: sin conexión, 404, 503 y JSON inválido (
 - 2026-10-27. Tests en rojo del PR 1 de ingredientes: fallan 11 de `test/` por el resultado (C53, C55 a C57, C59 a C62, C64, C66 y C71); C54, C63 y C65 pasan y su control negativo falla; C58 compila y queda para correr con el emulador. Firmas sin lógica: `Ingredient`, las columnas y campos nuevos con su valor por defecto, `isValidIngredient` (devuelve `false`), el cuarto parámetro de `onOpenConfirmation` y `nutrition_error_ingredients`.
 - 2026-10-27. Implementación del PR 1 de ingredientes (datos y ViewModels, commits `425e2d6` y `d0fd972`): C53 a C66 y C71 en verde, C58 en el emulador. Decisión con Sofi al maquetar: la bajada de 01 va en hasta dos líneas y no en una (C67), para que se vean más ingredientes sin un gesto escondido; se descartó el scroll horizontal porque, sin `…`, no se nota que hay más.
 - 2026-10-27. Pantallas del PR 1 de ingredientes: 01, 02, 07 y 08 dibujan los ingredientes guardados (C67 a C69), y 07 dibuja sus tarjetas con `confirmation.ingredients` (lo marcó el revisor de arquitectura). Al capturar en 360 dp la bajada de 01 quedaba pegada a las kcal: se separó con 12 dp, también en las líneas de 02. `revisor-visual`: las cinco APROBADA en la primera vuelta. C70 (instalar la versión 5 sobre una base vieja) no se recorrió a mano.
+- 2026-10-27. Borrado con `@Delete`, como en la clase (rama `refactor/nutrition-borrar-con-delete`, PR aparte entre el 1 y el 2). Decisiones con Sofi: `deleteMeal` recibe la `Meal` y no el id (con el id, la implementación tendría que leer la fila o armar una Entity de mentira); si `delete` devuelve 0 no es un error (C73), a diferencia de `updateMeal` (C17). Cambian C11, C14 y C45; se suman C72 (Room borra por la clave primaria), C73 y C74 (sin `Content` no se borra), y el párrafo "Por qué la comida tiene id y el ingrediente no" en Datos, por la pregunta del profe en la clase de Retrofit.
+- 2026-10-27. Corregida según la auditoría del refactor: C74 nuevo; `FakeMealRepository` sigue anotando ids en `eliminadas` (C43, C46, C47 y C48 no cambian) y suma `comidasEliminadas`; controles negativos de C11, C72 y C73 escritos; aviso a Fiore por `PANTALLAS.md` §17; C72 y C73 movidos después de C17.
