@@ -4,6 +4,7 @@ import com.example.parcial_tp3.data.repository.AppError
 import com.example.parcial_tp3.data.repository.AppException
 import com.example.parcial_tp3.domain.model.FoodItem
 import com.example.parcial_tp3.domain.model.FoodPage
+import com.example.parcial_tp3.domain.model.Ingredient
 import com.example.parcial_tp3.domain.model.Nutrients
 import com.example.parcial_tp3.util.MainDispatcherRule
 import java.time.LocalDate
@@ -265,14 +266,14 @@ class FoodSearchViewModelTest {
     }
 
     @Test
-    fun `C29 onConfirm arma el MealForm con nombre nutrientes y type null`() = runTest {
+    fun `C29 onConfirm arma la seleccion con nombre nutrientes y type null`() = runTest {
         val vm = vm(repo())
         advanceUntilIdle()
         vm.onFoodSelected(pollo)
         vm.onGramsChange("150")
         advanceUntilIdle()
 
-        val form = vm.onConfirm(hoy)
+        val form = vm.onConfirm(hoy)?.form
 
         assertEquals("Pollo cocido", form?.name)
         assertEquals("248", form?.kcal)
@@ -289,7 +290,7 @@ class FoodSearchViewModelTest {
         vm.onGramsChange("100")
         advanceUntilIdle()
 
-        val form = vm.onConfirm(hoy)
+        val form = vm.onConfirm(hoy)?.form
 
         // parseKcal valida con ^-?\d+$: "165.0" haria que 07 marque NOT_A_WHOLE_NUMBER.
         assertEquals("165", form?.kcal)
@@ -305,7 +306,7 @@ class FoodSearchViewModelTest {
         advanceUntilIdle()
 
         val otroDia = LocalDate.of(2026, 10, 20)
-        assertEquals(otroDia, vm.onConfirm(otroDia)?.date)
+        assertEquals(otroDia, vm.onConfirm(otroDia)?.form?.date)
     }
 
     @Test
@@ -319,5 +320,26 @@ class FoodSearchViewModelTest {
 
         assertNull("al volver de 07 se ven los resultados", vm.estado.value.seleccionado)
         assertEquals(listOf(pollo, aceite), vm.estado.value.items)
+    }
+
+    @Test
+    fun `C81 onConfirm devuelve el alimento como ingrediente con gramos redondeados`() = runTest {
+        val vm = vm(repo())
+        advanceUntilIdle()
+        val fallas = mutableListOf<String>()
+
+        for ((gramos, esperados) in listOf("150" to 150, "150,5" to 151, "0,4" to 1)) {
+            vm.onFoodSelected(pollo)
+            vm.onGramsChange(gramos)
+            val seleccion = vm.onConfirm(hoy)
+            if (seleccion == null) {
+                fallas += "con \"$gramos\" onConfirm devolvió null"
+                continue
+            }
+            val esperado = Ingredient("Pollo cocido", grams = esperados, kcal = seleccion.form.kcal.toInt())
+            if (seleccion.ingredient != esperado) fallas += "con \"$gramos\": esperaba $esperado y dio ${seleccion.ingredient}"
+        }
+
+        assertEquals(emptyList<String>(), fallas)
     }
 }

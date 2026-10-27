@@ -473,16 +473,16 @@ Casos de la plantilla que no aplican: sin conexión, 404, 503 y JSON inválido (
 | C7 | `` `C7 el cero es valido en kcal y macros` `` | `test/` · `MealValidationTest` | sí, 2026-10-24 |
 | C8 | `` `C8 trae el error de cada campo invalido` `` | `test/` · `MealValidationTest` | sí, 2026-10-24 |
 | C9 | `` `C9 un formulario valido da la Meal con el id pedido` `` | `test/` · `MealValidationTest` | sí, 2026-10-24 |
-| C10 | `C10_update_cambia_los_valores_y_conserva_el_id` | `androidTest/` · `MealDaoTest` | no: pasa desde el principio porque Room genera el DAO con las anotaciones; control negativo el 2026-10-24 (docs/evidencia/tests/2026-10-24-vc-l-verde.md); se borra en el PR 2 (sin edición) |
+| C10 | `C10_update_cambia_los_valores_y_conserva_el_id` | `androidTest/` · `MealDaoTest` | no: pasa desde el principio porque Room genera el DAO con las anotaciones; control negativo el 2026-10-24 (docs/evidencia/tests/2026-10-24-vc-l-verde.md); **borrado** el 2026-10-27 (PR 2, sin edición) |
 | C11 | `C11_delete_saca_la_comida_y_devuelve_las_filas_borradas` (antes `C11_deleteById_…`) | `androidTest/` · `MealDaoTest` | no: pasa desde el principio porque Room genera `@Delete`. Control negativo del refactor, 2026-10-27: `@Update` en lugar de `@Delete` (misma firma, no borra) y fallan C11, C12 y C72 |
 | C12 | `C12_observeById_emite_la_comida_y_null_al_borrarla` | `androidTest/` · `MealDaoTest` | no: pasa desde el principio porque Room genera el DAO con las anotaciones; control negativo el 2026-10-24 (docs/evidencia/tests/2026-10-24-vc-l-verde.md) |
 | C13 | `` `C13 observeMeal devuelve Meal y null cuando no existe` `` | `test/` · `MealRepositoryImplTest` | sí, 2026-10-24 |
-| C14 | `` `C14 deleteMeal llega al DAO con la Entity de la comida` `` (antes `C14 updateMeal y deleteMeal llegan…`) | `test/` · `MealRepositoryImplTest` | sí, 2026-10-24; de nuevo el 2026-10-27 con `deleteMeal(meal)`: `delete` no recibe la Entity; en el PR 2 se queda solo con `deleteMeal` (se cambia el test) |
+| C14 | `` `C14 deleteMeal llega al DAO con la Entity de la comida` `` (antes `C14 updateMeal y deleteMeal llegan…`) | `test/` · `MealRepositoryImplTest` | sí, 2026-10-24; de nuevo el 2026-10-27 con `deleteMeal(meal)`: `delete` no recibe la Entity; en el PR 2 se queda solo con `deleteMeal`: hecho el 2026-10-27, sigue en verde (la parte que queda ya estaba implementada) |
 | C72 | `C72_delete_borra_por_id_aunque_cambien_los_otros_valores` | `androidTest/` · `MealDaoTest` | no: pasa desde el principio, como C11. Control negativo: el mismo de C11, falla |
 | C73 | `` `C73 deleteMeal no falla si no habia nada que borrar` `` | `test/` · `MealRepositoryImplTest` | sí, 2026-10-27: con la firma provisoria `deleteMeal` llama a `deleteById` y `delete` no recibe la Entity |
 | C15 | `C15_un_id_repetido_es_MealDataException_STORAGE` | `androidTest/` · `MealRepositoryRoomTest` | sí, 2026-10-24 (tiró `SQLiteConstraintException` sin traducir) |
 | C16 | `` `C16 una Entity invalida es MealDataException INVALID_DATA` `` | `test/` · `MealRepositoryImplTest` | sí, 2026-10-24 |
-| C17 | `` `C17 update de una comida borrada es NOT_FOUND` `` | `test/` · `MealRepositoryImplTest` | sí, 2026-10-24; se borra en el PR 2 |
+| C17 | `` `C17 update de una comida borrada es NOT_FOUND` `` | `test/` · `MealRepositoryImplTest` | sí, 2026-10-24; **borrado** el 2026-10-27 (PR 2) |
 | C18 | `` `C18 arranca pidiendo la fecha de hoy del Clock` `` | `test/` · `NutritionViewModelTest` | sí, 2026-10-24 |
 | C19 | `` `C19 elegir una fecha la pide y la guarda en SavedStateHandle` `` | `test/` · `NutritionViewModelTest` | sí, 2026-10-24 |
 | C20 | `` `C20 al recrearse usa la fecha guardada` `` | `test/` · `NutritionViewModelTest` | sí, 2026-10-24 |
@@ -494,17 +494,17 @@ Casos de la plantilla que no aplican: sin conexión, 404, 503 y JSON inválido (
 | C26 | `` `C26 recolectar en menos de 5 s no vuelve a suscribirse` `` | `test/` · `NutritionViewModelTest` | sí, 2026-10-24 |
 | C27 | `` `C27 los millis del DatePicker son la fecha en UTC` `` | `test/` · `DatePickerDatesTest` | sí, 2026-10-24 |
 | C28 | `` `C28 con borrador el formulario viene precargado` `` | `test/` · `FoodConfirmationViewModelTest` | sí, 2026-10-24 |
-| C29 | `` `C29 abrir la carga manual la deja vacia y sin borrador` `` (antes `C29 la carga manual viene vacia…`) | `test/` · `FoodCaptureManualEntryTest` | pendiente (PR 2); el viejo vio el rojo el 2026-10-24 |
-| C30 | `` `C30 con id el formulario trae la comida guardada` `` | `test/` · `FoodConfirmationViewModelTest` | sí, 2026-10-24; se borra en el PR 2 |
-| C31 | `` `C31 abrir 07 reemplaza la confirmacion anterior` `` (antes `C31 reabrir con el mismo id…`) | `test/` · `FoodConfirmationViewModelTest` | pendiente (PR 2) |
-| C32 | `` `C32 onDiscard cierra el formulario` `` | `test/` · `FoodConfirmationViewModelTest` | sí, 2026-10-24 |
-| C33 | `` `C33 un id que no existe es notFound` `` | `test/` · `FoodConfirmationViewModelTest` | sí, 2026-10-24; se borra en el PR 2 |
-| C34 | `` `C34 guardar invalido no escribe y muestra saveError` `` (antes `…muestra errores y no escribe`) | `test/` · `FoodConfirmationViewModelTest` | pendiente (PR 2) |
-| C35 | `` `C35 corregir un campo del pop-up borra solo su error` `` (antes en `FoodConfirmationViewModelTest`) | `test/` · `FoodCaptureManualEntryTest` | pendiente (PR 2) |
-| C36 | `` `C36 guardar nueva llama a addMeal emite Saved y limpia` `` | `test/` · `FoodConfirmationViewModelTest` | sí, 2026-10-24 |
-| C37 | `` `C37 guardar edicion llama a updateMeal con el mismo id` `` | `test/` · `FoodConfirmationViewModelTest` | sí, 2026-10-24; se borra en el PR 2 |
-| C38 | `` `C38 dos toques en guardar escriben una sola vez` `` | `test/` · `FoodConfirmationViewModelTest` | sí, 2026-10-24 |
-| C39 | `` `C39 si guardar falla conserva lo escrito y no emite Saved` `` | `test/` · `FoodConfirmationViewModelTest` | sí, 2026-10-24 |
+| C29 | `` `C29 abrir la carga manual la deja vacia y sin borrador` `` (antes `C29 la carga manual viene vacia…`) | `test/` · `FoodCaptureManualEntryTest` | sí, 2026-10-27 (PR 2: el pop-up no se abre); el viejo vio el rojo el 2026-10-24 |
+| C30 | `` `C30 con id el formulario trae la comida guardada` `` | `test/` · `FoodConfirmationViewModelTest` | sí, 2026-10-24; **borrado** el 2026-10-27 (PR 2) |
+| C31 | `` `C31 abrir 07 reemplaza la confirmacion anterior` `` (antes `C31 reabrir con el mismo id…`) | `test/` · `FoodConfirmationViewModelTest` | sí, 2026-10-27: con la misma `confirmation` abierta no la reemplaza (`Pollo con arroz` en vez de `Fideos con salsa`) |
+| C32 | `` `C32 onDiscard cierra el formulario` `` | `test/` · `FoodConfirmationViewModelTest` | sí, 2026-10-24; en el PR 2 solo cambia cómo se abre 07 y sigue en verde |
+| C33 | `` `C33 un id que no existe es notFound` `` | `test/` · `FoodConfirmationViewModelTest` | sí, 2026-10-24; **borrado** el 2026-10-27 (PR 2) |
+| C34 | `` `C34 guardar invalido no escribe y muestra saveError` `` (antes `…muestra errores y no escribe`) | `test/` · `FoodConfirmationViewModelTest` | sí, 2026-10-27: `saveError` queda en `null` (los errores van a `errors`) |
+| C35 | `` `C35 corregir un campo del pop-up borra solo su error` `` (antes en `FoodConfirmationViewModelTest`) | `test/` · `FoodCaptureManualEntryTest` | sí, 2026-10-27 (el pop-up no se abre) |
+| C36 | `` `C36 guardar nueva llama a addMeal emite Saved y limpia` `` | `test/` · `FoodConfirmationViewModelTest` | sí, 2026-10-24; en el PR 2 sigue en verde: la foto ya guarda 520, que es la suma (el caso con `form.kcal` distinto es C87) |
+| C37 | `` `C37 guardar edicion llama a updateMeal con el mismo id` `` | `test/` · `FoodConfirmationViewModelTest` | sí, 2026-10-24; **borrado** el 2026-10-27 (PR 2) |
+| C38 | `` `C38 dos toques en guardar escriben una sola vez` `` | `test/` · `FoodConfirmationViewModelTest` | sí, 2026-10-24; de nuevo el 2026-10-27, por el pop-up (no deja seguir a 07) |
+| C39 | `` `C39 si guardar falla conserva lo escrito y no emite Saved` `` | `test/` · `FoodConfirmationViewModelTest` | sí, 2026-10-24; de nuevo el 2026-10-27, por el pop-up |
 | C40 | `` `C40 al terminar el analisis de voz el borrador es el de la foto` `` | `test/` · `FoodCaptureViewModelTest` | sí, 2026-10-24 |
 | C41 | `` `C41 carga la comida de la ruta` `` | `test/` · `MealDetailViewModelTest` | sí, 2026-10-24 |
 | C42 | `` `C42 no existe es NotFound y un error de datos es Error` `` | `test/` · `MealDetailViewModelTest` | sí, 2026-10-24 |
@@ -528,9 +528,9 @@ Casos de la plantilla que no aplican: sin conexión, 404, 503 y JSON inválido (
 | C59 | `` `C59 isValidIngredient pide nombre gramos mayores a 0 y kcal no negativas` `` | `test/` · `MealValidationTest` | sí, 2026-10-27 |
 | C60 | `` `C60 con borrador 07 trae los ingredientes que paso el grafo` `` | `test/` · `FoodConfirmationViewModelTest` | sí, 2026-10-27 |
 | C61 | `` `C61 guardar con borrador hace un solo addMeal con sus ingredientes` `` | `test/` · `FoodConfirmationViewModelTest` | sí, 2026-10-27 |
-| C62 | `` `C62 un ingrediente invalido no guarda y muestra el error` `` | `test/` · `FoodConfirmationViewModelTest` | sí, 2026-10-27 |
-| C63 | `` `C63 sin borrador 07 no tiene ingredientes` `` | `test/` · `FoodConfirmationViewModelTest` | se reescribe en el PR 2 (sin `onManualEntry`); antes: control negativo, 2026-10-27 |
-| C64 | `` `C64 editar conserva los ingredientes guardados` `` | `test/` · `FoodConfirmationViewModelTest` | sí, 2026-10-27; se borra en el PR 2 |
+| C62 | `` `C62 un ingrediente invalido no guarda y muestra el error` `` | `test/` · `FoodConfirmationViewModelTest` | sí, 2026-10-27; en el PR 2 pierde la mitad de edición y sigue en verde |
+| C63 | `` `C63 sin borrador 07 no tiene ingredientes` `` | `test/` · `FoodConfirmationViewModelTest` | no: pasa (el código del PR 1 ya lo cumple); control negativo del PR 2, 2026-10-27: usar `draftIngredients` sin borrador, falla |
+| C64 | `` `C64 editar conserva los ingredientes guardados` `` | `test/` · `FoodConfirmationViewModelTest` | sí, 2026-10-27; **borrado** el 2026-10-27 (PR 2) |
 | C65 | `` `C65 Duplicate copia los ingredientes` `` | `test/` · `MealDetailViewModelTest` | no: `meal.copy(id = 0)` ya los copia; control negativo con `copy(ingredients = emptyList())`: falla, 2026-10-27 |
 | C66 | `` `C66 cada MealRow trae sus ingredientes` `` | `test/` · `NutritionViewModelTest` | sí, 2026-10-27 |
 | C71 | `` `C71 Duplicate con un ingrediente invalido no guarda y muestra el error` `` | `test/` · `MealDetailViewModelTest` | sí, 2026-10-27 |
@@ -538,25 +538,25 @@ Casos de la plantilla que no aplican: sin conexión, 404, 503 y JSON inválido (
 | C68 | recorrido a mano y captura | emulador (360 y 411 dp) · `nutrition-02-ingredientes-*` | no aplica; hecho 2026-10-27 |
 | C69 | recorrido a mano y captura | emulador (360 y 411 dp) · `nutrition-08-ingredientes-*` y `nutrition-08-sin-ingredientes-*` | no aplica; hecho 2026-10-27 |
 | C70 | recorrido a mano | emulador | no aplica |
-| C75 | `` `C75 validateIngredient da el resultado de cada fila de la tabla` `` | `test/` · `MealValidationTest` | pendiente (PR 2) |
-| C76 | `` `C76 un ingrediente valido sale sin espacios y con todos los errores si no` `` | `test/` · `MealValidationTest` | pendiente |
-| C77 | `` `C77 validateMealDetails valida como validateMeal sin mirar las kcal` `` | `test/` · `MealValidationTest` | pendiente |
-| C78 | `` `C78 continuar invalido muestra errores y no abre 07` `` | `test/` · `FoodCaptureManualEntryTest` | pendiente |
-| C79 | `` `C79 continuar valido abre 07 con el form y los ingredientes del pop-up` `` | `test/` · `FoodCaptureManualEntryTest` | pendiente |
-| C80 | `` `C80 cerrar el pop-up no abre 07 ni escribe` `` | `test/` · `FoodCaptureManualEntryTest` | pendiente |
-| C81 | `` `C81 onConfirm devuelve el alimento como ingrediente con gramos redondeados` `` | `test/` · `FoodSearchViewModelTest` | pendiente |
-| C82 | `` `C82 onPrefill abre el pop-up con el alimento` `` | `test/` · `FoodCaptureManualEntryTest` | pendiente |
-| C83 | `` `C83 desde la busqueda 07 llega con el alimento como ingrediente` `` | `test/` · `FoodCaptureManualEntryTest` | pendiente |
-| C84 | `` `C84 Add Ingredient abre el pop-up y cerrarlo no cambia la lista` `` | `test/` · `FoodConfirmationViewModelTest` | pendiente |
-| C85 | `` `C85 confirmar un ingrediente lo agrega al final o muestra los errores` `` | `test/` · `FoodConfirmationViewModelTest` | pendiente |
-| C86 | `` `C86 corregir un campo del ingrediente borra solo su error` `` | `test/` · `FoodConfirmationViewModelTest` | pendiente |
-| C87 | `` `C87 las kcal guardadas son la suma de los ingredientes` `` | `test/` · `FoodConfirmationViewModelTest` | pendiente |
-| C88 | `` `C88 sin ingredientes no guarda` `` | `test/` · `FoodConfirmationViewModelTest` | pendiente |
-| C89 | `` `C89 un ingrediente de 0 kcal se guarda` `` | `test/` · `FoodConfirmationViewModelTest` | pendiente (si pasa a la primera, control negativo) |
-| C90 | `` `C90 Remove saca el ingrediente de esa posicion` `` | `test/` · `FoodConfirmationViewModelTest` | pendiente |
-| C91 | `` `C91 mientras guarda no cambian los ingredientes` `` | `test/` · `FoodConfirmationViewModelTest` | pendiente |
-| C101 | `` `C101 agregar o sacar un ingrediente borra el error de guardado` `` | `test/` · `FoodConfirmationViewModelTest` | pendiente |
-| C102 | `` `C102 mientras guarda abrir 07 no reemplaza la confirmacion` `` | `test/` · `FoodConfirmationViewModelTest` | pendiente |
+| C75 | `` `C75 validateIngredient da el resultado de cada fila de la tabla` `` | `test/` · `MealValidationTest` | sí, 2026-10-27: `validateIngredient` provisoria da `Invalid` vacío |
+| C76 | `` `C76 un ingrediente valido sale sin espacios y con todos los errores si no` `` | `test/` · `MealValidationTest` | sí, 2026-10-27: `validateIngredient` provisoria da `Invalid` vacío |
+| C77 | `` `C77 validateMealDetails valida como validateMeal sin mirar las kcal` `` | `test/` · `MealValidationTest` | sí, 2026-10-27: `validateMealDetails` provisoria no da errores |
+| C78 | `` `C78 continuar invalido muestra errores y no abre 07` `` | `test/` · `FoodCaptureManualEntryTest` | sí, 2026-10-27: el pop-up no se abre |
+| C79 | `` `C79 continuar valido abre 07 con el form y los ingredientes del pop-up` `` | `test/` · `FoodCaptureManualEntryTest` | sí, 2026-10-27: `onContinueManualEntry` devuelve `false` |
+| C80 | `` `C80 cerrar el pop-up no abre 07 ni escribe` `` | `test/` · `FoodCaptureManualEntryTest` | sí, 2026-10-27: el pop-up no se abre |
+| C81 | `` `C81 onConfirm devuelve el alimento como ingrediente con gramos redondeados` `` | `test/` · `FoodSearchViewModelTest` | sí, 2026-10-27: el ingrediente provisorio sale vacío |
+| C82 | `` `C82 onPrefill abre el pop-up con el alimento` `` | `test/` · `FoodCaptureManualEntryTest` | sí, 2026-10-27: el pop-up no se abre |
+| C83 | `` `C83 desde la busqueda 07 llega con el alimento como ingrediente` `` | `test/` · `FoodCaptureManualEntryTest` | sí, 2026-10-27: el pop-up no se abre |
+| C84 | `` `C84 Add Ingredient abre el pop-up y cerrarlo no cambia la lista` `` | `test/` · `FoodConfirmationViewModelTest` | sí, 2026-10-27: `ingredientEntry` sigue en `null` |
+| C85 | `` `C85 confirmar un ingrediente lo agrega al final o muestra los errores` `` | `test/` · `FoodConfirmationViewModelTest` | sí, 2026-10-27: la lista no cambia |
+| C86 | `` `C86 corregir un campo del ingrediente borra solo su error` `` | `test/` · `FoodConfirmationViewModelTest` | sí, 2026-10-27: no hay errores del ingrediente |
+| C87 | `` `C87 las kcal guardadas son la suma de los ingredientes` `` | `test/` · `FoodConfirmationViewModelTest` | sí, 2026-10-27: `totalKcal` provisoria da 0 |
+| C88 | `` `C88 sin ingredientes no guarda` `` | `test/` · `FoodConfirmationViewModelTest` | sí, 2026-10-27: el pop-up no deja seguir a 07 |
+| C89 | `` `C89 un ingrediente de 0 kcal se guarda` `` | `test/` · `FoodConfirmationViewModelTest` | sí, 2026-10-27: el pop-up no deja seguir a 07 |
+| C90 | `` `C90 Remove saca el ingrediente de esa posicion` `` | `test/` · `FoodConfirmationViewModelTest` | sí, 2026-10-27: Remove no saca nada |
+| C91 | `` `C91 mientras guarda no cambian los ingredientes` `` | `test/` · `FoodConfirmationViewModelTest` | no: pasa con las firmas vacías; control negativo (Remove que borra aunque esté guardando): falla, 2026-10-27 |
+| C101 | `` `C101 agregar o sacar un ingrediente borra el error de guardado` `` | `test/` · `FoodConfirmationViewModelTest` | sí, 2026-10-27: `saveError` no se borra |
+| C102 | `` `C102 mientras guarda abrir 07 no reemplaza la confirmacion` `` | `test/` · `FoodConfirmationViewModelTest` | sí, por el pop-up de carga; la mitad de `onOpenConfirmation` pasaba con el código viejo; control negativo (abrir 07 siempre reemplaza): falla, 2026-10-27 |
 | C92 a C98 | recorrido a mano y capturas | emulador (411 y 360 dp) | no aplica |
 | C99 | capturas de la tabla y `revisor-visual` | `docs/evidencia/visual/` | no aplica |
 | C100 | recorrido a mano y captura | emulador | no aplica |
@@ -676,3 +676,4 @@ Casos de la plantilla que no aplican: sin conexión, 404, 503 y JSON inválido (
 
   Además, por decisión de Sofi: el pop-up de carga es una hoja inferior, como la búsqueda, y el de ingrediente un `AlertDialog`.
 - 2026-10-27. Corregida según la segunda vuelta del `auditor-spec` (13 hallazgos: 0 BLOQUEA, 2 ALTA, 4 MEDIA, 7 BAJA). Se corrigieron todos: `nutrition_confirm_not_found` queda también en "Edición: fuera de alcance"; C63 sin `mealId` y sin guardar dos veces; C102 nuevo (mientras se guarda, abrir 07 no reemplaza la confirmación); el segundo test de `FoodCapturePrefillTest` se borra (lo reemplaza C82); C34 con `nutrition_error_save` y el orden de los controles de `onSave`; la spec de búsqueda con la marca del PR 2 en las secciones que faltaban; C14 con nombre nuevo; la lista de código sin uso completa (el botón de 07 dice siempre "Add to [tipo]"); `ManualEntrySheet` en lugar de "Dialog"; los controles de la hoja y sus textos; el `grep` de C95. Decidido por la IA (Sofi puede cambiarlo): el texto de C34 y el orden de `onSave`.
+- 2026-10-27. Tests en rojo del PR 2 de ingredientes. Fallan 25 de 380 en `test/`, todos por el resultado (`AssertionError`): C75 a C90, C101 y C102, y los reescritos C29, C31, C34, C35, C38, C39 y C31 de la búsqueda (`FoodCapturePrefillTest`). C63 y C91 pasan con las firmas vacías: su control negativo falla, igual que el de la mitad de C102 que el código viejo ya cumplía. Siguen en verde, porque su criterio no cambió y solo cambió la llamada: C14, C28, C32, C36, C60, C61, C62 y C29, C30 y C32 de la búsqueda. Borrados: C10, C17, C30, C33, C37, C64, la parte de `update` de C14 y el segundo test de `FoodCapturePrefillTest`. `FoodSearchGuardadoRoomTest` pasa por el pop-up; compila y queda para el emulador. Firmas provisorias sin lógica: `IngredientForm`, `IngredientField`, `IngredientValidation`, `validateIngredient`, `validateMealDetails`, `FoodSelection`, `ManualEntryState`, `IngredientEntryState`, `totalKcal` (da 0), los eventos nuevos de `FoodCaptureViewModel` (vacíos; `onContinueManualEntry` da `false`) y `nutrition_error_no_ingredients`. `onOpenConfirmation` sin `mealId` convive con la vieja, `onPrefill(selection)` con `onPrefill(form)`, y `FakeMealDao.update` y `FakeMealRepository.updateMeal` quedan como `override` vacíos: los saca implementar junto con la edición.

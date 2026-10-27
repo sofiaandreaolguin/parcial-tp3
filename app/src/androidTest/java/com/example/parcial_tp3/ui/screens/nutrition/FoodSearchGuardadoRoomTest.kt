@@ -8,6 +8,7 @@ import com.example.parcial_tp3.data.repository.FoodRepository
 import com.example.parcial_tp3.data.repository.MealRepositoryImpl
 import com.example.parcial_tp3.domain.model.FoodItem
 import com.example.parcial_tp3.domain.model.FoodPage
+import com.example.parcial_tp3.domain.model.Ingredient
 import com.example.parcial_tp3.domain.model.MealType
 import com.example.parcial_tp3.domain.model.Nutrients
 import java.time.LocalDate
@@ -30,12 +31,10 @@ import org.junit.runner.RunWith
  * Spec: specs/funcionales/busqueda-de-alimentos.md.
  *
  * Va en androidTest porque usa Room de verdad, que es la regla de la casa. Recorre la cadena
- * entera: `onConfirm` arma el MealForm, `onPrefill` se lo deja a 07, `onSave` lo valida y lo
- * guarda, y despues se lee por fecha.
- *
- * **Es el test que atrapa el bug del formato.** `parseKcal` valida con `^-?\d+$`: si la busqueda
- * precargara "248.0" en vez de "248", la validacion de 07 marcaria NOT_A_WHOLE_NUMBER y no se
- * guardaria nada. Desde un test de ViewModel suelto eso no se ve, porque ahi nadie valida.
+ * entera (PR 2 de ingredientes): `onConfirm` arma la seleccion, `onPrefill` abre el pop-up de
+ * carga, ahi se elige el tipo y `onContinueManualEntry` lleva a 07 con el alimento como
+ * ingrediente; `onSave` lo guarda y despues se lee por fecha. Las kcal guardadas son la suma de
+ * los ingredientes, asi que el formato de `form.kcal` ya no decide si se guarda.
  */
 @OptIn(ExperimentalCoroutinesApi::class)
 @RunWith(AndroidJUnit4::class)
@@ -77,13 +76,12 @@ class FoodSearchGuardadoRoomTest {
 
         buscador.onFoodSelected(pollo)
         buscador.onGramsChange("150")
-        val form = buscador.onConfirm(hoy)
-        requireNotNull(form) { "onConfirm tenia que devolver el formulario" }
+        val seleccion = buscador.onConfirm(hoy)
+        requireNotNull(seleccion) { "onConfirm tenia que devolver la seleccion" }
 
-        // El tipo lo elige la persona en 07: la busqueda lo deja en null a proposito (C38).
-        assertEquals(null, form.type)
-        captura.onPrefill(form.copy(type = MealType.LUNCH))
-        captura.onSave()
+        // El tipo lo elige la persona en el pop-up: la busqueda lo deja en null a proposito (C38).
+        assertEquals(null, seleccion.form.type)
+        guardarDesdeElPopUp(captura, seleccion)
         advanceUntilIdle()
 
         val delDia = comidas.observeMealsByDate(hoy).first()
@@ -95,6 +93,7 @@ class FoodSearchGuardadoRoomTest {
         assertEquals(46.5, comida.proteinG, 0.0001)
         assertEquals(0.0, comida.carbsG, 0.0001)
         assertEquals(5.4, comida.fatG, 0.0001)
+        assertEquals(listOf(Ingredient("Pollo cocido", grams = 150, kcal = 248)), comida.ingredients)
     }
 
     @Test
@@ -106,8 +105,7 @@ class FoodSearchGuardadoRoomTest {
         for (gramos in listOf("150", "100")) {
             buscador.onFoodSelected(pollo)
             buscador.onGramsChange(gramos)
-            captura.onPrefill(buscador.onConfirm(hoy)!!.copy(type = MealType.LUNCH))
-            captura.onSave()
+            guardarDesdeElPopUp(captura, buscador.onConfirm(hoy)!!)
             advanceUntilIdle()
         }
 
@@ -115,5 +113,16 @@ class FoodSearchGuardadoRoomTest {
         assertEquals(2, delDia.size)
         // 248 de la porcion de 150 g mas 165 de la de 100 g: es lo que cambia el total de RF04.
         assertEquals(413, delDia.sumOf { it.kcal })
+    }
+
+    private fun guardarDesdeElPopUp(
+        captura: FoodCaptureViewModel,
+        seleccion: FoodSelection,
+    ) {
+        captura.onPrefill(seleccion)
+        val popUp = requireNotNull(captura.uiState.value.manualEntry) { "onPrefill tenia que abrir el pop-up" }
+        captura.onManualEntryChange(popUp.form.copy(type = MealType.LUNCH))
+        check(captura.onContinueManualEntry()) { "el pop-up no dejo seguir a 07" }
+        captura.onSave()
     }
 }

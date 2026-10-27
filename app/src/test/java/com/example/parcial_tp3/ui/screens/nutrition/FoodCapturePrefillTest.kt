@@ -1,6 +1,7 @@
 package com.example.parcial_tp3.ui.screens.nutrition
 
 import com.example.parcial_tp3.domain.MealForm
+import com.example.parcial_tp3.domain.model.Ingredient
 import com.example.parcial_tp3.ui.screens.home.FakeMealRepository
 import java.time.LocalDate
 import org.junit.Assert.assertEquals
@@ -8,7 +9,8 @@ import org.junit.Assert.assertNull
 import org.junit.Test
 
 /**
- * La puerta que usa la busqueda para dejar cargado Nutrition / 07 (EXT02, C31).
+ * La puerta que usa la busqueda para abrir el pop-up de carga (EXT02, C31; desde el PR 2 de
+ * ingredientes). Que el pop-up se abra con el alimento es C82, en FoodCaptureManualEntryTest.
  * Spec: specs/funcionales/busqueda-de-alimentos.md.
  */
 class FoodCapturePrefillTest {
@@ -22,6 +24,7 @@ class FoodCapturePrefillTest {
         carbs = "0",
         fat = "5.4",
     )
+    private val seleccion = FoodSelection(form, Ingredient("Pollo cocido", grams = 150, kcal = 248))
 
     @Test
     fun `C31 onPrefill limpia el borrador del analisis`() {
@@ -30,19 +33,9 @@ class FoodCapturePrefillTest {
         vm.onPhotoCaptureStarted()
         assertEquals(PhotoMealDraft, vm.uiState.value.draft)
 
-        vm.onPrefill(form)
+        vm.onPrefill(seleccion)
 
         assertNull("si queda el borrador, 07 muestra los ingredientes de la foto", vm.uiState.value.draft)
     }
 
-    @Test
-    fun `C31 onPrefill deja la confirmacion con el formulario de la busqueda`() {
-        val vm = FoodCaptureViewModel(FakeMealRepository())
-
-        vm.onPrefill(form)
-
-        val confirmacion = vm.uiState.value.confirmation
-        assertEquals(NEW_MEAL_ID, confirmacion?.mealId)
-        assertEquals(form, confirmacion?.form)
-    }
 }

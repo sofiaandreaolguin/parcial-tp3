@@ -4,6 +4,8 @@ import androidx.annotation.StringRes
 import com.example.parcial_tp3.R
 import com.example.parcial_tp3.data.repository.AppError
 import com.example.parcial_tp3.domain.FieldError
+import com.example.parcial_tp3.domain.MealForm
+import com.example.parcial_tp3.domain.model.Ingredient
 import com.example.parcial_tp3.domain.model.FoodItem
 import com.example.parcial_tp3.domain.model.Nutrients
 
@@ -23,6 +25,9 @@ data class FoodSearchUiState(
     val gramosError: FieldError? = null,
     val porcion: Nutrients? = null,
 )
+
+/** Lo que la busqueda le pasa al pop-up de carga: la comida y el alimento como primer ingrediente (C81). */
+data class FoodSelection(val form: MealForm, val ingredient: Ingredient)
 
 /** La unidad en que viene el dato del servidor: el primer numero que se ve coincide con el suyo. */
 const val GRAMOS_INICIALES = "100"

@@ -48,6 +48,21 @@ fun validateMeal(form: MealForm, id: Long = 0): MealValidation {
     )
 }
 
+// PR 2 de ingredientes: firmas provisorias de la sesión de tests en rojo; la lógica va en implementar.
+
+data class IngredientForm(val name: String = "", val grams: String = "", val kcal: String = "")
+
+enum class IngredientField { NAME, GRAMS, KCAL }
+
+sealed interface IngredientValidation {
+    data class Valid(val ingredient: Ingredient) : IngredientValidation
+    data class Invalid(val errors: Map<IngredientField, FieldError>) : IngredientValidation
+}
+
+fun validateIngredient(form: IngredientForm): IngredientValidation = IngredientValidation.Invalid(emptyMap())
+
+fun validateMealDetails(form: MealForm): Map<MealField, FieldError> = emptyMap()
+
 fun isValidIngredient(ingredient: Ingredient): Boolean =
     ingredient.name.isNotBlank() && ingredient.grams > 0 && ingredient.kcal >= 0
 

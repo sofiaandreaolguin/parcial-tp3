@@ -35,7 +35,7 @@ fun FoodSearchSheetHost(
         onGramsChange = viewModel::onGramsChange,
         onBackFromPortion = viewModel::onBackFromPortion,
         onConfirm = {
-            val form = viewModel.onConfirm(nutricion.selectedDate.value)
+            val form = viewModel.onConfirm(nutricion.selectedDate.value)?.form
             if (form != null) {
                 captura.onPrefill(form)
                 onConfirmed()

@@ -3,6 +3,8 @@ package com.example.parcial_tp3.ui.screens.nutrition
 import androidx.annotation.StringRes
 import com.example.parcial_tp3.R
 import com.example.parcial_tp3.domain.FieldError
+import com.example.parcial_tp3.domain.IngredientField
+import com.example.parcial_tp3.domain.IngredientForm
 import com.example.parcial_tp3.domain.MealField
 import com.example.parcial_tp3.domain.MealForm
 import com.example.parcial_tp3.domain.model.Ingredient
@@ -18,6 +20,8 @@ data class FoodCaptureUiState(
     /** null = no hubo captura (carga manual). */
     val draft: MealDraft? = null,
     val analysisStep: AnalysisStep = AnalysisStep.Identifying,
+    /** null = pop-up de carga cerrado. */
+    val manualEntry: ManualEntryState? = null,
     /** null = 07 cerrada. */
     val confirmation: ConfirmationState? = null,
 )
@@ -34,6 +38,24 @@ data class ConfirmationState(
     val notFound: Boolean = false,
     @StringRes val saveError: Int? = null,
     val ingredients: List<Ingredient> = emptyList(),
+    /** null = pop-up de ingrediente cerrado. */
+    val ingredientEntry: IngredientEntryState? = null,
+) {
+    // Provisorio (tests en rojo del PR 2): la suma la escribe implementar (C87).
+    val totalKcal: Int get() = 0
+}
+
+data class ManualEntryState(
+    /** form.kcal no se usa: las kcal son la suma de los ingredientes. */
+    val form: MealForm,
+    val errors: Map<MealField, FieldError> = emptyMap(),
+    /** Vacía a mano; el alimento si viene de la búsqueda. */
+    val ingredients: List<Ingredient> = emptyList(),
+)
+
+data class IngredientEntryState(
+    val form: IngredientForm = IngredientForm(),
+    val errors: Map<IngredientField, FieldError> = emptyMap(),
 )
 
 /** El paso de Nutrition / 05 que se está haciendo; los anteriores están hechos y los siguientes pendientes. */

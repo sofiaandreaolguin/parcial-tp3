@@ -4,7 +4,8 @@ import com.example.parcial_tp3.R
 import com.example.parcial_tp3.data.repository.MealDataException
 import com.example.parcial_tp3.data.repository.MealError
 import com.example.parcial_tp3.domain.FieldError
-import com.example.parcial_tp3.domain.MealField
+import com.example.parcial_tp3.domain.IngredientField
+import com.example.parcial_tp3.domain.IngredientForm
 import com.example.parcial_tp3.domain.MealForm
 import com.example.parcial_tp3.domain.model.Ingredient
 import com.example.parcial_tp3.domain.model.Meal
@@ -39,30 +40,25 @@ class FoodConfirmationViewModelTest {
     val mainDispatcherRule = MainDispatcherRule(UnconfinedTestDispatcher())
 
     private val fecha = LocalDate.of(2026, 10, 24)
-    private val nueva = -1L
 
-    private val guardada = Meal(
-        id = 7,
-        name = "Avena con fruta",
-        date = LocalDate.of(2026, 10, 20),
-        type = MealType.BREAKFAST,
-        kcal = 320,
-        proteinG = 12.5,
-        carbsG = 54.0,
-        fatG = 6.25,
-    )
-
+    // Lo que llega del pop-up de carga: sin kcal, porque son la suma de los ingredientes.
     private val formValido = MealForm(
         name = "Ensalada",
         type = MealType.DINNER,
         date = fecha,
-        kcal = "350",
         protein = "20",
         carbs = "30,5",
         fat = "12",
     )
 
-    private val repo = FakeMealRepository(listOf(guardada))
+    // Lo que la Route resuelve con getString a partir de PhotoMealDraft.
+    private val ingredientes = listOf(
+        Ingredient("Pollo", grams = 180, kcal = 280),
+        Ingredient("Arroz", grams = 150, kcal = 190),
+        Ingredient("Verduras", grams = 100, kcal = 50),
+    )
+
+    private val repo = FakeMealRepository()
     private val vm = FoodCaptureViewModel(repo)
 
     private fun TestScope.eventos(): List<FoodCaptureEvent> {
@@ -80,27 +76,32 @@ class FoodConfirmationViewModelTest {
     /** El texto del formulario como número: no importa si dice "38" o "38.0". */
     private fun numero(texto: String): Double? = texto.trim().replace(',', '.').toDoubleOrNull()
 
-    private fun assertNumeros(meal: Meal, form: MealForm) {
-        assertEquals(
-            listOf(meal.kcal.toDouble(), meal.proteinG, meal.carbsG, meal.fatG),
-            listOf(numero(form.kcal), numero(form.protein), numero(form.carbs), numero(form.fat)),
-        )
+    private fun abrirConFoto() {
+        vm.onPhotoCaptureStarted()
+        vm.onOpenConfirmation(fecha, "Pollo con arroz", ingredientes)
     }
 
-    private fun abrirManualConFormValido() {
-        vm.onManualEntry()
-        vm.onOpenConfirmation(nueva, fecha, "Comida estimada")
-        vm.onFormChange(formValido)
+    private fun abrirManual(form: MealForm = formValido) {
+        vm.onOpenManualEntry(fecha)
+        vm.onManualEntryChange(form)
+        assertTrue("el pop-up de carga no dejó seguir a 07", vm.onContinueManualEntry())
     }
+
+    private fun agregarIngrediente(form: IngredientForm) {
+        vm.onAddIngredientClick()
+        vm.onIngredientEntryChange(form)
+        vm.onConfirmIngredient()
+    }
+
+    private val lechuga = IngredientForm(name = "Lechuga", grams = "100", kcal = "20")
 
     @Test
     fun `C28 con borrador el formulario viene precargado`() = runTest {
         vm.onPhotoCaptureStarted()
 
-        vm.onOpenConfirmation(nueva, fecha, "Pollo con arroz")
+        vm.onOpenConfirmation(fecha, "Pollo con arroz")
 
         val c = confirmacion()
-        assertEquals(nueva, c.mealId)
         assertEquals("Pollo con arroz", c.form.name)
         assertEquals(MealType.LUNCH, c.form.type)
         assertEquals(fecha, c.form.date)
@@ -108,94 +109,64 @@ class FoodConfirmationViewModelTest {
     }
 
     @Test
-    fun `C29 la carga manual viene vacia aunque antes hubo foto`() = runTest {
-        vm.onPhotoCaptureStarted()
+    fun `C31 abrir 07 reemplaza la confirmacion anterior`() = runTest {
+        // Se salió de 07 por la barra inferior, sin descartar, después de sacar un ingrediente.
+        abrirConFoto()
+        vm.onRemoveIngredient(0)
 
-        vm.onManualEntry()
-        vm.onOpenConfirmation(nueva, fecha, "Pollo con arroz")
+        val otros = listOf(Ingredient("Fideos", grams = 200, kcal = 300))
+        vm.onOpenConfirmation(fecha, "Fideos con salsa", otros)
 
-        assertEquals(MealForm(date = fecha), confirmacion().form)
-    }
+        assertEquals("Fideos con salsa", confirmacion().form.name)
+        assertEquals(otros, confirmacion().ingredients)
 
-    @Test
-    fun `C30 con id el formulario trae la comida guardada`() = runTest {
-        vm.onOpenConfirmation(7, fecha, "Pollo con arroz")
+        // También desde el pop-up de carga.
+        abrirManual()
 
-        val c = confirmacion()
-        assertEquals(7L, c.mealId)
-        assertEquals(Triple("Avena con fruta", MealType.BREAKFAST, guardada.date), Triple(c.form.name, c.form.type, c.form.date))
-        assertNumeros(guardada, c.form)
-    }
-
-    @Test
-    fun `C31 reabrir con el mismo id conserva lo escrito y no recarga`() = runTest {
-        vm.onOpenConfirmation(7, fecha, "Pollo con arroz")
-        vm.onFormChange(confirmacion().form.copy(name = "Avena editada"))
-
-        vm.onOpenConfirmation(7, fecha, "Pollo con arroz")
-
-        assertEquals("Avena editada", confirmacion().form.name)
-        assertEquals(listOf(7L), repo.idsPedidos)
+        assertEquals(formValido, confirmacion().form)
+        assertEquals(emptyList<Ingredient>(), confirmacion().ingredients)
     }
 
     @Test
     fun `C32 onDiscard cierra el formulario`() = runTest {
-        vm.onManualEntry()
-        vm.onOpenConfirmation(nueva, fecha, "Comida estimada")
-        vm.onFormChange(formValido)
+        abrirConFoto()
         assertNotNull("07 no se abrió", vm.uiState.value.confirmation)
 
         vm.onDiscard()
         assertNull(vm.uiState.value.confirmation)
 
-        vm.onOpenConfirmation(nueva, fecha, "Comida estimada")
-        assertEquals(MealForm(date = fecha), confirmacion().form)
+        vm.onOpenConfirmation(fecha, "Otra comida", ingredientes.take(1))
+        assertEquals("Otra comida", confirmacion().form.name)
+        assertEquals(ingredientes.take(1), confirmacion().ingredients)
     }
 
     @Test
-    fun `C33 un id que no existe es notFound`() = runTest {
-        vm.onOpenConfirmation(99, fecha, "Pollo con arroz")
-
-        assertTrue(confirmacion().notFound)
-    }
-
-    @Test
-    fun `C34 guardar invalido muestra errores y no escribe`() = runTest {
+    fun `C34 guardar invalido no escribe y muestra saveError`() = runTest {
         val eventos = eventos()
-        vm.onManualEntry()
-        vm.onOpenConfirmation(nueva, fecha, "Comida estimada")
+        vm.onPhotoCaptureStarted()
+        vm.onOpenConfirmation(fecha, "", ingredientes)
 
         vm.onSave()
 
-        assertEquals(MealField.entries.associateWith { FieldError.REQUIRED }, confirmacion().errors)
-        assertEquals(emptyList<Meal>(), repo.agregadas + repo.actualizadas)
+        assertEquals(emptyList<Meal>(), repo.agregadas)
+        assertEquals(R.string.nutrition_error_save, confirmacion().saveError)
         assertEquals(emptyList<FoodCaptureEvent>(), eventos)
-    }
-
-    @Test
-    fun `C35 corregir un campo borra solo su error`() = runTest {
-        vm.onManualEntry()
-        vm.onOpenConfirmation(nueva, fecha, "Comida estimada")
-        vm.onSave()
-
-        vm.onFormChange(confirmacion().form.copy(name = "Ensalada", kcal = "350"))
-
-        assertEquals(
-            setOf(MealField.TYPE, MealField.PROTEIN, MealField.CARBS, MealField.FAT),
-            confirmacion().errors.keys,
-        )
     }
 
     @Test
     fun `C36 guardar nueva llama a addMeal emite Saved y limpia`() = runTest {
         val eventos = eventos()
-        vm.onPhotoCaptureStarted()
-        vm.onOpenConfirmation(nueva, fecha, "Pollo con arroz")
+        abrirConFoto()
 
         vm.onSave()
 
         assertEquals(
-            listOf(Meal(name = "Pollo con arroz", date = fecha, type = MealType.LUNCH, kcal = 520, proteinG = 38.0, carbsG = 54.0, fatG = 14.0)),
+            listOf(
+                Meal(
+                    name = "Pollo con arroz", date = fecha, type = MealType.LUNCH,
+                    kcal = 520, proteinG = 38.0, carbsG = 54.0, fatG = 14.0, ingredients = ingredientes,
+                ),
+            ),
             repo.agregadas,
         )
         assertEquals(listOf<FoodCaptureEvent>(FoodCaptureEvent.Saved), eventos)
@@ -204,24 +175,12 @@ class FoodConfirmationViewModelTest {
     }
 
     @Test
-    fun `C37 guardar edicion llama a updateMeal con el mismo id`() = runTest {
-        val eventos = eventos()
-        vm.onOpenConfirmation(7, fecha, "Pollo con arroz")
-        vm.onFormChange(confirmacion().form.copy(kcal = "400"))
-
-        vm.onSave()
-
-        assertEquals(listOf(guardada.copy(kcal = 400)), repo.actualizadas)
-        assertEquals(emptyList<Meal>(), repo.agregadas)
-        assertEquals(listOf<FoodCaptureEvent>(FoodCaptureEvent.Saved), eventos)
-    }
-
-    @Test
     fun `C38 dos toques en guardar escriben una sola vez`() = runTest {
         val eventos = eventos()
         val bloqueo = CompletableDeferred<Unit>()
         repo.bloqueo = bloqueo
-        abrirManualConFormValido()
+        abrirManual()
+        agregarIngrediente(lechuga)
 
         vm.onSave()
         assertTrue("no está guardando", confirmacion().isSaving)
@@ -236,7 +195,8 @@ class FoodConfirmationViewModelTest {
     fun `C39 si guardar falla conserva lo escrito y no emite Saved`() = runTest {
         val eventos = eventos()
         repo.errorAlEscribir = MealDataException(MealError.STORAGE)
-        abrirManualConFormValido()
+        abrirManual()
+        agregarIngrediente(lechuga)
 
         vm.onSave()
 
@@ -247,32 +207,19 @@ class FoodConfirmationViewModelTest {
         assertFalse(c.isSaving)
         assertEquals(emptyList<FoodCaptureEvent>(), eventos)
     }
-    // Lo que el grafo resuelve con getString a partir de PhotoMealDraft.
-    private val ingredientes = listOf(
-        Ingredient("Pollo", grams = 180, kcal = 280),
-        Ingredient("Arroz", grams = 150, kcal = 190),
-        Ingredient("Verduras", grams = 100, kcal = 50),
-    )
-
-    private fun TestScope.eventosDe(v: FoodCaptureViewModel): List<FoodCaptureEvent> {
-        val lista = mutableListOf<FoodCaptureEvent>()
-        backgroundScope.launch(UnconfinedTestDispatcher(testScheduler)) { v.events.toList(lista) }
-        return lista
-    }
 
     @Test
     fun `C60 con borrador 07 trae los ingredientes que paso el grafo`() = runTest {
         vm.onPhotoCaptureStarted()
 
-        vm.onOpenConfirmation(nueva, fecha, "Pollo con arroz", ingredientes)
+        vm.onOpenConfirmation(fecha, "Pollo con arroz", ingredientes)
 
         assertEquals(ingredientes, confirmacion().ingredients)
     }
 
     @Test
     fun `C61 guardar con borrador hace un solo addMeal con sus ingredientes`() = runTest {
-        vm.onPhotoCaptureStarted()
-        vm.onOpenConfirmation(nueva, fecha, "Pollo con arroz", ingredientes)
+        abrirConFoto()
 
         vm.onSave()
 
@@ -280,14 +227,13 @@ class FoodConfirmationViewModelTest {
         val meal = repo.agregadas.single()
         assertEquals("Pollo con arroz", meal.name)
         assertEquals(ingredientes, meal.ingredients)
-        assertTrue("no debería actualizar", repo.actualizadas.isEmpty())
     }
 
     @Test
     fun `C62 un ingrediente invalido no guarda y muestra el error`() = runTest {
         val ev = eventos()
         vm.onPhotoCaptureStarted()
-        vm.onOpenConfirmation(nueva, fecha, "Pollo con arroz", listOf(ingredientes[0], Ingredient("Arroz", grams = 0, kcal = 190)))
+        vm.onOpenConfirmation(fecha, "Pollo con arroz", listOf(ingredientes[0], Ingredient("Arroz", grams = 0, kcal = 190)))
 
         vm.onSave()
 
@@ -296,61 +242,182 @@ class FoodConfirmationViewModelTest {
         assertEquals(R.string.nutrition_error_ingredients, c.saveError)
         assertFalse(c.isSaving)
         assertTrue("no debería emitir Saved: $ev", ev.isEmpty())
-
-        // También al editar una comida guardada con un ingrediente inválido.
-        val repoEdicion = FakeMealRepository(listOf(guardada.copy(ingredients = listOf(Ingredient("  ", grams = 100, kcal = 10)))))
-        val edicion = FoodCaptureViewModel(repoEdicion)
-        val evEdicion = eventosDe(edicion)
-        edicion.onOpenConfirmation(7, fecha, "Pollo con arroz")
-
-        edicion.onSave()
-
-        assertTrue("no debería llamar a updateMeal: ${repoEdicion.actualizadas}", repoEdicion.actualizadas.isEmpty())
-        assertTrue("no debería llamar a addMeal", repoEdicion.agregadas.isEmpty())
-        val ce = edicion.uiState.value.confirmation
-        assertEquals(R.string.nutrition_error_ingredients, ce?.saveError)
-        assertEquals(false, ce?.isSaving)
-        assertTrue("no debería emitir Saved: $evEdicion", evEdicion.isEmpty())
     }
 
     @Test
     fun `C63 sin borrador 07 no tiene ingredientes`() = runTest {
-        // Carga manual después de una foto.
-        vm.onPhotoCaptureStarted()
-        vm.onManualEntry()
-        vm.onOpenConfirmation(nueva, fecha, "Comida estimada", ingredientes)
+        // Sin captura, draft es null.
+        vm.onOpenConfirmation(fecha, "Comida estimada", ingredientes)
+
         assertEquals(emptyList<Ingredient>(), confirmacion().ingredients)
-
-        vm.onFormChange(formValido)
-        vm.onSave()
-        assertEquals(emptyList<Ingredient>(), repo.agregadas.single().ingredients)
-
-        // Precarga de la búsqueda (onPrefill) después de una foto.
-        vm.onPhotoCaptureStarted()
-        vm.onPrefill(formValido)
-        vm.onOpenConfirmation(nueva, fecha, "Comida estimada", ingredientes)
-        assertEquals(emptyList<Ingredient>(), confirmacion().ingredients)
-
-        vm.onSave()
-        assertEquals(2, repo.agregadas.size)
-        assertEquals(emptyList<Ingredient>(), repo.agregadas[1].ingredients)
     }
 
     @Test
-    fun `C64 editar conserva los ingredientes guardados`() = runTest {
-        val repoEdicion = FakeMealRepository(listOf(guardada.copy(ingredients = ingredientes)))
-        val edicion = FoodCaptureViewModel(repoEdicion)
-        edicion.onOpenConfirmation(7, fecha, "Pollo con arroz")
+    fun `C84 Add Ingredient abre el pop-up y cerrarlo no cambia la lista`() = runTest {
+        abrirConFoto()
 
-        val c = edicion.uiState.value.confirmation
-        assertEquals(ingredientes, c?.ingredients)
+        vm.onAddIngredientClick()
+        assertEquals(IngredientEntryState(), confirmacion().ingredientEntry)
 
-        edicion.onFormChange(c!!.form.copy(name = "Avena editada", kcal = "400", type = MealType.SNACK))
-        edicion.onSave()
+        vm.onIngredientEntryChange(lechuga)
+        vm.onDismissIngredientEntry()
 
-        assertEquals("updateMeal no se llamó una sola vez", 1, repoEdicion.actualizadas.size)
-        val meal = repoEdicion.actualizadas.single()
-        assertEquals(7L, meal.id)
-        assertEquals(ingredientes, meal.ingredients)
+        assertNull(confirmacion().ingredientEntry)
+        assertEquals(ingredientes, confirmacion().ingredients)
+    }
+
+    @Test
+    fun `C85 confirmar un ingrediente lo agrega al final o muestra los errores`() = runTest {
+        abrirConFoto()
+
+        agregarIngrediente(lechuga)
+
+        assertEquals(ingredientes + Ingredient("Lechuga", grams = 100, kcal = 20), confirmacion().ingredients)
+        assertNull("el pop-up tiene que cerrarse", confirmacion().ingredientEntry)
+
+        val invalido = IngredientForm(name = " ", grams = "0", kcal = "abc")
+        agregarIngrediente(invalido)
+
+        val c = confirmacion()
+        assertEquals("la lista no tiene que cambiar", ingredientes + Ingredient("Lechuga", grams = 100, kcal = 20), c.ingredients)
+        assertEquals(
+            IngredientEntryState(
+                form = invalido,
+                errors = mapOf(
+                    IngredientField.NAME to FieldError.REQUIRED,
+                    IngredientField.GRAMS to FieldError.NEGATIVE,
+                    IngredientField.KCAL to FieldError.NOT_A_WHOLE_NUMBER,
+                ),
+            ),
+            c.ingredientEntry,
+        )
+    }
+
+    @Test
+    fun `C86 corregir un campo del ingrediente borra solo su error`() = runTest {
+        abrirConFoto()
+        val invalido = IngredientForm(name = " ", grams = "0", kcal = "abc")
+        agregarIngrediente(invalido)
+
+        vm.onIngredientEntryChange(invalido.copy(name = "Sal"))
+
+        assertEquals(setOf(IngredientField.GRAMS, IngredientField.KCAL), confirmacion().ingredientEntry?.errors?.keys)
+    }
+
+    @Test
+    fun `C87 las kcal guardadas son la suma de los ingredientes`() = runTest {
+        abrirConFoto()
+        assertEquals(520, confirmacion().totalKcal)
+        vm.onRemoveIngredient(2)
+        assertEquals(470, confirmacion().totalKcal)
+        agregarIngrediente(IngredientForm(name = "Palta", grams = "50", kcal = "80"))
+        assertEquals(550, confirmacion().totalKcal)
+        vm.onDiscard()
+
+        // form.kcal no cuenta: lo que se guarda es la suma.
+        abrirManual(formValido.copy(kcal = "999"))
+        agregarIngrediente(IngredientForm(name = "Pollo", grams = "180", kcal = "280"))
+        agregarIngrediente(IngredientForm(name = "Arroz", grams = "150", kcal = "190"))
+        agregarIngrediente(IngredientForm(name = "Verduras", grams = "100", kcal = "50"))
+        vm.onSave()
+
+        assertEquals(listOf(520), repo.agregadas.map { it.kcal })
+        assertEquals(ingredientes, repo.agregadas.single().ingredients)
+    }
+
+    @Test
+    fun `C88 sin ingredientes no guarda`() = runTest {
+        val eventos = eventos()
+        abrirManual()
+
+        vm.onSave()
+
+        assertEquals(emptyList<Meal>(), repo.agregadas)
+        val c = confirmacion()
+        assertEquals(R.string.nutrition_error_no_ingredients, c.saveError)
+        assertFalse(c.isSaving)
+        assertEquals(emptyList<FoodCaptureEvent>(), eventos)
+    }
+
+    @Test
+    fun `C89 un ingrediente de 0 kcal se guarda`() = runTest {
+        val eventos = eventos()
+        abrirManual()
+        agregarIngrediente(IngredientForm(name = "Agua", grams = "250", kcal = "0"))
+
+        vm.onSave()
+
+        assertEquals(listOf(0), repo.agregadas.map { it.kcal })
+        assertEquals(listOf<FoodCaptureEvent>(FoodCaptureEvent.Saved), eventos)
+    }
+
+    @Test
+    fun `C90 Remove saca el ingrediente de esa posicion`() = runTest {
+        abrirConFoto()
+
+        vm.onRemoveIngredient(1)
+        assertEquals(listOf(ingredientes[0], ingredientes[2]), confirmacion().ingredients)
+
+        vm.onRemoveIngredient(-1)
+        vm.onRemoveIngredient(2)
+        assertEquals("fuera de la lista no cambia nada", listOf(ingredientes[0], ingredientes[2]), confirmacion().ingredients)
+    }
+
+    @Test
+    fun `C91 mientras guarda no cambian los ingredientes`() = runTest {
+        val bloqueo = CompletableDeferred<Unit>()
+        repo.bloqueo = bloqueo
+        abrirConFoto()
+        vm.onSave()
+        assertTrue("no está guardando", confirmacion().isSaving)
+
+        vm.onAddIngredientClick()
+        assertNull("no tiene que abrir el pop-up de ingrediente", confirmacion().ingredientEntry)
+        vm.onRemoveIngredient(0)
+        vm.onIngredientEntryChange(lechuga)
+        vm.onConfirmIngredient()
+
+        assertEquals(ingredientes, confirmacion().ingredients)
+        bloqueo.complete(Unit)
+    }
+
+    @Test
+    fun `C101 agregar o sacar un ingrediente borra el error de guardado`() = runTest {
+        repo.errorAlEscribir = MealDataException(MealError.STORAGE)
+        abrirConFoto()
+        vm.onSave()
+        assertNotNull("guardar tenía que fallar", confirmacion().saveError)
+
+        vm.onRemoveIngredient(0)
+        assertNull("sacar un ingrediente tiene que borrar el error", confirmacion().saveError)
+
+        vm.onSave()
+        assertNotNull("guardar tenía que fallar", confirmacion().saveError)
+
+        agregarIngrediente(lechuga)
+        assertNull("agregar un ingrediente tiene que borrar el error", confirmacion().saveError)
+    }
+
+    @Test
+    fun `C102 mientras guarda abrir 07 no reemplaza la confirmacion`() = runTest {
+        val bloqueo = CompletableDeferred<Unit>()
+        repo.bloqueo = bloqueo
+        abrirConFoto()
+        vm.onSave()
+        val guardando = confirmacion()
+        assertTrue("no está guardando", guardando.isSaving)
+
+        // Se salió de 07 por la barra mientras guardaba y se volvió a abrir.
+        vm.onOpenConfirmation(fecha, "Otra comida", ingredientes.take(1))
+        assertEquals(guardando, confirmacion())
+
+        vm.onOpenManualEntry(fecha)
+        vm.onManualEntryChange(formValido)
+        assertNotNull("el pop-up de carga no se abrió", vm.uiState.value.manualEntry)
+        assertFalse("no tiene que seguir a 07", vm.onContinueManualEntry())
+        assertNotNull("el pop-up no tiene que cerrarse", vm.uiState.value.manualEntry)
+        assertEquals(guardando, confirmacion())
+
+        bloqueo.complete(Unit)
     }
 }

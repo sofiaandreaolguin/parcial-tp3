@@ -113,19 +113,8 @@ class MealDaoTest {
         assertEquals(listOf(desayuno.copy(id = id)), nueva)
     }
 
-    // C10 a C12 son de specs/funcionales/carga-y-eliminacion-de-comidas.md; los de arriba, de
-    // registro-de-comidas.md (VC-h). Por eso hay dos C10.
-
-    @Test
-    fun C10_update_cambia_los_valores_y_conserva_el_id() = runTest {
-        val id = dao.insert(desayuno)
-        val editada = desayuno.copy(id = id, name = "Avena con miel", kcal = 380, proteinG = 14.0)
-
-        val filas = dao.update(editada)
-
-        assertEquals(1, filas)
-        assertEquals(listOf(editada), dao.observeByDate(hoy).first())
-    }
+    // C11, C12 y C72 son de specs/funcionales/carga-y-eliminacion-de-comidas.md; los de arriba, de
+    // registro-de-comidas.md (VC-h).
 
     @Test
     fun C11_delete_saca_la_comida_y_devuelve_las_filas_borradas() = runTest {

@@ -128,11 +128,9 @@ class MealRepositoryImplTest {
     }
 
     @Test
-    fun `C14 updateMeal y deleteMeal llegan al DAO con el mismo id`() = runTest {
-        repository.updateMeal(comidaGuardada.copy(kcal = 400))
+    fun `C14 deleteMeal llega al DAO con la Entity de la comida`() = runTest {
         repository.deleteMeal(comidaGuardada)
 
-        assertEquals(listOf(entityGuardada.copy(kcal = 400)), dao.actualizadas)
         assertEquals(listOf(entityGuardada), dao.borradas)
     }
 
@@ -156,13 +154,6 @@ class MealRepositoryImplTest {
 
         dao.porId.value = entityGuardada.copy(type = "BRUNCH")
         assertMealError(MealError.INVALID_DATA, errorDe { repository.observeMeal(4).first() })
-    }
-
-    @Test
-    fun `C17 update de una comida borrada es NOT_FOUND`() = runTest {
-        dao.filasActualizadas = 0
-
-        assertMealError(MealError.NOT_FOUND, errorDe { repository.updateMeal(comidaGuardada) })
     }
 
     @Test
@@ -210,8 +201,6 @@ private class FakeMealDao : MealDao {
 
     val porId = MutableStateFlow<MealEntity?>(null)
     var idPedido: Long? = null
-    val actualizadas = mutableListOf<MealEntity>()
-    var filasActualizadas = 1
     var filasBorradas = 1
 
     override fun observeById(id: Long): Flow<MealEntity?> {
@@ -219,10 +208,8 @@ private class FakeMealDao : MealDao {
         return porId
     }
 
-    override suspend fun update(meal: MealEntity): Int {
-        actualizadas += meal
-        return filasActualizadas
-    }
+    // Provisorio: se va con MealDao.update (PR 2 de ingredientes, sin edición).
+    override suspend fun update(meal: MealEntity): Int = 0
 
     val borradas = mutableListOf<MealEntity>()
 

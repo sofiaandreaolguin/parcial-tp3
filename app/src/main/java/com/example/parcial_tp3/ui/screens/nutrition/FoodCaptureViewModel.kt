@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.parcial_tp3.R
 import com.example.parcial_tp3.data.repository.MealDataException
 import com.example.parcial_tp3.data.repository.MealRepository
+import com.example.parcial_tp3.domain.IngredientForm
 import com.example.parcial_tp3.domain.MealField
 import com.example.parcial_tp3.domain.MealForm
 import com.example.parcial_tp3.domain.MealValidation
@@ -132,6 +133,38 @@ class FoodCaptureViewModel @Inject constructor(
         val changed = changedFields(c.form, form)
         c.copy(form = form, errors = c.errors - changed, saveError = null)
     }
+
+    // --- PR 2 de ingredientes: firmas provisorias de la sesión de tests en rojo. ---
+    // La lógica la escribe la skill implementar; ahí se van también onManualEntry, onFormChange,
+    // onPrefill(MealForm) y la versión de onOpenConfirmation con mealId.
+
+    fun onOpenManualEntry(defaultDate: LocalDate) {}
+
+    fun onManualEntryChange(form: MealForm) {}
+
+    fun onContinueManualEntry(): Boolean = false
+
+    fun onDismissManualEntry() {}
+
+    fun onPrefill(selection: FoodSelection) {}
+
+    fun onOpenConfirmation(
+        defaultDate: LocalDate,
+        draftName: String,
+        draftIngredients: List<Ingredient> = emptyList(),
+    ) = onOpenConfirmation(NEW_MEAL_ID, defaultDate, draftName, draftIngredients)
+
+    fun onAddIngredientClick() {}
+
+    fun onIngredientEntryChange(form: IngredientForm) {}
+
+    fun onConfirmIngredient() {}
+
+    fun onDismissIngredientEntry() {}
+
+    fun onRemoveIngredient(index: Int) {}
+
+    // --- fin de las firmas provisorias ---
 
     fun onSave() {
         val c = _uiState.value.confirmation ?: return

@@ -183,4 +183,121 @@ class MealValidationTest {
         for (i in invalidos) assertFalse("$i no debería ser válido", isValidIngredient(i))
         for (i in validos) assertTrue("$i debería ser válido", isValidIngredient(i))
     }
+
+    // PR 2 de ingredientes. "válido" se espera como el número; un error, como el FieldError.
+    private val tablaGramos: List<Pair<String, Any>> = listOf(
+        "" to FieldError.REQUIRED,
+        "  " to FieldError.REQUIRED,
+        "150" to 150,
+        " 150 " to 150,
+        "0" to FieldError.NEGATIVE,
+        "-0" to FieldError.NEGATIVE,
+        "0150" to 150,
+        "1" to 1,
+        "10000" to 10000,
+        "10001" to FieldError.NEGATIVE,
+        "-5" to FieldError.NEGATIVE,
+        "150.5" to FieldError.NOT_A_WHOLE_NUMBER,
+        "150,5" to FieldError.NOT_A_WHOLE_NUMBER,
+        "abc" to FieldError.NOT_A_WHOLE_NUMBER,
+        "+5" to FieldError.NOT_A_WHOLE_NUMBER,
+        "1e3" to FieldError.NOT_A_WHOLE_NUMBER,
+        "3000000000" to FieldError.NOT_A_WHOLE_NUMBER,
+    )
+
+    private val tablaKcalIngrediente: List<Pair<String, Any>> = listOf(
+        "" to FieldError.REQUIRED,
+        "  " to FieldError.REQUIRED,
+        "150" to 150,
+        " 150 " to 150,
+        "0" to 0,
+        "-0" to 0,
+        "0150" to 150,
+        "1" to 1,
+        "10000" to 10000,
+        "10001" to FieldError.NEGATIVE,
+        "-5" to FieldError.NEGATIVE,
+        "150.5" to FieldError.NOT_A_WHOLE_NUMBER,
+        "150,5" to FieldError.NOT_A_WHOLE_NUMBER,
+        "abc" to FieldError.NOT_A_WHOLE_NUMBER,
+        "+5" to FieldError.NOT_A_WHOLE_NUMBER,
+        "1e3" to FieldError.NOT_A_WHOLE_NUMBER,
+        "3000000000" to FieldError.NOT_A_WHOLE_NUMBER,
+    )
+
+    private val ingredienteValido = IngredientForm(name = "Arroz", grams = "150", kcal = "190")
+
+    /** El número leído o el error del campo, para comparar con una fila de la tabla. */
+    private fun resultado(form: IngredientForm, campo: IngredientField): Any? =
+        when (val r = validateIngredient(form)) {
+            is IngredientValidation.Valid -> if (campo == IngredientField.GRAMS) r.ingredient.grams else r.ingredient.kcal
+            is IngredientValidation.Invalid -> r.errors[campo]
+        }
+
+    @Test
+    fun `C75 validateIngredient da el resultado de cada fila de la tabla`() {
+        val fallas = mutableListOf<String>()
+        for ((texto, esperado) in tablaGramos) {
+            val obtenido = resultado(ingredienteValido.copy(grams = texto), IngredientField.GRAMS)
+            if (obtenido != esperado) fallas += "gramos \"$texto\": esperaba $esperado y dio $obtenido"
+        }
+        for ((texto, esperado) in tablaKcalIngrediente) {
+            val obtenido = resultado(ingredienteValido.copy(kcal = texto), IngredientField.KCAL)
+            if (obtenido != esperado) fallas += "kcal \"$texto\": esperaba $esperado y dio $obtenido"
+        }
+        for (nombre in listOf("", "   ")) {
+            val r = validateIngredient(ingredienteValido.copy(name = nombre))
+            val errores = (r as? IngredientValidation.Invalid)?.errors.orEmpty()
+            if (errores != mapOf(IngredientField.NAME to FieldError.REQUIRED)) {
+                fallas += "nombre \"$nombre\": esperaba NAME REQUIRED y dio $r"
+            }
+        }
+
+        assertEquals(emptyList<String>(), fallas)
+    }
+
+    @Test
+    fun `C76 un ingrediente valido sale sin espacios y con todos los errores si no`() {
+        assertEquals(
+            IngredientValidation.Valid(Ingredient("Arroz integral", grams = 150, kcal = 190)),
+            validateIngredient(IngredientForm(name = "  Arroz integral ", grams = " 150 ", kcal = "190")),
+        )
+        assertEquals(
+            IngredientValidation.Invalid(
+                mapOf(
+                    IngredientField.NAME to FieldError.REQUIRED,
+                    IngredientField.GRAMS to FieldError.NEGATIVE,
+                    IngredientField.KCAL to FieldError.NOT_A_WHOLE_NUMBER,
+                ),
+            ),
+            validateIngredient(IngredientForm(name = " ", grams = "0", kcal = "abc")),
+        )
+    }
+
+    @Test
+    fun `C77 validateMealDetails valida como validateMeal sin mirar las kcal`() {
+        val casos = buildList {
+            add(valido.copy(name = ""))
+            add(valido.copy(name = "   "))
+            add(valido.copy(type = null))
+            for ((texto, _) in tablaMacro) {
+                add(valido.copy(protein = texto))
+                add(valido.copy(carbs = texto))
+                add(valido.copy(fat = texto))
+            }
+            add(valido.copy(name = " ", type = null, kcal = "abc", protein = "-1"))
+        }
+        val fallas = mutableListOf<String>()
+        for (form in casos) {
+            val esperado = errores(form) - MealField.KCAL
+            val obtenido = validateMealDetails(form)
+            if (obtenido != esperado) fallas += "$form: esperaba $esperado y dio $obtenido"
+        }
+        for (kcal in listOf("", "abc")) {
+            val obtenido = validateMealDetails(valido.copy(kcal = kcal))
+            if (obtenido.isNotEmpty()) fallas += "kcal \"$kcal\" no tiene que dar error y dio $obtenido"
+        }
+
+        assertEquals(emptyList<String>(), fallas)
+    }
 }
