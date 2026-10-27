@@ -31,6 +31,7 @@ import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.parcial_tp3.R
 import com.example.parcial_tp3.domain.model.MealType
@@ -266,17 +267,25 @@ private fun MealCard(meal: MealRow, onClick: () -> Unit) {
         radius = VoraTheme.radius.r12,
         onClick = onClick,
     ) {
-        Row(verticalAlignment = Alignment.CenterVertically) {
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(VoraTheme.spacing.s12),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
             Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(VoraTheme.spacing.s2)) {
                 Text(
                     text = meal.type.label(),
                     style = MaterialTheme.typography.labelLarge,
                     color = MaterialTheme.colorScheme.onBackground,
                 )
+                val separator = stringResource(R.string.nutrition_ingredients_separator)
+                // Hasta dos líneas y no una como el Figma: los nombres del borrador son más largos que
+                // los del frame (decisión de C67).
                 Text(
-                    text = meal.name,
+                    text = if (meal.ingredients.isEmpty()) meal.name else meal.ingredients.joinToString(separator) { it.name },
                     style = VoraTheme.text.footnote,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis,
                 )
             }
             Text(

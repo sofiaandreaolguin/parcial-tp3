@@ -1,9 +1,11 @@
 package com.example.parcial_tp3.domain
 
+import com.example.parcial_tp3.domain.model.Ingredient
 import com.example.parcial_tp3.domain.model.Meal
 import com.example.parcial_tp3.domain.model.MealType
 import java.time.LocalDate
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
@@ -162,5 +164,23 @@ class MealValidationTest {
         assertEquals(esperada, comida(valido, id = 7))
         val nueva = comida(valido)
         assertTrue("una nueva lleva id 0: $nueva", nueva == esperada.copy(id = 0))
+    }
+    @Test
+    fun `C59 isValidIngredient pide nombre gramos mayores a 0 y kcal no negativas`() {
+        val invalidos = listOf(
+            Ingredient("", grams = 100, kcal = 50),
+            Ingredient("   ", grams = 100, kcal = 50),
+            Ingredient("Arroz", grams = 0, kcal = 50),
+            Ingredient("Arroz", grams = -10, kcal = 50),
+            Ingredient("Arroz", grams = 100, kcal = -1),
+        )
+        val validos = listOf(
+            Ingredient("Arroz", grams = 100, kcal = 50),
+            Ingredient("Agua", grams = 250, kcal = 0),
+            Ingredient("Sal", grams = 1, kcal = 0),
+        )
+
+        for (i in invalidos) assertFalse("$i no debería ser válido", isValidIngredient(i))
+        for (i in validos) assertTrue("$i debería ser válido", isValidIngredient(i))
     }
 }

@@ -15,7 +15,10 @@ data class Meal(
     val proteinG: Double,
     val carbsG: Double,
     val fatG: Double,
+    val ingredients: List<Ingredient> = emptyList(),
 )
+
+data class Ingredient(val name: String, val grams: Int, val kcal: Int)
 
 /** Desayuno, almuerzo, merienda y cena. */
 enum class MealType { BREAKFAST, LUNCH, SNACK, DINNER }

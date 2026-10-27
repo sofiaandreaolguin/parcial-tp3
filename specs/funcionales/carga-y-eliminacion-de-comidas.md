@@ -1,8 +1,8 @@
-# Carga, edición, eliminación y total diario de comidas
+# Carga, edición, eliminación, ingredientes y total diario de comidas
 
 Flujo: Nutrition
 Requisitos: RF03, RF04, RF06, RF07, RF08
-Pantallas: Nutrition 01 (Dashboard), 02 (Today's Meals), 07 (Food Confirmation) y 08 (Meal Details). En VC-l se hacen los datos, los ViewModels y la adaptación de 01 y 02; las pantallas 07 y 08 se maquetan después, en los PR 7 y 8 de VC-m.
+Pantallas: Nutrition 01 (Dashboard), 02 (Today's Meals), 07 (Food Confirmation) y 08 (Meal Details). Los ingredientes (PR 1 de 2) tocan 01, 02, 07 y 08. En VC-l se hacen los datos, los ViewModels y la adaptación de 01 y 02; las pantallas 07 y 08 se maquetan después, en los PR 7 y 8 de VC-m.
 Responsable: Sofi
 
 ## Qué hace
@@ -10,11 +10,17 @@ La persona carga una comida a mano (o confirma la que "estimó" la voz o la foto
 
 Se apoya en lo que dejó VC-h (`specs/funcionales/registro-de-comidas.md`): `Meal`, `MealEntity`, `MealDao.insert` / `observeByDate`, mappers y `MealRepository.observeMealsByDate` / `addMeal`.
 
+**Ingredientes (PR 1 de 2, 2026-10-27).** La comida guarda también sus ingredientes (nombre, gramos y kcal) dentro de su fila. Los de foto y voz se guardan al confirmar, y se ven en 01, 02 y 08 como en el Figma. La carga manual y la búsqueda (EXT02) siguen guardando sin ingredientes hasta el PR 2, que cambia la carga manual a pop-up y saca la edición.
+
 ## Datos
-- DTO: ninguno (la consigna no tiene endpoint de comidas).
-- Modelo: `Meal` y `MealType`, sin cambios. **Los ingredientes no se guardan:** el borrador de voz o foto los muestra en 07, pero en Room queda la comida con sus totales.
-- Entity: `MealEntity`, sin cambios. **No se sube la versión de la base** (sigue `version = 2`).
-- Formulario (nuevo, en `domain/`): `MealForm(name: String = "", type: MealType? = null, date: LocalDate, kcal: String = "", protein: String = "", carbs: String = "", fat: String = "")`. Los números van como texto porque es lo que se tipea.
+- DTO: ninguno (la consigna no tiene endpoint de comidas). El JSON de los ingredientes es el formato de una columna de la Entity, no de una API: RF06 pide DTO solo para lo que llega por Retrofit.
+- Modelo: `Meal` y `MealType`. `Meal` suma `ingredients: List<Ingredient>`, vacía por defecto.
+- Entity: `MealEntity` suma la columna `ingredients: String`, con la lista en JSON y `"[]"` por defecto.
+  - **No es una tabla aparte:** la lista vive en la fila de la comida y se borra con ella.
+  - Sin Entity ni DAO nuevos (en clase: un DAO por entidad).
+  - `VoraDatabase` pasa de `version = 4` a `5`. Cambiar el esquema obliga a subirla. No se escribe `Migration`: el fallback destructivo de la decisión 003 (`dropAllTables = true`) borra **todas** las tablas una vez y las vuelve a crear vacías con el esquema nuevo. Se pierden los registros (comidas, caché de entrenamientos e historial del coach); la caché se vuelve a llenar desde el servidor.
+  - Antes de unir el PR, confirmar que ningún otro PR abierto sube también a `version = 5`.
+- Formulario (nuevo, en `domain/`): `MealForm(name: String = "", type: MealType? = null, date: LocalDate, kcal: String = "", protein: String = "", carbs: String = "", fat: String = "")`. Los números van como texto porque es lo que se tipea. **No tiene ingredientes:** viajan aparte, en `ConfirmationState.ingredients`.
 
 ## Contrato
 
@@ -27,6 +33,11 @@ Se apoya en lo que dejó VC-h (`specs/funcionales/registro-de-comidas.md`): `Mea
 | Validación | `domain/MealValidation.kt` | `fun validateMeal(form: MealForm, id: Long = 0): MealValidation`; `sealed interface MealValidation { data class Valid(val meal: Meal); data class Invalid(val errors: Map<MealField, FieldError>) }`; `enum class MealField { NAME, TYPE, KCAL, PROTEIN, CARBS, FAT }`; `enum class FieldError { REQUIRED, NOT_A_NUMBER, NOT_A_WHOLE_NUMBER, NEGATIVE }` |
 | Reloj | `di/ClockModule.kt` | `@Provides fun provideClock(): Clock = Clock.systemDefaultZone()`. Los ViewModels piden "hoy" con `LocalDate.now(clock)`, así los tests fijan el día |
 | Fecha del DatePicker | `ui/screens/nutrition/DatePickerDates.kt` | `fun selectedMillisToLocalDate(millis: Long): LocalDate` y `fun LocalDate.toPickerMillis(): Long`, las dos con `ZoneOffset.UTC` (el DatePicker de Material 3 trabaja en UTC) |
+| Ingrediente | `domain/model/Meal.kt` | `data class Ingredient(val name: String, val grams: Int, val kcal: Int)`; `Meal` suma `val ingredients: List<Ingredient> = emptyList()` como último parámetro |
+| Columna | `data/local/entity/MealEntity.kt` | suma `val ingredients: String = "[]"` como último parámetro |
+| Base | `data/local/VoraDatabase.kt` | `version = 5` |
+| Mappers | `data/repository/MealMappers.kt` | `toEntity()` escribe la lista con `Gson().toJson`: un arreglo con un objeto por ingrediente y las claves `name`, `grams` y `kcal`. `toDomain()` la lee con `Gson().fromJson(texto, Array<Ingredient>::class.java)`, directo a `Ingredient`, sin una clase aparte para el JSON. **Renombrar un campo de `Ingredient` rompe lo guardado**, porque Gson usa el nombre del campo. Gson no tira `IllegalArgumentException`, así que `toDomain()` la lanza a mano en estos casos, y el repositorio ya la traduce a `INVALID_DATA`: <br>• Gson tira `JsonParseException` (texto que no es JSON, un objeto en vez de un arreglo, un número con texto o decimales). <br>• `fromJson` devuelve `null` (`""` o `"null"`). <br>• La lista trae un elemento `null`. <br>• A un ingrediente le falta el nombre o viene `null`: Gson lo deja en `null` sin avisar, así que se revisa después de leer. <br>Un número que falta se lee como 0 y no es error al leer: lo frena la validación antes de guardar |
+| Validación de ingredientes | `domain/MealValidation.kt` | `fun isValidIngredient(ingredient: Ingredient): Boolean`: nombre no vacío ni solo espacios, `grams > 0` y `kcal >= 0` |
 
 ### Estados y ViewModels
 **01 y 02.** `NutritionViewModel @Inject constructor(repo: MealRepository, savedState: SavedStateHandle, clock: Clock)`:
@@ -47,7 +58,10 @@ sealed interface NutritionUiState {
     data class Error(@StringRes val message: Int) : NutritionUiState
 }
 data class MacroTotal(val kind: MacroKind, val grams: Int, val goal: Int, val progress: Float)
-data class MealRow(val id: Long, val type: MealType, val name: String, val kcal: Int)
+data class MealRow(
+    val id: Long, val type: MealType, val name: String, val kcal: Int,
+    val ingredients: List<Ingredient> = emptyList(),
+)
 ```
 - Las metas son de demostración. kcal, proteína y carbos son las de Home (`HomeDemoData`: 2100, 140 y 220). La grasa, 65 g, es solo de Nutrition, en `NutritionDemoData`, como dice el Figma. El progreso se topa en 1.
 - El consejo y la fecha del encabezado los arma la pantalla.
@@ -55,6 +69,11 @@ data class MealRow(val id: Long, val type: MealType, val name: String, val kcal:
 **Qué muestran 01 y 02 sin ingredientes:**
 - **01:** una fila por comida, con el tipo como título, el nombre como bajada y las kcal.
 - **02:** las comidas agrupadas por tipo. El encabezado del grupo lleva el tipo y la suma de kcal; cada comida es una línea con su nombre y sus kcal, y tocarla abre su detalle.
+
+**Con ingredientes, como el Figma:**
+- **01:** la bajada son los nombres de los ingredientes separados por `" · "`, en hasta dos líneas; si no entra, se corta con `…` (`maxLines = 2`, `TextOverflow.Ellipsis`). El Figma la dibuja en una línea porque sus nombres son cortos; con nombres cortos queda igual.
+- **02:** en vez de la línea de la comida, una línea por ingrediente (nombre, gramos en gris abajo y kcal), una comida debajo de la otra y sin el nombre de la comida. Tocar cualquier línea abre la 08 de su comida. El encabezado sigue sumando las kcal de las comidas.
+- **08:** "Ingredients" muestra una tarjeta por ingrediente con nombre, gramos en la línea gris y kcal. Sin ingredientes, una sola tarjeta con el nombre de la comida y la proteína en la línea gris.
 
 **07.** Se amplía `FoodCaptureViewModel`: suma `repo: MealRepository` al constructor y `FoodCaptureUiState` cambia así.
 
@@ -72,11 +91,19 @@ data class ConfirmationState(
     val isSaving: Boolean = false,
     val notFound: Boolean = false,
     @StringRes val saveError: Int? = null,
+    val ingredients: List<Ingredient> = emptyList(),  // los que se guardan con la comida
 )
 ```
+- **Ingredientes en 07 (PR 1):** `onOpenConfirmation` suma un cuarto parámetro, `draftIngredients: List<Ingredient> = emptyList()`. Lo arma el grafo con los ingredientes del borrador y sus nombres resueltos con `getString`, igual que `draftName`, porque el ViewModel no tiene `Context`. Los nombres quedan guardados en el idioma que tenía la app al confirmar. `DraftIngredient` no cambia.
+  - Comida nueva con borrador: `ingredients` son los `draftIngredients`.
+  - Comida nueva sin borrador (carga manual o `onPrefill` de la búsqueda): `ingredients` queda vacía.
+  - Comida guardada (edición): `ingredients` son los de esa comida y se conservan al guardar, aunque cambien nombre, tipo, kcal o macros.
+  - **La comida se guarda armada, de una vez:** mientras 07 está abierta vive solo en memoria. Al guardar, la `Meal` de `validateMeal` se completa con `copy(ingredients = …)` y va en un solo `addMeal` (un INSERT de una fila) o `updateMeal`. `validateMeal` no cambia.
+  - Antes de escribir, cada ingrediente pasa por `isValidIngredient`, también al editar. Si alguno no cumple, no se escribe nada y `saveError` toma `R.string.nutrition_error_ingredients`.
+  - 07 muestra tarjetas solo para una comida nueva con borrador; al editar muestra el formulario. **Las tarjetas se dibujan con `confirmation.ingredients`**, no con `draft.ingredients`, así lo que se ve es lo que se guarda.
 - **Eventos nuevos:**
   - `onManualEntry()` deja `draft = null`. Lo llaman "Log Manually" (03) y "Type instead" (04) antes de navegar, como `abrirFoto`.
-  - `onOpenConfirmation(mealId: Long, defaultDate: LocalDate, draftName: String)`. `draftName` lo resuelve la Route con `stringResource`, porque el ViewModel no tiene `Context`.
+  - `onOpenConfirmation(mealId: Long, defaultDate: LocalDate, draftName: String, draftIngredients: List<Ingredient> = emptyList())`. `draftName` y los nombres de los ingredientes los resuelve el grafo (`rememberAbrirConfirmacion`) con `getString`, porque el ViewModel no tiene `Context`.
   - `onFormChange(form: MealForm)`, `onSave()` y `onDiscard()`. Este último cierra 07: lo llaman ‹ y el botón atrás.
 - **Evento de una sola vez:** `FoodCaptureEvent.Saved`.
 - `PhotoAnalysisRoute` usa `state.draft ?: PhotoMealDraft`.
@@ -109,7 +136,15 @@ sealed interface MealDetailEvent { data object Deleted : MealDetailEvent; data o
   - `NutritionViewModel` atado al grafo;
   - `onManualEntry` antes de "Log Manually" y "Type instead";
   - la fecha para 07.
-- 07 y 08 siguen siendo `PantallaVacia` hasta los PR 7 y 8 de VC-m.
+- 07 y 08 se maquetaron en los PR 7 y 8 de VC-m.
+
+**PR 1 de ingredientes (2026-10-27):**
+- Datos y dominio: `domain/model/Meal.kt`, `data/local/entity/MealEntity.kt`, `data/local/VoraDatabase.kt` (versión 5 y su KDoc, que hoy dice "la version 4 borra"), `data/repository/MealMappers.kt` y `domain/MealValidation.kt`.
+- 07: `FoodCaptureViewModel`, `FoodCaptureUiState` (su KDoc dice que el borrador "no se guarda": deja de ser cierto para los ingredientes), `FoodConfirmationRoute` y `FoodConfirmationScreen` (tarjetas con `confirmation.ingredients`).
+- 08: `MealDetailViewModel` (validar al duplicar, C71) y `MealDetailScreen`.
+- 01 y 02: `NutritionViewModel`, `NutritionUiState`, `NutritionDemoData`, `NutritionDashboardScreen` y `TodaysMealsScreen`.
+- `res/values/strings.xml` y `res/values-es/strings.xml`: `nutrition_error_ingredients` (hoy no existe).
+- **Fiore:** `ui/navigation/NutritionNavGraph.kt`. `rememberAbrirConfirmacion` resuelve con `getString` los nombres de `draft.ingredients` y los pasa como cuarto argumento de `onOpenConfirmation`. Se le avisa en el PR.
 
 **Home (Martu):** `HomeViewModel` suma un `catch` (C44). Es un cambio chico y se avisa en el PR.
 
@@ -203,17 +238,43 @@ Regla de formato: el texto se evalúa sin espacios en los bordes; **primero el f
 - C49. CUANDO se toca "Duplicate Meal", DEBE llamarse una vez a `addMeal` con la misma comida y `id = 0`, y emitirse `Duplicated`.
 - C50. CUANDO `uiState` se deja de colectar y se vuelve a colectar en menos de 5 s, el repositorio falso DEBE registrar una sola suscripción a `observeMeal`.
 
+### Ingredientes guardados (RF03, RF04, RF06, RF07)
+- C53. `Meal.toEntity().ingredients` DEBE ser un arreglo JSON con un objeto por ingrediente, en el mismo orden, con las claves `name`, `grams` y `kcal` (el test lo lee con `JsonParser`, no compara el texto exacto), y `toDomain()` DEBE devolver la misma lista.
+- C54. Una comida sin ingredientes DEBE guardarse con `"[]"` y leerse con la lista vacía.
+- C55. Un nombre con coma, comillas, `|`, `·`, tildes o espacios DEBE volver igual después de ir y volver por los mappers.
+- C56. SI `ingredients` es `"hola"`, `"{}"`, `""`, `"null"`, `"[null]"`, `[{"name":"x","grams":"abc","kcal":1}]`, `[{"grams":1,"kcal":1}]` o `[{"name":null,"grams":1,"kcal":1}]`, ENTONCES `observeMealsByDate` y `observeMeal` DEBEN fallar con `MealDataException(INVALID_DATA)`.
+- C57. SI a un ingrediente del JSON le faltan los gramos o las kcal, ENTONCES `toDomain()` DEBE leerlos como 0, sin error.
+- C58. CUANDO se guarda con `addMeal` una comida con ingredientes en Room, `observeMeal` DEBE devolverla con los mismos ingredientes.
+- C59. `isValidIngredient` DEBE ser `false` con el nombre vacío o con solo espacios, con `grams` en 0 o negativo, o con `kcal` negativo; y `true` con nombre, `grams > 0` y `kcal` en 0 o más.
+- C60. CUANDO se abre 07 para una comida nueva con borrador, `confirmation.ingredients` DEBE ser la lista `draftIngredients` que pasó el grafo.
+- C61. CUANDO se guarda una comida nueva con borrador, DEBE llamarse una sola vez a `addMeal`, con la `Meal` y sus ingredientes juntos.
+- C62. SI al guardar algún ingrediente no pasa `isValidIngredient`, ENTONCES no DEBE llamarse a `addMeal` ni a `updateMeal`, `saveError` DEBE tener un texto de `strings.xml`, `isSaving` DEBE quedar en `false` y no DEBE emitirse `Saved`.
+- C63. CUANDO se abre 07 sin borrador (después de `onManualEntry()` o con `onPrefill`), `confirmation.ingredients` DEBE estar vacía aunque se pasen `draftIngredients`, y la comida DEBE guardarse sin ingredientes.
+- C64. CUANDO se abre 07 con un id guardado, `confirmation.ingredients` DEBE traer los de esa comida, y guardar la edición DEBE llamar a `updateMeal` con esos mismos ingredientes aunque haya cambiado el formulario.
+- C65. CUANDO se duplica una comida con ingredientes, `addMeal` DEBE recibir los mismos ingredientes.
+- C66. Cada `MealRow` de `Content` DEBE traer los ingredientes de su comida, en el mismo orden.
+- C71. SI al duplicar algún ingrediente no pasa `isValidIngredient`, ENTONCES no DEBE llamarse a `addMeal`, `actionError` DEBE tener un texto de `strings.xml`, `isBusy` DEBE volver a `false` y no DEBE emitirse `Duplicated`.
+
 ### A mano (no tienen test automático)
 - C51. CUANDO se guarda una comida y se cierra la app (`adb shell am force-stop`), al reabrirla la comida DEBE seguir en 02 y en el total (RF04).
 - C52. El ícono de calendario de 01 DEBE abrir un `DatePickerDialog` de Material 3 con la fecha elegida, y elegir otra DEBE cambiar lo que listan 01 y 02.
+- C67. CUANDO se guarda una comida desde la foto o la voz, 01 DEBE mostrar como bajada sus ingredientes separados por `" · "` en hasta dos líneas, cortada con `…` si no entra en 360 dp, y una comida manual DEBE seguir mostrando su nombre.
+- C68. En 02, una comida con ingredientes DEBE verse como una línea por ingrediente (nombre, gramos y kcal), y tocar cualquiera de esas líneas DEBE abrir la 08 de esa comida. Una manual DEBE verse como dice "Qué muestran 01 y 02 sin ingredientes".
+- C69. En 08, una comida con ingredientes DEBE mostrar una tarjeta por ingrediente con nombre, gramos y kcal. Una manual DEBE mostrar una sola tarjeta con su nombre y la proteína en la línea gris.
+- C70. CUANDO se instala la versión con `version = 5` sobre una base vieja, la app DEBE abrir sin cerrarse. Room borra una vez todas las tablas y las vuelve a crear vacías, así que se pierden los registros de comidas, caché de entrenamientos e historial del coach. Lo que se cargue después DEBE seguir al cerrar y reabrir (C51).
 
 Plantillas: **La app DEBE** (siempre) · **CUANDO** (ante un evento) · **MIENTRAS** (durante un estado) · **SI ... ENTONCES** (algo sale mal) · **DONDE** (opcional, para ampliaciones).
 
 Casos de la plantilla que no aplican: sin conexión, 404, 503 y JSON inválido (todo es local).
 
 ## Fuera de alcance
-- Guardar ingredientes en Room, y una tabla nueva o subir la versión de la base.
-- Buscar alimentos (VC-y) y "Retake Photo".
+- Una tabla aparte de ingredientes: la lista vive en la fila de la comida (ver Datos).
+- **Va en el PR 2, no en este:** cargar ingredientes a mano, guardar como ingrediente el alimento elegido en la búsqueda (EXT02) y calcular las kcal de la comida como la suma de sus ingredientes. Ese PR también saca la edición de comidas.
+- Que −/+, "Remove" y "+ Add Ingredient" de 07 funcionen: siguen como demostración.
+- Traducir los nombres ya guardados si se cambia el idioma de la app.
+- Corregir una comida guardada con un ingrediente inválido (por ejemplo, gramos en 0 leídos de un JSON viejo): la validación también frena la edición y Duplicate, así que solo se puede eliminar. No se da por la app, porque todo lo que se escribe pasa por `isValidIngredient`, y la edición se va en el PR 2.
+- Pasar `deleteById` de `@Query` a `@Delete`, como en la clase: va en un PR aparte, entre el 1 y el 2 (cambia la llamada de C11).
+- "Retake Photo".
 - Eliminar desde 02 o con deslizar: se elimina solo desde 08.
 - Maquetar 07 y 08: son los PR 7 y 8 de VC-m. En VC-l solo se tocan para que compile.
 - Cambiar `Rutas.kt`, `MainActivity` o `RUTAS_*`.
@@ -276,6 +337,25 @@ Casos de la plantilla que no aplican: sin conexión, 404, 503 y JSON inválido (
 | C50 | `` `C50 recolectar en menos de 5 s no vuelve a pedir la comida` `` | `test/` · `MealDetailViewModelTest` | sí, 2026-10-24 |
 | C51 | recorrido a mano | emulador | no aplica |
 | C52 | recorrido a mano | emulador | no aplica |
+| C53 | `` `C53 los ingredientes van y vuelven por los mappers en orden` `` | `test/` · `MealMappersTest` | sí, 2026-10-27 |
+| C54 | `` `C54 sin ingredientes se guarda corchetes vacios` `` | `test/` · `MealMappersTest` | no: pasa al agregar el campo (`"[]"` por defecto); control negativo rompiendo el mapper (`ingredients = ""`): falla, 2026-10-27 |
+| C55 | `` `C55 un nombre con coma comillas y tildes vuelve igual` `` | `test/` · `MealMappersTest` | sí, 2026-10-27 |
+| C56 | `` `C56 ingredientes invalidos son MealDataException INVALID_DATA` `` | `test/` · `MealRepositoryImplTest` | sí, 2026-10-27 |
+| C57 | `` `C57 gramos o kcal que faltan se leen como 0` `` | `test/` · `MealMappersTest` | sí, 2026-10-27 |
+| C58 | `C58_addMeal_guarda_y_devuelve_los_ingredientes` | `androidTest/` · `MealRepositoryRoomTest` | compila, 2026-10-27; verde en el emulador el mismo día |
+| C59 | `` `C59 isValidIngredient pide nombre gramos mayores a 0 y kcal no negativas` `` | `test/` · `MealValidationTest` | sí, 2026-10-27 |
+| C60 | `` `C60 con borrador 07 trae los ingredientes que paso el grafo` `` | `test/` · `FoodConfirmationViewModelTest` | sí, 2026-10-27 |
+| C61 | `` `C61 guardar con borrador hace un solo addMeal con sus ingredientes` `` | `test/` · `FoodConfirmationViewModelTest` | sí, 2026-10-27 |
+| C62 | `` `C62 un ingrediente invalido no guarda y muestra el error` `` | `test/` · `FoodConfirmationViewModelTest` | sí, 2026-10-27 |
+| C63 | `` `C63 sin borrador 07 no tiene ingredientes` `` | `test/` · `FoodConfirmationViewModelTest` | no: pasa al agregar el campo (lista vacía por defecto); control negativo asignando `draftIngredients` sin mirar `draft`: falla, 2026-10-27 |
+| C64 | `` `C64 editar conserva los ingredientes guardados` `` | `test/` · `FoodConfirmationViewModelTest` | sí, 2026-10-27 |
+| C65 | `` `C65 Duplicate copia los ingredientes` `` | `test/` · `MealDetailViewModelTest` | no: `meal.copy(id = 0)` ya los copia; control negativo con `copy(ingredients = emptyList())`: falla, 2026-10-27 |
+| C66 | `` `C66 cada MealRow trae sus ingredientes` `` | `test/` · `NutritionViewModelTest` | sí, 2026-10-27 |
+| C71 | `` `C71 Duplicate con un ingrediente invalido no guarda y muestra el error` `` | `test/` · `MealDetailViewModelTest` | sí, 2026-10-27 |
+| C67 | recorrido a mano y captura | emulador (360 y 411 dp) · `docs/evidencia/visual/nutrition-01-ingredientes-*` | no aplica; hecho 2026-10-27 |
+| C68 | recorrido a mano y captura | emulador (360 y 411 dp) · `nutrition-02-ingredientes-*` | no aplica; hecho 2026-10-27 |
+| C69 | recorrido a mano y captura | emulador (360 y 411 dp) · `nutrition-08-ingredientes-*` y `nutrition-08-sin-ingredientes-*` | no aplica; hecho 2026-10-27 |
+| C70 | recorrido a mano | emulador | no aplica |
 
 - Los tests de `androidTest/` van con guion bajo (con `minSdk` 29 el DEX no acepta espacios) y se corren a mano con `./gradlew connectedDebugAndroidTest`. La salida se guarda en `docs/evidencia/tests/`.
 - Los de ViewModel usan un repositorio falso, `runTest`, la regla de `Dispatchers.Main` y `UnconfinedTestDispatcher` para observar, como `HomeViewModelTest`. El falso cuenta las suscripciones con `onStart` (C26 y C50). `deleteMeal` lo saca de la lista que emite y `updateMeal` lo reemplaza.
@@ -302,6 +382,19 @@ Casos de la plantilla que no aplican: sin conexión, 404, 503 y JSON inválido (
   - #13: C35 y C36.
   - #14: los archivos que se tocan y el aviso a Fiore.
   - #15: suscripciones en vez de llamadas, C26 y C50.
+- auditor-spec (2026-10-27, ingredientes del PR 1): 13 hallazgos (0 BLOQUEA, 3 ALTA, 7 MEDIA, 3 BAJA). Se corrigieron todos en la spec:
+  - #1 y #2 (ALTA): Gson no tira `IllegalArgumentException` y deja un nombre `null` sin avisar. Mappers y C56 con los casos concretos.
+  - #3 (ALTA): aviso a Fiore por `NutritionNavGraph`.
+  - #4: la firma de `onOpenConfirmation` quedaba vieja en "Eventos nuevos".
+  - #5: lista de archivos del PR 1, `nutrition_error_ingredients` y KDoc que quedan falsos.
+  - #6: la versión 5 borra todas las tablas (C70) y hay que coordinarla con otros PRs.
+  - #7: C54, C63 y C65 pasan sin rojo; llevan control negativo.
+  - #8: la validación cubre también la edición y Duplicate (C71), por decisión de Sofi. El caso sin salida queda en Fuera de alcance.
+  - #9: las tarjetas de 07 salen de `confirmation.ingredients`.
+  - #10: bajada de 01 en una línea con `…` (C67).
+  - #11: C53 con las claves del JSON.
+  - #12: se sacaron los "como hoy" de C68 y C69.
+  - #13: por qué no hay DTO.
 - Decidido por la IA en la corrección (Sofi puede cambiarlo):
   - corregir un campo borra solo su error, sin revalidar todo;
   - Home muestra 0 ante un error de datos;
@@ -328,3 +421,19 @@ Casos de la plantilla que no aplican: sin conexión, 404, 503 y JSON inválido (
   - "13:12" y el consejo son fijos;
   - eliminar es un botón "Delete Meal" con un `AlertDialog` (el Figma no lo tiene);
   - "Edit Meal" abre la confirmación con el id antes de navegar.
+- 2026-10-27. Ingredientes guardados (PR 1 de 2): C53 a C71 (C71, después de la auditoría). Antes no se guardaban (decisión de VC-l). Plan y entrevista con Sofi:
+  - van dentro de la fila de la comida, en una columna JSON, y no en una tabla aparte (sin Entity ni DAO nuevos);
+  - la comida se guarda armada, en un solo INSERT, nunca sin ingredientes para completarla después;
+  - `Ingredient` es un modelo (`data class`), no una Entity; Gson lee directo a él, sin una clase aparte para el JSON, porque el repo no usa ese patrón en otro lado;
+  - al leer, un número que falta es 0; antes de guardar se valida: gramos mayores a 0 y kcal desde 0, como "no negativos" de RF03 y C7;
+  - foto y voz guardan los suyos; manual y búsqueda, en el PR 2;
+  - en 02, una línea por ingrediente y sin el nombre de la comida, como el Figma;
+  - en 01, los ingredientes como bajada, como el Figma;
+  - editar conserva los ingredientes, hasta que el PR 2 saque la edición;
+  - `DraftIngredient` no cambia: el grafo resuelve los nombres, como `draftName`;
+  - el borrado pasa a `@Delete`, como en la clase, en un PR aparte entre el 1 y el 2.
+  
+  Los tests existentes no cambian: `Meal`, `MealEntity`, `MealRow` y `onOpenConfirmation` traen valores por defecto.
+- 2026-10-27. Tests en rojo del PR 1 de ingredientes: fallan 11 de `test/` por el resultado (C53, C55 a C57, C59 a C62, C64, C66 y C71); C54, C63 y C65 pasan y su control negativo falla; C58 compila y queda para correr con el emulador. Firmas sin lógica: `Ingredient`, las columnas y campos nuevos con su valor por defecto, `isValidIngredient` (devuelve `false`), el cuarto parámetro de `onOpenConfirmation` y `nutrition_error_ingredients`.
+- 2026-10-27. Implementación del PR 1 de ingredientes (datos y ViewModels, commits `425e2d6` y `d0fd972`): C53 a C66 y C71 en verde, C58 en el emulador. Decisión con Sofi al maquetar: la bajada de 01 va en hasta dos líneas y no en una (C67), para que se vean más ingredientes sin un gesto escondido; se descartó el scroll horizontal porque, sin `…`, no se nota que hay más.
+- 2026-10-27. Pantallas del PR 1 de ingredientes: 01, 02, 07 y 08 dibujan los ingredientes guardados (C67 a C69), y 07 dibuja sus tarjetas con `confirmation.ingredients` (lo marcó el revisor de arquitectura). Al capturar en 360 dp la bajada de 01 quedaba pegada a las kcal: se separó con 12 dp, también en las líneas de 02. `revisor-visual`: las cinco APROBADA en la primera vuelta. C70 (instalar la versión 5 sobre una base vieja) no se recorrió a mano.

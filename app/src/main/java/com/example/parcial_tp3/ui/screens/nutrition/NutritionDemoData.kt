@@ -3,10 +3,11 @@ package com.example.parcial_tp3.ui.screens.nutrition
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.res.stringResource
 import com.example.parcial_tp3.R
+import com.example.parcial_tp3.domain.model.Ingredient
 import com.example.parcial_tp3.domain.model.MealType
 import java.time.LocalDate
 
-/** Metas de demostración de Nutrition y el estado de las previews de 01 y 02. */
+/** Metas de demostración de Nutrition y los datos de las previews de 01, 02, 07 y 08. */
 object NutritionDemoData {
 
     /** Solo de Nutrition, como dice el Figma (nodo 1:777). kcal, proteína y carbos son las de Home. */
@@ -26,9 +27,16 @@ object NutritionDemoData {
         ),
         meals = listOf(
             MealRow(1, MealType.BREAKFAST, stringResource(R.string.nutrition_dash_breakfast_items), 420),
-            MealRow(2, MealType.LUNCH, stringResource(R.string.nutrition_dash_lunch_items), 520),
+            // El almuerzo con los ingredientes de la foto; el desayuno y la merienda, como una carga manual.
+            MealRow(2, MealType.LUNCH, stringResource(R.string.nutrition_dash_lunch_items), 520, photoIngredients()),
             MealRow(3, MealType.SNACK, stringResource(R.string.nutrition_dash_snack_items), 240),
         ),
         pending = MealType.DINNER,
     )
+
+    /** Los de [PhotoMealDraft] con el nombre resuelto, como los arma el grafo al abrir 07. */
+    @Composable
+    fun photoIngredients() = PhotoMealDraft.ingredients.map {
+        Ingredient(stringResource(it.name), it.grams, it.kcal)
+    }
 }

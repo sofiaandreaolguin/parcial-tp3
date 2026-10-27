@@ -12,6 +12,7 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.navArgument
+import com.example.parcial_tp3.domain.model.Ingredient
 import com.example.parcial_tp3.ui.screens.nutrition.AddFoodRoute
 import com.example.parcial_tp3.ui.screens.nutrition.FoodAnalysisRoute
 import com.example.parcial_tp3.ui.screens.nutrition.FoodCaptureViewModel
@@ -182,8 +183,12 @@ private fun rememberAbrirConfirmacion(nav: NavController, grafo: NavBackStackEnt
     val resources = LocalResources.current
     return remember(nav, captura, nutricion, resources) {
         { opciones ->
-            val nombre = resources.getString(captura.uiState.value.draft?.name ?: MealDraft().name)
-            captura.onOpenConfirmation(NEW_MEAL_ID, nutricion.selectedDate.value, nombre)
+            val borrador = captura.uiState.value.draft
+            val nombre = resources.getString(borrador?.name ?: MealDraft().name)
+            val ingredientes = borrador?.ingredients.orEmpty().map {
+                Ingredient(resources.getString(it.name), it.grams, it.kcal)
+            }
+            captura.onOpenConfirmation(NEW_MEAL_ID, nutricion.selectedDate.value, nombre, ingredientes)
             nav.navigate(Rutas.foodConfirmation(), opciones)
         }
     }

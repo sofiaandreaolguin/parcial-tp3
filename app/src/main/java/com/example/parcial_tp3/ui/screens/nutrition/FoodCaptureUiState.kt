@@ -5,11 +5,13 @@ import com.example.parcial_tp3.R
 import com.example.parcial_tp3.domain.FieldError
 import com.example.parcial_tp3.domain.MealField
 import com.example.parcial_tp3.domain.MealForm
+import com.example.parcial_tp3.domain.model.Ingredient
 import com.example.parcial_tp3.domain.model.MealType
 
 /**
  * 04 a 07: lo que se escuchó, el borrador de la comida y el formulario de 07. El borrador es de
- * demostración y no se guarda: al confirmar, en Room queda la comida con sus totales.
+ * demostración: al confirmar, en Room queda la comida con sus totales y con los ingredientes de
+ * [ConfirmationState.ingredients], que el grafo arma a partir de los del borrador.
  */
 data class FoodCaptureUiState(
     @StringRes val transcript: Int = R.string.nutrition_voice_transcript_demo,
@@ -31,6 +33,7 @@ data class ConfirmationState(
     val isSaving: Boolean = false,
     val notFound: Boolean = false,
     @StringRes val saveError: Int? = null,
+    val ingredients: List<Ingredient> = emptyList(),
 )
 
 /** El paso de Nutrition / 05 que se está haciendo; los anteriores están hechos y los siguientes pendientes. */

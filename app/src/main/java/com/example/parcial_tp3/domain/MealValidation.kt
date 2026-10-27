@@ -1,5 +1,6 @@
 package com.example.parcial_tp3.domain
 
+import com.example.parcial_tp3.domain.model.Ingredient
 import com.example.parcial_tp3.domain.model.Meal
 
 /** RF03. Las reglas de cada campo estan en specs/funcionales/carga-y-eliminacion-de-comidas.md. */
@@ -46,6 +47,9 @@ fun validateMeal(form: MealForm, id: Long = 0): MealValidation {
         ),
     )
 }
+
+fun isValidIngredient(ingredient: Ingredient): Boolean =
+    ingredient.name.isNotBlank() && ingredient.grams > 0 && ingredient.kcal >= 0
 
 private class Parsed(val value: Double? = null, val error: FieldError? = null)
 

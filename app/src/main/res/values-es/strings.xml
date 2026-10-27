@@ -546,6 +546,7 @@
     <string name="nutrition_dash_breakfast_items">Yogur griego · frutos rojos · granola</string>
     <string name="nutrition_dash_lunch">Almuerzo</string>
     <string name="nutrition_dash_lunch_items">Pollo · arroz · verduras</string>
+    <string name="nutrition_ingredients_separator">" · "</string>
     <string name="nutrition_dash_snack">Merienda</string>
     <string name="nutrition_dash_snack_items">Batido de proteínas</string>
     <string name="nutrition_dash_dinner">Cena</string>
@@ -576,6 +577,7 @@
     <string name="nutrition_error_load">No pudimos cargar tus comidas.</string>
     <string name="nutrition_error_save">No pudimos guardar la comida. Probá de nuevo.</string>
     <string name="nutrition_error_action">Algo salió mal. Probá de nuevo.</string>
+    <string name="nutrition_error_ingredients">Hay ingredientes que no son válidos. Revisá el nombre, los gramos y las kcal.</string>
     <string name="nutrition_retry">Reintentar</string>
 
     <!-- Nutrition / 03 — Add Food -->

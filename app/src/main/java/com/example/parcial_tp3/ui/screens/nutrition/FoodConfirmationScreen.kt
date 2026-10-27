@@ -28,6 +28,7 @@ import com.example.parcial_tp3.R
 import com.example.parcial_tp3.domain.FieldError
 import com.example.parcial_tp3.domain.MealField
 import com.example.parcial_tp3.domain.MealForm
+import com.example.parcial_tp3.domain.model.Ingredient
 import com.example.parcial_tp3.domain.model.MealType
 import com.example.parcial_tp3.ui.components.VoraButton
 import com.example.parcial_tp3.ui.components.VoraButtonSize
@@ -47,16 +48,17 @@ import java.time.LocalDate
  *
  * Con ingredientes (llega de 05 o 06) se ve como el frame: tarjetas, totales y botones. Sin ellos
  * (carga manual o edición) el frame no tiene dibujo: van los campos de RF03 con los mismos
- * componentes. −/+, "Remove", "+ Add Ingredient" y "Save without logging" llaman a [onDemo]: los
- * ingredientes no se guardan (spec carga-y-eliminacion-de-comidas).
+ * componentes. Los ingredientes se guardan con la comida, pero −/+, "Remove", "+ Add Ingredient" y
+ * "Save without logging" llaman a [onDemo]: todavía no se pueden cambiar (spec
+ * carga-y-eliminacion-de-comidas).
  *
  * @param confirmation null mientras el ViewModel todavía no la abrió.
- * @param ingredients los del borrador; vacío muestra los campos.
+ * @param ingredients los que se guardan con la comida; vacío muestra los campos.
  */
 @Composable
 fun FoodConfirmationScreen(
     confirmation: ConfirmationState?,
-    ingredients: List<DraftIngredient>,
+    ingredients: List<Ingredient>,
     onBack: () -> Unit,
     onFormChange: (MealForm) -> Unit,
     onSave: () -> Unit,
@@ -109,7 +111,7 @@ fun FoodConfirmationScreen(
 }
 
 @Composable
-private fun IngredientList(ingredients: List<DraftIngredient>, onDemo: () -> Unit) {
+private fun IngredientList(ingredients: List<Ingredient>, onDemo: () -> Unit) {
     Column(verticalArrangement = Arrangement.spacedBy(VoraTheme.spacing.s12)) {
         ingredients.forEach { IngredientCard(it, onDemo) }
     }
@@ -117,7 +119,7 @@ private fun IngredientList(ingredients: List<DraftIngredient>, onDemo: () -> Uni
 
 // Tarjeta de 85 en el frame: padding 12, nombre y kcal arriba, y a 10 el selector y "Remove".
 @Composable
-private fun IngredientCard(ingredient: DraftIngredient, onDemo: () -> Unit) {
+private fun IngredientCard(ingredient: Ingredient, onDemo: () -> Unit) {
     VoraCard(modifier = Modifier.fillMaxWidth(), padding = VoraTheme.spacing.s12) {
         Column(verticalArrangement = Arrangement.spacedBy(VoraTheme.spacing.s10)) {
             Row(
@@ -127,7 +129,7 @@ private fun IngredientCard(ingredient: DraftIngredient, onDemo: () -> Unit) {
             ) {
                 // 14 y no 15: "Grilled Chicken Breast" mide 145 en el frame (14 Medium) y "280 kcal" 55 (14 SemiBold).
                 Text(
-                    text = stringResource(ingredient.name),
+                    text = ingredient.name,
                     style = MaterialTheme.typography.labelLarge,
                     fontWeight = FontWeight.Medium,
                     color = MaterialTheme.colorScheme.onSurface,
@@ -325,7 +327,7 @@ private fun FoodConfirmationDraftPreview() {
                     fat = PhotoMealDraft.fatG.toInt().toString(),
                 ),
             ),
-            ingredients = PhotoMealDraft.ingredients,
+            ingredients = NutritionDemoData.photoIngredients(),
             onBack = {},
             onFormChange = {},
             onSave = {},

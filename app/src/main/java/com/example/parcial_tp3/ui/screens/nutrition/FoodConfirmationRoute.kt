@@ -9,6 +9,7 @@ import androidx.compose.runtime.rememberUpdatedState
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavBackStackEntry
+import com.example.parcial_tp3.domain.model.Ingredient
 import com.example.parcial_tp3.ui.components.rememberDemoToast
 
 /**
@@ -54,7 +55,8 @@ fun FoodConfirmationRoute(
     val shown = remember { Shown() }
     state.confirmation?.let { c ->
         shown.confirmation = c
-        shown.ingredients = if (c.mealId == NEW_MEAL_ID) state.draft?.ingredients.orEmpty() else emptyList()
+        // Los que se van a guardar, no los del borrador: lo que se ve es lo que queda en Room.
+        shown.ingredients = if (c.mealId == NEW_MEAL_ID) c.ingredients else emptyList()
     }
 
     FoodConfirmationScreen(
@@ -69,5 +71,5 @@ fun FoodConfirmationRoute(
 
 private class Shown(
     var confirmation: ConfirmationState? = null,
-    var ingredients: List<DraftIngredient> = emptyList(),
+    var ingredients: List<Ingredient> = emptyList(),
 )

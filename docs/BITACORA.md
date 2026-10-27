@@ -911,3 +911,24 @@ Formato:
 - **El revisor de arquitectura encontró lo que el método no había agarrado:** `PageMetaDto` tenía los campos no anulables, contra el KDoc de su propio archivo. Gson no corre el constructor de Kotlin, así que un `meta` truncado dejaba `total` en 0 y la pantalla decía "no se encontró ningún alimento" cuando la respuesta vino rota. Corregido, con el caso sumado a C6 y su control negativo. También faltaba el test de la carrera del debounce (la respuesta vieja que llega tarde y pisa a la nueva): agregado, y sin la cancelación caen C20 y C24.
 - Evidencia: **351 tests unitarios y 25 con emulador, 0 fallos**; `./gradlew assembleDebug` en verde y `./scripts/reglas.sh` sin hallazgos. Capturas en `docs/evidencia/busqueda/`, en 411 y 360 dp y en modo oscuro.
 - Commit / PR:
+
+### 2026-10-27 · Sofi · feat(nutrition): guardar los ingredientes de foto y voz y mostrarlos en 01, 02, 07 y 08
+- Carril y requisitos: C (datos y ViewModels) y después B (pantallas) · RF03, RF04, RF06, RF07 · UI01, UI03, NAV03, NAV04. Spec `carga-y-eliminacion-de-comidas.md`, C53 a C71 (PR 1 de 2). Tests en rojo en `928d9d2`.
+- Plan aprobado: los ingredientes van en una columna JSON de `meals`, convertida con Gson en `MealMappers.kt` (sin tabla, Entity ni DAO nuevos), con la base en versión 5 y fallback destructivo. `isValidIngredient` frena el guardado en 07 y el Duplicate de 08. Las pantallas dibujan lo guardado: bajada en 01, una línea por ingrediente en 02, tarjetas en 07 y 08.
+- Qué propuso la IA y qué cambiamos:
+  - La IA propuso dos commits (datos y lógica) y dejar las pantallas para otra sesión. Sofi recordó que las pantallas van en el mismo PR: se hicieron acá, y el PR se abre con todo junto.
+  - La IA propuso la bajada de 01 en una línea con `…`, como el Figma. Sofi preguntó por un scroll horizontal o dos líneas. Quedó en hasta dos líneas: con el scroll, sin `…`, no se nota que hay más. Se corrigió C67 en la spec.
+  - Sofi propuso dejar `NutritionNavGraph` como los otros grafos (solo navegación). Revisando git, la lógica era de Sofi y estaba decidida en la spec (25/10). Como el PR 2 cambia esos caminos (saca la edición y pasa la carga manual a pop-up), se decidió revisarlo en el plan del PR 2.
+  - Las capturas en 360 dp mostraron la bajada de 01 pegada a las kcal: se separó con 12 dp, también en 02.
+- Trampas que conviene saber:
+  - Sin `app/google-services.json` no compila; con la plantilla compila, pero el login falla con "API key not valid". Para probar en el emulador hace falta el archivo real del proyecto `vora-coach`.
+  - Gson no corre el constructor de Kotlin: un `name` que falta llega como `null` aunque el tipo diga `String`, y por eso se revisa a mano después de leer.
+- Revisores:
+  - `revisor-requisitos`: los 15 criterios cumplen; tests sin tocar desde el rojo.
+  - `revisor-arquitectura`: una ALTA (07 dibujaba las tarjetas con el borrador y no con lo que se guarda), corregida en las pantallas. MEDIA: la versión 5 también borra la caché de entrenamientos (avisar a Hector).
+  - Code review: nada crítico ni alto.
+  - `revisor-visual`: las cinco pantallas APROBADA en la primera vuelta.
+  - Sugerencias sin aplicar (BAJA y MEDIA): validar el Duplicate después del control de "ocupado o borrada"; al editar, una carga que falla puede guardar sin ingredientes (la edición se va en el PR 2); declarar Gson directo en `libs.versions.toml`; una regla `-keep` para `Ingredient` si se activa R8; las kcal de 02 un poco más chicas; los ViewModels de `ui/` importan `data.repository` y `reglas.sh` no lo controla.
+- Evidencia: **365 tests unitarios y 26 con emulador, 0 fallos** (C58 incluido); `assembleDebug`, `lintDebug` y `reglas.sh` en verde. Control negativo de 16 roturas, las 16 detectadas (`docs/evidencia/tests/2026-10-27-ingredientes-verde.md`). Capturas `docs/evidencia/visual/nutrition-{01,02,07,08}-ingredientes-{411,360}dp.png` y `nutrition-08-sin-ingredientes-*`.
+- Sin verificar: C70 a mano (instalar la versión 5 sobre una base vieja); el texto en castellano de las pantallas nuevas.
+- Commit / PR:

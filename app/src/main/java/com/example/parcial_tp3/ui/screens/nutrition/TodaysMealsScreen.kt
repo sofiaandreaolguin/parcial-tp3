@@ -33,6 +33,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.example.parcial_tp3.R
+import com.example.parcial_tp3.domain.model.Ingredient
 import com.example.parcial_tp3.domain.model.MealType
 import com.example.parcial_tp3.ui.components.VoraButton
 import com.example.parcial_tp3.ui.components.VoraButtonSize
@@ -45,8 +46,9 @@ import com.example.parcial_tp3.ui.theme.VoraTheme
  * MainActivity. Con tres comidas más la cena no entra en 818 dp, así que va con scroll (UI03).
  * Cada control va a donde dice la tabla NAV03 de specs/PANTALLAS.md.
  *
- * Las comidas de Room de la fecha elegida en 01, agrupadas por tipo. Sin ingredientes guardados,
- * cada grupo lista sus comidas con nombre y kcal, y tocar una abre su detalle (08).
+ * Las comidas de Room de la fecha elegida en 01, agrupadas por tipo. Una comida con ingredientes
+ * (foto o voz) se ve como el frame, una línea por ingrediente; una sin ingredientes (carga manual),
+ * una línea con su nombre. Tocar cualquier línea abre el detalle de su comida (08).
  */
 @Composable
 fun TodaysMealsScreen(
@@ -115,8 +117,7 @@ private fun Header(total: String?) {
     }
 }
 
-// La tarjeta del frame (encabezado con el tipo y las kcal, divisor y una línea por ingrediente);
-// las líneas pasan a ser las comidas de ese tipo.
+// La tarjeta del frame: encabezado con el tipo y las kcal de sus comidas, divisor y las líneas.
 @Composable
 private fun MealGroupCard(type: MealType, meals: List<MealRow>, onMeal: (Long) -> Unit) {
     VoraCard(modifier = Modifier.fillMaxWidth(), padding = VoraTheme.spacing.s12) {
@@ -141,7 +142,14 @@ private fun MealGroupCard(type: MealType, meals: List<MealRow>, onMeal: (Long) -
             }
             HorizontalDivider(color = MaterialTheme.colorScheme.outline)
             Column(verticalArrangement = Arrangement.spacedBy(VoraTheme.spacing.s6)) {
-                meals.forEach { meal -> MealLine(meal, onClick = { onMeal(meal.id) }) }
+                meals.forEach { meal ->
+                    val open = { onMeal(meal.id) }
+                    if (meal.ingredients.isEmpty()) {
+                        MealLine(meal, onClick = open)
+                    } else {
+                        meal.ingredients.forEach { IngredientLine(it, onClick = open) }
+                    }
+                }
             }
         }
     }
@@ -154,6 +162,7 @@ private fun MealLine(meal: MealRow, onClick: () -> Unit) {
             .fillMaxWidth()
             .clickable(role = Role.Button, onClick = onClick)
             .padding(vertical = VoraTheme.spacing.s4),
+        horizontalArrangement = Arrangement.spacedBy(VoraTheme.spacing.s12),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Text(
@@ -165,6 +174,38 @@ private fun MealLine(meal: MealRow, onClick: () -> Unit) {
         )
         Text(
             text = stringResource(R.string.nutrition_kcal, meal.kcal),
+            style = VoraTheme.text.fieldLabel,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+        )
+    }
+}
+
+// Como el frame: nombre y debajo los gramos en gris, con las kcal a la derecha.
+@Composable
+private fun IngredientLine(ingredient: Ingredient, onClick: () -> Unit) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable(role = Role.Button, onClick = onClick)
+            .padding(vertical = VoraTheme.spacing.s4),
+        horizontalArrangement = Arrangement.spacedBy(VoraTheme.spacing.s12),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Column(modifier = Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(VoraTheme.spacing.s2)) {
+            Text(
+                text = ingredient.name,
+                style = MaterialTheme.typography.bodyMedium,
+                fontWeight = FontWeight.Medium,
+                color = MaterialTheme.colorScheme.onBackground,
+            )
+            Text(
+                text = stringResource(R.string.nutrition_confirm_grams, ingredient.grams),
+                style = MaterialTheme.typography.bodySmall,
+                color = VoraTheme.colors.textMuted,
+            )
+        }
+        Text(
+            text = stringResource(R.string.nutrition_kcal, ingredient.kcal),
             style = VoraTheme.text.fieldLabel,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
         )

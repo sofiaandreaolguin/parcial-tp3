@@ -3,6 +3,7 @@ package com.example.parcial_tp3.ui.screens.nutrition
 import androidx.lifecycle.SavedStateHandle
 import com.example.parcial_tp3.data.repository.MealDataException
 import com.example.parcial_tp3.data.repository.MealError
+import com.example.parcial_tp3.domain.model.Ingredient
 import com.example.parcial_tp3.domain.model.Meal
 import com.example.parcial_tp3.domain.model.MealType
 import com.example.parcial_tp3.ui.navigation.Rutas
@@ -203,5 +204,38 @@ class MealDetailViewModelTest {
 
         assertEquals(guardada, vm.contenido().meal)
         assertEquals(1, repo.suscripcionesPorId)
+    }
+    private val ingredientes = listOf(
+        Ingredient("Avena", grams = 60, kcal = 230),
+        Ingredient("Banana", grams = 100, kcal = 90),
+    )
+
+    @Test
+    fun `C65 Duplicate copia los ingredientes`() = runTest {
+        val repoConIngredientes = FakeMealRepository(listOf(guardada.copy(ingredients = ingredientes)))
+        val vm = MealDetailViewModel(repoConIngredientes, SavedStateHandle(mapOf(Rutas.ARG_MEAL_ID to 7L)))
+        observar(vm)
+
+        vm.onDuplicate()
+
+        assertEquals("addMeal no se llamó una sola vez", 1, repoConIngredientes.agregadas.size)
+        assertEquals(ingredientes, repoConIngredientes.agregadas.single().ingredients)
+    }
+
+    @Test
+    fun `C71 Duplicate con un ingrediente invalido no guarda y muestra el error`() = runTest {
+        val invalida = guardada.copy(ingredients = listOf(ingredientes[0], Ingredient("Banana", grams = 0, kcal = 90)))
+        val repoInvalido = FakeMealRepository(listOf(invalida))
+        val vm = MealDetailViewModel(repoInvalido, SavedStateHandle(mapOf(Rutas.ARG_MEAL_ID to 7L)))
+        observar(vm)
+        val ev = eventos(vm)
+
+        vm.onDuplicate()
+
+        assertTrue("no debería llamar a addMeal: ${repoInvalido.agregadas}", repoInvalido.agregadas.isEmpty())
+        val c = vm.contenido()
+        assertTrue("actionError no es un texto de strings.xml: ${c.actionError}", esTextoDeStrings(c.actionError))
+        assertFalse(c.isBusy)
+        assertTrue("no debería emitir Duplicated: $ev", ev.isEmpty())
     }
 }
