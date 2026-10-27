@@ -28,8 +28,8 @@ class MealRepositoryImpl @Inject constructor(
         if (rows == 0) throw MealDataException(MealError.NOT_FOUND)
     }
 
-    override suspend fun deleteMeal(id: Long) {
-        write { dao.deleteById(id) }
+    override suspend fun deleteMeal(meal: Meal) {
+        write { dao.delete(meal.toEntity()) }
     }
 
     // valueOf tira IllegalArgumentException con un tipo desconocido; parse, DateTimeParseException.

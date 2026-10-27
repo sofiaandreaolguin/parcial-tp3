@@ -1,6 +1,7 @@
 package com.example.parcial_tp3.data.local.dao
 
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
@@ -29,7 +30,10 @@ interface MealDao {
     @Update
     suspend fun update(meal: MealEntity): Int
 
-    /** Devuelve las filas borradas: 0 si el id no existe. */
-    @Query("DELETE FROM meals WHERE id = :id")
-    suspend fun deleteById(id: Long): Int
+    /**
+     * Devuelve las filas borradas: 0 si la comida ya no existe. Room busca la fila solo por la clave
+     * primaria, así que los demás campos de [meal] pueden estar desactualizados (C72).
+     */
+    @Delete
+    suspend fun delete(meal: MealEntity): Int
 }

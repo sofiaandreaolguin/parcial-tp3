@@ -932,3 +932,22 @@ Formato:
 - Evidencia: **365 tests unitarios y 26 con emulador, 0 fallos** (C58 incluido); `assembleDebug`, `lintDebug` y `reglas.sh` en verde. Control negativo de 16 roturas, las 16 detectadas (`docs/evidencia/tests/2026-10-27-ingredientes-verde.md`). Capturas `docs/evidencia/visual/nutrition-{01,02,07,08}-ingredientes-{411,360}dp.png` y `nutrition-08-sin-ingredientes-*`.
 - Sin verificar: C70 a mano (instalar la versión 5 sobre una base vieja); el texto en castellano de las pantallas nuevas.
 - Commit / PR:
+
+### 2026-10-27 · Sofi · refactor(nutrition): borrar comidas con @Delete
+- Carril y requisitos: C · RF04 y RF06. Spec `carga-y-eliminacion-de-comidas.md`: cambian C11, C12, C14 y C45, y se suman C72, C73 y C74. Tests en rojo en `f7a7200`.
+- Plan aprobado: `MealDao.deleteById` (`@Query`) pasa a `@Delete suspend fun delete(meal: MealEntity): Int`, como en la clase. El repositorio pasa a `deleteMeal(meal: Meal)` y el ViewModel le pasa la comida que muestra `Content`. Lo que ve el usuario no cambia.
+- Qué propuso la IA y qué cambiamos:
+  - La IA propuso dos opciones: que el repositorio siga recibiendo el id o que reciba la `Meal`. Con el id, la implementación tendría que leer la fila o armar una Entity de mentira. Sofi eligió la `Meal`.
+  - Si `delete` borra 0 filas, no es error (C73): para quien borra, que la comida ya no esté es lo que buscaba. `updateMeal` sí avisa (C17), porque ahí se pierde lo escrito.
+  - Sofi propuso sumar el refactor al PR 1 de ingredientes. Se dejó aparte, porque ese PR ya estaba revisado y es de otro tipo (`feat` contra `refactor`).
+  - Sofi pidió que quedara aclarado en la spec por qué la comida tiene id y el ingrediente no: la comida lo usa en algunas consultas (abrir su detalle, editarla, borrarla), y el ingrediente no tiene id porque no tiene tabla propia (vive en una columna de `meals`), y en esta versión de la app no se consulta, edita ni borra por separado. Quedó en el párrafo "Por qué la comida tiene id y el ingrediente no".
+- Revisores:
+  - `auditor-spec`, dos ALTA corregidas antes del rojo:
+    - `FakeMealRepository.eliminadas` lo usaban C43, C46, C47 y C48. Se conservó y se sumó `comidasEliminadas`, así esos cuatro tests no se tocaron.
+    - Faltaba qué hace confirmar sin `Content`: se sumó C74.
+  - `revisor-requisitos`: los 7 criterios cumplen. El único cambio en los tests después del rojo es sacar el `override` de `deleteById` del `FakeMealDao`, que dejó de existir en el DAO.
+  - `revisor-arquitectura`: un import sobrante y un comentario del ViewModel que nombraba `@Delete`; los dos se corrigieron.
+- Trampa: dos compilaciones a la vez en la misma carpeta (un revisor y el control automático) fallan con `NoSuchFileException` o `EOFException`, sin que el código tenga nada mal. Corrido solo, da verde.
+- Evidencia: **367 tests unitarios y 27 con emulador, 0 fallos**; `lintDebug` y `reglas.sh` en verde. Rojo, control negativo (`@Update` en lugar de `@Delete` para C11, C12 y C72, más cuatro roturas para C14, C45, C73 y C74) y verde en `docs/evidencia/tests/2026-10-27-borrar-con-delete.md`.
+- Pendiente de otra zona: `specs/PANTALLAS.md` §17 todavía nombra `MealDao.deleteById` (Fiore). Va como aviso en el PR.
+- Commit / PR:

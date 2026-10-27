@@ -128,14 +128,14 @@ class MealDaoTest {
     }
 
     @Test
-    fun C11_deleteById_saca_la_comida_y_devuelve_las_filas_borradas() = runTest {
+    fun C11_delete_saca_la_comida_y_devuelve_las_filas_borradas() = runTest {
         val idDesayuno = dao.insert(desayuno)
         val idAlmuerzo = dao.insert(almuerzo)
 
-        assertEquals(1, dao.deleteById(idDesayuno))
+        assertEquals(1, dao.delete(desayuno.copy(id = idDesayuno)))
         assertEquals(listOf(almuerzo.copy(id = idAlmuerzo)), dao.observeByDate(hoy).first())
 
-        assertEquals(0, dao.deleteById(9_999))
+        assertEquals(0, dao.delete(desayuno.copy(id = 9_999)))
         assertEquals(listOf(almuerzo.copy(id = idAlmuerzo)), dao.observeByDate(hoy).first())
     }
 
@@ -150,7 +150,7 @@ class MealDaoTest {
         val (inicial, trasBorrar) = withContext(Dispatchers.Default) {
             withTimeout(5_000) {
                 val primera = emisiones.receive()
-                dao.deleteById(id)
+                dao.delete(desayuno.copy(id = id))
                 primera to emisiones.receive()
             }
         }
@@ -158,5 +158,14 @@ class MealDaoTest {
 
         assertEquals(desayuno.copy(id = id), inicial)
         assertNull(trasBorrar)
+    }
+
+    @Test
+    fun C72_delete_borra_por_id_aunque_cambien_los_otros_valores() = runTest {
+        val id = dao.insert(desayuno)
+        val otraVersion = desayuno.copy(id = id, name = "Otro nombre", kcal = 1, ingredients = "[]")
+
+        assertEquals(1, dao.delete(otraVersion))
+        assertTrue(dao.observeByDate(hoy).first().isEmpty())
     }
 }

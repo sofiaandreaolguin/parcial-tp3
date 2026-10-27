@@ -7,7 +7,6 @@ import com.example.parcial_tp3.R
 import com.example.parcial_tp3.data.repository.MealDataException
 import com.example.parcial_tp3.data.repository.MealRepository
 import com.example.parcial_tp3.domain.isValidIngredient
-import com.example.parcial_tp3.domain.model.Meal
 import com.example.parcial_tp3.ui.navigation.Rutas
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
@@ -60,7 +59,11 @@ class MealDetailViewModel @Inject constructor(
 
     fun onDismissDelete() = actions.update { it.copy(confirmingDelete = false) }
 
-    fun onConfirmDelete() = runAction(deleting = true, MealDetailEvent.Deleted) { repo.deleteMeal(mealId) }
+    // Se borra la comida que muestra Content; sin Content no hay qué borrar (C74).
+    fun onConfirmDelete() {
+        val meal = (uiState.value as? MealDetailUiState.Content)?.meal ?: return
+        runAction(deleting = true, MealDetailEvent.Deleted) { repo.deleteMeal(meal) }
+    }
 
     fun onDuplicate() {
         val meal = (uiState.value as? MealDetailUiState.Content)?.meal ?: return
