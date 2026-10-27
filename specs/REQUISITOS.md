@@ -12,9 +12,9 @@ Ninguna fila figura todavía como **verificado**: ese estado pide que otro integ
 
 | Código | Qué pide | Responsable | Dónde se cubre · En `main` desde | Estado | Verificó |
 |---|---|---|---|---|---|
-| UI01 | Maquetación fiel al Figma: estructura, colores, tipografías, espaciados, íconos; sin textos cortados ni superpuestos | Todos, cada uno las suyas; control visual Zaki | Las 37 en `ui/screens/` · PR #16 a #54, 22 al 25/10 | hecho | falta VC-s |
+| UI01 | Maquetación fiel al Figma: estructura, colores, tipografías, espaciados, íconos; sin textos cortados ni superpuestos | Todos, cada uno las suyas; control visual Zaki | Las 37 en `ui/screens/` · PR #16 a #54, 22 al 25/10 | hecho | Zaki, VC-s: 37/37 en `docs/evidencia/visual/control-final.md` |
 | UI02 | Tema propio y componentes reutilizados (corregir uno lo corrige en todas) | Martu | `ui/theme/`, `ui/components/` · **PR #5 a #7, 20/10** | hecho | lo controla `reglas.sh` |
-| UI03 | Consistente en el tamaño del Figma y en otro emulador; lo que no entra se desplaza | Todos; control visual Zaki | Capturas de las 37 en 394/411 dp y 360 dp, en `docs/evidencia/visual/` | hecho | falta VC-s |
+| UI03 | Consistente en el tamaño del Figma y en otro emulador; lo que no entra se desplaza | Todos; control visual Zaki | Capturas de las 37 en 411 dp y 360 dp, en `docs/evidencia/visual/` | hecho | Zaki, VC-s: 37/37 en `docs/evidencia/visual/control-final.md` |
 | NAV01 | Cada pantalla de Figma con su destino y estado (funcional o demostración) en el README | Fiore | `PANTALLAS.md` y la tabla de 37 filas del README · **PR #2, 18/10** | hecho | |
 | NAV02 | Recorridos entre áreas; volver, cerrar y cancelar; atrás del sistema coherente | Fiore | `ui/navigation/`: 7 grafos, 33 destinos · **PR #2, 18/10** | hecho | `RutasTest` |
 | NAV03 | Todo control que abre algo lleva a su destino | Todos, cada uno las suyas | `PANTALLAS.md` §3 a §9; los controles sin frame avisan modo demostración · PR #27 y #49 | hecho | |

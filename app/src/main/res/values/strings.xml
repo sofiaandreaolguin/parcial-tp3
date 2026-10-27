@@ -117,6 +117,8 @@
     <string name="edit_birth_date_pattern">d MMMM yyyy</string>
     <string name="edit_height">HEIGHT</string>
     <string name="edit_weight">WEIGHT</string>
+    <string name="edit_unit_cm">cm</string>
+    <string name="edit_unit_kg">kg</string>
     <string name="edit_gender">GENDER</string>
     <string name="edit_date_confirm">OK</string>
     <string name="edit_date_cancel">Cancel</string>
