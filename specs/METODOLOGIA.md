@@ -1062,7 +1062,7 @@ Tests: guardar y leer el historial en orden; una falla de red no borra el histor
 
 - En "Agregar alimento", la opción de búsqueda consulta `GET /v1/foods?q=&page=&pageSize=` (12 alimentos, paginada).
 - El ViewModel espera a que la persona deje de tipear (debounce de unos 300 ms) antes de consultar, para no disparar una búsqueda por letra.
-- Paginación: al llegar al final de la lista, pide la página siguiente.
+- ~~Paginación: al llegar al final de la lista, pide la página siguiente.~~ **Se sacó a propósito el 27/10, al implementar.** El catálogo tiene 12 alimentos y el servidor acepta `pageSize` hasta 50: entran todos en una consulta, así que la paginación no se dispararía nunca en uso real. La consigna (`CONSIGNA.md:126`) no la pide: dice solo "búsqueda de alimentos y cálculo nutricional". El repositorio igual recibe y manda `page`, así que agregarla después es sumar criterios, no rehacer. Lo decidió Fiore; está en `specs/funcionales/busqueda-de-alimentos.md`.
 - Cálculo nutricional: al elegir un alimento y una porción, se calculan calorías, proteínas, carbohidratos y grasas proporcionales a la porción, y se precarga el formulario de carga manual (RF03). Se guarda por el mismo camino de Room, así el total diario se actualiza (RF04).
 - Estados: cargando, resultados, sin resultados y error con reintento (RF05).
 - **Ojo:** según la consigna, el servidor local filtra de verdad por `q`; el mock de Postman Cloud devuelve respuestas fijas. Hay que verificar que el servidor que usemos filtre (buscar algo que no existe tiene que dar lista vacía).
@@ -1081,7 +1081,7 @@ Tests: cálculo proporcional (por ejemplo, 150 g de un alimento con valores cada
 3. El coach (EXT01), si queda tiempo después.
 4. Firebase solo si el grupo quiere ir por más de 3 puntos extra: es la única vía para llegar a 10.
 
-Dueñas sugeridas: EXT02 la toma Nutrition; EXT01, quien tenga Coach o quien termine primero; Firebase, Tema y componentes (que ya tiene Acceso).
+Dueñas sugeridas: EXT02 la toma Nutrition (**la tomó Fiore el 26/10**, acordado en el grupo); EXT01, quien tenga Coach o quien termine primero; Firebase, Tema y componentes (que ya tiene Acceso).
 
 ---
 
