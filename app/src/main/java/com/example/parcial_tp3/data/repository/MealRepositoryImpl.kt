@@ -29,7 +29,7 @@ class MealRepositoryImpl @Inject constructor(
     }
 
     override suspend fun deleteMeal(meal: Meal) {
-        write { dao.deleteById(meal.id) }
+        write { dao.delete(meal.toEntity()) }
     }
 
     // valueOf tira IllegalArgumentException con un tipo desconocido; parse, DateTimeParseException.

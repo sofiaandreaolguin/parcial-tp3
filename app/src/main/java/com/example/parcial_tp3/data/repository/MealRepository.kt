@@ -22,5 +22,6 @@ interface MealRepository {
     /** Tira [MealDataException] con NOT_FOUND si la comida ya no existe. */
     suspend fun updateMeal(meal: Meal)
 
+    /** No avisa si la comida ya no estaba: lo que se quería ya pasó (C73). */
     suspend fun deleteMeal(meal: Meal)
 }

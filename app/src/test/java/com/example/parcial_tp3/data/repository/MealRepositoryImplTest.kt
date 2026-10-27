@@ -211,7 +211,6 @@ private class FakeMealDao : MealDao {
     val porId = MutableStateFlow<MealEntity?>(null)
     var idPedido: Long? = null
     val actualizadas = mutableListOf<MealEntity>()
-    val idsBorrados = mutableListOf<Long>()
     var filasActualizadas = 1
     var filasBorradas = 1
 
@@ -223,11 +222,6 @@ private class FakeMealDao : MealDao {
     override suspend fun update(meal: MealEntity): Int {
         actualizadas += meal
         return filasActualizadas
-    }
-
-    override suspend fun deleteById(id: Long): Int {
-        idsBorrados += id
-        return filasBorradas
     }
 
     val borradas = mutableListOf<MealEntity>()
