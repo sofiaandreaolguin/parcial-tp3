@@ -208,9 +208,6 @@ private class FakeMealDao : MealDao {
         return porId
     }
 
-    // Provisorio: se va con MealDao.update (PR 2 de ingredientes, sin edición).
-    override suspend fun update(meal: MealEntity): Int = 0
-
     val borradas = mutableListOf<MealEntity>()
 
     override suspend fun delete(meal: MealEntity): Int {

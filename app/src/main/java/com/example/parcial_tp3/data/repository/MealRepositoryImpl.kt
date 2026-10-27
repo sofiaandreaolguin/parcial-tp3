@@ -23,11 +23,6 @@ class MealRepositoryImpl @Inject constructor(
 
     override fun observeMeal(id: Long): Flow<Meal?> = dao.observeById(id).map { it?.toMeal() }.storageErrors()
 
-    override suspend fun updateMeal(meal: Meal) {
-        val rows = write { dao.update(meal.toEntity()) }
-        if (rows == 0) throw MealDataException(MealError.NOT_FOUND)
-    }
-
     override suspend fun deleteMeal(meal: Meal) {
         write { dao.delete(meal.toEntity()) }
     }

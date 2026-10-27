@@ -69,9 +69,6 @@ class FakeMealRepository(comidas: List<Meal> = emptyList()) : MealRepository {
         return id
     }
 
-    // Provisorio: se va con MealRepository.updateMeal (PR 2 de ingredientes, sin edición).
-    override suspend fun updateMeal(meal: Meal) = Unit
-
     override suspend fun deleteMeal(meal: Meal) {
         eliminadas += meal.id
         comidasEliminadas += meal
