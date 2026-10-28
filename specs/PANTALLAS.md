@@ -49,8 +49,8 @@ Por estado (NAV01):
 
 | Estado | Cuántas | Cuáles |
 |---|---|---|
-| Funcional | 11 | Workout 01, 02, 03 y 06; Nutrition 01, 02, 07 y 08; **con Firebase (extra aa):** Login 01 y 02 y Profile 02 |
-| Demostración | 26 | Las demás |
+| Funcional | 12 | Workout 01, 02, 03 y 06; Nutrition 01, 02, 07 y 08; **con el coach (EXT01):** Voice 05; **con Firebase (extra aa):** Login 01 y 02 y Profile 02 |
+| Demostración | 25 | Las demás |
 
 Son los dos estados que nombra NAV01, y coinciden con la tabla de **cobertura mínima por área** de la consigna, donde el profe ya clasifica Acceso, Home y Profile como demostración, Workout como Retrofit + Room, Nutrition como Room, y Coach y Progress como simulado.
 
@@ -633,7 +633,7 @@ Al 26/10 **no queda ninguno sin resolver**. Se deja el registro de cada uno porq
 4. ~~**Eliminar una comida (RF04) no tiene control en ningún frame**~~ · **Cerrado con el profe (duda #4).** Respondió: *"Eliminar el componente en la base, no en la API. Ya está el botón al editar el meal"*. Se borra desde `Nutrition / 08 — Meal Details`, con diálogo de confirmación (`MealDetailScreen.kt`) y `MealDao.deleteById`; el total del día se recalcula solo. El "Remove" de `07` sigue sacando un ingrediente del borrador, que es otra cosa.
 5. **El catálogo de entrenamientos (RF01) se muestra en `Workout / 02 — Your Plan`**, que lista tres con entrada por ítem, igual que devuelve el mock. `Workout / 01` muestra solo el destacado. **NAV04 se demuestra en `02`.**
 6. **Controles sin frame de destino:** "Connected Data" y "Account" en `Profile / 01`; Notifications, Units, Appearance, Help Centre, Contact Support y Privacy Policy en `Profile / 06`. NAV03 permite que "una acción de servicio opcional dé un resultado de ejemplo o avise que es modo demostración". Ninguno queda sin respuesta: todos avisan modo demostración.
-7. **Firebase:** quedó en una rama aparte (`feat/firebase-extra`) y **no se integró a `main`**. Login 01 y 02 siguen siendo **Demostración** acá y en el README. Si alguna vez se integra, las dos filas cambian a Funcional.
+7. ~~**Firebase:** quedó en una rama aparte (`feat/firebase-extra`)~~ · **Cerrado el 25/10 con el extra aa (PR #57).** Firebase se integró a `main`: Login 01 y 02 y Profile 02 son **Funcionales** acá y en el README. Ver `docs/decisiones/008-firebase-sin-acceso-demo.md`.
 
 ---
 

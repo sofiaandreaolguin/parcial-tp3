@@ -992,3 +992,12 @@ Formato:
 - Sin verificar: el segundo ensayo cronometrado conducido por una persona; el "No connection" del primer Sign In, que no se reprodujo; qué commit explica cada integrante (pregunta 6 sin contestar).
 - Pendiente de otra zona: tarjeta "LAST CONVERSATION" de Voice sin `onClick` contra `PANTALLAS.md` línea 184 (Zaki); textos cortados a 360 dp, "Registrar desayu…" y "Entrenamie…" (Martu); README con "8 funcionales" y Login 01/02 y Edit Profile como "Demostración", y `PANTALLAS.md` §17 que dice que Firebase no se integró (Fiore).
 - Commit / PR:
+
+### 2026-10-28 · Martu · docs: alinear el README y PANTALLAS.md con Firebase y el conteo de pantallas funcionales
+- Carril y requisitos: A (sin código de la app) · NAV01 (cobertura: cada pantalla con su estado) · extra aa (Firebase)
+- Plan aprobado: corregir lo que el ensayo de la demo (`docs/evidencia/ensayo-demo-2026-10-27.md`) marcó como desfasado: Login 01 y 02 y Edit Profile figuraban como "Demostración" en el README, el README decía "8 funcionales" y `PANTALLAS.md` §17 punto 7 decía que Firebase no se integró a `main`.
+- Qué propuso la IA y qué cambiamos: la IA contó las filas de las dos tablas en vez de sumar a mano y encontró que el número real con Firebase es **12 funcionales y 25 de demostración**, no 11 y 26: `PANTALLAS.md` omitía Voice 05 (Conversation, EXT01), que ya figuraba como funcional en su propia tabla. Se corrigió en los dos archivos.
+- Revisores: no aplica (solo documentación).
+- Evidencia: `grep` de las cuentas viejas ("8 funcionales", "29 de demostración", "11", "26") sin resultados.
+- Sin verificar: las líneas de `PANTALLAS.md` y del README que dejó anotadas el PR #63 (la ~259 que habla de `SUM` y de que "03 carga", y la §17 que nombra `MealDao.deleteById`) y el `LEEME.md` de Nutrition; no se tocaron acá.
+- Commit / PR:
