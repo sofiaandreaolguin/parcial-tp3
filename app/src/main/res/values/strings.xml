@@ -590,6 +590,8 @@
     <string name="nutrition_ingredient_title">Add Ingredient</string>
     <string name="nutrition_ingredient_add">Add</string>
     <string name="nutrition_ingredient_cancel">Cancel</string>
+    <string name="nutrition_ingredient_field_name">INGREDIENT</string>
+    <string name="nutrition_ingredient_field_grams">GRAMS (G)</string>
     <string name="nutrition_ingredient_grams_range">Between 1 and 10000 g</string>
     <string name="nutrition_ingredient_kcal_range">Between 0 and 10000 kcal</string>
 

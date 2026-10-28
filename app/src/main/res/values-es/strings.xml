@@ -588,6 +588,8 @@
     <string name="nutrition_ingredient_title">Agregar ingrediente</string>
     <string name="nutrition_ingredient_add">Agregar</string>
     <string name="nutrition_ingredient_cancel">Cancelar</string>
+    <string name="nutrition_ingredient_field_name">INGREDIENTE</string>
+    <string name="nutrition_ingredient_field_grams">GRAMOS (G)</string>
     <string name="nutrition_ingredient_grams_range">Entre 1 y 10000 g</string>
     <string name="nutrition_ingredient_kcal_range">Entre 0 y 10000 kcal</string>
 
