@@ -209,14 +209,14 @@ Lo que hoy está bien resuelto para 37 pantallas y dejaría de estarlo con más:
 
 ## Inventario de pantallas (NAV01)
 
-Las 37 pantallas del Figma con su destino en la app y su estado. **8 funcionales** (cumplen un requisito con datos reales) y **29 de demostración**.
+Las 37 pantallas del Figma con su destino en la app y su estado. **12 funcionales** (cumplen un requisito o un extra con datos reales: Workout, Nutrition, Conversation con el coach, y Login, SignUp y Edit Profile con Firebase) y **25 de demostración**.
 
 Los 5 estados del Asistente VORA son **una sola ruta** `voice` con estado distinto, no cinco destinos: ver [`docs/decisiones/002-voice-una-pantalla-con-estados.md`](docs/decisiones/002-voice-una-pantalla-con-estados.md). Por eso el `NavHost` tiene 33 destinos para 37 pantallas.
 
 | # | Pantalla de Figma | Destino en la app | Estado |
 |---|---|---|---|
-| 1 | Login - 01 — SignIn | `sign_in` | Demostración |
-| 2 | Login - 02 — SignUp | `sign_up` | Demostración |
+| 1 | Login - 01 — SignIn | `sign_in` | **Funcional** (Firebase, extra aa) |
+| 2 | Login - 02 — SignUp | `sign_up` | **Funcional** (Firebase, extra aa) |
 | 3 | Home / 01 — Dashboard | `home_dashboard` | Demostración (el entrenamiento recomendado sale de la caché de Room y el total de calorías, de la tabla de comidas) |
 | 4 | Home / 02 — Notifications | `notifications` | Demostración |
 | 5 | Voice / 01 — Idle | `voice` (estado `Idle`) | Demostración |
@@ -247,7 +247,7 @@ Los 5 estados del Asistente VORA son **una sola ruta** `voice` con estado distin
 | 30 | Progress / 05 — Health Trends | `health_trends` | Demostración |
 | 31 | Progress / 06 — Weekly Review | `weekly_review` | Demostración |
 | 32 | Profile / 01 — Dashboard | `profile_dashboard` | Demostración |
-| 33 | Profile / 02 — Edit Profile | `edit_profile` | Demostración |
+| 33 | Profile / 02 — Edit Profile | `edit_profile` | **Funcional** (Firebase, extra aa) |
 | 34 | Profile / 03 — Goals & Preferences | `goals_preferences` | Demostración |
 | 35 | Profile / 04 — Nutrition Preferences | `nutrition_preferences` | Demostración |
 | 36 | Profile / 05 — Voice & AI Settings | `voice_ai_settings` | Demostración |
