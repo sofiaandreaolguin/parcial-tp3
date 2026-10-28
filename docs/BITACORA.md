@@ -978,3 +978,17 @@ Formato:
 - Sin verificar: el texto en castellano de los pop-ups en 360 dp; C96 medido en píxeles; C51 (cerrar y reabrir la app con una comida del PR 2).
 - Pendiente de otra zona: avisar a Fiore por `NutritionNavGraph`, `Rutas.kt`, `FoodSearchViewModel`, `FoodSearchSheetHost`, `PANTALLAS.md`, el README y el `LEEME.md` de Nutrition. En `PANTALLAS.md` siguen dos líneas de antes de este PR: la 260 (habla de `SUM` y de que "03 carga") y la §17 (nombra `MealDao.deleteById`).
 - Commit / PR:
+
+### 2026-10-27 · Martu · docs(demo): ensayo del recorrido de la demo (tarea v)
+- Carril y requisitos: A (sin código de la app) · recorrido mínimo de la consigna (los 5 pasos) · RF01, RF02, RF03, RF04, RF05, RF07, RF08 · NAV01 a NAV05, UI03.
+- Plan aprobado: ensayar sobre `main` (`0b47c64`) con el mock local y el emulador, los 5 pasos de `specs/METODOLOGIA.md` §14 más rotación y 360 dp, y dejar la evidencia en `docs/evidencia/ensayo-demo-2026-10-27.md`.
+- Qué propuso la IA y qué cambiamos:
+  - Claude Code manejó el emulador con `adb` y el mock local; **no lo condujo una persona del grupo**, así que no hay tiempos y el segundo ensayo cronometrado sigue pendiente.
+  - El paso 3 se ensayó con el flujo nuevo del PR #63 (pop-up, ingredientes en 07 y kcal como suma). Quedó cerrado lo que Sofi dejó "sin verificar": C51 (cerrar y abrir la app con una comida) y los pop-ups en castellano a 360 dp.
+  - Para el paso 4 se probaron los tres escenarios del mock (`empty`, `error`, `malformed`), cambiando `local.properties` y recompilando; se restauró el archivo y se reinstaló.
+  - El paso 5 se practicó con el agente `tp3:docente-examinador` (cinco de seis preguntas). Las respuestas se armaron leyendo el código, no de memoria. De ahí salieron cuatro correcciones: son 21 ViewModels, se usa KSP, no hay `@HiltAndroidTest` y no hay DataStore.
+- Revisores: no aplica (no cambió código de la app).
+- Evidencia: `docs/evidencia/ensayo-demo-2026-10-27.md`. Resultado: los pasos 1 a 4, la rotación (RF07) y 360 dp salen ✅ (los de 1 y 360 dp con observaciones); el paso 5 quedó parcial.
+- Sin verificar: el segundo ensayo cronometrado conducido por una persona; el "No connection" del primer Sign In, que no se reprodujo; qué commit explica cada integrante (pregunta 6 sin contestar).
+- Pendiente de otra zona: tarjeta "LAST CONVERSATION" de Voice sin `onClick` contra `PANTALLAS.md` línea 184 (Zaki); textos cortados a 360 dp, "Registrar desayu…" y "Entrenamie…" (Martu); README con "8 funcionales" y Login 01/02 y Edit Profile como "Demostración", y `PANTALLAS.md` §17 que dice que Firebase no se integró (Fiore).
+- Commit / PR:
