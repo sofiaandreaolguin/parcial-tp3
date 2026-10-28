@@ -13,9 +13,12 @@ import androidx.navigation.NavBackStackEntry
  * `NutritionDatePickerDialog`: la Route guarda un booleano y dibuja esto cuando esta en true.
  * Asi la pantalla de atras se sigue viendo y el inventario de rutas no cambia.
  *
- * Pide FoodCaptureViewModel y NutritionViewModel atados a la entrada del grafo, igual que
- * `rememberAbrirConfirmacion`: el primero recibe la comida y el alimento y el segundo da la
- * fecha que se esta mirando, para que el total diario que cambie sea el de ese dia (C32).
+ * Pide FoodCaptureViewModel y NutritionViewModel atados a la entrada del grafo: el primero recibe
+ * la comida y el alimento y el segundo da la fecha que se esta mirando, para que el total diario
+ * que cambie sea el de ese dia (C32).
+ *
+ * @param onConfirmed se llama cuando el pop-up de carga ya quedo abierto con el alimento: la Route
+ *  cierra esta hoja y queda el pop-up (`ManualEntrySheetHost`).
  */
 @Composable
 fun FoodSearchSheetHost(
