@@ -22,6 +22,7 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.parcial_tp3.R
+import com.example.parcial_tp3.domain.IngredientForm
 import com.example.parcial_tp3.domain.MealForm
 import com.example.parcial_tp3.domain.model.Ingredient
 import com.example.parcial_tp3.domain.model.MealType
@@ -40,19 +41,21 @@ import java.time.LocalDate
  * Nutrition / 07 — Food Confirmation ("Review Meal").
  *
  * Siempre como el frame: tarjetas, totales y botones. Nombre, tipo y macros se cargan antes, en el
- * pop-up de carga ([MealFields]). Los ingredientes se guardan con la comida, pero −/+, "Remove", "+ Add Ingredient" y
- * "Save without logging" llaman a [onDemo]: todavía no se pueden cambiar (spec
- * carga-y-eliminacion-de-comidas).
+ * pop-up de carga ([MealFields]). Las kcal del panel son la suma de las tarjetas. −/+ y "Save
+ * without logging" llaman a [onDemo] (spec carga-y-eliminacion-de-comidas).
  *
  * @param confirmation null mientras el ViewModel todavía no la abrió.
- * @param ingredients los que se guardan con la comida.
  */
 @Composable
 fun FoodConfirmationScreen(
     confirmation: ConfirmationState?,
-    ingredients: List<Ingredient>,
     onBack: () -> Unit,
     onSave: () -> Unit,
+    onAddIngredient: () -> Unit,
+    onRemoveIngredient: (index: Int) -> Unit,
+    onIngredientChange: (IngredientForm) -> Unit,
+    onConfirmIngredient: () -> Unit,
+    onDismissIngredient: () -> Unit,
     onDemo: () -> Unit,
 ) {
     Column(
@@ -73,33 +76,41 @@ fun FoodConfirmationScreen(
             // El botón mide ~46 con su relleno y el texto 19: con 6 a cada lado, el texto queda a
             // los ~29,5 de las tarjetas y del panel que mide el frame.
             Column(verticalArrangement = Arrangement.spacedBy(VoraTheme.spacing.s6)) {
-                IngredientList(ingredients, onDemo)
+                IngredientList(confirmation.ingredients, onRemoveIngredient, onDemo)
                 VoraButton(
                     text = stringResource(R.string.nutrition_confirm_add_ingredient),
-                    onClick = onDemo,
+                    onClick = onAddIngredient,
                     style = VoraButtonStyle.Text,
                     size = VoraButtonSize.Medium,
                 )
-                TotalsPanel(confirmation.form)
+                TotalsPanel(confirmation.totalKcal, confirmation.form)
             }
             confirmation.saveError?.let {
                 VoraInfoMessage(text = stringResource(it), icon = painterResource(R.drawable.ic_info))
             }
             Actions(confirmation, onSave, onDemo)
+            confirmation.ingredientEntry?.let {
+                IngredientEntryDialog(
+                    entry = it,
+                    onChange = onIngredientChange,
+                    onConfirm = onConfirmIngredient,
+                    onDismiss = onDismissIngredient,
+                )
+            }
         }
     }
 }
 
 @Composable
-private fun IngredientList(ingredients: List<Ingredient>, onDemo: () -> Unit) {
+private fun IngredientList(ingredients: List<Ingredient>, onRemove: (index: Int) -> Unit, onDemo: () -> Unit) {
     Column(verticalArrangement = Arrangement.spacedBy(VoraTheme.spacing.s12)) {
-        ingredients.forEach { IngredientCard(it, onDemo) }
+        ingredients.forEachIndexed { i, ingredient -> IngredientCard(ingredient, onRemove = { onRemove(i) }, onDemo) }
     }
 }
 
 // Tarjeta de 85 en el frame: padding 12, nombre y kcal arriba, y a 10 el selector y "Remove".
 @Composable
-private fun IngredientCard(ingredient: Ingredient, onDemo: () -> Unit) {
+private fun IngredientCard(ingredient: Ingredient, onRemove: () -> Unit, onDemo: () -> Unit) {
     VoraCard(modifier = Modifier.fillMaxWidth(), padding = VoraTheme.spacing.s12) {
         Column(verticalArrangement = Arrangement.spacedBy(VoraTheme.spacing.s10)) {
             Row(
@@ -136,7 +147,7 @@ private fun IngredientCard(ingredient: Ingredient, onDemo: () -> Unit) {
                 )
                 VoraButton(
                     text = stringResource(R.string.nutrition_confirm_remove),
-                    onClick = onDemo,
+                    onClick = onRemove,
                     style = VoraButtonStyle.TextDestructive,
                     size = VoraButtonSize.Small,
                 )
@@ -147,7 +158,7 @@ private fun IngredientCard(ingredient: Ingredient, onDemo: () -> Unit) {
 
 // Panel con padding 16 (no los 20 de VoraPanel) y 12 entre el encabezado, el divisor y los macros.
 @Composable
-private fun TotalsPanel(form: MealForm) {
+private fun TotalsPanel(totalKcal: Int, form: MealForm) {
     VoraPanel(modifier = Modifier.fillMaxWidth(), padding = VoraTheme.spacing.s16) {
         Column(verticalArrangement = Arrangement.spacedBy(VoraTheme.spacing.s12)) {
             Row(
@@ -164,7 +175,7 @@ private fun TotalsPanel(form: MealForm) {
                     color = MaterialTheme.colorScheme.secondary,
                 )
                 Text(
-                    text = stringResource(R.string.nutrition_confirm_total_kcal, form.kcal),
+                    text = stringResource(R.string.nutrition_confirm_total_kcal, totalKcal.toString()),
                     style = MaterialTheme.typography.titleLarge,
                 )
             }
@@ -196,7 +207,10 @@ private fun Actions(confirmation: ConfirmationState, onSave: () -> Unit, onDemo:
     }
 }
 
-/** "Add to Lunch" con el tipo elegido; "Save Meal" sin tipo. */
+/**
+ * "Add to Lunch" con el tipo elegido. "Save Meal" queda para cuando no hay tipo: desde la app solo
+ * pasa si Android cerró el proceso en 06 y el borrador volvió vacío.
+ */
 @StringRes
 private fun ConfirmationState.saveLabel(): Int = when (form.type) {
     MealType.BREAKFAST -> R.string.nutrition_confirm_add_breakfast
@@ -222,10 +236,15 @@ private fun FoodConfirmationDraftPreview() {
                     carbs = PhotoMealDraft.carbsG.toInt().toString(),
                     fat = PhotoMealDraft.fatG.toInt().toString(),
                 ),
+                ingredients = NutritionDemoData.photoIngredients(),
             ),
-            ingredients = NutritionDemoData.photoIngredients(),
             onBack = {},
             onSave = {},
+            onAddIngredient = {},
+            onRemoveIngredient = {},
+            onIngredientChange = {},
+            onConfirmIngredient = {},
+            onDismissIngredient = {},
             onDemo = {},
         )
     }
@@ -239,9 +258,13 @@ private fun FoodConfirmationEmptyPreview() {
             confirmation = ConfirmationState(
                 form = MealForm(date = previewDate),
             ),
-            ingredients = emptyList(),
             onBack = {},
             onSave = {},
+            onAddIngredient = {},
+            onRemoveIngredient = {},
+            onIngredientChange = {},
+            onConfirmIngredient = {},
+            onDismissIngredient = {},
             onDemo = {},
         )
     }

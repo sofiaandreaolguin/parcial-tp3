@@ -9,7 +9,6 @@ import androidx.compose.runtime.rememberUpdatedState
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavBackStackEntry
-import com.example.parcial_tp3.domain.model.Ingredient
 import com.example.parcial_tp3.ui.components.rememberDemoToast
 
 /**
@@ -51,23 +50,21 @@ fun FoodConfirmationRoute(
 
     // Al guardar o descartar, el ViewModel limpia la confirmación (y al guardar, el borrador) antes de
     // que termine la animación de salida: se sigue mostrando lo último para que 07 no cambie mientras se va.
+    // Las tarjetas salen de confirmation.ingredients: lo que se ve es lo que queda en Room.
     val shown = remember { Shown() }
-    state.confirmation?.let { c ->
-        shown.confirmation = c
-        // Los que se van a guardar, no los del borrador: lo que se ve es lo que queda en Room.
-        shown.ingredients = c.ingredients
-    }
+    state.confirmation?.let { shown.confirmation = it }
 
     FoodConfirmationScreen(
         confirmation = shown.confirmation,
-        ingredients = shown.ingredients,
         onBack = back,
         onSave = viewModel::onSave,
+        onAddIngredient = viewModel::onAddIngredientClick,
+        onRemoveIngredient = viewModel::onRemoveIngredient,
+        onIngredientChange = viewModel::onIngredientEntryChange,
+        onConfirmIngredient = viewModel::onConfirmIngredient,
+        onDismissIngredient = viewModel::onDismissIngredientEntry,
         onDemo = rememberDemoToast(),
     )
 }
 
-private class Shown(
-    var confirmation: ConfirmationState? = null,
-    var ingredients: List<Ingredient> = emptyList(),
-)
+private class Shown(var confirmation: ConfirmationState? = null)
