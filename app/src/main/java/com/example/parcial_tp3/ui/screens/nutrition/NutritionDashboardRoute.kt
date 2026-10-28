@@ -10,8 +10,10 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavBackStackEntry
 
 /**
- * @param grafo la entrada del grafo de Nutrition: el ViewModel se pide ahí para compartirlo con 02,
- *  así las dos muestran la misma fecha.
+ * @param grafo la entrada del grafo de Nutrition: los ViewModels se piden ahí para compartirlos con
+ *  02 (la fecha) y con 04 a 07 (la captura).
+ * @param onPhoto navega a 06; el borrador de la foto se carga antes, acá.
+ * @param onConfirmed navega a 07, cuando "Continue" del pop-up de carga la abrió.
  */
 @Composable
 fun NutritionDashboardRoute(
@@ -23,6 +25,7 @@ fun NutritionDashboardRoute(
     onPhoto: () -> Unit,
     onConfirmed: () -> Unit,
     viewModel: NutritionViewModel = hiltViewModel(grafo),
+    captura: FoodCaptureViewModel = hiltViewModel(grafo),
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     val date by viewModel.selectedDate.collectAsStateWithLifecycle()
@@ -38,7 +41,10 @@ fun NutritionDashboardRoute(
         onMeal = onMeal,
         onAddMeal = onAddMeal,
         onVoice = onVoice,
-        onPhoto = onPhoto,
+        onPhoto = {
+            captura.onPhotoCaptureStarted()
+            onPhoto()
+        },
         onSearch = { mostrarBuscador = true },
     )
 
@@ -46,9 +52,12 @@ fun NutritionDashboardRoute(
         FoodSearchSheetHost(
             grafo = grafo,
             onDismiss = { mostrarBuscador = false },
-            onConfirmed = { mostrarBuscador = false; onConfirmed() },
+            // La búsqueda dejó abierto el pop-up de carga: se cierra la hoja y queda ese.
+            onConfirmed = { mostrarBuscador = false },
         )
     }
+
+    ManualEntrySheetHost(grafo = grafo, onContinued = onConfirmed)
 
     if (showDatePicker) {
         NutritionDatePickerDialog(

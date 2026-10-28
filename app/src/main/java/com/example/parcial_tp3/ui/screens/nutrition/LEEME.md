@@ -26,8 +26,8 @@ Por cada pantalla, cuatro archivos (`specs/CONTEXTO.md`, secciones 3 y 5):
 | Nutrition / 04 — Voice Food Logging | `voice_food_logging` | Encima | Demostración |
 | Nutrition / 05 — Food Analysis | `food_analysis` | Encima | Demostración: tres pasos con `delay` (~2 s) y pasa sola a `07`; "Cancel analysis", la X y atrás cortan el análisis |
 | Nutrition / 06 — Photo Analysis | `photo_analysis` | Con barra | Demostración: foto de ejemplo y estimación fija (`PhotoMealDraft`), sin cámara; "Review & Add" abre `07` y "Retake Photo" muestra el aviso |
-| Nutrition / 07 — Food Confirmation | `food_confirmation?mealId={mealId}` | Con barra | **Funcional**: con borrador (05 o 06) se ve como el Figma y guarda en Room; sin borrador muestra los campos de RF03 con su validación. El grafo abre la confirmación antes de navegar. −/+, "Remove", "+ Add Ingredient" y "Save without logging" muestran el aviso (los ingredientes no se guardan). "Edit Meal" de 08 la abre con el id para editar |
-| Nutrition / 08 — Meal Details | `meal_details/{mealId}` | Con barra | **Funcional**: la comida de Room por su id (NAV04). Room no guarda ingredientes, así que "Ingredients" muestra una tarjeta con la comida (nombre, proteína y kcal); "13:12" y el consejo son fijos (demostración). "Edit Meal" abre 07 con el id, "Duplicate Meal" guarda una copia y vuelve, y "Delete Meal" (no está en el Figma: es el control de RF04) pide confirmación y vuelve |
+| Nutrition / 07 — Food Confirmation | `food_confirmation` | Con barra | **Funcional**: tarjetas de ingredientes como el Figma; "+ Add Ingredient" (diálogo) y "Remove" cambian la lista, y las kcal son su suma. Llega con los de 05 o 06, o vacía desde el pop-up de carga. Guarda en Room con al menos un ingrediente. La Route que navega abre la confirmación antes. −/+ y "Save without logging" muestran el aviso |
+| Nutrition / 08 — Meal Details | `meal_details/{mealId}` | Con barra | **Funcional**: la comida de Room por su id (NAV04). "Ingredients" muestra una tarjeta por ingrediente (las comidas guardadas antes de los ingredientes muestran una con el nombre y la proteína); "13:12" y el consejo son fijos (demostración). "Edit Meal" muestra el aviso de demostración (la edición quedó fuera de alcance), "Duplicate Meal" guarda una copia y vuelve, y "Delete Meal" (no está en el Figma: es el control de RF04) pide confirmación y vuelve |
 
 ## Antes de empezar
 
@@ -40,7 +40,7 @@ Por cada pantalla, cuatro archivos (`specs/CONTEXTO.md`, secciones 3 y 5):
 - **Acá viven RF03 y RF04** (carga manual con validación, listado por fecha, eliminación con confirmación y total diario en Room).
 - Que `03`, `06`, `07` y `08` lleven barra sorprende, pero está así en el Figma. Y llevar barra **no quiere decir que no tengan flecha de volver**: la tienen.
 - **Dos pendientes para cerrar antes de maquetar** (`specs/PANTALLAS.md`, sección 17):
-  - **"Log Manually" (RF03)** no lleva a ningún lado en el Figma. Por ahora abre `07` vacío, que ya tiene los campos.
-  - **Eliminar una comida (RF04) no tiene control en ningún frame.** Resuelto en `08` con un botón "Delete Meal" y un diálogo de confirmación. Ojo: el "Remove" de `07` es de un ingrediente del borrador (muestra el aviso de demostración), no borra una comida guardada.
-- `food_confirmation` sin `mealId` (-1) crea una comida; con id edita una ya guardada.
+  - **"Log Manually" (RF03)** no lleva a ningún lado en el Figma. Abre el pop-up de carga (`ManualEntrySheet`) encima de 03, igual que "Type instead" en 04 y la búsqueda; "Continue" lleva a 07.
+  - **Eliminar una comida (RF04) no tiene control en ningún frame.** Resuelto en `08` con un botón "Delete Meal" y un diálogo de confirmación. Ojo: el "Remove" de `07` saca un ingrediente de la comida que se está armando, no borra una comida guardada.
+- `food_confirmation` siempre crea una comida nueva: la edición quedó fuera de alcance (PR 2 de ingredientes).
 - **NAV05:** `04`, `05` y `06` son simuladas y **no piden micrófono ni cámara**.

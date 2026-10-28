@@ -9,12 +9,10 @@ import androidx.compose.runtime.rememberUpdatedState
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavBackStackEntry
-import com.example.parcial_tp3.domain.model.Ingredient
 import com.example.parcial_tp3.ui.components.rememberDemoToast
 
 /**
- * La confirmación ya llega abierta: la arma el grafo antes de navegar (CONTEXTO §2). Las capturas
- * abren una comida nueva con la fecha de 01; "Edit Meal" de 08 la abre con el id de la comida. Si
+ * La confirmación ya llega abierta: la arma quien navega (CONTEXTO §2), con la fecha de 01. Si
  * el proceso murió, `confirmation` vuelve en null y solo se ve el encabezado, con ‹ para salir.
  *
  * @param grafo la entrada del grafo de Nutrition, de donde se pide el ViewModel que 04 a 07 comparten.
@@ -52,24 +50,21 @@ fun FoodConfirmationRoute(
 
     // Al guardar o descartar, el ViewModel limpia la confirmación (y al guardar, el borrador) antes de
     // que termine la animación de salida: se sigue mostrando lo último para que 07 no cambie mientras se va.
+    // Las tarjetas salen de confirmation.ingredients: lo que se ve es lo que queda en Room.
     val shown = remember { Shown() }
-    state.confirmation?.let { c ->
-        shown.confirmation = c
-        // Los que se van a guardar, no los del borrador: lo que se ve es lo que queda en Room.
-        shown.ingredients = if (c.mealId == NEW_MEAL_ID) c.ingredients else emptyList()
-    }
+    state.confirmation?.let { shown.confirmation = it }
 
     FoodConfirmationScreen(
         confirmation = shown.confirmation,
-        ingredients = shown.ingredients,
         onBack = back,
-        onFormChange = viewModel::onFormChange,
         onSave = viewModel::onSave,
+        onAddIngredient = viewModel::onAddIngredientClick,
+        onRemoveIngredient = viewModel::onRemoveIngredient,
+        onIngredientChange = viewModel::onIngredientEntryChange,
+        onConfirmIngredient = viewModel::onConfirmIngredient,
+        onDismissIngredient = viewModel::onDismissIngredientEntry,
         onDemo = rememberDemoToast(),
     )
 }
 
-private class Shown(
-    var confirmation: ConfirmationState? = null,
-    var ingredients: List<Ingredient> = emptyList(),
-)
+private class Shown(var confirmation: ConfirmationState? = null)

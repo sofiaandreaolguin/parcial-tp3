@@ -7,10 +7,12 @@ import com.example.parcial_tp3.data.repository.toAppError
 import com.example.parcial_tp3.domain.GramsParse
 import com.example.parcial_tp3.domain.MealForm
 import com.example.parcial_tp3.domain.model.FoodItem
+import com.example.parcial_tp3.domain.model.Ingredient
 import com.example.parcial_tp3.domain.nutrientsForPortion
 import com.example.parcial_tp3.domain.parseGrams
 import dagger.hilt.android.lifecycle.HiltViewModel
 import java.time.LocalDate
+import kotlin.math.roundToInt
 import javax.inject.Inject
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -85,14 +87,14 @@ class FoodSearchViewModel @Inject constructor(
      * Deja la pantalla en los resultados, asi volver de 07 sin guardar no muestra el panel de la
      * porcion de un alimento que ya se uso (C35).
      */
-    fun onConfirm(date: LocalDate): MealForm? {
+    fun onConfirm(date: LocalDate): FoodSelection? {
         val actual = _estado.value
         val alimento = actual.seleccionado ?: return null
         val porcion = actual.porcion ?: return null
         if (actual.gramosError != null) return null
 
         _estado.update { it.sinSeleccion() }
-        return MealForm(
+        val form = MealForm(
             name = alimento.name,
             type = null,
             date = date,
@@ -101,6 +103,9 @@ class FoodSearchViewModel @Inject constructor(
             carbs = porcion.carbsG.toFormText(),
             fat = porcion.fatG.toFormText(),
         )
+        // Ingredient guarda gramos enteros: "0,4" no puede quedar en 0, que isValidIngredient rechaza (C81).
+        val gramos = (parseGrams(actual.gramos) as? GramsParse.Ok)?.grams ?: return null
+        return FoodSelection(form, Ingredient(alimento.name, gramos.roundToInt().coerceAtLeast(1), porcion.kcal))
     }
 
     private fun FoodSearchUiState.sinSeleccion() =

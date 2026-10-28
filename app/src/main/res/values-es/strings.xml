@@ -578,7 +578,20 @@
     <string name="nutrition_error_save">No pudimos guardar la comida. Probá de nuevo.</string>
     <string name="nutrition_error_action">Algo salió mal. Probá de nuevo.</string>
     <string name="nutrition_error_ingredients">Hay ingredientes que no son válidos. Revisá el nombre, los gramos y las kcal.</string>
+    <string name="nutrition_error_no_ingredients">Agregá al menos un ingrediente para guardar la comida.</string>
     <string name="nutrition_retry">Reintentar</string>
+
+    <!-- Pop-ups de carga e ingrediente (PR 2 de ingredientes): no estan en el Figma. -->
+    <string name="nutrition_manual_title">Registrar a mano</string>
+    <string name="nutrition_manual_continue">Continuar</string>
+    <string name="nutrition_manual_cancel">Cancelar</string>
+    <string name="nutrition_ingredient_title">Agregar ingrediente</string>
+    <string name="nutrition_ingredient_add">Agregar</string>
+    <string name="nutrition_ingredient_cancel">Cancelar</string>
+    <string name="nutrition_ingredient_field_name">INGREDIENTE</string>
+    <string name="nutrition_ingredient_field_grams">GRAMOS (G)</string>
+    <string name="nutrition_ingredient_grams_range">Entre 1 y 10000 g</string>
+    <string name="nutrition_ingredient_kcal_range">Entre 0 y 10000 kcal</string>
 
     <!-- Nutrition / 03 — Add Food -->
     <string name="nutrition_add_title">Agregar comida</string>

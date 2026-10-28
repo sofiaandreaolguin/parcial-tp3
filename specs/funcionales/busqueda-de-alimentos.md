@@ -2,7 +2,7 @@
 
 Flujo: Nutrition
 Requisitos: **EXT02** (ampliación; el núcleo no la pide). Se apoya en RF03, RF04, RF05, RF06, RF07 y RF08, y respeta NAV02, NAV03 y UI01.
-Pantallas: `Nutrition / 01 — Dashboard` (chip "Search") y `Nutrition / 03 — Add Food` (botón "Search Database") abren **una hoja inferior, que no es un destino del `NavHost`**; `Nutrition / 07 — Food Confirmation` recibe el formulario cargado y guarda.
+Pantallas: `Nutrition / 01 — Dashboard` (chip "Search") y `Nutrition / 03 — Add Food` (botón "Search Database") abren **una hoja inferior, que no es un destino del `NavHost`**; `Nutrition / 07 — Food Confirmation` recibe el formulario cargado y guarda. *(27/10, PR 2 de ingredientes: entre la hoja y 07 está el pop-up de carga, donde se elige el tipo; ver "Qué hace".)*
 Responsable: Fiore
 
 > **Dos cosas que contradicen a `METODOLOGIA.md` y se asumen a sabiendas, 26/10.** §16 sugiere que
@@ -15,8 +15,10 @@ Responsable: Fiore
 Hoy "Search Database" avisa modo demostración. Con esto abre una pantalla donde se escribe el nombre de
 un alimento, se consulta el catálogo del servidor del docente, se elige uno y se dice cuántos gramos se
 comieron. La app calcula los nutrientes de esa porción y deja cargado el formulario de `Nutrition / 07`,
-donde se revisa, se elige el tipo de comida y se guarda por el mismo camino de Room que la carga manual,
+donde se revisa, se elige el tipo de comida *(hasta el PR 2; desde el 27/10 se elige en el pop-up de carga)* y se guarda por el mismo camino de Room que la carga manual,
 así el total diario se actualiza (RF04).
+
+> **Desde el 27/10 (PR 2 de ingredientes de Sofi):** "Usar este alimento" cierra la hoja y abre el pop-up de carga manual (otra hoja inferior) con el nombre y los macros de la porción; ahí se elige el tipo, y "Continue" lleva a 07 con el alimento como primer ingrediente (nombre, gramos y kcal). Las kcal de la comida son la suma de sus ingredientes. Detalle en `carga-y-eliminacion-de-comidas.md`, C79 a C83.
 
 El servidor **no** calcula nada: devuelve los valores cada 100 g y la multiplicación la hace la app.
 Comprobado el 26/10 contra `https://tp3.martinrivas.ar/`: pasarle `grams=150` devuelve la misma respuesta.
@@ -80,6 +82,8 @@ Lo único que cambia de lo que ya existía:
 | `ui/screens/nutrition/LEEME.md` | dice que la búsqueda es una hoja, no una novena pantalla |
 
 ## Zonas con responsable: hay que avisar
+
+> *(27/10, PR 2 de ingredientes: lo de esta sección vale hasta ese PR. `onPrefill` pasa a recibir `FoodSelection` y abre el pop-up de carga, no `ConfirmationState`; el "248.0 no deja guardar" deja de valer porque las kcal son la suma; y el PR 2 sí toca `MealValidation`, `MealDao` y `MealRepository`.)*
 
 - **`VoraApi` (Hector).** Un endpoint más: `GET /v1/foods`. Es el tercero de esta rama.
 - **`FoodCaptureViewModel` (Sofi).** `Nutrition / 07` no tiene ViewModel propio. Hacen falta dos cambios
@@ -194,11 +198,11 @@ UNKNOWN`) y se traducen en el repositorio con `toAppError()`. **No se inventa un
 - C26. CUANDO se elige un alimento, la app DEBE mostrar el panel de la porción con **100** en los gramos.
 - C27. MIENTRAS se cambian los gramos, la app DEBE mostrar los cuatro nutrientes recalculados **sin volver a consultar el servidor**.
 - C28. CUANDO se vuelve atrás desde el panel de la porción —con la flecha o con el botón del sistema—, la app DEBE volver a los resultados **sin perderlos** y sin alimento elegido; sin alimento elegido, el atrás DEBE cerrar la hoja (NAV02).
-- C29. CUANDO se confirma la porción, `onConfirm(date)` DEBE devolver un `MealForm` con el nombre del alimento, los cuatro nutrientes redondeados, esa fecha y `type = null`.
-- C30. Los números del formulario DEBEN entrar con el formato de `toFormText`: las calorías como entero sin decimales ("248") y los macros con punto y sin ".0" ("0" y no "0.0"). Si no, `parseKcal` marca `NOT_A_WHOLE_NUMBER` y 07 no deja guardar.
-- C31. CUANDO se precarga desde la búsqueda, `onPrefill` DEBE dejar `draft = null`, así 07 NO muestra los ingredientes de un análisis anterior (una comida = un alimento).
+- C29. CUANDO se confirma la porción, `onConfirm(date)` DEBE devolver una `FoodSelection` cuyo `form` tiene el nombre del alimento, los cuatro nutrientes redondeados, esa fecha y `type = null`. *(27/10, PR 2 de ingredientes de Sofi: antes devolvía el `MealForm` solo; el `ingredient` de `FoodSelection` está en C81 de `carga-y-eliminacion-de-comidas.md`.)*
+- C30. Los números del formulario DEBEN entrar con el formato de `toFormText`: las calorías como entero sin decimales ("248") y los macros con punto y sin ".0" ("0" y no "0.0"). Si no, `parseKcal` marca `NOT_A_WHOLE_NUMBER` y 07 no deja guardar. *(Desde el PR 2 de ingredientes las kcal guardadas son la suma de los ingredientes, así que C30 queda como regla de formato de lo que muestra el pop-up: ya no protege el guardado.)*
+- C31. CUANDO se precarga desde la búsqueda, `onPrefill(selection)` DEBE dejar `draft = null`, así 07 NO muestra los ingredientes de un análisis anterior. *(27/10, PR 2 de ingredientes: `onPrefill` ya no abre 07 sino el pop-up de carga, con el alimento como único ingrediente; ver C82 de `carga-y-eliminacion-de-comidas.md`.)*
 - C32. El formulario precargado DEBE llevar la fecha seleccionada en `NutritionViewModel`, la misma que usa la carga manual, para que el total diario que cambie sea el del día que se está mirando (RF04).
-- C33. CUANDO se guarda desde `Nutrition / 07`, la comida DEBE quedar en Room por el mismo camino que la carga manual y el total diario DEBE cambiar (RF04).
+- C33. CUANDO se guarda desde `Nutrition / 07`, la comida DEBE quedar en Room por el mismo camino que la carga manual y el total diario DEBE cambiar (RF04). *(27/10, PR 2 de ingredientes: el camino del test pasa por el pop-up de carga (elegir el tipo y `onContinueManualEntry`), y la comida se guarda con el alimento como ingrediente y sus kcal como total.)*
 - C34. MIENTRAS hay una búsqueda escrita o unos gramos sin confirmar, CUANDO se rota la pantalla, lo escrito NO DEBE perderse (RF07).
 - C35. CUANDO se confirma la porción, la hoja DEBE cerrarse y el estado DEBE quedar **sin alimento elegido**, así la próxima vez que se abra arranca en la lista y no en el panel del alimento anterior.
 
@@ -221,13 +225,13 @@ Plantillas: **La app DEBE** (siempre) · **CUANDO** (ante un evento) · **MIENTR
 | Repositorio | `data/repository/FoodRepository.kt` y `FoodRepositoryImpl.kt` | `suspend fun searchFoods(q: String, page: Int): Result<FoodPage>` |
 | Cálculo | `domain/FoodPortion.kt` | `fun nutrientsForPortion(per100g: Nutrients, grams: Double): Nutrients` y `fun parseGrams(text: String): GramsParse`, con `sealed interface GramsParse { data class Ok(val grams: Double); data class Err(val error: FieldError) }` — **puras, sin Android** |
 | Estado | `ui/screens/nutrition/FoodSearchUiState.kt` | `data class FoodSearchUiState(query: String = "", items: List<FoodItem> = emptyList(), cargando: Boolean = false, error: AppError? = null, vacio: Boolean = false, seleccionado: FoodItem? = null, gramos: String = "100", gramosError: FieldError? = null, porcion: Nutrients? = null)` |
-| ViewModel | `ui/screens/nutrition/FoodSearchViewModel.kt` | `@HiltViewModel class FoodSearchViewModel @Inject constructor(private val repo: FoodRepository)` con `onQueryChange(String)`, `onRetry()`, `onFoodSelected(FoodItem)`, `onGramsChange(String)`, `onBackFromPortion()` y `onConfirm(date: LocalDate): MealForm?` |
+| ViewModel | `ui/screens/nutrition/FoodSearchViewModel.kt` | `@HiltViewModel class FoodSearchViewModel @Inject constructor(private val repo: FoodRepository)` con `onQueryChange(String)`, `onRetry()`, `onFoodSelected(FoodItem)`, `onGramsChange(String)`, `onBackFromPortion()` y `onConfirm(date: LocalDate): FoodSelection?` (hasta el 27/10, `MealForm?`; `FoodSelection(form, ingredient)` está en `FoodSearchUiState.kt`) |
 | Constantes | `FoodSearchViewModel.kt` y `FoodRepository.kt` | `DEBOUNCE_MS = 300L` en el ViewModel y `PAGE_SIZE = 50` en el repositorio, que es quien lo manda |
 | Hoja | `ui/screens/nutrition/FoodSearchScreen.kt` | `FoodSearchSheet(...)` envuelve en `ModalBottomSheet` a `FoodSearchScreen(...)`, que no tiene estado; reusa `VoraTextField` y `MacroTotalsRow`; `BackHandler` para el atrás del sistema (C28) |
-| Anfitrión | `ui/screens/nutrition/FoodSearchSheetHost.kt` | `FoodSearchSheetHost(grafo: NavBackStackEntry, onDismiss: () -> Unit, onConfirmed: () -> Unit)` |
-| Puerta a 07 | `ui/screens/nutrition/FoodCaptureViewModel.kt` | **nuevo** `fun onPrefill(form: MealForm)` que limpia `draft`; `toFormText` pasa a `internal` |
+| Anfitrión | `ui/screens/nutrition/FoodSearchSheetHost.kt` | `FoodSearchSheetHost(grafo: NavBackStackEntry, onDismiss: () -> Unit, onConfirmed: () -> Unit)`. Desde el PR 2 de ingredientes, `onConfirmed` cierra la hoja y la Route muestra el pop-up de carga; ya no navega a 07 |
+| Puerta a 07 | `ui/screens/nutrition/FoodCaptureViewModel.kt` | **nuevo** `fun onPrefill(form: MealForm)` que limpia `draft`; `toFormText` pasa a `internal`. Desde el PR 2 de ingredientes: `onPrefill(selection: FoodSelection)`, que abre el pop-up de carga en vez de 07 |
 | Add Food y Dashboard | `AddFoodRoute.kt` y `NutritionDashboardRoute.kt` | `onSearch` sube como parámetro en vez de `rememberDemoToast()` |
-| Montaje | `AddFoodRoute.kt` y `NutritionDashboardRoute.kt` | un `rememberSaveable` booleano y la hoja cuando está en true, igual que `NutritionDatePickerDialog`. **No se toca `Rutas.kt` ni el grafo.** |
+| Montaje | `AddFoodRoute.kt` y `NutritionDashboardRoute.kt` | un `rememberSaveable` booleano y la hoja cuando está en true, igual que `NutritionDatePickerDialog`. **No se toca `Rutas.kt` ni el grafo** *(vale para este PR; la fila de Impacto ya marcaba que el grafo sí cambia, y el PR 2 de ingredientes toca los dos)*. |
 | Hilt | `di/RepositoryModule.kt` | `@Binds @Singleton abstract fun bindFoodRepository(impl: FoodRepositoryImpl): FoodRepository` |
 
 ## Textos nuevos
@@ -254,9 +258,9 @@ Plantillas: **La app DEBE** (siempre) · **CUANDO** (ante un evento) · **MIENTR
 
 - **Sin paginación** (ver la decisión de arriba).
 - **No se cachea el catálogo en Room.** Sin conexión no se busca: error con reintento.
-- **Una comida = un alimento.** Sumar ingredientes es otra funcionalidad y la encara Sofi.
-- **No se toca `MealDraft`, `MealValidation`, `MealEntity`, `MealDao` ni `MealRepository`.**
-- **`Nutrition / 07` no se rediseña**: su controlador gana `onPrefill` y `toFormText` pasa a `internal`.
+- ~~**Una comida = un alimento.**~~ Desde el PR 2 de ingredientes (Sofi), el alimento es el primer ingrediente y en 07 se pueden sumar más.
+- **No se toca `MealDraft`, `MealValidation`, `MealEntity`, `MealDao` ni `MealRepository`.** *(Vale para este PR; el PR 2 de ingredientes toca `MealValidation`, `MealDao` y `MealRepository`.)*
+- **`Nutrition / 07` no se rediseña**: su controlador gana `onPrefill` y `toFormText` pasa a `internal`. *(El PR 2 de ingredientes sí la cambia; ver esa spec.)*
 - No se modifican los frames de `Nutrition / 01` ni `03`: solo cambia a dónde llevan sus controles.
 - No hay favoritos, historial de búsquedas ni alimentos propios.
 
@@ -296,7 +300,7 @@ Plantillas: **La app DEBE** (siempre) · **CUANDO** (ante un evento) · **MIENTR
 | C26 | `C26 elegir un alimento deja la porcion en cien gramos` | `test/` | sí |
 | C27 | `C27 cambiar los gramos recalcula sin volver a consultar` | `test/` | sí |
 | C28 | `C28 volver desde la porcion conserva los resultados` | `test/` | sí |
-| C29 | `C29 onConfirm arma el MealForm con nombre nutrientes fecha y type null` | `test/` | sí |
+| C29 | `C29 onConfirm arma el MealForm con nombre nutrientes y type null` (nombre real del código; con el PR 2 pasa a `C29 onConfirm arma la seleccion con nombre nutrientes y type null`) | `test/` | sí |
 | C30 | `C30 los numeros entran como 248 y no como 248 punto cero` | `test/` | sí |
 | C31 | `C31 onPrefill limpia el borrador del analisis` | `test/` | sí |
 | C32 | `C32 el formulario lleva la fecha seleccionada` | `test/` | sí |
@@ -304,7 +308,7 @@ Plantillas: **La app DEBE** (siempre) · **CUANDO** (ante un evento) · **MIENTR
 | C33 | `c33_el_total_del_dia_suma_lo_que_guardo_la_busqueda` | `androidTest/` | sí |
 | C34 | `c34_rotar_conserva_el_texto_buscado` | `androidTest/` | sí |
 | C34 | `c34_rotar_conserva_los_gramos_sin_confirmar` | `androidTest/` | sí |
-| C35 | `C35 volver de 07 sin guardar deja los resultados sin seleccion` | `test/` | sí |
+| C35 | `C35 despues de confirmar no queda alimento elegido` (nombre real del código) | `test/` | sí |
 | C36 | `las tres listas suman las 33 rutas del inventario sin repetir` (el de siempre, sin cambios) | `test/` | — |
 | C37 | — | evidencia manual (captura) | — |
 | C38 | — | `scripts/reglas.sh` y revisión de las dos `strings.xml` en el pull request | |
@@ -329,7 +333,7 @@ las 21 detectadas**, pero cinco de ellas recién después de agregar los tests q
 | Clasificar el 400 como `INVALID_DATA` | C4 |
 | Precargar los números con ".0" | C30 |
 | No limpiar el borrador al precargar 07 | C31 |
-| Precargar las calorías como "248.0" | C33 (las dos: la validación de 07 las rechaza y no se guarda nada) |
+| Precargar las calorías como "248.0" | C33 (las dos: la validación de 07 las rechaza y no se guarda nada). *Deja de valer con el PR 2: las kcal son la suma de los ingredientes* |
 | Guardar el texto buscado en un `remember` local que arranca vacío | C34 (`...texto_buscado`) |
 | Lo mismo con el campo de gramos | C34 (`...gramos_sin_confirmar`) |
 | Dejar `PageMetaDto` con campos no anulables | C6 (un `meta` truncado se veía como "no hay resultados") |
@@ -407,3 +411,4 @@ Los dos archivos de la tabla de Impacto, más: `specs/REQUISITOS.md` (EXT02 pasa
 - 26/10 — Recortada tras la segunda: **38 criterios**, sin paginación, con el redondeo en `BigDecimal` y el formato de precarga resuelto.
 
 - 27/10 — **Pasa de pantalla a hoja inferior**, después de probarla a mano: sacaba de contexto. Se revirtieron los once archivos de conteos y se borraron los dos tests de navegación, cuyos criterios ya no existen. Quedan **36 criterios**.
+- 27/10 — **PR 2 de ingredientes (Sofi), avisado a Fiore:** "Usar este alimento" ya no abre 07 sino el pop-up de carga manual precargado, y el alimento se guarda como ingrediente (nombre, gramos de la porción y kcal). Cambian C29, C31 y C33 (cada uno lo dice); los tests de C29, C30, C32 y C35 leen `onConfirm(...)?.form`. Detalle en `carga-y-eliminacion-de-comidas.md`, C79 a C83.

@@ -30,7 +30,6 @@ class FakeMealRepository(comidas: List<Meal> = emptyList()) : MealRepository {
         private set
 
     val agregadas = mutableListOf<Meal>()
-    val actualizadas = mutableListOf<Meal>()
     val eliminadas = mutableListOf<Long>()
     val comidasEliminadas = mutableListOf<Meal>()
 
@@ -68,12 +67,6 @@ class FakeMealRepository(comidas: List<Meal> = emptyList()) : MealRepository {
         val id = (meals.value.maxOfOrNull { it.id } ?: 0) + 1
         meals.value = meals.value + meal.copy(id = id)
         return id
-    }
-
-    override suspend fun updateMeal(meal: Meal) {
-        actualizadas += meal
-        antesDeEscribir()
-        meals.value = meals.value.map { if (it.id == meal.id) meal else it }
     }
 
     override suspend fun deleteMeal(meal: Meal) {

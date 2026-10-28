@@ -19,9 +19,6 @@ interface MealRepository {
     /** La comida con ese id, o null si no existe (por ejemplo, porque se elimino). */
     fun observeMeal(id: Long): Flow<Meal?>
 
-    /** Tira [MealDataException] con NOT_FOUND si la comida ya no existe. */
-    suspend fun updateMeal(meal: Meal)
-
     /** No avisa si la comida ya no estaba: lo que se quería ya pasó (C73). */
     suspend fun deleteMeal(meal: Meal)
 }
