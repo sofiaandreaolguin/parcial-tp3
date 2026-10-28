@@ -115,7 +115,11 @@ class FoodSearchGuardadoRoomTest {
         assertEquals(413, delDia.sumOf { it.kcal })
     }
 
-    private fun guardarDesdeElPopUp(
+    /**
+     * Espera a `Saved`: Room escribe en su propio hilo y `advanceUntilIdle` no lo espera. Sin esto,
+     * la segunda comida encontraria la primera todavia guardando y C102 no la dejaria abrir 07.
+     */
+    private suspend fun guardarDesdeElPopUp(
         captura: FoodCaptureViewModel,
         seleccion: FoodSelection,
     ) {
@@ -124,5 +128,6 @@ class FoodSearchGuardadoRoomTest {
         captura.onManualEntryChange(popUp.form.copy(type = MealType.LUNCH))
         check(captura.onContinueManualEntry()) { "el pop-up no dejo seguir a 07" }
         captura.onSave()
+        assertEquals(FoodCaptureEvent.Saved, captura.events.first())
     }
 }
