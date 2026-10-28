@@ -951,3 +951,30 @@ Formato:
 - Evidencia: **367 tests unitarios y 27 con emulador, 0 fallos**; `lintDebug` y `reglas.sh` en verde. Rojo, control negativo (`@Update` en lugar de `@Delete` para C11, C12 y C72, más cuatro roturas para C14, C45, C73 y C74) y verde en `docs/evidencia/tests/2026-10-27-borrar-con-delete.md`.
 - Pendiente de otra zona: `specs/PANTALLAS.md` §17 todavía nombra `MealDao.deleteById` (Fiore). Va como aviso en el PR.
 - Commit / PR:
+
+### 2026-10-28 · Sofi · feat(nutrition): carga manual en pop-up, ingredientes a mano y kcal como suma (PR 2 de ingredientes)
+- Carril y requisitos: C (datos y ViewModels) y después B (pantallas) · RF03, RF04, RF06, RF07, EXT02 · UI01, UI02, UI03, NAV01, NAV02, NAV03. Spec `carga-y-eliminacion-de-comidas.md`, C75 a C102 y los reescritos (PR 2 de 2). Tests en rojo en `05848ba`.
+- Plan aprobado:
+  - Carril C: `validateIngredient` y `validateMealDetails` en el dominio; los dos pop-ups viven en `FoodCaptureViewModel`; `onSave` controla primero que haya ingredientes, después `validateMeal` con las kcal sumadas y después `isValidIngredient`; la búsqueda devuelve el alimento como ingrediente. Se va la edición entera (`updateMeal`, `MealDao.update`, `NOT_FOUND` y el `mealId` de 07).
+  - Carril B: hoja de carga (`ManualEntrySheet`), diálogo de ingrediente (`IngredientEntryDialog`), 07 con "+ Add Ingredient" y "Remove" reales y el total como suma, y las Routes que preparan el ViewModel, así `NutritionNavGraph` solo navega (C95).
+- Qué propuso la IA y qué cambiamos:
+  - La IA propuso sacar el texto "Save Meal", como decía la spec. Al planear vio que, si Android cierra la app en 06, 07 puede abrir sin tipo. Sofi decidió dejarlo como respaldo para ese caso y se corrigió la spec.
+  - La IA agregó `nutrition_ingredient_cancel` y dos etiquetas de campo que la spec no nombraba, porque cada diálogo de la app tiene las suyas.
+  - El grafo pasó a solo navegar después de revisar en el código cómo lo hacen los otros grafos.
+  - La primera corrida de `connectedDebugAndroidTest` falló en `FoodSearchGuardadoRoomTest`: el test no esperaba a que Room terminara de guardar y chocaba con C102. La IA lo confirmó con una espera temporal que deshizo; Sofi decidió arreglar el test (espera `Saved`) y no aflojar C102.
+  - `revisor-visual` pidió `VoraButton` en el diálogo de ingrediente y que la hoja no oscurezca la hora sobre 04: se corrigieron.
+- Trampas que conviene saber:
+  - Room escribe en su propio hilo y `advanceUntilIdle` no lo espera: en `androidTest`, esperar el evento del ViewModel.
+  - La hoja inferior es otra ventana: no hereda los íconos claros de 04 y hay que ponerlos en la ventana de la hoja.
+  - Deslizar la hoja hacia abajo la cierra (como debe ser): para scrollearla hacia arriba en una prueba automática, no arrastrar desde el borde de arriba.
+  - Dos procesos sobre el mismo emulador (Android Studio y una prueba) se pisan: el "Run" de Android Studio cierra la app y la vuelve a abrir.
+- Revisores:
+  - `revisor-requisitos`: todos los criterios cumplen, ningún test debilitado. MEDIA: faltaban la evidencia de tests y en el Historial C96, C67, C68 y la pasada visual; se agregaron.
+  - `revisor-arquitectura`: nada BLOQUEA ni ALTA. C95, capas, textos y tema en regla.
+  - `revisor-visual`: CON CAMBIOS en la primera vuelta y APROBADO en la segunda.
+  - Code review: nada crítico ni alto.
+  - Sugerencias sin aplicar (MEDIA y BAJA): en `FoodSearchViewModel.onConfirm`, parsear los gramos antes de limpiar la selección y actualizar su KDoc; un doble toque muy rápido en "Remove" puede sacar también el ingrediente siguiente; kcal y macros pueden no coincidir (los macros se cargan para toda la comida, decisión de la spec); 01 ordena las comidas por cómo se guardaron y 02 por momento del día (viene de antes); el aviso de demostración es un Toast del sistema (de toda la app); `FieldError.OUT_OF_RANGE` en lugar de `NEGATIVE`; un canal de eventos por pantalla.
+- Evidencia: **380 tests unitarios y 26 con emulador, 0 fallos**; `assembleDebug`, `lintDebug` y `reglas.sh` en verde. Rojo, control negativo (C63, C91, C102) y verde en `docs/evidencia/tests/2026-10-28-ingredientes-pr2-verde.md`. Recorrido a mano de C92 a C100 en 411 y 360 dp y capturas de C99 en `docs/evidencia/visual/`.
+- Sin verificar: el texto en castellano de los pop-ups en 360 dp; C96 medido en píxeles; C51 (cerrar y reabrir la app con una comida del PR 2).
+- Pendiente de otra zona: avisar a Fiore por `NutritionNavGraph`, `Rutas.kt`, `FoodSearchViewModel`, `FoodSearchSheetHost`, `PANTALLAS.md`, el README y el `LEEME.md` de Nutrition. En `PANTALLAS.md` siguen dos líneas de antes de este PR: la 260 (habla de `SUM` y de que "03 carga") y la §17 (nombra `MealDao.deleteById`).
+- Commit / PR:

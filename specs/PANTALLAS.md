@@ -526,7 +526,6 @@ object Rutas {
     const val VOICE_FOOD_LOGGING = "voice_food_logging"
     const val FOOD_ANALYSIS = "food_analysis"
     const val PHOTO_ANALYSIS = "photo_analysis"
-    /** mealId = -1 significa "comida nueva"; con id, se edita una ya guardada (NAV04). */
     const val FOOD_CONFIRMATION = "food_confirmation"
     const val ARG_MEAL_ID = "mealId"
     const val MEAL_DETAILS = "meal_details/{$ARG_MEAL_ID}"
