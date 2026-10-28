@@ -234,10 +234,23 @@ Cuenta con email y contraseña (Firebase Authentication), perfil en Firestore y 
 
 ### Configurarlo
 
+Hay dos caminos. Elegí uno; en los dos el archivo queda en `app/google-services.json`, que está en `.gitignore` y no se sube.
+
+#### Opción A: usar el `google-services.json` del grupo
+
+El grupo entrega el archivo ya completo, por Campus o por mail, porque no se sube a Git. El proyecto de Firebase ya tiene Authentication, Firestore y las reglas configurados.
+
+1. Copiar el archivo recibido a `app/google-services.json`.
+2. Hacer **Sync Project with Gradle Files** y correr la app. Ya se puede crear una cuenta e iniciar sesión.
+
+No hace falta tocar la consola de Firebase ni editar nada.
+
+#### Opción B: crear un proyecto Firebase propio
+
 1. En la [consola de Firebase](https://console.firebase.google.com) crear un proyecto y agregar una app Android con el paquete `com.example.parcial_tp3`.
 2. En **Authentication > Sign-in method**, habilitar **Email/Password**.
 3. En **Firestore Database**, crear la base en modo producción.
-4. Descargar `google-services.json` y ponerlo en `app/google-services.json`. Está en `.gitignore`: no se sube. Para compilar sin proyecto propio (por ejemplo en la CI) alcanza con copiar la plantilla: `cp app/google-services.json.example app/google-services.json` (compila, pero no se puede iniciar sesión).
+4. Descargar `google-services.json` y ponerlo en `app/google-services.json`. Para compilar sin proyecto propio (por ejemplo en la CI) alcanza con copiar la plantilla: `cp app/google-services.json.example app/google-services.json` (compila, pero no se puede iniciar sesión).
 5. Publicar las reglas de [`firebase/firestore.rules`](firebase/firestore.rules): en **Firestore > Rules** pegar el contenido y publicar, o `firebase deploy --only firestore:rules`.
 
 ### Probar las reglas con dos cuentas
