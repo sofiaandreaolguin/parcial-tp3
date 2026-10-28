@@ -213,7 +213,7 @@ Los 5 estados del Asistente VORA son **una sola ruta** `voice` con estado distin
 | 21 | Nutrition / 04 — Voice Food Logging | `voice_food_logging` | Demostración |
 | 22 | Nutrition / 05 — Food Analysis | `food_analysis` | Demostración |
 | 23 | Nutrition / 06 — Photo Analysis | `photo_analysis` | Demostración |
-| 24 | Nutrition / 07 — Food Confirmation | `food_confirmation?mealId={mealId}` | Funcional |
+| 24 | Nutrition / 07 — Food Confirmation | `food_confirmation` | Funcional |
 | 25 | Nutrition / 08 — Meal Details | `meal_details/{mealId}` | Funcional |
 | 26 | Progress / 01 — Today's Overview | `todays_overview` | Demostración |
 | 27 | Progress / 02 — Dashboard | `progress_dashboard` | Demostración |

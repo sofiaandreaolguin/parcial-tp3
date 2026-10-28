@@ -252,13 +252,13 @@ Leído de los frames el 18/10. Lo que dice *a confirmar* es lectura mía del dib
 | 21 | Nutrition / 04 — Voice Food Logging | `voice_food_logging` | Encima | `FoodCaptureViewModel` | Demostración | Nutrition |
 | 22 | Nutrition / 05 — Food Analysis | `food_analysis` | Encima | `FoodCaptureViewModel` | Demostración | Nutrition |
 | 23 | Nutrition / 06 — Photo Analysis | `photo_analysis` | Con barra | `FoodCaptureViewModel` | Demostración | Nutrition |
-| 24 | Nutrition / 07 — Food Confirmation | `food_confirmation?mealId={mealId}` | Con barra | `FoodCaptureViewModel` | Funcional | Nutrition |
+| 24 | Nutrition / 07 — Food Confirmation | `food_confirmation` | Con barra | `FoodCaptureViewModel` | Funcional | Nutrition |
 | 25 | Nutrition / 08 — Meal Details | `meal_details/{mealId}` | Con barra | `MealDetailViewModel` | Funcional | Nutrition |
 
 - **Las que sorprenden:** 03, 06, 07 y 08 **sí** tienen barra; 04 y 05 **no**. Es lo que muestra el Figma y se respeta.
 - **RF03 y RF04:** 03 carga a mano con validación; 02 lista por fecha y elimina con confirmación; 01 muestra el total diario con una consulta (`SUM`); 08 es el detalle de la comida elegida.
 - **Nutrition / 07:** los valores llegan del análisis simulado (04, 05 o 06) **o de la búsqueda de alimentos**, y **el guardado es real** (Room).
-- **La búsqueda de alimentos (EXT02) no es una pantalla:** es una **hoja inferior** que se abre sobre `01` o sobre `03`, que se siguen viendo detrás. Por eso el inventario no cambia: siguen siendo 37 pantallas y 33 destinos. La abren el chip "Search" de 01 y el botón "Search Database" de 03 (NAV03), y termina dejando el formulario de 07 cargado. La regla con la que se dibujó, en [`docs/decisiones/010-buscador-como-hoja.md`](../docs/decisiones/010-buscador-como-hoja.md).
+- **La búsqueda de alimentos (EXT02) no es una pantalla:** es una **hoja inferior** que se abre sobre `01` o sobre `03`, que se siguen viendo detrás. Por eso el inventario no cambia: siguen siendo 37 pantallas y 33 destinos. La abren el chip "Search" de 01 y el botón "Search Database" de 03 (NAV03), y al confirmar un alimento deja abierto el pop-up de carga (otra hoja) con el alimento como ingrediente; "Continue" lleva a 07. La regla con la que se dibujó, en [`docs/decisiones/010-buscador-como-hoja.md`](../docs/decisiones/010-buscador-como-hoja.md).
 - **NAV05:** 04, 05 y 06 son estados de demostración. **No se pide permiso de cámara ni de micrófono.**
 - **NAV04:** el `mealId` viaja en la ruta (08).
 - `FoodCaptureViewModel` lo comparten 04, 05, 06 y 07: se obtiene con el `NavBackStackEntry` del grafo (`hiltViewModel(navController.getBackStackEntry(Rutas.NUTRITION_GRAPH))`) para que el borrador de la comida sobreviva el paso de una pantalla a la siguiente. *A acordar en la tarea VC-b con la zona de Nutrition.* **Ojo:** colgarlo del grafo entero lo deja vivo mientras haya cualquier pantalla de Nutrition en la pila, así que una captura cancelada reaparece en la siguiente. Conviene acotarlo al subflujo de captura (04 a 07) o limpiar el borrador al salir de `food_confirmation`.
@@ -280,20 +280,20 @@ Leído de los frames el 18/10. Lo que dice *a confirmar* es lectura mía del dib
 | 03 Add Food | "Start Voice Logging" | `voice_food_logging` |
 | | "Snap a Photo" | `photo_analysis` |
 | | "Search Database" | EXT02 |
-| | **"Log Manually"** | `food_confirmation?mealId=-1` **vacío**, para completarlo a mano. El formulario de RF03 no tiene frame propio |
+| | **"Log Manually"** | Pop-up de carga (hoja inferior) **encima de 03**: nombre, tipo y macros. "Continue" lleva a `food_confirmation`, donde se agregan los ingredientes. El pop-up no tiene frame propio |
 | | Flecha ‹ | `popBackStack()` |
 | 04 Voice Food Logging | "Done Speaking" | `food_analysis` |
-| | "Type instead" | El mismo formulario de carga manual |
+| | "Type instead" | El mismo pop-up de carga, encima de 04 |
 | | X (cerrar) | `popBackStack()` |
-| 05 Food Analysis | Termina solo | `food_confirmation?mealId=-1` (comida nueva) |
+| 05 Food Analysis | Termina solo | `food_confirmation` (comida nueva) |
 | | "Cancel analysis" | `popBackStack()` |
-| 06 Photo Analysis | "Review & Add" | `food_confirmation?mealId=-1` (comida nueva) |
+| 06 Photo Analysis | "Review & Add" | `food_confirmation` (comida nueva) |
 | | "Retake Photo" | Vuelve a tomar la foto (demostración) |
 | 07 Food Confirmation | "Add to [comida]" | **Guarda en Room** y vuelve a `nutrition_dashboard` |
 | | "Save without logging" | Aviso de modo demostración |
 | | "−" / "+" de cantidad, "Remove" | No navega: cambia el borrador |
 | | "+ Add Ingredient" | No navega |
-| 08 Meal Details | "Edit Meal" | `food_confirmation?mealId={mealId}` · **edita**, no crea |
+| 08 Meal Details | "Edit Meal" | Demostración: muestra el aviso (la edición quedó fuera de alcance en el PR 2 de ingredientes) |
 | | "Duplicate Meal" | Guarda una copia y vuelve |
 | | Eliminar | **Diálogo de confirmación** (RF04) y después vuelve |
 
@@ -417,7 +417,7 @@ val RUTAS_CON_BARRA = setOf(
 )
 ```
 
-Ojo: `MEAL_DETAILS` y `FOOD_CONFIRMATION` son rutas con argumento. En `RUTAS_CON_BARRA` va el **patrón** de la ruta (`meal_details/{mealId}`, `food_confirmation?mealId={mealId}`), que es lo que devuelve `destination.route`, no la ruta ya armada con el id.
+Ojo: `MEAL_DETAILS` es una ruta con argumento. En `RUTAS_CON_BARRA` va el **patrón** de la ruta (`meal_details/{mealId}`), que es lo que devuelve `destination.route`, no la ruta ya armada con el id.
 
 ## 11. Las 19 que se abren encima
 
@@ -527,8 +527,7 @@ object Rutas {
     const val FOOD_ANALYSIS = "food_analysis"
     const val PHOTO_ANALYSIS = "photo_analysis"
     /** mealId = -1 significa "comida nueva"; con id, se edita una ya guardada (NAV04). */
-    const val FOOD_CONFIRMATION = "food_confirmation?$ARG_MEAL_ID={$ARG_MEAL_ID}"
-    fun foodConfirmation(mealId: Long = -1L) = "food_confirmation?$ARG_MEAL_ID=$mealId"
+    const val FOOD_CONFIRMATION = "food_confirmation"
     const val ARG_MEAL_ID = "mealId"
     const val MEAL_DETAILS = "meal_details/{$ARG_MEAL_ID}"
     fun mealDetails(id: Long) = "meal_details/$id"
@@ -584,7 +583,7 @@ Las tablas "A dónde lleva cada control" dicen **hacia dónde sale** cada pantal
 | `voice_food_logging` | `nutrition_dashboard` "Voice" · `add_food` "Start Voice Logging" |
 | `food_analysis` | `voice_food_logging` "Done Speaking" |
 | `photo_analysis` | `nutrition_dashboard` "Photo" · `add_food` "Snap a Photo" |
-| `food_confirmation?mealId={mealId}` | `food_analysis` al terminar · `photo_analysis` "Review & Add" · `meal_details` "Edit Meal" · `add_food` "Log Manually" |
+| `food_confirmation` | `food_analysis` al terminar · `photo_analysis` "Review & Add" · "Continue" del pop-up de carga (desde `add_food`, `voice_food_logging` y la búsqueda de `nutrition_dashboard` y `add_food`) |
 | `meal_details/{mealId}` | `nutrition_dashboard` una comida · `todays_meals` una comida |
 | `todays_overview` | **pantalla base de la pestaña Progress** · además `home_dashboard`, sección "Today's Overview" |
 | `progress_dashboard` | Pestaña Progress |
@@ -631,7 +630,7 @@ Al 26/10 **no queda ninguno sin resolver**. Se deja el registro de cada uno porq
 
 1. ~~**Tarea VC-b sin asignar**~~ · **Cerrado.** Se acordaron las rutas, los modelos y los componentes; las rutas de la sección 15 son las que están en `ui/navigation/Rutas.kt` y la firma de `VoraBottomBar` quedó fija. Ya no es una propuesta: es lo implementado.
 2. **Ya no hay entradas sin confirmar.** `Progress / 01 — Today's Overview` se resolvió el 22/10 (duda #2): es la pantalla base de la pestaña Progress y su "Start Workout" lleva a `progress_dashboard`. La de `Profile / 05 — Voice & AI Settings` quedó confirmada el 21/10 al maquetar `Profile / 01` (Zaki, tarea VC-q). Una pantalla sin entrada rompe NAV01, así que si alguna fila cambia hay que revisar esto de nuevo.
-3. ~~**El formulario de carga manual de comidas (RF03) no tiene frame propio**~~ · **Cerrado con el profe (duda #3).** Respondió: *"Podríamos conectarlo a la pantalla que decidamos, no es necesario"*. "Log Manually" abre `Nutrition / 07 — Food Confirmation` vacío, que ya tiene los campos, con la validación de `domain/MealValidation.kt`. No se inventó ninguna pantalla.
+3. ~~**El formulario de carga manual de comidas (RF03) no tiene frame propio**~~ · **Cerrado con el profe (duda #3).** Respondió: *"Podríamos conectarlo a la pantalla que decidamos, no es necesario"*. "Log Manually" abre un pop-up de carga (hoja inferior, como la búsqueda) con nombre, tipo y macros, validados con `domain/MealValidation.kt`; "Continue" lleva a `Nutrition / 07`, donde se agregan los ingredientes (PR 2 de ingredientes). No se inventó ninguna pantalla: el pop-up no es un destino del `NavHost`.
 4. ~~**Eliminar una comida (RF04) no tiene control en ningún frame**~~ · **Cerrado con el profe (duda #4).** Respondió: *"Eliminar el componente en la base, no en la API. Ya está el botón al editar el meal"*. Se borra desde `Nutrition / 08 — Meal Details`, con diálogo de confirmación (`MealDetailScreen.kt`) y `MealDao.deleteById`; el total del día se recalcula solo. El "Remove" de `07` sigue sacando un ingrediente del borrador, que es otra cosa.
 5. **El catálogo de entrenamientos (RF01) se muestra en `Workout / 02 — Your Plan`**, que lista tres con entrada por ítem, igual que devuelve el mock. `Workout / 01` muestra solo el destacado. **NAV04 se demuestra en `02`.**
 6. **Controles sin frame de destino:** "Connected Data" y "Account" en `Profile / 01`; Notifications, Units, Appearance, Help Centre, Contact Support y Privacy Policy en `Profile / 06`. NAV03 permite que "una acción de servicio opcional dé un resultado de ejemplo o avise que es modo demostración". Ninguno queda sin respuesta: todos avisan modo demostración.
