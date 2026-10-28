@@ -1001,11 +1001,13 @@ La pregunta 2 depende de que el grupo cierre bien la entrega; las 3 a 7 se respo
 
 Es el recorrido mínimo que pide el profe. Se ensaya antes de entregar.
 
-- [ ] 1. Abrir la app y recorrer las pantallas del inventario, mostrando regreso y navegación inferior.
-- [ ] 2. Consultar el catálogo remoto y abrir **dos entrenamientos distintos** con sus detalles.
-- [ ] 3. Registrar una comida, cerrar y abrir la app, comprobar que sigue, eliminarla y mostrar cómo cambia el total.
-- [ ] 4. Detener el servidor, abrir un detalle ya descargado desde Room; probar error, lista vacía y reintento.
+- [x] 1. Abrir la app y recorrer las pantallas del inventario, mostrando regreso y navegación inferior.
+- [x] 2. Consultar el catálogo remoto y abrir **dos entrenamientos distintos** con sus detalles.
+- [x] 3. Registrar una comida, cerrar y abrir la app, comprobar que sigue, eliminarla y mostrar cómo cambia el total.
+- [x] 4. Detener el servidor, abrir un detalle ya descargado desde Room; probar error, lista vacía y reintento.
 - [ ] 5. Mostrar los commits de cada integrante y explicar ViewModel, repositorios e inyección (y Firebase, si lo hay).
+
+Ensayo del 27/10 (`docs/evidencia/ensayo-demo-2026-10-27.md`): los pasos 1 a 4 se recorrieron con el emulador manejado por `adb`, no por una persona del grupo. El paso 5 quedó parcial y falta el ensayo cronometrado.
 
 ---
 
