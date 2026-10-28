@@ -44,6 +44,8 @@ En [`docs/figma/`](docs/figma/) hay una imagen por flujo, exportada a 2x, para c
 ./gradlew connectedDebugAndroidTest   # tests de Room (con el emulador abierto)
 ```
 
+Si `./gradlew` corta con `JAVA_HOME is not set`, se usa el Java que trae Android Studio. En Git Bash, para esa terminal: `export JAVA_HOME="/c/Program Files/Android/Android Studio/jbr"`. Para que quede fijo, hay que crear la variable `JAVA_HOME` con esa ruta en las variables de entorno de Windows y abrir otra terminal.
+
 ### Levantar el mock local
 
 Solo hace falta para probar la caché sin conexión (RF02), que necesita **poder apagar el servidor**. Con el servidor publicado del paso 2 no hay que levantar nada.
@@ -54,6 +56,28 @@ python3 mock/server.py --port 9000 --host 0.0.0.0   # otro puerto, o para un tel
 ```
 
 Necesita Python 3.9 o más, sin instalar dependencias. Después hay que apuntar `api.baseUrl` a `http://10.0.2.2:8000/` (ver **URL del servidor**) y hacer Sync.
+
+#### En Windows
+
+1. Mock, en una terminal que queda abierta. En Windows `python3` abre la Microsoft Store; el que anda es `py`:
+
+   ```bash
+   py mock/server.py
+   ```
+
+2. En algunos emuladores `10.0.2.2` no llega a la compu (al grupo le pasó, ver `docs/BITACORA.md`) y la app muestra "No connection". En ese caso, en `local.properties` va `api.baseUrl=http://127.0.0.1:8000/` (y Sync), y con el emulador abierto hay que redirigir el puerto. `adb` no suele estar en el PATH, así que va con la ruta completa:
+
+   ```bash
+   # Git Bash
+   /c/Users/TU-USUARIO/AppData/Local/Android/Sdk/platform-tools/adb.exe reverse tcp:8000 tcp:8000
+   ```
+
+   ```powershell
+   # PowerShell
+   & "$env:LOCALAPPDATA\Android\Sdk\platform-tools\adb.exe" reverse tcp:8000 tcp:8000
+   ```
+
+   Si responde `8000`, quedó conectado. El `adb reverse` se borra cada vez que se reinicia el emulador: hay que volver a correrlo.
 
 ## Versiones usadas
 
@@ -82,6 +106,7 @@ Después de cambiar `local.properties`, hacé **Sync Project with Gradle Files**
 | Servidor | `api.baseUrl` | Cuándo |
 |---|---|---|
 | Mock local desde el emulador | `http://10.0.2.2:8000/` | Para probar la caché sin conexión (RF02) hace falta poder apagar el servidor. Usa el paquete del docente, que está en `mock/` tal como vino en `mock.zip` |
+| Mock local con `adb reverse` | `http://127.0.0.1:8000/` | Si el emulador no llega a `10.0.2.2`. Requiere `adb reverse tcp:8000 tcp:8000` (ver **En Windows**) |
 | Publicado por el docente | `https://tp3.martinrivas.ar/` | Sin levantar nada. Es el que hay que usar en la versión release |
 | Teléfono físico | `http://<IP-de-la-compu>:8000/` | Con el mock del docente escuchando en `0.0.0.0` |
 
